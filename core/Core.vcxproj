@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9CF25D83-D719-4757-B9E5-D21517BD5A7C}</ProjectGuid>
+    <RootNamespace>Core</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>core</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="auxililty\forward.h" />
+    <ClInclude Include="auxililty\ingore_unused.h" />
+    <ClInclude Include="auxililty\noncopyable.h" />
+    <ClInclude Include="auxililty\optional.h" />
+    <ClInclude Include="auxililty\singletonable.h" />
+    <ClInclude Include="compile.h" />
+    <ClInclude Include="container\bidirection_list.h" />
+    <ClInclude Include="container\char_trait.h" />
+    <ClInclude Include="container\concurrent_hash_map.h" />
+    <ClInclude Include="container\concurrent_hash_set.h" />
+    <ClInclude Include="container\forward_list.h" />
+    <ClInclude Include="container\hash_map.h" />
+    <ClInclude Include="container\hash_set.h" />
+    <ClInclude Include="container\lockfree_circular_queue.h" />
+    <ClInclude Include="container\skip_map.h" />
+    <ClInclude Include="container\skip_set.h" />
+    <ClInclude Include="container\string.h" />
+    <ClInclude Include="container\string_ref.h" />
+    <ClInclude Include="container\vector.h" />
+    <ClInclude Include="filesystem\path.h" />
+    <ClInclude Include="filesystem\reader.h" />
+    <ClInclude Include="filesystem\writer.h" />
+    <ClInclude Include="log\log.h" />
+    <ClInclude Include="math\capsule.h" />
+    <ClInclude Include="math\color4.h" />
+    <ClInclude Include="math\euler.h" />
+    <ClInclude Include="math\float16.h" />
+    <ClInclude Include="math\float32.h" />
+    <ClInclude Include="math\float16x16.h" />
+    <ClInclude Include="math\float16x8.h" />
+    <ClInclude Include="math\math_fwd.h" />
+    <ClInclude Include="math\math_impl.h" />
+    <ClInclude Include="math\matrix4.h" />
+    <ClInclude Include="math\plane.h" />
+    <ClInclude Include="math\quantity.h" />
+    <ClInclude Include="math\quaternion.h" />
+    <ClInclude Include="math\sphere.h" />
+    <ClInclude Include="math\uint8x16.h" />
+    <ClInclude Include="math\uint8x32.h" />
+    <ClInclude Include="math\vector2.h" />
+    <ClInclude Include="math\vector3.h" />
+    <ClInclude Include="math\vector4.h" />
+    <ClInclude Include="math\vector4x2.h" />
+    <ClInclude Include="math\vector_runtime_support.h" />
+    <ClInclude Include="memory\aligned_allocator.h" />
+    <ClInclude Include="memory\heap_allocator.h" />
+    <ClInclude Include="memory\place_new.h" />
+    <ClInclude Include="mpl\base\bool_.h" />
+    <ClInclude Include="mpl\base\char.h" />
+    <ClInclude Include="mpl\base\choose.h" />
+    <ClInclude Include="mpl\base\condi_derive.h" />
+    <ClInclude Include="mpl\base\condi_enable.h" />
+    <ClInclude Include="mpl\base\if_.h" />
+    <ClInclude Include="mpl\base\integral_.h" />
+    <ClInclude Include="mpl\base\int_.h" />
+    <ClInclude Include="mpl\base\llong_.h" />
+    <ClInclude Include="mpl\base\and_.h" />
+    <ClInclude Include="mpl\base\not_.h" />
+    <ClInclude Include="mpl\base\or_.h" />
+    <ClInclude Include="mpl\base\short_.h" />
+    <ClInclude Include="mpl\base\size_.h" />
+    <ClInclude Include="mpl\base\uint_.h" />
+    <ClInclude Include="mpl\base\ullong.h" />
+    <ClInclude Include="mpl\base\ushort.h" />
+    <ClInclude Include="mpl\base\wchar_.h" />
+    <ClInclude Include="mpl\type_print.hpp" />
+    <ClInclude Include="mpl\type_traits\add_const.h" />
+    <ClInclude Include="mpl\type_traits\add_cv.h" />
+    <ClInclude Include="mpl\type_traits\add_lref.h" />
+    <ClInclude Include="mpl\type_traits\add_pointer.h" />
+    <ClInclude Include="mpl\type_traits\add_rref.h" />
+    <ClInclude Include="mpl\type_traits\add_signed.h" />
+    <ClInclude Include="mpl\type_traits\add_top_const.h" />
+    <ClInclude Include="mpl\type_traits\add_unsigned.h" />
+    <ClInclude Include="mpl\type_traits\add_volatile.h" />
+    <ClInclude Include="mpl\type_traits\aligned_max.h" />
+    <ClInclude Include="mpl\type_traits\aligned_storage.h" />
+    <ClInclude Include="mpl\type_traits\align_of.h" />
+    <ClInclude Include="mpl\type_traits\array_dim.h" />
+    <ClInclude Include="mpl\type_traits\array_length.h" />
+    <ClInclude Include="mpl\type_traits\binary_not_match.h" />
+    <ClInclude Include="mpl\type_traits\compatible_type.h" />
+    <ClInclude Include="mpl\type_traits\add_const_lref.h" />
+    <ClInclude Include="mpl\type_traits\decay.h" />
+    <ClInclude Include="mpl\type_traits\declval.h" />
+    <ClInclude Include="mpl\type_traits\first_template.h" />
+    <ClInclude Include="mpl\type_traits\has_add.h" />
+    <ClInclude Include="mpl\type_traits\has_assigner.h" />
+    <ClInclude Include="mpl\type_traits\has_bit_and.h" />
+    <ClInclude Include="mpl\type_traits\has_bit_or.h" />
+    <ClInclude Include="mpl\type_traits\has_bit_reverse.h" />
+    <ClInclude Include="mpl\type_traits\has_bit_xor.h" />
+    <ClInclude Include="mpl\type_traits\has_constructor.h" />
+    <ClInclude Include="mpl\type_traits\has_delete.h" />
+    <ClInclude Include="mpl\type_traits\has_dereference.h" />
+    <ClInclude Include="mpl\type_traits\has_destructor.h" />
+    <ClInclude Include="mpl\type_traits\has_div.h" />
+    <ClInclude Include="mpl\type_traits\has_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_front_dec.h" />
+    <ClInclude Include="mpl\type_traits\has_front_inc.h" />
+    <ClInclude Include="mpl\type_traits\has_greater.h" />
+    <ClInclude Include="mpl\type_traits\has_greater_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_indexer.h" />
+    <ClInclude Include="mpl\type_traits\has_inner_decl.h" />
+    <ClInclude Include="mpl\type_traits\has_inner_template_apply.h" />
+    <ClInclude Include="mpl\type_traits\has_inner_type.h" />
+    <ClInclude Include="mpl\type_traits\has_invoker.h" />
+    <ClInclude Include="mpl\type_traits\has_less.h" />
+    <ClInclude Include="mpl\type_traits\has_less_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_logic_and.h" />
+    <ClInclude Include="mpl\type_traits\has_logic_not.h" />
+    <ClInclude Include="mpl\type_traits\has_logic_or.h" />
+    <ClInclude Include="mpl\type_traits\has_member_fn_decl.h" />
+    <ClInclude Include="mpl\type_traits\has_mod.h" />
+    <ClInclude Include="mpl\type_traits\has_mul.h" />
+    <ClInclude Include="mpl\type_traits\has_negative.h" />
+    <ClInclude Include="mpl\type_traits\has_new.h" />
+    <ClInclude Include="mpl\type_traits\has_new_delete_decl.h" />
+    <ClInclude Include="mpl\type_traits\has_not_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_operator_decl.h" />
+    <ClInclude Include="mpl\type_traits\has_operator_type.h" />
+    <ClInclude Include="mpl\type_traits\has_positive.h" />
+    <ClInclude Include="mpl\type_traits\has_post_dec.h" />
+    <ClInclude Include="mpl\type_traits\has_post_inc.h" />
+    <ClInclude Include="mpl\type_traits\has_refer_arrow.h" />
+    <ClInclude Include="mpl\type_traits\has_shift_left.h" />
+    <ClInclude Include="mpl\type_traits\has_shift_right.h" />
+    <ClInclude Include="mpl\type_traits\has_sub.h" />
+    <ClInclude Include="mpl\type_traits\is_abstract.h" />
+    <ClInclude Include="mpl\type_traits\is_arithmetic.h" />
+    <ClInclude Include="mpl\type_traits\is_array.h" />
+    <ClInclude Include="mpl\type_traits\is_base_of.h" />
+    <ClInclude Include="mpl\type_traits\is_base_same.h" />
+    <ClInclude Include="mpl\type_traits\is_class.h" />
+    <ClInclude Include="mpl\type_traits\is_compound.h" />
+    <ClInclude Include="mpl\type_traits\is_const.h" />
+    <ClInclude Include="mpl\type_traits\is_convertible.h" />
+    <ClInclude Include="mpl\type_traits\is_empty.h" />
+    <ClInclude Include="mpl\type_traits\is_enum.h" />
+    <ClInclude Include="mpl\type_traits\is_final.h" />
+    <ClInclude Include="mpl\type_traits\is_float.h" />
+    <ClInclude Include="mpl\type_traits\is_function.h" />
+    <ClInclude Include="mpl\type_traits\is_fundamental.h" />
+    <ClInclude Include="mpl\type_traits\is_instance_of.h" />
+    <ClInclude Include="mpl\type_traits\is_integral.h" />
+    <ClInclude Include="mpl\type_traits\is_lref.h" />
+    <ClInclude Include="mpl\type_traits\is_mfn_ptr.h" />
+    <ClInclude Include="mpl\type_traits\is_mobj_ptr.h" />
+    <ClInclude Include="mpl\type_traits\is_member_ptr.h" />
+    <ClInclude Include="mpl\type_traits\is_nullptr_t.h" />
+    <ClInclude Include="mpl\type_traits\is_object.h" />
+    <ClInclude Include="mpl\type_traits\is_pod.h" />
+    <ClInclude Include="mpl\type_traits\is_pointer.h" />
+    <ClInclude Include="mpl\type_traits\is_polymorphic.h" />
+    <ClInclude Include="mpl\type_traits\is_ref.h" />
+    <ClInclude Include="mpl\type_traits\is_rref.h" />
+    <ClInclude Include="mpl\type_traits\is_same.h" />
+    <ClInclude Include="mpl\type_traits\is_scalar.h" />
+    <ClInclude Include="mpl\type_traits\is_signed.h" />
+    <ClInclude Include="mpl\type_traits\is_stand_layout.h" />
+    <ClInclude Include="mpl\type_traits\is_trivial.h" />
+    <ClInclude Include="mpl\type_traits\is_union.h" />
+    <ClInclude Include="mpl\type_traits\is_unsigned.h" />
+    <ClInclude Include="mpl\type_traits\is_void.h" />
+    <ClInclude Include="mpl\type_traits\remove_all_dim.h" />
+    <ClInclude Include="mpl\type_traits\remove_const.h" />
+    <ClInclude Include="mpl\type_traits\remove_cv.h" />
+    <ClInclude Include="mpl\type_traits\remove_dim.h" />
+    <ClInclude Include="mpl\type_traits\remove_pointer.h" />
+    <ClInclude Include="mpl\type_traits\remove_ref.h" />
+    <ClInclude Include="mpl\type_traits\remove_top_const.h" />
+    <ClInclude Include="mpl\type_traits\remove_volatile.h" />
+    <ClInclude Include="mpl\type_traits\result_of.h" />
+    <ClInclude Include="mpl\type_traits\enum_base.h" />
+    <ClInclude Include="preprocessor\bool_and.h" />
+    <ClInclude Include="preprocessor\bool_equal.h" />
+    <ClInclude Include="preprocessor\bool_if.h" />
+    <ClInclude Include="preprocessor\bool_if_comma.h" />
+    <ClInclude Include="preprocessor\bool_less.h" />
+    <ClInclude Include="preprocessor\bool_not.h" />
+    <ClInclude Include="preprocessor\bool_or.h" />
+    <ClInclude Include="preprocessor\bool_xor.h" />
+    <ClInclude Include="preprocessor\connect.h" />
+    <ClInclude Include="preprocessor\impl\bit4x4_add.h" />
+    <ClInclude Include="preprocessor\impl\bit4x4_equal.h" />
+    <ClInclude Include="preprocessor\impl\bit4x4_less.h" />
+    <ClInclude Include="preprocessor\impl\bit4x4_sub.h" />
+    <ClInclude Include="preprocessor\impl\bit4_all_zero.h" />
+    <ClInclude Include="preprocessor\impl\byte_add.h" />
+    <ClInclude Include="preprocessor\impl\byte_div.h" />
+    <ClInclude Include="preprocessor\impl\byte_equal.h" />
+    <ClInclude Include="preprocessor\impl\byte_greater.h" />
+    <ClInclude Include="preprocessor\impl\byte_less.h" />
+    <ClInclude Include="preprocessor\impl\byte_mod.h" />
+    <ClInclude Include="preprocessor\impl\byte_mul.h" />
+    <ClInclude Include="preprocessor\impl\byte_not_equal.h" />
+    <ClInclude Include="preprocessor\impl\byte_shift_attribute.h" />
+    <ClInclude Include="preprocessor\impl\byte_shift_left.h" />
+    <ClInclude Include="preprocessor\impl\byte_shift_right.h" />
+    <ClInclude Include="preprocessor\impl\byte_sub.h" />
+    <ClInclude Include="preprocessor\impl\byte_to_bool.h" />
+    <ClInclude Include="preprocessor\impl\byte_to_uint8.h" />
+    <ClInclude Include="preprocessor\ingore.h" />
+    <ClInclude Include="preprocessor\range_alias.h" />
+    <ClInclude Include="preprocessor\range_call.h" />
+    <ClInclude Include="preprocessor\range_inner_call.h" />
+    <ClInclude Include="preprocessor\range_prefix.h" />
+    <ClInclude Include="preprocessor\range_wrap.h" />
+    <ClInclude Include="preprocessor\seq_at.h" />
+    <ClInclude Include="preprocessor\seq_compose.h" />
+    <ClInclude Include="preprocessor\seq_expand.h" />
+    <ClInclude Include="preprocessor\seq_foreach_item.h" />
+    <ClInclude Include="preprocessor\seq_foreach_tuple.h" />
+    <ClInclude Include="preprocessor\seq_size.h" />
+    <ClInclude Include="preprocessor\seq_unpack.h" />
+    <ClInclude Include="preprocessor\sign.h" />
+    <ClInclude Include="preprocessor\stringize.h" />
+    <ClInclude Include="preprocessor\uint8_add_n.h" />
+    <ClInclude Include="preprocessor\uint8_add_one.h" />
+    <ClInclude Include="preprocessor\uint8_comma_if.h" />
+    <ClInclude Include="preprocessor\uint8_div.h" />
+    <ClInclude Include="preprocessor\uint8_equal.h" />
+    <ClInclude Include="preprocessor\uint8_greater.h" />
+    <ClInclude Include="preprocessor\uint8_greater_equal.h" />
+    <ClInclude Include="preprocessor\uint8_if.h" />
+    <ClInclude Include="preprocessor\uint8_is_zero.h" />
+    <ClInclude Include="preprocessor\uint8_less.h" />
+    <ClInclude Include="preprocessor\uint8_less_equal.h" />
+    <ClInclude Include="preprocessor\uint8_mod.h" />
+    <ClInclude Include="preprocessor\uint8_mul.h" />
+    <ClInclude Include="preprocessor\uint8_not_equal.h" />
+    <ClInclude Include="preprocessor\uint8_shift_right.h" />
+    <ClInclude Include="preprocessor\uint8_sub_n.h" />
+    <ClInclude Include="preprocessor\uint8_sub_one.h" />
+    <ClInclude Include="preprocessor\while.h" />
+    <ClInclude Include="type.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

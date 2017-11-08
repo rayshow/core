@@ -1,0 +1,8 @@
+#pragma once
+
+#define A3D_PP_BOOL_LESS(x, y)      A3D_PP_BOOL_LESS_FAST(x,y)
+#define A3D_PP_BOOL_LESS_FAST(x, y) A3D_PP_BOOL_LESS_VALUE##x##y
+#define A3D_PP_BOOL_LESS_VALUE00  0
+#define A3D_PP_BOOL_LESS_VALUE01  1
+#define A3D_PP_BOOL_LESS_VALUE10  0
+#define A3D_PP_BOOL_LESS_VALUE11  0

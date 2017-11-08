@@ -1,0 +1,739 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{bf9df51c-06bf-4bf1-a08d-b8fb0eef3de1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="auxililty">
+      <UniqueIdentifier>{d9b6b7df-d2cf-4576-82ce-12fdf5886032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filesystem">
+      <UniqueIdentifier>{399943a3-a555-4a86-84b3-b2c080dcd2d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="container">
+      <UniqueIdentifier>{4efb1de1-6821-4155-8e96-da88890e6842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{53a06abf-f421-4603-84b7-4b683d880e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="preprocessor">
+      <UniqueIdentifier>{aaa970fb-831d-4f26-8748-97760875ca7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="preprocessor\impl">
+      <UniqueIdentifier>{158b3518-609c-4045-b141-835991562cb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl">
+      <UniqueIdentifier>{b10c4845-fa84-4d83-84b9-b58fa95834de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\type_trait">
+      <UniqueIdentifier>{1cbec206-79c4-48af-ad1c-7cdf1c70e9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\base">
+      <UniqueIdentifier>{21c54ea0-d126-456d-bf3d-f8cc36bfb7db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compile.h" />
+    <ClInclude Include="type.h" />
+    <ClInclude Include="log\log.h" />
+    <ClInclude Include="auxililty\ingore_unused.h">
+      <Filter>auxililty</Filter>
+    </ClInclude>
+    <ClInclude Include="auxililty\noncopyable.h">
+      <Filter>auxililty</Filter>
+    </ClInclude>
+    <ClInclude Include="auxililty\optional.h">
+      <Filter>auxililty</Filter>
+    </ClInclude>
+    <ClInclude Include="auxililty\singletonable.h">
+      <Filter>auxililty</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\path.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\reader.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\writer.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="container\string.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\string_ref.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\char_trait.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\vector.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\bidirection_list.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\forward_list.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\hash_map.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\hash_set.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\skip_map.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\skip_set.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\concurrent_hash_map.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\concurrent_hash_set.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\lockfree_circular_queue.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="math\capsule.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\color4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\euler.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\math_fwd.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\math_impl.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\matrix4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\plane.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\quaternion.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\sphere.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\float16x8.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\uint8x16.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\uint8x32.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\float16x16.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector_runtime_support.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\aligned_allocator.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\heap_allocator.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\place_new.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="auxililty\forward.h">
+      <Filter>auxililty</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector4x2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\float32.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\float16.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\quantity.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_and.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_equal.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_if.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_if_comma.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_less.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_not.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_or.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\bool_xor.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\connect.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\ingore.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\range_alias.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\range_call.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\range_inner_call.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\range_prefix.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\range_wrap.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_at.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_compose.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_expand.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_foreach_item.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_foreach_tuple.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_size.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\seq_unpack.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\sign.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\stringize.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_add_n.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_add_one.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_comma_if.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_div.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_equal.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_greater.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_greater_equal.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_if.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_is_zero.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_less.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_less_equal.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_mod.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_mul.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_not_equal.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_shift_right.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_sub_n.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\while.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\bit4_all_zero.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\bit4x4_add.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\bit4x4_equal.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\bit4x4_less.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\bit4x4_sub.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_add.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_div.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_equal.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_greater.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_less.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_mod.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_mul.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_not_equal.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_shift_attribute.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_shift_left.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_shift_right.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_sub.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_to_bool.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\byte_to_uint8.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\uint8_sub_one.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_const.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_cv.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_pointer.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_top_const.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_volatile.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\align_of.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\aligned_max.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\aligned_storage.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\array_length.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\binary_not_match.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\compatible_type.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\decay.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\declval.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\first_template.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_add.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_assigner.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_bit_and.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_bit_or.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_bit_reverse.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_bit_xor.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_constructor.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_delete.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_dereference.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_destructor.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_div.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_equal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_front_dec.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_front_inc.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_greater.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_greater_equal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_indexer.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_inner_decl.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_inner_template_apply.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_inner_type.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_invoker.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_less.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_less_equal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_logic_and.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_logic_not.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_logic_or.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_member_fn_decl.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_mod.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_mul.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_negative.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_new.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_new_delete_decl.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_not_equal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_operator_decl.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_operator_type.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_positive.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_post_dec.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_post_inc.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_refer_arrow.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_shift_left.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_shift_right.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_sub.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_abstract.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_arithmetic.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_array.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_base_of.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_base_same.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_class.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_compound.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_const.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_convertible.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_empty.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_enum.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_final.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_float.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_function.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_fundamental.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_integral.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_nullptr_t.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_object.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_pod.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_pointer.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_polymorphic.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_ref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_same.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_scalar.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_signed.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_stand_layout.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_trivial.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_union.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_unsigned.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_void.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_const.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_cv.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_pointer.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_ref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_top_const.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_volatile.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\result_of.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\integral_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\bool_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\int_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\uint_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\ushort.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\short_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\llong_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\ullong.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\char.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\wchar_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_lref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\enum_base.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\size_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\array_dim.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_const_lref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_signed.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_unsigned.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\choose.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\condi_enable.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\if_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\and_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\condi_derive.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\or_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\not_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_dim.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_rref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_lref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_mfn_ptr.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_mobj_ptr.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_member_ptr.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\remove_all_dim.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\add_rref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_instance_of.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_print.hpp">
+      <Filter>mpl</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

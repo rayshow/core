@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{e6a55ed7-4935-4066-8e8f-d47bfad3f408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\impl">
+      <UniqueIdentifier>{0c7c39fc-36eb-4e26-a1f5-ad559cc62ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{3839893f-6a04-4144-80c7-6fc896d83bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="design">
+      <UniqueIdentifier>{6ab65ef0-6b33-492a-950c-253c65dad3d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{43ee89d1-d4d0-4c05-a8e1-c7ae6b69424f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{5133e6d6-1936-4ec1-85c2-5a3a693c6bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{d3e85462-600a-4d31-a148-611cc522ac80}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="graphics\dx11\const_buffer_dx11_impl.cpp">
+      <Filter>graphics\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\dx11\graphics_dx11_impl.cpp">
+      <Filter>graphics\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\dx11\vertex_buffer_dx11_impl.cpp">
+      <Filter>graphics\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu_object.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\vertex_buffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\image.cpp" />
+    <ClCompile Include="scene\scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="io\binary_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\logger.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="sample.cpp" />
+    <ClCompile Include="graphics\constant_buffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_surface.cpp" />
+    <ClCompile Include="math\math_utility.cpp" />
+    <ClCompile Include="io\buffer.cpp" />
+    <ClCompile Include="io\file_system.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector.cpp" />
+    <ClCompile Include="platform_spec\window_sdl_win32.cpp" />
+    <ClCompile Include="platform_spec\input_sdl.cpp" />
+    <ClCompile Include="engine\engine.cpp" />
+    <ClCompile Include="auxiliary\aux_string.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="graphics\dx11\graphics_dx11_impl.h">
+      <Filter>graphics\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_object.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vertex_buffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="core\timer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\image.h" />
+    <ClInclude Include="graphics\texture.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_target.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="precompile_def.h" />
+    <ClInclude Include="io\binary_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\logger.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="common_def.h" />
+    <ClInclude Include="graphics\constant_buffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\resource_def.h" />
+    <ClInclude Include="event\window_evt.h" />
+    <ClInclude Include="event\event_def.h" />
+    <ClInclude Include="math\color4.h" />
+    <ClInclude Include="event\engine_evt.h" />
+    <ClInclude Include="graphics\graphics_def.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="event\event_dispatcher.h" />
+    <ClInclude Include="event\input_evt.h" />
+    <ClInclude Include="renderer\renderer.h" />
+    <ClInclude Include="renderer\model.h" />
+    <ClInclude Include="math\matrix4.h" />
+    <ClInclude Include="math\vector4.h" />
+    <ClInclude Include="math\math_utility.h" />
+    <ClInclude Include="math\plane.h" />
+    <ClInclude Include="math\vector3.h" />
+    <ClInclude Include="math\euler.h" />
+    <ClInclude Include="math\capsule.h" />
+    <ClInclude Include="math\math_def.h" />
+    <ClInclude Include="math\sphere.h" />
+    <ClInclude Include="math\quaternion.h" />
+    <ClInclude Include="math\math_fpu.inl" />
+    <ClInclude Include="math\math_neon.inl" />
+    <ClInclude Include="math\math_sse.inl" />
+    <ClInclude Include="io\io_def.h" />
+    <ClInclude Include="io\buffer.h" />
+    <ClInclude Include="io\file_system.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="math\int_rect.h" />
+    <ClInclude Include="io\serialize_trait.h" />
+    <ClInclude Include="io\serialize.h" />
+    <ClInclude Include="platform_spec\GenericMemory.h" />
+    <ClInclude Include="platform_spec\GenericString.h" />
+    <ClInclude Include="platform_spec\GenericTime.h" />
+    <ClInclude Include="platform_spec\GenericFile.h" />
+    <ClInclude Include="platform_spec\window_sdl.h" />
+    <ClInclude Include="platform_spec\input_sdl.h" />
+    <ClInclude Include="platform_spec\platform_def.h" />
+    <ClInclude Include="auxiliary\uncopyable.h" />
+    <ClInclude Include="auxiliary\singleton.h">
+      <Filter>design</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\application.h" />
+    <ClInclude Include="engine\engine.h" />
+    <ClInclude Include="engine\pulser.h" />
+    <ClInclude Include="auxiliary\aux_string_trait.h" />
+    <ClInclude Include="auxiliary\Aux_string.h" />
+  </ItemGroup>
+</Project>
