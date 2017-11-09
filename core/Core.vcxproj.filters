@@ -31,6 +31,9 @@
     <Filter Include="mpl\base">
       <UniqueIdentifier>{21c54ea0-d126-456d-bf3d-f8cc36bfb7db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mpl\type_trait\impl">
+      <UniqueIdentifier>{74b6b3cd-90c6-4cee-9395-db23514e5200}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
@@ -450,9 +453,6 @@
     <ClInclude Include="mpl\type_traits\has_inner_decl.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_inner_template_apply.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_inner_type.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -734,6 +734,15 @@
     </ClInclude>
     <ClInclude Include="mpl\type_print.hpp">
       <Filter>mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\binary_not_match.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\null_.h">
+      <Filter>mpl\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,10 @@
 #include<cstdio>
+#include<utility>
+#include<memory>
+#include<string>
+#include<typeinfo>
+
+#include<core/preprocessor/stringize.h>
 
 #include<core/mpl/base/and_.h>
 #include<core/mpl/base/or_.h>
@@ -60,9 +66,8 @@
 #include<core/mpl/type_traits/remove_ref.h>
 #include<core/mpl/type_traits/remove_top_const.h>
 #include<core/mpl/type_traits/remove_volatile.h>
-#include<typeinfo>
 
-#include<core/preprocessor/stringize.h>
+#include<core/mpl/type_traits/has_add.h>
 
 //using namespace std;
 using namespace core::mpl;
@@ -532,9 +537,6 @@ int main()
 	void(*volatile normal_volatile)() = normal_cd_fn;
 	void(*const volatile normal_cv)() = normal_cd_fn;
 	AssertTrue(is_function_v<decltype(normal_fn)>);
-	AssertTrue(is_function_v<decltype(normal_fn) const>);
-	AssertTrue(is_function_v<decltype(normal_fn) volatile>);
-	AssertTrue(is_function_v<decltype(normal_fn) const volatile>);
 	//AssertTrue(is_function_v<decltype(*normal_p)>);
 	//AssertTrue(is_function_v<decltype(normal_const)>);
 	//AssertTrue(is_function_v<decltype(normal_volatile)>);
@@ -547,8 +549,6 @@ int main()
 	AssertTrue(is_function_v<decltype(varg_cd_fn)>);
 	AssertTrue(is_function_v<decltype(varg_sc_fn)>);
 	AssertTrue(is_function_v<decltype(varg_fc_fn)>);
-	
-	//is 
 	
 	//is scaler
 	AssertTrue(is_scaler_v<int*>);
@@ -581,12 +581,18 @@ int main()
 	//is l ref
 	AssertTrue(is_lref_v<TestUnion&>);
 	AssertTrue(is_lref_v<int&>);
+	AssertTrue(is_lref_v<const int&>);
+	AssertTrue(is_lref_v<volatile int&>);
+	AssertTrue(is_lref_v<const volatile int&>);
 	AssertFalse(is_lref_v<float>);
 	AssertFalse(is_lref_v<TestUnion&&>);
 
 	//is r ref
 	AssertTrue(is_rref_v<TestUnion&&>);
 	AssertTrue(is_rref_v<int&&>);
+	AssertTrue(is_rref_v<const int&&>);
+	AssertTrue(is_rref_v<volatile int&&>);
+	AssertTrue(is_rref_v<const volatile int&&>);
 	AssertFalse(is_rref_v<TestUnion&>);
 	AssertFalse(is_rref_v<int&>);
 
@@ -595,6 +601,135 @@ int main()
 	AssertTrue(is_ref_v<int&&>);
 	AssertTrue(is_ref_v<TestUnion&>);
 	AssertTrue(is_ref_v<int&>);
+	AssertTrue(is_ref_v<const int&>);
+	AssertTrue(is_ref_v<volatile int&>);
+	AssertTrue(is_ref_v<const volatile int&>);
+	AssertTrue(is_ref_v<const int&&>);
+	AssertTrue(is_ref_v<volatile int&&>);
+	AssertTrue(is_ref_v<const volatile int&&>);
+
+	//is pointer
+	AssertTrue(is_pointer_v<int*>);
+	AssertTrue(is_pointer_v<int* const>);
+	AssertTrue(is_pointer_v<int* volatile>);
+	AssertTrue(is_pointer_v<int* const volatile>);
+	AssertTrue(is_pointer_v<const int*>);
+	AssertTrue(is_pointer_v<volatile int*>);
+	AssertTrue(is_pointer_v<const volatile int*>);
+	AssertTrue(is_pointer_v<decltype(&varg_fn)>);
+	AssertTrue(is_pointer_v<decltype(&normal_fn)>);
+	AssertTrue(is_pointer_v<int*>);
+	AssertFalse(is_pointer_v<int&>);
+	AssertFalse(is_pointer_v<int&&>);
+
+	//is array
+	AssertTrue(is_array_v<int[]>);
+	AssertTrue(is_array_v<int[1]>);
+	AssertTrue(is_array_v<int[][1]>);
+	AssertTrue(is_array_v<int[1][1]>);
+
+	
+	//is trivial
+	class T1 { int a = 1; };
+	AssertTrue(is_trivial_v<int>);
+	AssertTrue(is_trivial_v<int*>);
+	AssertTrue(is_trivial_v<int*>);
+	AssertFalse(is_trivial_v<T1>);
+	AssertFalse((is_trivial_v<std::pair<int,int>>));
+	AssertFalse((is_trivial_v<std::unique_ptr<int> >));
+
+	//is standart layout
+	class B1 {};
+	class B2:public B1 { int a; };
+	class B3:public B2 {};
+	class B4:public B3 { int b; };
+	AssertTrue(is_standlayout_v<int>);
+	AssertTrue(is_standlayout_v<B1>);
+	AssertTrue(is_standlayout_v<B2>);
+	AssertTrue(is_standlayout_v<B3>);
+	AssertFalse(is_standlayout_v<B4>);
+	AssertTrue((is_standlayout_v<std::pair<int, int>>));
+	AssertTrue((is_standlayout_v<std::unique_ptr<int>>));
+
+	//is polymorphic
+	class C1 { virtual void test() {} };
+	class C2:public C1 { virtual void test() {} };
+	AssertFalse(is_polymorphic_v<int>);
+	AssertFalse(is_polymorphic_v<B4>);
+	AssertFalse(is_polymorphic_v<C2&>);
+	AssertTrue(is_polymorphic_v<C2>);
+	AssertTrue(is_polymorphic_v<C2 const>);
+	AssertTrue(is_polymorphic_v<C2 volatile>);
+	AssertTrue(is_polymorphic_v<C2 const volatile>);
+	AssertTrue(is_polymorphic_v<C1>);
+
+	//is abstract
+	class C3 { virtual void test() = 0; };
+	AssertFalse(is_abstract_v<C1>);
+	AssertFalse(is_abstract_v<C2>);
+	AssertTrue(is_abstract_v<C3>);
+	AssertTrue(is_abstract_v<C3 const>);
+	AssertTrue(is_abstract_v<C3 volatile>);
+	AssertTrue(is_abstract_v<C3 const volatile>);
+
+	//is base/ is child
+	AssertTrue((is_base_of_v<C1, C2>));
+	AssertTrue((is_base_of_v<C1, C2 const>));
+	AssertTrue((is_base_of_v<C1, C2 volatile>));
+	AssertTrue((is_base_of_v<C1, C2 const volatile>));
+	AssertTrue((is_base_of_v<C1, C1>));
+	AssertTrue((is_child_of_v<C2, C1>));
+	AssertTrue((is_child_of_v<C2, C1 const>));
+	AssertTrue((is_child_of_v<C2, C1 volatile>));
+	AssertTrue((is_child_of_v<C2, C1 const volatile>));
+	AssertFalse((is_child_of_v<C1, C1>));
+
+	//is final
+	class D1 final {};
+	AssertTrue(is_final_v<D1>);
+	AssertTrue(is_final_v<D1 const>);
+	AssertTrue(is_final_v<D1 volatile>);
+	AssertTrue(is_final_v<D1 const volatile>);
+	AssertFalse(is_final_v<int>);
+
+	//is empty
+	AssertTrue(is_empty_v<D1 >);
+	AssertTrue(is_empty_v<D1 const>);
+	AssertTrue(is_empty_v<D1 volatile>);
+	AssertTrue(is_empty_v<D1 const volatile>);
+	AssertFalse(is_empty_v<TestUnion>);  //??
+	AssertFalse(is_empty_v<int>);
+
+	//is convertible
+	AssertTrue((is_convertible_v<int, float>));
+	AssertTrue((is_convertible_v<float, int>));
+	AssertFalse((is_convertible_v<C1*, C2*>));
+	AssertTrue((is_convertible_v<C1*, void*>));
+	AssertFalse((is_convertible_v<C1*, int>));
+	AssertTrue((is_convertible_v<C2*, C1*>));    //derived* -> base*
+	AssertTrue((is_convertible_v<C2&, C1&>));    //derived& -> base&
+	AssertFalse((is_convertible_v<C1&, C2&>));   
+	AssertTrue((is_convertible_v<const char*, std::string>)); //explicit constructor
+	AssertTrue((is_convertible_v<int_<0>, int>)); //explicit convert function
+
+	//is const
+	AssertFalse(is_const_v<int>);
+	AssertTrue(is_const_v<const int>);
+	AssertFalse(is_const_v<const int&>); //top const
+	AssertFalse(is_const_v<const int*>); //top const
+	AssertTrue(is_const_v<int* const>);  //
+
+	//is class
+	AssertTrue(is_class_v<TestAbstract>);
+	AssertTrue(is_class_v<TestAbstract const>);
+	AssertTrue(is_class_v<TestAbstract volatile>);
+	AssertTrue(is_class_v<TestAbstract const volatile>);
+	AssertTrue(is_class_v<TestDerive>);
+	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
+	AssertFalse(is_class_v<int>);
+
+	has_add<int, int>::value;
+	AssertTrue((has_add<int, int>::value));
 
 	output_test_info();
 	getchar();
@@ -602,6 +737,21 @@ int main()
 }
 
 #include<core/mpl/type_print.hpp>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void output_test_info()
 {
@@ -682,6 +832,8 @@ void output_test_info()
 	NormalTypeName<decltype(normal_fn) const>{}();
 	NormalTypeName<decltype(normal_volatile)>{}();
 	NormalTypeName<decltype(normal_cd_fn)>{}();
+
+	//
 
 
 }

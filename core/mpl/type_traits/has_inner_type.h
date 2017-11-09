@@ -2,7 +2,7 @@
 
 #include<core/mpl/type_traits/has_operator_type.h>
 #include<core/mpl/type_traits/has_inner_decl.h>
-#include<core/mpl/bool_.h>
+#include<core/mpl/base/bool_.h>
 
 namespace Aurora3D
 {

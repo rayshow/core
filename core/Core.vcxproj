@@ -129,6 +129,7 @@
     <ClInclude Include="mpl\base\llong_.h" />
     <ClInclude Include="mpl\base\and_.h" />
     <ClInclude Include="mpl\base\not_.h" />
+    <ClInclude Include="mpl\base\null_.h" />
     <ClInclude Include="mpl\base\or_.h" />
     <ClInclude Include="mpl\base\short_.h" />
     <ClInclude Include="mpl\base\size_.h" />
@@ -175,7 +176,6 @@
     <ClInclude Include="mpl\type_traits\has_greater_equal.h" />
     <ClInclude Include="mpl\type_traits\has_indexer.h" />
     <ClInclude Include="mpl\type_traits\has_inner_decl.h" />
-    <ClInclude Include="mpl\type_traits\has_inner_template_apply.h" />
     <ClInclude Include="mpl\type_traits\has_inner_type.h" />
     <ClInclude Include="mpl\type_traits\has_invoker.h" />
     <ClInclude Include="mpl\type_traits\has_less.h" />
@@ -199,6 +199,8 @@
     <ClInclude Include="mpl\type_traits\has_shift_left.h" />
     <ClInclude Include="mpl\type_traits\has_shift_right.h" />
     <ClInclude Include="mpl\type_traits\has_sub.h" />
+    <ClInclude Include="mpl\type_traits\impl\binary_not_match.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h" />
     <ClInclude Include="mpl\type_traits\is_abstract.h" />
     <ClInclude Include="mpl\type_traits\is_arithmetic.h" />
     <ClInclude Include="mpl\type_traits\is_array.h" />
