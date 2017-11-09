@@ -744,5 +744,8 @@
     <ClInclude Include="mpl\base\null_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\base\dispatch_when.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

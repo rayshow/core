@@ -96,7 +96,7 @@ int main()
 	OUTPUT("16. for range chain alias: \n", A3D_PP_RANGE_CHAIN_ALIAS(typedef A, ::type, B, 1, 3, (;)));
 	OUTPUT("17. for range chain call: \n", A3D_PP_RANGE_CHAIN_CALL(1, 3, A3D_PP_TEST_FORE_INDEX, (;)));
 
-#define ADD_SIGNED(a) cout << typeid(a).name() <<endl;
+#define ADD_SIGNED(a,...) cout << typeid(a).name() <<endl;
 	A3D_PP_FOREACH_ITEM(ADD_SIGNED, A3D_PP_COMPOSE((char, short, int, long, long long), (, const, volatile, const volatile)));
 
 

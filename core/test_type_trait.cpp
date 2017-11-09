@@ -69,6 +69,9 @@
 
 #include<core/mpl/type_traits/has_add.h>
 
+#include<core/mpl/base/dispatch_when.h>
+
+
 //using namespace std;
 using namespace core::mpl;
 
@@ -728,8 +731,20 @@ int main()
 	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
 	AssertFalse(is_class_v<int>);
 
+	// has_add
+	class TestAdd { public: void operator+(int a) {} };
 	has_add<int, int>::value;
-	AssertTrue((has_add<int, int>::value));
+	AssertTrue((has_add_v<int, int>));
+	AssertTrue((has_add_v<char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_add_v<volatile char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_add_v<const char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_add_v<char* const, int>));   //T*    + integer is well-formed
+	AssertFalse((has_add_v<void*, int>));  //void* + integer is ill-formed
+	/*void* a = 0;
+	a = a + 2;*/
+	int *b = 0;
+	b = b + 2;
+	AssertTrue((has_add_v<TestAdd, int>));
 
 	output_test_info();
 	getchar();
@@ -747,14 +762,29 @@ int main()
 
 
 
+#include<core/mpl/base/dispatch_when.h>
+template<typename T, typename d = dispatch_< is_void<T>, is_integer<T>, is_pointer<T> > >
+struct test_dispatcher { static constexpr int value = 1; };
 
+template<typename T>
+struct test_dispatcher<T, when_< is_void<T> > > { static constexpr int value = 2;  };
 
+template<typename T>
+struct test_dispatcher<T, when_< is_integer<T> > > { static constexpr int value = 3; };
 
-
+template<typename T>
+struct test_dispatcher<T, when_< is_pointer<T> > > { static constexpr int value = 4; };
 
 
 void output_test_info()
 {
+	//
+	printf("%d %d %d\n", test_dispatcher<void>::value, test_dispatcher<int>::value, test_dispatcher<int*>::value);
+
+	//OutputTypename(case_<is_void<void>>);
+	//OutputTypename(( dispatcher< is_void<void>, is_integer<void> >::type ));
+
+
 	TestMemberClass c;
 	TestMemberClass& d = c;
 	const TestMemberClass e{};
@@ -833,7 +863,6 @@ void output_test_info()
 	NormalTypeName<decltype(normal_volatile)>{}();
 	NormalTypeName<decltype(normal_cd_fn)>{}();
 
-	//
-
+	
 
 }

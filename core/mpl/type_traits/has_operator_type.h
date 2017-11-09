@@ -25,7 +25,7 @@ namespace core
 			template<typename T> inline T operator,(const T&, const has_any&) { return declval<T>(); };
 			inline no_op operator,(const no_op&, const has_any&) { return declval<no_op>(); };
 
-#define HasOperationValue(T)  (sizeof(T) == sizeof(has_op))
+#define A3D_TT_HAS_OP(T)  (sizeof(T) == sizeof(has_op))
 
 	}
 }

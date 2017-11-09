@@ -37,7 +37,7 @@ namespace core
 
 			//both parameter can't be void for unary or binary operation
 			template<typename L, typename R = L>
-			struct check_parameter_not_void : public parameter_extracter<L, R>
+			struct is_parameter_valid : public parameter_extracter<L, R>
 			{
 				static constexpr bool value = !is_void_v<left_nocv_t> && !is_void_v<right_nocv_t>;
 			};
@@ -76,7 +76,7 @@ namespace core
 			//if   Left op Right exists,  BinaryOp::Op() return HasOperation
 			//else return NoOperation,  do [ operator,(NoOperation, HasOperation) ] and GET NoOperation type
 			template<typename OP>
-			struct check_has_operation :public bool_< HasOperationValue((  OP::invoke(), declval<has_op>()  )) > {};
+			struct is_operation_valid :public bool_< A3D_TT_HAS_OP((  OP::invoke(), declval<has_op>()  )) > {};
 
 			//if    OP::invoke() valid and return void, (void, has_any) return HasAnyReturn =>NoOperation
 			//else  OP::invoke() exists and return Non-NoOperation type, (T, HasAnyReturn) return T
@@ -84,48 +84,53 @@ namespace core
 			//                     (NoOperation,HasAnyReturn) return NoOperation
 			//if    return type is ingored always true
 			template<typename OP, typename Ret>
-			struct check_has_ret :
-				public bool_< HasOperationValue( ret_convert<Ret>::convert((  OP::invoke(), declval<has_any>()  )) ) > { };
+			struct is_ret_valid :
+				public bool_< A3D_TT_HAS_OP( ret_convert<Ret>::convert((  OP::invoke(), declval<has_any>()  )) ) > { };
 
 			template<typename OP> 
-			struct check_has_ret<OP, null_> : public true_ {};
+			struct is_ret_valid<OP, null_> : public true_ {};
 
 			//if    BinaryOp::Op() return Non-NoOperation type,  GET NoOperation
 			//else  BinaryOp::Op() return NoOperation type, GET HasVoidReturn
 			//if    return type is ingored always true
-			template<typename Operation> struct check_has_ret_void :
-				public bool_< HasOperationValue((  Operation::invoke(), declval<has_void>()  ))> {};
+			template<typename OP> struct is_void_ret_valid :
+				public bool_< A3D_TT_HAS_OP((  OP::invoke(), declval<has_void>()  ))> {};
 
 			//for binary operation
 			//operation overload contained in class(member function) left imply type is a left value reference, so Left can't be const T 
 			//Left or Right type qualified with & and && passed to operation will miss
 			template<typename OP, typename L, typename R, typename Ret, bool isVoid = is_void_v<Ret> >
 			struct has_binary_operation :public and_<
-				check_parameter_not_void<L, R>,
-				check_has_operation<OP>,
-				check_has_ret<OP, Ret> > {};
+				is_parameter_valid<L, R>,
+				is_operation_valid<OP>,
+				is_ret_valid<OP, Ret> > {};
 
 			//return void
 			template <typename OP, typename L, typename R, typename Ret>
 			struct has_binary_operation<OP, L, R, Ret, true> :public and_<
-				check_parameter_not_void<L, R>,
-				check_has_operation<OP>,
-				check_has_ret_void<OP > > {};
+				is_parameter_valid<L, R>,
+				is_operation_valid<OP>,
+				is_void_ret_valid<OP > > {};
 
 
 			//for unary Operation
 			template<typename OP, typename T, typename Ret, bool isVoid = is_void_v<Ret> >
 			struct has_unary_operation :public and_<
-				check_parameter_not_void<T>,
-				check_has_operation<OP>,
-				check_has_ret<OP, Ret>> {};
+				is_parameter_valid<T>,
+				is_operation_valid<OP>,
+				is_ret_valid<OP, Ret>> {};
 
 			//return is void
 			template<typename OP, typename T, typename Ret>
 			struct has_unary_operation<OP, T, Ret, true> :public and_<
-				check_parameter_not_void<T>,
-				check_has_operation<OP>,
-				check_has_ret_void<OP> >{};
+				is_parameter_valid<T>,
+				is_operation_valid<OP>,
+				is_void_ret_valid<OP> >{};
+
+			// operation check has three state: 
+			// 1. op exists and is public access, test parameter and ret if op is will-formed return true
+			// 2. op exists and is not public, static assert failed and cause a compile error(need imporve)
+			// 3. op not exists return false
 
 			//for binary operation declare,  Left OP Right 
 #define  HAS_BINARY_OPERATION_DECL(sign, opname, check_LR_fn )                                         \
@@ -134,8 +139,10 @@ namespace core
 				template<typename L, typename R>                                                       \
 					struct opname ## _operation                                                        \
 				{                                                                                      \
-					static constexpr auto invoke()                                                     \
-						->decltype(makeval<L>() sign declval<R>());                                    \
+					static constexpr decltype(auto) invoke()                                           \
+					{                                                                                  \
+						return makeval<L>() sign makeval<R>();                                         \
+					}                                                                                  \
 				};                                                                                     \
 				template<typename L, typename R> struct check_ ## opname ## _parameter :               \
 					public parameter_extracter<L, R>                                                   \
@@ -149,7 +156,10 @@ namespace core
 				op_detail::opname ## _operation<L, R>, L, R, Ret> {};                                  \
                                                                                                        \
 			template<typename L, typename R, typename Ret>                                             \
-			struct has_## opname<L,R,Ret,true> : public false_ {};
+			struct has_## opname<L,R,Ret,true> : public false_ {};                                     \
+                                                                                                       \
+			template<typename L, typename R, typename Ret = null_>                                     \
+			constexpr bool has_ ## opname ## _v = has_ ## opname<L,R,Ret>::value
 		
 
 		//for pre-unary operation declare, OP T like -1
@@ -159,7 +169,10 @@ namespace core
 				template<typename T>                                                             \
 				struct opname ## _operation                                                      \
 				{                                                                                \
-					static constexpr auto invoke()->decltype(sign makeval<T>());                 \
+					static constexpr decltype(auto) invoke()                                     \
+					{                                                                            \
+						return sign makeval<T>();                                                \
+					}                                                                            \
 				};                                                                               \
 				template<typename T>                                                             \
 				struct check_ ## opname ## _parameter :public parameter_extracter<T>             \

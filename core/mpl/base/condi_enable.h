@@ -1,5 +1,6 @@
 #pragma once
-namespace Aurora3D
+
+namespace core
 {
 	namespace mpl
 	{

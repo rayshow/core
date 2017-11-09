@@ -15,10 +15,10 @@ namespace Aurora3D
 		//fundemental(no integral) op pointer
 		//pointer + pointer
 		//+,-
-#define BinaryNotMatchAddSubV(p, t)      false //\ 
-		/*( is_pointer_v(p) && is_pointer_v(t))  \
-	    || ( is_pointer_v(p) &&  IsFundamentalV(t)  && ( IsVoidV(RemovePointerT<p>)|| NotIntegralV(t)) ) \
-		|| ( is_pointer_v(t) &&  IsFundamentalV(p)  && ( IsVoidV(RemovePointerT<t>)|| NotIntegralV(p)) )*/
+#define A3D_TT_ADD_SUB_NOT_MATCH(L, R)                  \
+		( ( is_pointer_v<L> && is_pointer_v<R> )        \
+	    || ( is_pointer_v<L> &&  is_fundamental_v<R>  && ( is_void_v< remove_pointer_t<L>> || !is_integer_v<R> ) ) \
+		|| ( is_pointer_v<R> &&  is_fundamental_v<L>  && ( is_void_v< remove_pointer_t<R>> || !is_integer_v<L> ) ) )
 		 
 		//forbidden
 		//fundemental op pointer
