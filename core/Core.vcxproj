@@ -118,6 +118,7 @@
     <ClInclude Include="memory\aligned_allocator.h" />
     <ClInclude Include="memory\heap_allocator.h" />
     <ClInclude Include="memory\place_new.h" />
+    <ClInclude Include="mpl\base\add_.h" />
     <ClInclude Include="mpl\base\bool_.h" />
     <ClInclude Include="mpl\base\char.h" />
     <ClInclude Include="mpl\base\choose.h" />
@@ -174,13 +175,13 @@
     <ClInclude Include="mpl\type_traits\has_front_dec.h" />
     <ClInclude Include="mpl\type_traits\has_front_inc.h" />
     <ClInclude Include="mpl\type_traits\has_greater.h" />
-    <ClInclude Include="mpl\type_traits\has_greater_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_gequal.h" />
     <ClInclude Include="mpl\type_traits\has_indexer.h" />
     <ClInclude Include="mpl\type_traits\has_inner_decl.h" />
     <ClInclude Include="mpl\type_traits\has_inner_type.h" />
     <ClInclude Include="mpl\type_traits\has_invoker.h" />
     <ClInclude Include="mpl\type_traits\has_less.h" />
-    <ClInclude Include="mpl\type_traits\has_less_equal.h" />
+    <ClInclude Include="mpl\type_traits\has_lequal.h" />
     <ClInclude Include="mpl\type_traits\has_logic_and.h" />
     <ClInclude Include="mpl\type_traits\has_logic_not.h" />
     <ClInclude Include="mpl\type_traits\has_logic_or.h" />

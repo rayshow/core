@@ -444,9 +444,6 @@
     <ClInclude Include="mpl\type_traits\has_greater.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_greater_equal.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_indexer.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -460,9 +457,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_less.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_less_equal.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_logic_and.h">
@@ -746,6 +740,15 @@
     </ClInclude>
     <ClInclude Include="mpl\base\dispatch_when.h">
       <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\add_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_lequal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_gequal.h">
+      <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

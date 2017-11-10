@@ -2,40 +2,37 @@
 
 #include<core/preprocessor/seq_foreach_item.h>
 #include<core/mpl/base/int_.h>
+#include<core/mpl/base/add_.h>
 #include<core/mpl/base/condi_derive.h>
 
 namespace core
 {
 	namespace mpl
 	{
-		namespace detail
-		{
-			template<typename T> struct test_fn_indexer :int_<-1> {};
+		
+			template<typename T> struct trait_fn_indexer :public int_<-1> {};
 
 #define IS_FN_DECL( name, index ,... )                    \
 			template<typename T> struct name;             \
-			template<typename T> struct test_fn_indexer< name<T> > :int_<index> {};
+			template<typename T> struct trait_fn_indexer< name<T> > :public int_<index> {};
 			A3D_PP_FOREACH_ITEM(IS_FN_DECL, (is_void, is_integer, is_const, is_pointer))
 #undef  IS_FN_DECL
 
-			template<typename T1, typename T2> struct add:public int_<T1::value+T2::value> {};
-	
-			template<typename... Args>
-			struct accumulate_if;
+			namespace detail
+			{
+				template<typename... Args>
+				struct acc_index_if :public add_< condi_derive< Args, trait_fn_indexer<Args>, int_<0> >...> {};
 
-			template<typename T>
-			struct accumulate_if<T> :public condi_derive< T, test_fn_indexer<T>, int_<0> > {};
-
-			template<typename T, typename... Args>
-			struct accumulate_if<T,Args...> :public add< accumulate_if<T>, accumulate_if<Args...> > {};
-		}
+				template<typename... Args>
+				struct acc_index :public add_< trait_fn_indexer<Args>...> {};
+			}
+		//}
 
 		template<typename T, typename... Args>
-		using dispatch_ = typename detail::accumulate_if<T, Args...>::type;
-		
+		using dispatch_ = typename detail::acc_index_if<T, Args...>::type;
 
 		template<typename T,typename... Args>
-		using when_ = typename detail::accumulate_if<T, Args...>::type;
+		using when_ = typename detail::acc_index<T, Args...>::type;
 
 		
 	}

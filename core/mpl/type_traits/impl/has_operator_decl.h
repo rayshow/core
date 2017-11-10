@@ -31,8 +31,11 @@ namespace core
 			//Left op Right is forbidden
 			template<typename L, typename R = L> struct parameter_extracter
 			{
+				typedef remove_pointer_t<L>           left_noptr_t;
+				typedef remove_pointer_t<R>           right_noptr_t;
 				typedef remove_cv_t<remove_ref_t<L>>  left_nocv_t;
 				typedef remove_cv_t<remove_ref_t<R>>  right_nocv_t;
+
 			};
 
 			//both parameter can't be void for unary or binary operation
@@ -141,11 +144,11 @@ namespace core
 				{                                                                                      \
 					static constexpr decltype(auto) invoke()                                           \
 					{                                                                                  \
-						return makeval<L>() sign makeval<R>();                                         \
+						return makeval<remove_const_t<L>>() sign makeval<R>();                         \
 					}                                                                                  \
 				};                                                                                     \
-				template<typename L, typename R> struct check_ ## opname ## _parameter :               \
-					public parameter_extracter<L, R>                                                   \
+				template<typename left, typename right> struct check_ ## opname ## _parameter :        \
+					public parameter_extracter<left, right>                                            \
 				{                                                                                      \
 					static constexpr bool value = check_LR_fn;                                         \
 				};                                                                                     \

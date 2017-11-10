@@ -1,13 +1,20 @@
 #pragma once
 
-#include<core/mpl/type_traits/has_operator_decl.h>
-#include<core/mpl/type_traits/binary_not_match.h>
+#include<core/mpl/type_traits/impl/has_operator_decl.h>
+#include<core/mpl/type_traits/impl/binary_not_match.h>
+#include<core/mpl/type_traits/is_const.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
-		HAS_BINARY_OPERATION_DECL(<<,   ShiftLeft, BinaryNotMatchArithmeticLogic_v(left_nocv_t, right_nocv_t));
-		HAS_BINARY_OPERATION_DECL(<<= , ShiftLeftAssign, BinaryNotMatchArithmeticLogic_v(left_nocv_t, right_nocv_t));
+		// T* <<  P* is ill-formed
+		// T* << fundamental is ill-formed
+		// integer << non-integer fundamental is ill-formed
+		HAS_BINARY_OPERATION_DECL(<< , shift_left, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t));
+
+		// const T <<= P is ill-formed 
+		HAS_BINARY_OPERATION_DECL(<<=, shift_left_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left>);
+
 	}
 }

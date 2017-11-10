@@ -68,6 +68,8 @@
 #include<core/mpl/type_traits/remove_volatile.h>
 
 #include<core/mpl/type_traits/has_add.h>
+#include<core/mpl/type_traits/has_sub.h>
+#include<core/mpl/type_traits/has_mul.h>
 
 #include<core/mpl/base/dispatch_when.h>
 
@@ -77,7 +79,7 @@ using namespace core::mpl;
 
 #define AssertFalse(v) static_assert(!v, "")
 #define AssertTrue(v) static_assert( v, "")
-#define OutputTypename(v) printf("%s\n", typeid(v).name())
+
 
 typedef int int2[2];
 
@@ -733,17 +735,49 @@ int main()
 
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
-	has_add<int, int>::value;
+	AssertTrue((has_add_v<TestAdd, int>));
+	AssertTrue((has_add_v<TestAdd, float>)); //implicit convert to int
+	AssertFalse((has_add_v<float, TestAdd>)); //implicit convert to int
 	AssertTrue((has_add_v<int, int>));
+	AssertTrue((has_add_v<int, int>));
+	AssertFalse((has_add_v<int*&, int*&>));
 	AssertTrue((has_add_v<char*, int>));   //T*    + integer is well-formed
 	AssertTrue((has_add_v<volatile char*, int>));   //T*    + integer is well-formed
 	AssertTrue((has_add_v<const char*, int>));   //T*    + integer is well-formed
 	AssertTrue((has_add_v<char* const, int>));   //T*    + integer is well-formed
 	AssertFalse((has_add_v<void*, int>));  //void* + integer is ill-formed
-	/*void* a = 0;
-	a = a + 2;*/
-	int *b = 0;
-	b = b + 2;
+
+	// has_add_assign
+	AssertTrue((has_add_assign_v<int, int>));
+	AssertFalse((has_add_assign_v<const int, int>));
+	AssertTrue((has_add_assign_v<int, int*>));
+
+
+	//has_sub
+	AssertFalse((has_sub_v<TestAdd, int>));
+	AssertTrue((has_sub_v<int, int>));
+	AssertTrue((has_sub_v<int, const int>));
+	AssertTrue((has_sub_v<int, volatile int>));
+	AssertTrue((has_sub_v<int, int>));
+	AssertFalse((has_sub_v<int*&, int*&>));
+	AssertTrue((has_sub_v<char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_sub_v<volatile char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_sub_v<const char*, int>));   //T*    + integer is well-formed
+	AssertTrue((has_sub_v<char* const, int>));   //T*    + integer is well-formed
+	AssertFalse((has_sub_v<void*, int>));  //void* + integer is ill-formed
+
+	//has_mul
+	AssertTrue((has_mul_v<int, int>));
+	AssertFalse((has_mul_v<int*, int>));
+
+	
+
+
+
+
+
+
+
 	AssertTrue((has_add_v<TestAdd, int>));
 
 	output_test_info();
@@ -752,18 +786,8 @@ int main()
 }
 
 #include<core/mpl/type_print.hpp>
-
-
-
-
-
-
-
-
-
-
 #include<core/mpl/base/dispatch_when.h>
-template<typename T, typename d = dispatch_< is_void<T>, is_integer<T>, is_pointer<T> > >
+template<typename T, typename d = dispatch_< is_void<T>, is_integer<T>, is_pointer<T>, is_const<T> > >
 struct test_dispatcher { static constexpr int value = 1; };
 
 template<typename T>
@@ -775,14 +799,16 @@ struct test_dispatcher<T, when_< is_integer<T> > > { static constexpr int value 
 template<typename T>
 struct test_dispatcher<T, when_< is_pointer<T> > > { static constexpr int value = 4; };
 
+template<typename T>
+struct test_dispatcher<T, when_< is_pointer<T>, is_const<T> > > { static constexpr int value = 5; };
+
 
 void output_test_info()
 {
-	//
-	printf("%d %d %d\n", test_dispatcher<void>::value, test_dispatcher<int>::value, test_dispatcher<int*>::value);
-
-	//OutputTypename(case_<is_void<void>>);
-	//OutputTypename(( dispatcher< is_void<void>, is_integer<void> >::type ));
+#define PrintIndex(T) printf("index %d \n", trait_fn_indexer<T>::value)
+#define PrintDispatch(T) printf("disp %d \n", dispatch_< is_void<T>, is_integer<T>, is_pointer<T>, is_const<T> >::value)
+#define OutputTypename(v) printf("%s\n", typeid(v).name())
+	printf("%d %d %d %d\n", test_dispatcher<void>::value, test_dispatcher<int>::value, test_dispatcher<char*>::value, test_dispatcher<char* const>::value);
 
 
 	TestMemberClass c;
