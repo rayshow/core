@@ -1,32 +1,46 @@
 #pragma once
 
-#include<core/mpl/type_traits/has_operator_decl.h>
-#include<core/mpl/type_traits/binary_not_match.h>
+#include<core/mpl/type_traits/impl/has_operator_decl.h>
+#include<core/mpl/type_traits/declval.h>
+#include<core/mpl/type_traits/is_void.h>
+#include<core/mpl/type_traits/is_nullptr_t.h>
+#include<core/mpl/type_traits/is_enum.h>
+#include<core/mpl/type_traits/is_rref.h>
+#include<core/mpl/type_traits/is_const.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
-		//for pre-unary operation declare
-			namespace has_operation_detail                                                       
-			{                                                                                    
-				template<typename OpType>                                                        
-				struct PostDecOperation                                                         
-				{                                                                                
-					static constexpr auto Op()->decltype(Make<OpType>()--);                 
-				};                                                                               
-				template<typename OpType>                                                        
-				struct CheckPostDecParameter :public CheckParameterHelper<OpType>             
-				{                                                                                
-					static const bool value = 0;                                         
-				};                                                                               
-			}                                                                                    
-			template<typename OpType, typename Ret = ingore_t,
-				bool forbidden = has_operation_detail::CheckPostDecParameter<OpType>::value>
-			struct HasPostDec :public has_operation_detail::HasUnaryOp<                         
-				has_operation_detail::PostDecOperation<OpType>,OpType,Ret> {};
+		// T -- 
+		// const T or T&& is ill-formed
+		// enum -- is ill-formed
+		// nullptr-- is ill-formed
+		// void,void* is ill-formed
+		namespace op_detail
+		{
+			template<typename T>
+			struct post_dec_operation
+			{
+				static constexpr decltype(auto) invoke()
+				{
+					return makeval<T>()++;
+				}
+			};
+			template<typename T>
+			struct check_post_dec_parameter :public parameter_extracter<T>
+			{
+				static constexpr bool value = or_v< is_const<T>, is_rref<T>, is_enum<T>, is_nullptr_t<T>, is_void<left_noptr_t>>;
+			};
+		}
+		template<typename T, typename Ret = null_,
+			bool invalid = op_detail::check_post_dec_parameter<T>::value >
+			struct has_post_dec :public op_detail::has_unary_operation< 
+				op_detail::post_dec_operation<T>, T, Ret> {};
 
-			template<typename OpType, typename Ret>                                              
-			struct HasPostDec<OpType, Ret, true> :False_ {};
+		template<typename T, typename Ret> struct has_post_dec<T, Ret, true> :public false_ {};
+
+		template<typename T, typename Ret = null_>
+		static constexpr bool has_post_dec_v = has_post_dec<T, Ret>::value;
 	}
 }

@@ -155,7 +155,6 @@
     <ClInclude Include="mpl\type_traits\align_of.h" />
     <ClInclude Include="mpl\type_traits\array_dim.h" />
     <ClInclude Include="mpl\type_traits\array_length.h" />
-    <ClInclude Include="mpl\type_traits\binary_not_match.h" />
     <ClInclude Include="mpl\type_traits\compatible_type.h" />
     <ClInclude Include="mpl\type_traits\add_const_lref.h" />
     <ClInclude Include="mpl\type_traits\decay.h" />
@@ -191,8 +190,8 @@
     <ClInclude Include="mpl\type_traits\has_new.h" />
     <ClInclude Include="mpl\type_traits\has_nequal.h" />
     <ClInclude Include="mpl\type_traits\has_positive.h" />
-    <ClInclude Include="mpl\type_traits\has_post_dec.h" />
     <ClInclude Include="mpl\type_traits\has_post_inc.h" />
+    <ClInclude Include="mpl\type_traits\has_post_dec.h" />
     <ClInclude Include="mpl\type_traits\has_refer_arrow.h" />
     <ClInclude Include="mpl\type_traits\has_shl.h" />
     <ClInclude Include="mpl\type_traits\has_shr.h" />

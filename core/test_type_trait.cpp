@@ -87,6 +87,20 @@
 #include<core/mpl/type_traits/has_logic_and.h>
 #include<core/mpl/type_traits/has_logic_or.h>
 
+#include<core/mpl/type_traits/has_front_dec.h>
+#include<core/mpl/type_traits/has_front_inc.h>
+#include<core/mpl/type_traits/has_post_dec.h>
+#include<core/mpl/type_traits/has_post_inc.h>
+#include<core/mpl/type_traits/has_positive.h>
+#include<core/mpl/type_traits/has_negative.h>
+#include<core/mpl/type_traits/has_deref.h>
+
+#include<core/mpl/type_traits/has_delete.h>
+
+
+
+#include<core/mpl/type_traits/has_constructor.h>
+
 
 #include<core/mpl/base/dispatch_when.h>
 
@@ -139,6 +153,17 @@ class TestDerive :public TestAbstract { virtual void test() override final{} };
 
 
 void output_test_info();
+void operator delete(void* mem)
+{
+	printf("replace delete\n");
+	//::delete(mem);
+}
+
+void operator delete[](void * mem)
+{
+	printf("replace delete[]\n");
+	//::delete[](mem);
+}
 
 
 int main()
@@ -751,6 +776,9 @@ int main()
 
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
+	AssertFalse((has_add_v<int, int, int const>));
+	AssertFalse((has_add_v<int, int, int&&>));
+	AssertFalse((has_add_v<int, int, TestAdd>));
 	AssertTrue((has_add_v<TestAdd, int>));
 	AssertTrue((has_add_v<TestAdd, float>));      //implicit convert to int
 	AssertFalse((has_add_v<float, TestAdd>));     
@@ -809,15 +837,99 @@ int main()
 	AssertFalse((has_logic_and_v<int, TestBitAnd>));
 	AssertTrue((has_logic_and_v<int, TestLogic>));
 
+	//has front inc
+	class TestFrontInc { public: TestFrontInc operator++(){} };
+	class TestBackInc { public: TestFrontInc operator++(int) {} };
+	AssertTrue(has_front_inc_v<int>);
+	AssertTrue(has_front_inc_v<float>);
+	AssertTrue(has_front_inc_v<int*>);
+	AssertTrue(has_front_inc_v<TestFrontInc>);
+	AssertFalse(has_front_inc_v<TestBackInc>);
+	AssertFalse(has_front_inc_v<TestNewEnum>); //enum no op
+	AssertFalse(has_front_inc_v<int const>);   //const can't change self
+	AssertFalse(has_front_inc_v<int&&>);       //not changable lvalue
+	AssertFalse(has_front_inc_v<void*>);       
+	AssertFalse(has_front_inc_v<void>);       
+	AssertFalse(has_front_inc_v<nullptr_t>);       
+
+	//has post inc
+	AssertTrue(has_post_inc_v<int>);
+	AssertTrue(has_post_inc_v<float>);
+	AssertTrue(has_post_inc_v<int*>); 
+	AssertFalse(has_post_inc_v<TestFrontInc>);
+	AssertTrue(has_post_inc_v<TestBackInc>);
+	AssertFalse(has_post_inc_v<TestNewEnum>); //enum no op
+	AssertFalse(has_post_inc_v<int const>);   //const can't change self
+	AssertFalse(has_post_inc_v<int&&>);       //not changable lvalue
+	AssertFalse(has_post_inc_v<void*>);
+	AssertFalse(has_post_inc_v<void>);
+	AssertFalse(has_post_inc_v<nullptr_t>);
+	
+	//has positive/negative
+	class TestPositive { public: TestPositive operator+() {} };
+	class TestPositiveRet { public: TestPositiveRet(int) {} };
+	AssertTrue(has_positive_v<int>);
+	AssertTrue((has_positive_v<int, int>));
+	AssertFalse((has_positive_v<int, const int>));   //const  ret
+	AssertFalse((has_positive_v<int, int&&>));       //rvalue ret
+	AssertFalse((has_positive_v<int,TestPositive>)); //no constructor
+	AssertTrue((has_positive_v<int, TestPositiveRet>)); //has constructor
+	AssertTrue(has_positive_v<const int>);
+	AssertTrue(has_positive_v<TestPositive>);
+	AssertTrue(has_positive_v<int*>);
+	AssertTrue(has_positive_v<TestNewEnum>);
+
+	//test has deref
+	class TestDeref { public: int operator*() {} };
+	AssertTrue(has_deref_v<TestDeref>);
+	AssertFalse(has_deref_v<int>);
+	AssertTrue(has_deref_v<decltype(varg_fn)>);
+	AssertFalse(has_deref_v<decltype(p_member_const_fn1)>);
+
+	//test has delete
+	class TestHasDelete 
+	{
+		public:
+		void operator delete(void * ptr)
+		{
+			printf(" TestHasDelete delete \n");
+			delete(ptr);
+		}
+
+		void operator delete(void* ptr, size_t size)
+		{
+			printf(" TestHasDelete delete with size \n");
+			delete(ptr);
+		}
+
+		void operator delete[](void* ptr)
+		{
+			printf(" testHasDelete delete [] \n");
+			delete(ptr);
+		}
+
+		void operator delete[](void* ptr, size_t size)
+		{
+			printf(" testHasDelete delete [] with size \n");
+			delete(ptr);
+		}
+
+		virtual void Test() {};
+	};
+
+	class TestHasDeleteDerive1 :public TestHasDelete { public: virtual void Test() override {} };
+	TestHasDelete *p = new TestHasDelete;
+	TestHasDelete *p2 = new TestHasDeleteDerive1;
+	delete p;
+	delete p2;
 	
 
-	
-
-
-	output_test_info();
+	//output_test_info();
 	getchar();
 	return 0;
 }
+
+
 
 #include<core/mpl/type_print.hpp>
 #include<core/mpl/base/dispatch_when.h>
@@ -857,6 +969,7 @@ void output_test_info()
 	void (TestMemberClass::*p_member_ref_fn3)() const& = &TestMemberClass::member_ref_fn;
 	constexpr void (TestMemberClass::*p_member_noexcept_fn3)() noexcept = &TestMemberClass::member_noexcept_fn;
 	(c.*p_member_const_fn1)();
+	
 	(c.*p_member_const_fn2)();
 	(c.*p_member_const_fn3)();
 	(c.*p_member_const_fn4)();
@@ -898,6 +1011,8 @@ void output_test_info()
 
 	printf("/// 1. varg function\n");
 	OutputTypename(decltype(varg_cd_fn));
+	OutputTypename(decltype(*varg_cd_fn));
+	
 	OutputTypename(decltype(varg_sc_fn));
 	OutputTypename(decltype(varg_fc_fn));
 	//OutputTypename(decltype(varg_vc_fn));
@@ -926,4 +1041,6 @@ void output_test_info()
 	
 
 }
+
+
 

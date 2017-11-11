@@ -7,7 +7,7 @@ namespace core
 {   
 	namespace mpl
 	{
-		template<typename T> struct is_integer : public is_enum<T> {};
+		template<typename T> struct is_integer :public false_ {};
 		template<> struct is_integer<bool>   :public true_ {};
 		template<> struct is_integer<char>  :public true_ {};
 		template<> struct is_integer<wchar_t>  :public true_ {};

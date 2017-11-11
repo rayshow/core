@@ -384,9 +384,6 @@
     <ClInclude Include="mpl\type_traits\array_length.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\binary_not_match.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\compatible_type.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -432,9 +429,6 @@
     <ClInclude Include="mpl\type_traits\has_equal.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_front_dec.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_front_inc.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -475,12 +469,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_positive.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_post_dec.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_post_inc.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_refer_arrow.h">
@@ -699,9 +687,6 @@
     <ClInclude Include="mpl\type_print.hpp">
       <Filter>mpl</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\impl\binary_not_match.h">
-      <Filter>mpl\type_trait\impl</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h">
       <Filter>mpl\type_trait\impl</Filter>
     </ClInclude>
@@ -748,6 +733,18 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_integer.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_front_dec.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\binary_not_match.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_post_inc.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_post_dec.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>

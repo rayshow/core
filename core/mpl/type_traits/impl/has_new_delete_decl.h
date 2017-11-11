@@ -26,4 +26,4 @@
 		template<typename T>                                                                  \
 		struct has_ ## opname:public bool_<detail::has_ ## opname ## _helper<T, __VA_ARGS__>::value>{}; \
 		template<typename T>                                                                  \
-		using has_ ## opname ## _v = has_ ## opname<T>::value;
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T>::value;

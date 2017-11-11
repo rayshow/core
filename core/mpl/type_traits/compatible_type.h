@@ -3,7 +3,7 @@
 #include<core/mpl/type_traits/decay.h>
 #include<core/mpl/type_traits/declval.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{

@@ -7,6 +7,8 @@
 #include<core/mpl/base/and_.h>
 #include<core/mpl/base/not_.h>
 #include<core/mpl/type_traits/is_void.h>
+#include<core/mpl/type_traits/is_const.h>
+#include<core/mpl/type_traits/is_rref.h>
 #include<core/mpl/type_traits/declval.h>
 #include<core/mpl/type_traits/remove_cv.h>
 #include<core/mpl/type_traits/remove_pointer.h>
@@ -54,10 +56,14 @@ namespace core
 			// op anything => no_op like: +anything => no_op
 #define UNARY_PRE_OPERATION(sign, ...) static no_op operator sign(const anything&){ return declval<no_op>(); }
 
+#define UNARY_POST_OPERATION(sign, ...) static no_op operator sign(const anything&, int){ return declval<no_op>(); }
+
 			//binary operator  + - * / % & | ^ >> <<  += -= *= /= %= |= &= ^= >>= <<= && || > >= < <= == != (except = refer to has assigner)
 			A3D_PP_FOREACH_ITEM(BINARY_OPERATION, (+, -, *, / , %, &, | , ^, +=, -=, *=, /=, %=, &=, |=, ^=, << , >> , >>=, <<=, &&, || , <, <= , >, >= , == , != ));
 			// pre-unary operator --T ++T -T +T *T !T ~T
 			A3D_PP_FOREACH_ITEM(UNARY_PRE_OPERATION, (++, --, !, ~, *, -, +));
+
+			A3D_PP_FOREACH_ITEM(UNARY_POST_OPERATION, (++, --));
 			//post operator []  ()  new  new[]  delete  delete[] ->  ->*  ,  T--  T++
 			//not allowd . .* :: ?:
 #undef  BINARY_OPERATION
@@ -70,13 +76,15 @@ namespace core
 				static  constexpr has_op convert(const T&) { return declval<has_op>(); };
 
 				//match void
-				static  constexpr no_op convert(const has_any&) { return declval<no_op>(); };
+				//static  constexpr no_op convert(const has_any&) { return declval<no_op>(); };
+
+				static  constexpr no_op convert(...) { return declval<no_op>(); };
 
 				//match NoOperation
-				static  constexpr no_op convert(const no_op&) { return declval<no_op>(); };
+				//static  constexpr no_op convert(const no_op&) { return declval<no_op>(); };
 			};
 
-			//if   Left op Right exists,  BinaryOp::Op() return HasOperation
+			//if   Left op Right exists,  OP::invoke() return HasOperation
 			//else return NoOperation,  do [ operator,(NoOperation, HasOperation) ] and GET NoOperation type
 			template<typename OP>
 			struct is_operation_valid :public bool_< A3D_TT_HAS_OP((  OP::invoke(), declval<has_op>()  )) > {};
@@ -86,12 +94,15 @@ namespace core
 			//else  OP::invoke() not exists(imply convert to ImplicitConverted op ImplicitConverted, return NoOperation)
 			//                     (NoOperation,HasAnyReturn) return NoOperation
 			//if    return type is ingored always true
-			template<typename OP, typename Ret>
+			template<typename OP, typename Ret, bool isConstOrRValue = or_v< is_const<Ret>, is_rref<Ret>> >
 			struct is_ret_valid :
-				public bool_< A3D_TT_HAS_OP( ret_convert<Ret>::convert((  OP::invoke(), declval<has_any>()  )) ) > { };
+				public bool_< A3D_TT_HAS_OP( ret_convert<Ret>::convert((  OP::invoke()/**, declval<has_any>()*/  )) ) > { };
 
-			template<typename OP> 
-			struct is_ret_valid<OP, null_> : public true_ {};
+			// Ret == null_ need ingore ret check
+			template<typename OP>  struct is_ret_valid<OP, null_, false> : public true_ {};
+
+			// Ret is const or rvalue, can't change
+			template<typename OP, typename T>  struct is_ret_valid<OP, T, true> : public false_ {};
 
 			//if    BinaryOp::Op() return Non-NoOperation type,  GET NoOperation
 			//else  BinaryOp::Op() return NoOperation type, GET HasVoidReturn

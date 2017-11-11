@@ -25,7 +25,7 @@ namespace core
 		//forbidden op * / % *= /= %/
 		//T* op P* or fundemental
 #define A3D_TT_MUL_DIV_MOD_NOT_MATCH(L,R)                                   \
-		(( is_pointer_v<L> && (is_pointer_v<R> || is_fundamental_v<R>)) || \
+		(( is_pointer_v<L> && (is_pointer_v<R> || is_fundamental_v<R>)) ||  \
 		 ( is_pointer_v<R> && (is_pointer_v<L> || is_fundamental_v<L>)) )
 
 
@@ -39,8 +39,7 @@ namespace core
 		   !(is_base_of_v< LNP, RNP > || is_base_of_v< RNP, LNP >)         \
 		  ))
 
-
-		// forbindden op & | ^ >> << |= &= ^= >>= <<=
+		// forbidden op & | ^ >> << |= &= ^= >>= <<=
 		// T* op P* 
 		// T* op fundamental
 		// integer op no-integer fundamental

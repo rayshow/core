@@ -1,7 +1,7 @@
 #pragma once
 
 #include<core/type.h>
-#include<core/mpl/int_.h>
+#include<core/mpl/base/int_.h>
 
 #if defined(AURORA3D_COMPILER_MSVC)
 #pragma warning(push)
@@ -9,7 +9,7 @@
 #pragma warning(disable:4324)
 #endif
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
@@ -18,30 +18,30 @@ namespace Aurora3D
 		{
 			struct alignas(16) Vector4_t
 			{
-				uint8  pad[16];
+				unsigned char  pad[16];
 			};
 
 			struct alignas(32) Vector4x2_t
 			{
-				uint8  vec[32];
+				unsigned char  vec[32];
 			};
 
 			struct alignas(128) Cache_t
 			{
-				uint8  pad[128];
+				unsigned char  pad[128];
 			};
 
 			//aligned vector, float128
 			union MaxSizeAlign_t
 			{
-				int8       byte;
-				int16      word;
-				int32      dword;
-				int64      qword;
-				hfloat     hprec;
-				Vector4_t   Vec;
-				Vector4x2_t Vec2;
-				Cache_t    cache;
+				char         byte;
+				short        word;
+				int          dword;
+				long long    qword;
+				long double  hprec;
+				Vector4_t    Vec;
+				Vector4x2_t  Vec2;
+				Cache_t      cache;
 			};
 
 			template<int64 Align, int64 Size>

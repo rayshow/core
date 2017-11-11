@@ -8,12 +8,15 @@
 namespace std
 {
 	struct nothrow_t;
+
+
 }
 
 namespace core
 {
 	namespace mpl
 	{
+		
 		//HasDefaultNew<T>   T::operator new(size_t)
 		HAS_NEW_DELETE_DECL(operator new, default_new, size_t);
 
