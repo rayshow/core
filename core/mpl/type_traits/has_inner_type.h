@@ -1,13 +1,17 @@
 #pragma once
 
-#include<core/mpl/type_traits/has_operator_type.h>
-#include<core/mpl/type_traits/has_inner_decl.h>
+#include<core/mpl/type_traits/impl/has_operator_type.h>
+#include<core/mpl/type_traits/impl/has_inner_decl.h>
 #include<core/mpl/base/bool_.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
-		A3D_MPL_HAS_INNER_DECL(Type, type);
+		//test if T::type is well-formed
+		A3D_TT_HAS_INNER_DECL(type, type);
+
+		//test if T::value_type is well-formed
+		A3D_TT_HAS_INNER_DECL(type, value_type);
 	}
 }

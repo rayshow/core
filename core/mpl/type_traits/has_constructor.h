@@ -1,10 +1,10 @@
 #pragma once
 
-#include<core/mpl/bool_.h>
-#include<core/mpl/type_traits/convert_const_lref.h>
-#include<core/mpl/type_traits/add_rvalue_ref.h>
+#include<core/mpl/base/bool_.h>
+#include<core/mpl/type_traits/add_const_lref.h>
+#include<core/mpl/type_traits/add_rref.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
@@ -13,18 +13,18 @@ namespace Aurora3D
 #define HAS_TRIVIAL_CONSTRUCTOR(Type, Args)   __is_trivially_constructible(Type, Args)
 #define HAS_NOTHROW_CONSTRUCTOR(Type, Args)   __is_nothrow_constructible(Type, Args)
 
-		template<typename T, typenameprefix,... Args> struct HasConstructor :public Bool_<HAS_CONSTRUCTOR(T, Argsprefix,...)> {};
-		template<typename T> struct HasDefaultConstructor :public HasConstructor<T> {};
-		template<typename T> struct HasCopyConstructor :public HasConstructor<T, ConvertConstLRefT<T>> {};
-		template<typename T> struct HasMoveConstructor :public HasConstructor<T, AddRValueRefT<T>> {};
+		template<typename T, typename... Args> struct has_constructor :public bool_<HAS_CONSTRUCTOR(T, Args...)> {};
+		template<typename T> struct has_default_constructor :public has_constructor<T> {};
+		template<typename T> struct has_copy_constructor :public has_constructor<T, add_const_lref_t<T>> {};
+		template<typename T> struct has_move_constructor :public has_constructor<T, add_rref_t<T>> {};
 
-		template<typename T, typenameprefix,... Args> struct HasTrivialConstructor :public Bool_<HAS_TRIVIAL_CONSTRUCTOR(T, Argsprefix,...)> {};
-		template<typename T> struct HasTrivialCopyConstructor :public HasTrivialConstructor<T, ConvertConstLRefT<T> > {};
-		template<typename T> struct HasTrivialMoveConstructor :public HasTrivialConstructor<T, AddRValueRefT<T> > {};
+		template<typename T, typename... Args> struct has_trivial_constructor :public bool_<HAS_TRIVIAL_CONSTRUCTOR(T, Args...)> {};
+		template<typename T> struct has_trivial_copy_constructor :public has_trivial_constructor<T, add_const_lref_t<T> > {};
+		template<typename T> struct has_trivial_move_constructor :public has_trivial_constructor<T, add_rref_t<T> > {};
 
-		template<typename T, typenameprefix,... Args> struct HasNothrowConstructor :public Bool_<HAS_NOTHROW_CONSTRUCTOR(T, Argsprefix,...)> {};
-		template<typename T> struct HasNotrowCopyConstructor  :public HasNothrowConstructor<T, ConvertConstLRefT<T>> {};
-		template<typename T> struct HasNotrowMoveConstructor :public HasNothrowConstructor<T, AddRValueRefT<T>> {};
+		template<typename T, typename... Args> struct has_nothrow_constructor :public bool_<HAS_NOTHROW_CONSTRUCTOR(T, Args...)> {};
+		template<typename T> struct has_nothrow_copy_constructor :public has_nothrow_constructor<T, add_const_lref_t<T>> {};
+		template<typename T> struct has_nothrow_move_constructor :public has_nothrow_constructor<T, add_rref_t<T>> {};
 		
 #undef HAS_CONSTRUCTOR
 #undef HAS_TRIVIAL_CONSTRUCTOR

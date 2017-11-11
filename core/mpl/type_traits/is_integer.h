@@ -1,12 +1,13 @@
 #pragma once
 
 #include<core/mpl/base/bool_.h>
+#include<core/mpl/type_traits/is_enum.h>
 
 namespace core
 {   
 	namespace mpl
 	{
-		template<typename T> struct is_integer :public false_ {};
+		template<typename T> struct is_integer : public is_enum<T> {};
 		template<> struct is_integer<bool>   :public true_ {};
 		template<> struct is_integer<char>  :public true_ {};
 		template<> struct is_integer<wchar_t>  :public true_ {};

@@ -1,8 +1,8 @@
 #pragma once
 
-#include<core/mpl/bool_.h>
+#include<core/mpl/base/bool_.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
@@ -12,10 +12,10 @@ namespace Aurora3D
 #define HAS_NOTHROW_DESTRUCTOR(T)   __is_nothrow_destructible(T)
 #define HAS_VIRTUAL_DESTRUCTOR(T)   __has_virtual_destructor(T)
 
-		template<typename T> struct HasDestructor:public Bool_<HAS_DESTRUCTOR(T)> {};
-		template<typename T> struct HasVirtualDestructor :public Bool_<HAS_VIRTUAL_DESTRUCTOR(T)> {};
-		template<typename T> struct HasTrivialDestructor :public Bool_<HAS_TRIVIAL_DESTRUCTOR(T)> {};
-		template<typename T> struct HasNoThrowDestructor :public Bool_<HAS_NOTHROW_DESTRUCTOR(T)> {};
+		template<typename T> struct HasDestructor:public bool_<HAS_DESTRUCTOR(T)> {};
+		template<typename T> struct HasVirtualDestructor :public bool_<HAS_VIRTUAL_DESTRUCTOR(T)> {};
+		template<typename T> struct HasTrivialDestructor :public bool_<HAS_TRIVIAL_DESTRUCTOR(T)> {};
+		template<typename T> struct HasNoThrowDestructor :public bool_<HAS_NOTHROW_DESTRUCTOR(T)> {};
 
 #undef HAS_DESTRUCTOR
 #undef HAS_TRIVIAL_DESTRUCTOR

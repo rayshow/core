@@ -8,10 +8,10 @@
 #include<core/mpl/base/not_.h>
 #include<core/mpl/type_traits/is_void.h>
 #include<core/mpl/type_traits/declval.h>
-#include<core/mpl/type_traits/has_operator_type.h>
 #include<core/mpl/type_traits/remove_cv.h>
 #include<core/mpl/type_traits/remove_pointer.h>
 #include<core/mpl/type_traits/remove_ref.h>
+#include<core/mpl/type_traits/impl/has_operator_type.h>
 
 #if defined(AURORA3D_COMPILER_MSVC)
 #pragma warning(push)
@@ -165,8 +165,8 @@ namespace core
 			constexpr bool has_ ## opname ## _v = has_ ## opname<L,R,Ret>::value
 		
 
-		//for pre-unary operation declare, OP T like -1
-#define HAS_FRONT_UNARY_OPERATION_DECL(sign, opname, check_LR_fn)                                \
+		//for pre-unary operation declare, OP T like -1 
+#define HAS_FRONT_UNARY_OPERATION_DECL(sign, opname, check_T_fn)                                 \
 			namespace op_detail                                                                  \
 			{                                                                                    \
 				template<typename T>                                                             \
@@ -180,16 +180,18 @@ namespace core
 				template<typename T>                                                             \
 				struct check_ ## opname ## _parameter :public parameter_extracter<T>             \
 				{                                                                                \
-					static const bool value = check_LR_fn;                                       \
+					static const bool value = check_T_fn;                                        \
 				};                                                                               \
 			}                                                                                    \
-			template<typename T, typename Ret = Null_,                                           \
+			template<typename T, typename Ret = null_,                                           \
 				bool invalid = op_detail::check_ ## opname ## _parameter<T>::value>              \
-			struct has_ ## opName :public has_operation_detail::has_unary_operation<             \
+			struct has_ ## opname :public op_detail::has_unary_operation<                        \
 				op_detail::opname ## _operation<T>,T,Ret> {};                                    \
                                                                                                  \
 			template<typename T, typename Ret>                                                   \
-			struct has_ ## opname <T, Ret, true> :false_ {};
+			struct has_ ## opname <T, Ret, true> :false_ {};                                     \
+			template<typename T, typename Ret = null_>                                           \
+			constexpr bool has_ ## opname ## _v = has_ ## opname<T,Ret>::value 
 
 		} //namespace op_detail
 	}//namespace mpl

@@ -11,10 +11,10 @@ namespace core
 		// T* <<  P* is ill-formed
 		// T* << fundamental is ill-formed
 		// integer << non-integer fundamental is ill-formed
-		HAS_BINARY_OPERATION_DECL(<< , shift_left, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t));
+		HAS_BINARY_OPERATION_DECL(<< , shl, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t));
 
 		// const T <<= P is ill-formed 
-		HAS_BINARY_OPERATION_DECL(<<=, shift_left_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left>);
+		HAS_BINARY_OPERATION_DECL(<<=, shl_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left>);
 
 	}
 }

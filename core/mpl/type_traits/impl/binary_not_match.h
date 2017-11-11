@@ -3,7 +3,8 @@
 #include<core/mpl/type_traits/is_pointer.h>
 #include<core/mpl/type_traits/is_fundamental.h>
 #include<core/mpl/type_traits/is_base_of.h>
-#include<core/mpl/type_traits/is_integral.h>
+#include<core/mpl/type_traits/is_integer.h>
+#include<core/mpl/type_traits/is_convertible.h>
 
 namespace core
 {
@@ -17,8 +18,8 @@ namespace core
 		//pointer + pointer
 #define A3D_TT_ADD_SUB_NOT_MATCH(L, R, LNP, RNP)                  \
 		( ( is_pointer_v<L> && is_pointer_v<R> )                  \
-	    || ( is_pointer_v<L> &&  is_fundamental_v<R>  && ( is_void_v< LNP> || !is_integer_v<R> ) ) \
-		|| ( is_pointer_v<R> &&  is_fundamental_v<L>  && ( is_void_v< RNP> || !is_integer_v<L> ) ) )
+	    || ( is_pointer_v<L> &&  is_fundamental_v<R> )            \
+		|| ( is_pointer_v<R> &&  is_fundamental_v<L> ) )
 
 
 		//forbidden op * / % *= /= %/
@@ -39,7 +40,7 @@ namespace core
 		  ))
 
 
-		// forbindden op & | >> << |= &= >>= <<=
+		// forbindden op & | ^ >> << |= &= ^= >>= <<=
 		// T* op P* 
 		// T* op fundamental
 		// integer op no-integer fundamental
@@ -47,9 +48,11 @@ namespace core
 		( ( is_pointer_v<L> && (is_pointer_v<R> || is_fundamental_v<R> ))  ||  \
 		  ( is_pointer_v<L> && (is_pointer_v<R> || is_fundamental_v<R>))   ||  \
 		  ( is_integer_v<L> && is_fundamental_v<R> && !is_integer_v<R> )   ||  \
-		  ( is_integer_v<R> && is_fundamental_v<L> && !is_integer_v<L> )
+		  ( is_integer_v<R> && is_fundamental_v<L> && !is_integer_v<L> ))
 
-		
+#define A3D_PP_LOGIC_NOT_MATCH(L,R) \
+		( (is_pointer_v<L> && !is_convertible_v<R, bool> ) || \
+		  (is_pointer_v<R> && !is_convertible_v<L, bool>))
 	}
 }
 

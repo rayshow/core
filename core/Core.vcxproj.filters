@@ -423,9 +423,6 @@
     <ClInclude Include="mpl\type_traits\has_delete.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_dereference.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_destructor.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -447,9 +444,6 @@
     <ClInclude Include="mpl\type_traits\has_indexer.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_inner_decl.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_inner_type.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -468,9 +462,6 @@
     <ClInclude Include="mpl\type_traits\has_logic_or.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_member_fn_decl.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_mod.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -483,18 +474,6 @@
     <ClInclude Include="mpl\type_traits\has_new.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_new_delete_decl.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_not_equal.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_operator_decl.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_operator_type.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_positive.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -505,12 +484,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_refer_arrow.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_shift_left.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_shift_right.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_sub.h">
@@ -559,9 +532,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_fundamental.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\is_integral.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_nullptr_t.h">
@@ -748,6 +718,36 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_gequal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\mpl.h">
+      <Filter>mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_member_fn_decl.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_new_delete_decl.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_inner_decl.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_operator_type.h">
+      <Filter>mpl\type_trait\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_nequal.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_deref.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_shl.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_shr.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_integer.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>

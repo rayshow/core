@@ -2,7 +2,7 @@
 
 #include<core/mpl/base/bool_.h>
 #include<core/mpl/base/and_.h>
-#include<core/mpl/type_traits/is_integral.h>
+#include<core/mpl/type_traits/is_integer.h>
 
 namespace core
 {

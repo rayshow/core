@@ -1,9 +1,9 @@
 #pragma once 
 
-#include<core/mpl/type_traits/has_operator_type.h>
-#include<core/mpl/type_traits/has_member_fn_decl.h>
+#include<core/mpl/type_traits/impl/has_operator_type.h>
+#include<core/mpl/type_traits/impl/has_member_fn_decl.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
@@ -15,6 +15,6 @@ namespace Aurora3D
 		//defined typedef int (TestOperator::*CallType)(float);
 		//CallType t = &TestOperator::operator[];  will be error
 		//but TestOperator::operator[](float) is allow
-		HAS_MEMBER_FN_DECL(operator[], Indexer);
+		HAS_MEMBER_FN_DECL(operator[], indexer);
 	}
 }

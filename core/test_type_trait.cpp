@@ -27,7 +27,7 @@
 #include<core/mpl/type_traits/is_mobj_ptr.h>
 #include<core/mpl/type_traits/is_mfn_ptr.h>
 #include<core/mpl/type_traits/is_member_ptr.h>
-#include<core/mpl/type_traits/is_integral.h>
+#include<core/mpl/type_traits/is_integer.h>
 #include<core/mpl/type_traits/is_fundamental.h>
 #include<core/mpl/type_traits/is_function.h>
 #include<core/mpl/type_traits/is_float.h>
@@ -70,6 +70,23 @@
 #include<core/mpl/type_traits/has_add.h>
 #include<core/mpl/type_traits/has_sub.h>
 #include<core/mpl/type_traits/has_mul.h>
+#include<core/mpl/type_traits/has_div.h>
+#include<core/mpl/type_traits/has_mod.h>
+#include<core/mpl/type_traits/has_bit_or.h>
+#include<core/mpl/type_traits/has_bit_and.h>
+#include<core/mpl/type_traits/has_bit_xor.h>
+#include<core/mpl/type_traits/has_bit_reverse.h>
+#include<core/mpl/type_traits/has_shl.h>
+#include<core/mpl/type_traits/has_shr.h>
+#include<core/mpl/type_traits/has_lequal.h>
+#include<core/mpl/type_traits/has_nequal.h>
+#include<core/mpl/type_traits/has_gequal.h>
+#include<core/mpl/type_traits/has_equal.h>
+#include<core/mpl/type_traits/has_less.h>
+#include<core/mpl/type_traits/has_greater.h>
+#include<core/mpl/type_traits/has_logic_and.h>
+#include<core/mpl/type_traits/has_logic_or.h>
+
 
 #include<core/mpl/base/dispatch_when.h>
 
@@ -103,7 +120,6 @@ public: int public_obj;
 		static int static_obj;
 		static int static_fn() {};
 		void member_fn() {};
-
 		void member_noexcept_fn() noexcept {};
 		//void member_noexcept_fn() {}
 		void member_const_fn() const { printf("const member fn\n"); };
@@ -736,49 +752,67 @@ int main()
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
 	AssertTrue((has_add_v<TestAdd, int>));
-	AssertTrue((has_add_v<TestAdd, float>)); //implicit convert to int
-	AssertFalse((has_add_v<float, TestAdd>)); //implicit convert to int
+	AssertTrue((has_add_v<TestAdd, float>));      //implicit convert to int
+	AssertFalse((has_add_v<float, TestAdd>));     
 	AssertTrue((has_add_v<int, int>));
-	AssertTrue((has_add_v<int, int>));
+	AssertFalse((has_add_v<char*, int>));          //T* + integer is ill-formed
+	AssertFalse((has_add_v<void*, int>));         //void* + integer is ill-formed
+	AssertFalse((has_add_v<TestAdd*, TestAdd*>)); //T* + P* is ill-formed
 	AssertFalse((has_add_v<int*&, int*&>));
-	AssertTrue((has_add_v<char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_add_v<volatile char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_add_v<const char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_add_v<char* const, int>));   //T*    + integer is well-formed
-	AssertFalse((has_add_v<void*, int>));  //void* + integer is ill-formed
 
 	// has_add_assign
 	AssertTrue((has_add_assign_v<int, int>));
-	AssertFalse((has_add_assign_v<const int, int>));
-	AssertTrue((has_add_assign_v<int, int*>));
-
-
-	//has_sub
-	AssertFalse((has_sub_v<TestAdd, int>));
-	AssertTrue((has_sub_v<int, int>));
-	AssertTrue((has_sub_v<int, const int>));
-	AssertTrue((has_sub_v<int, volatile int>));
-	AssertTrue((has_sub_v<int, int>));
-	AssertFalse((has_sub_v<int*&, int*&>));
-	AssertTrue((has_sub_v<char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_sub_v<volatile char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_sub_v<const char*, int>));   //T*    + integer is well-formed
-	AssertTrue((has_sub_v<char* const, int>));   //T*    + integer is well-formed
-	AssertFalse((has_sub_v<void*, int>));  //void* + integer is ill-formed
+	AssertFalse((has_add_assign_v<const int, int>)); //const lvalue + T is ill-formed
+	AssertFalse((has_add_assign_v<int, int*>));
 
 	//has_mul
-	AssertTrue((has_mul_v<int, int>));
+	class TestMul { public: void operator*(int a) {} };
+	AssertTrue((has_mul_v<TestMul, int>));
+	AssertFalse((has_mul_v<int, TestMul>));
+	AssertFalse((has_mul_v<int*, int*>));    
 	AssertFalse((has_mul_v<int*, int>));
+
+	//has mul assign
+	AssertFalse((has_mul_assign_v<TestMul, int>));
+	AssertTrue((has_mul_assign_v<int, int>));
+	AssertFalse((has_mul_assign_v<const int, int>));
+
+	//has bit and
+	class TestBitAnd { public: void operator&(int a) {} };
+	AssertTrue((has_bit_and_v<TestBitAnd, int>));
+	AssertFalse((has_bit_and_v<int, TestBitAnd>));
+	AssertTrue((has_bit_and_v<int, int>));
+	AssertFalse((has_bit_and_v<float, int>));  // 
+	AssertFalse((has_bit_and_v<void, int>));   // non-fundamental & integer
+	AssertFalse((has_bit_and_v<float*, int>)); // pointer & fundamental
+
+	// has bit reverse
+	class TestBitReverse { public: TestBitReverse operator~() {} };
+	AssertTrue(has_bit_reverse_v<int>);
+	AssertFalse(has_bit_reverse_v<int*>);
+	AssertFalse(has_bit_reverse_v<void>);
+	AssertFalse(has_bit_reverse_v<nullptr_t>);
+	AssertTrue(has_bit_reverse_v<TestBitReverse>);
+
+	//has cmp 
+	AssertTrue((has_equal_v<int, int>));
+	AssertFalse((has_equal_v<int, TestDerive>));
+	AssertFalse((has_equal_v<int, TestDerive*>));
+	AssertTrue((has_equal_v<TestDerive*, TestAbstract*>));
+
+	//has logic and
+	class TestLogic { public: constexpr operator bool() { return false; } };
+	AssertTrue((has_logic_and_v<int, int>));
+	AssertTrue((has_logic_and_v<int, int*>));
+	AssertFalse((has_logic_and_v<int, void>));
+	AssertFalse((has_logic_and_v<int, TestBitAnd>));
+	AssertFalse((has_logic_and_v<int, TestBitAnd>));
+	AssertTrue((has_logic_and_v<int, TestLogic>));
 
 	
 
+	
 
-
-
-
-
-
-	AssertTrue((has_add_v<TestAdd, int>));
 
 	output_test_info();
 	getchar();
@@ -892,3 +926,4 @@ void output_test_info()
 	
 
 }
+

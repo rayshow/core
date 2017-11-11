@@ -1,12 +1,14 @@
 #pragma once
 
-#include<core/mpl/type_traits/has_operator_decl.h>
-#include<core/mpl/type_traits/binary_not_match.h>
+#include<core/mpl/type_traits/impl/has_operator_decl.h>
+#include<core/mpl/type_traits/is_integer.h>
+#include<core/mpl/type_traits/is_fundamental.h>
+#include<core/mpl/type_traits/is_pointer.h>
 
-namespace Aurora3D
+namespace core
 {
 	namespace mpl
 	{
-		HAS_FRONT_UNARY_OPERATION_DECL(~, BitReverse, 0);
+		HAS_FRONT_UNARY_OPERATION_DECL(~, bit_reverse, is_pointer_v<T> ||( is_fundamental_v<T> && !is_integer_v<T>) );
 	}
 }

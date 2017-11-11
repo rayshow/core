@@ -6,7 +6,6 @@ namespace Aurora3D
 {
 	namespace mpl
 	{
-
 		namespace detail                                                  
 		{                                                                 
 			template<typename T, typename Ret>    

@@ -7,6 +7,6 @@ namespace core
 {
 	namespace mpl
 	{
-		HAS_FRONT_UNARY_OPERATION_DECL(++, front_inc, false);
+		HAS_FRONT_UNARY_OPERATION_DECL(*, deref, 0);
 	}
 }
