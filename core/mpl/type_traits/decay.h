@@ -2,7 +2,7 @@
 
 #include<core/mpl/type_traits/remove_cv.h>
 #include<core/mpl/type_traits/remove_ref.h>
-#include<core/mpl/type_traits/remove_all_dim.h>
+#include<core/mpl/type_traits/remove_dim.h>
 #include<core/mpl/type_traits/add_pointer.h>
 #include<core/mpl/type_traits/is_function.h>
 #include<core/mpl/type_traits/is_array.h>
@@ -13,10 +13,10 @@ namespace core
 	{
 		namespace detail
 		{
-			template<typename T, bool isFn =IsFunctionV(T), bool isArray =IsArrayV(T)> 
+			template<typename T, bool isFn = is_function_v<T>, bool isArray = is_array_v<T> > 
 								 struct decay_helper { typedef remove_cv_t<remove_ref_t<T>> type; };
-			template<typename T> struct decay_helper<T, false, true> { typedef AddPointerT<RemoveDimT<RemoveRefT<T>>> type; };
-			template<typename T> struct decay_helper<T, true, false> { typedef AddPointerT<T> type; };
+			template<typename T> struct decay_helper<T, false, true> { typedef add_pointer_t< remove_dim_t < remove_ref_t<T>>> type; };
+			template<typename T> struct decay_helper<T, true, false> { typedef add_pointer_t<T> type; };
 		}
 
 

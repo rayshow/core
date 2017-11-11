@@ -20,4 +20,6 @@
 		};                                                                             \
 	}                                                                                  \
 	template<typename T> struct has_inner_ ## name:                                    \
-		public bool_< has_inner_ ## name ## _helper<T>::value >{}; 
+		public bool_< detail::has_inner_ ## name ## _helper<T>::value >{};             \
+	template<typename T>                                                               \
+		static constexpr bool has_inner_ ## name ## _v = has_inner_ ## name<T>::value;

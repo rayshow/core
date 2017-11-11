@@ -393,9 +393,6 @@
     <ClInclude Include="mpl\type_traits\declval.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\first_template.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_add.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -438,9 +435,6 @@
     <ClInclude Include="mpl\type_traits\has_indexer.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_inner_type.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\has_invoker.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -469,9 +463,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_positive.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_refer_arrow.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_sub.h">
@@ -580,9 +571,6 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\remove_volatile.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\result_of.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\integral_.h">
@@ -745,6 +733,15 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_post_dec.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_arrow.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_inner_type.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_compatible.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>

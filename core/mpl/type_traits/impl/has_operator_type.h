@@ -28,6 +28,9 @@ namespace core
 
 			template<typename T, T t> struct fn_sfinae {};
 
+			
+
+
 #define A3D_TT_HAS_OP(T)  (sizeof(T) == sizeof(has_op))
 
 	}

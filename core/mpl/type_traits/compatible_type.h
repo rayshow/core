@@ -7,19 +7,19 @@ namespace core
 {
 	namespace mpl
 	{
-		template<typename First, typenameprefix,... Others>
-		struct CompatibleType :public CompatibleType<First, typename CompatibleType<Othersprefix,...>::type> {};
+		template<typename T, typename... Args>
+		struct compatible_type :public compatible_type<T, typename compatible_type<Args...>::type> {};
 
 		template<typename T>
-		struct CompatibleType<T> { typedef Decay_t<T> type; };
+		struct compatible_type<T> { typedef decay_t<T> type; };
 
 		template<typename T1, typename T2>
-		struct CompatibleType<T1,T2>
+		struct compatible_type<T1,T2>
 		{
-			typedef Decay_t<decltype(false ? Declval<T1>() : Declval<T2>())> type;
+			typedef decay_t<decltype(false ? declval<T1>() : declval<T2>())> type;
 		};
 
-		template<typename First, typenameprefix,... Others>
-		using CompatibleTypeT = typename CompatibleType<First, Othersprefix,...>::type;
+		template<typename T, typename... Args>
+		using compatible_type_t = typename compatible_type<T, Args...>::type;
 	}
 }

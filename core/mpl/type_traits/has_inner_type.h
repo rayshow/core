@@ -12,6 +12,6 @@ namespace core
 		A3D_TT_HAS_INNER_DECL(type, type);
 
 		//test if T::value_type is well-formed
-		A3D_TT_HAS_INNER_DECL(type, value_type);
+		A3D_TT_HAS_INNER_DECL(value_type, value_type);
 	}
 }

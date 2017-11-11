@@ -45,6 +45,7 @@
 #include<core/mpl/type_traits/is_arithmetic.h>
 #include<core/mpl/type_traits/is_abstract.h>
 #include<core/mpl/type_traits/is_instance_of.h>
+#include<core/mpl/type_traits/is_compatible.h>
 
 #include<core/mpl/type_traits/add_const.h>
 #include<core/mpl/type_traits/add_volatile.h>
@@ -96,11 +97,16 @@
 #include<core/mpl/type_traits/has_deref.h>
 
 #include<core/mpl/type_traits/has_delete.h>
-
-
+#include<core/mpl/type_traits/has_new.h>
+#include<core/mpl/type_traits/has_indexer.h>
+#include<core/mpl/type_traits/has_invoker.h>
+#include<core/mpl/type_traits/has_arrow.h>
+#include<core/mpl/type_traits/has_inner_type.h>
+#include<core/mpl/type_traits/compatible_type.h>
 
 #include<core/mpl/type_traits/has_constructor.h>
-
+#include<core/mpl/type_traits/has_destructor.h>
+#include<core/mpl/type_traits/has_assigner.h>
 
 #include<core/mpl/base/dispatch_when.h>
 
@@ -165,6 +171,21 @@ void operator delete[](void * mem)
 	//::delete[](mem);
 }
 
+namespace detail2
+{
+	class TestHasDelete2
+	{
+	public:
+		void* operator new(size_t size) {}
+		void* operator new(size_t size, void* ptr) {}
+		void* operator new(size_t size, int) {}
+		void* operator new[](size_t size) {}
+		void operator delete(void * ptr) {}
+		void operator delete(void* ptr, size_t size) {}
+		void operator delete[](void* ptr) {}
+		void operator delete[](void* ptr, size_t size) {}
+	};
+};
 
 int main()
 {
@@ -312,6 +333,15 @@ int main()
 	AssertTypeSame(add_unsigned_t<short>, unsigned short);
 	AssertTypeSame(add_unsigned_t<long>, unsigned long);
 	AssertTypeSame(add_unsigned_t<long long>, unsigned long long);
+
+
+	//decay
+	AssertTypeSame(int, decay_t<int>);
+	AssertTypeSame(int*, decay_t<int[2]>);
+	AssertTypeSame(int(*)(int), decay_t<int(int)>);
+	AssertTypeSame(int, decay_t<const int>);
+	AssertTypeSame(int, decay_t<int&>);
+	AssertTypeSame(int, decay_t<const int&>);
 
 	//array dim
 	AssertTrue(0 == array_dim_v< int >);
@@ -774,6 +804,13 @@ int main()
 	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
 	AssertFalse(is_class_v<int>);
 
+	//is compatible
+	class A {};
+	AssertTrue((is_compatible_v<int, float>));
+	AssertFalse((is_compatible_v<int, void>));
+	AssertFalse((is_compatible_v<int, A>));
+	AssertFalse((is_compatible_v<int, float, A>));
+
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
 	AssertFalse((has_add_v<int, int, int const>));
@@ -886,77 +923,66 @@ int main()
 	AssertTrue(has_deref_v<decltype(varg_fn)>);
 	AssertFalse(has_deref_v<decltype(p_member_const_fn1)>);
 
-	//test has delete
-	class TestHasDelete 
-	{
-		public:
-		void operator delete(void * ptr)
-		{
-			printf(" TestHasDelete delete \n");
-			delete(ptr);
-		}
+	//has new
+	AssertFalse(has_new_v<int>);
+	AssertTrue(has_new_v< detail2::TestHasDelete2>);
+	AssertTrue((has_new_v<detail2::TestHasDelete2, void*>));
+	AssertFalse((has_new_v<detail2::TestHasDelete2, int&>));
 
-		void operator delete(void* ptr, size_t size)
-		{
-			printf(" TestHasDelete delete with size \n");
-			delete(ptr);
-		}
+	//has delete
+	AssertFalse(has_delete_v<int>);
+	AssertTrue(has_delete_v<detail2::TestHasDelete2>);
+	AssertTrue((has_delete_v<detail2::TestHasDelete2, size_t>));
+	AssertTrue((has_array_delete_v<detail2::TestHasDelete2, size_t>));
+	AssertFalse((has_array_delete_v<detail2::TestHasDelete2, int>));
 
-		void operator delete[](void* ptr)
-		{
-			printf(" testHasDelete delete [] \n");
-			delete(ptr);
-		}
+	//has indexer
+	struct TestIndex { int operator[](int) {} };
+	struct TestTable { int operator[](const char*) {} };
+	AssertTrue((has_index_v<int[2], int, int>));
+	AssertTrue((has_index_v<TestIndex, int, int>));
+	AssertFalse((has_index_v<TestIndex, int, float>));
+	AssertTrue((has_index_v<TestTable, int, const char*>));
+	AssertFalse((has_index_v<TestTable, float, const char*>));
 
-		void operator delete[](void* ptr, size_t size)
-		{
-			printf(" testHasDelete delete [] with size \n");
-			delete(ptr);
-		}
+	//has invoker
+	struct TestInvoker { int operator()(int, int); };
+	AssertTrue((has_invoker_v<TestInvoker, int, int, int>));
+	AssertFalse((has_invoker_v<TestInvoker, int, int, float>));
 
-		virtual void Test() {};
-	};
+	//has arrow
+	struct TestArrow { void* operator->() { return 0; } };
+	AssertTrue((has_arrow_v<TestArrow, void*>));
+	AssertFalse((has_arrow_v<TestArrow, char*>));
+	AssertFalse((has_arrow_v<int, int>));
 
-	class TestHasDeleteDerive1 :public TestHasDelete { public: virtual void Test() override {} };
-	TestHasDelete *p = new TestHasDelete;
-	TestHasDelete *p2 = new TestHasDeleteDerive1;
-	delete p;
-	delete p2;
+	//has inner type
+	AssertTrue(has_inner_type_v < false_>);
+	AssertTrue(has_inner_value_type_v< false_>);
+	AssertFalse(has_inner_type_v< int>);
+
+
 	
 
-	//output_test_info();
+	output_test_info();
 	getchar();
 	return 0;
 }
 
+#define PrintIndex(T) printf("index %d \n", trait_fn_indexer<T>::value)
+#define PrintDispatch(T) printf("disp %d \n", dispatch_< is_void<T>, is_integer<T>, is_pointer<T>, is_const<T> >::value)
+#define OutputTypename(v) printf("%s\n", typeid(v).name())
 
-
-#include<core/mpl/type_print.hpp>
-#include<core/mpl/base/dispatch_when.h>
-template<typename T, typename d = dispatch_< is_void<T>, is_integer<T>, is_pointer<T>, is_const<T> > >
-struct test_dispatcher { static constexpr int value = 1; };
-
-template<typename T>
-struct test_dispatcher<T, when_< is_void<T> > > { static constexpr int value = 2;  };
-
-template<typename T>
-struct test_dispatcher<T, when_< is_integer<T> > > { static constexpr int value = 3; };
-
-template<typename T>
-struct test_dispatcher<T, when_< is_pointer<T> > > { static constexpr int value = 4; };
-
-template<typename T>
-struct test_dispatcher<T, when_< is_pointer<T>, is_const<T> > > { static constexpr int value = 5; };
 
 
 void output_test_info()
 {
-#define PrintIndex(T) printf("index %d \n", trait_fn_indexer<T>::value)
-#define PrintDispatch(T) printf("disp %d \n", dispatch_< is_void<T>, is_integer<T>, is_pointer<T>, is_const<T> >::value)
-#define OutputTypename(v) printf("%s\n", typeid(v).name())
-	printf("%d %d %d %d\n", test_dispatcher<void>::value, test_dispatcher<int>::value, test_dispatcher<char*>::value, test_dispatcher<char* const>::value);
-
-
+	
+	
+	//using T = compatible_type<int, float, long long, long double, A>::type;
+	//printf("%s\n", typeid(T).name());
+	//OutputTypename( compatible_type<int, float>::type );
+	return;
 	TestMemberClass c;
 	TestMemberClass& d = c;
 	const TestMemberClass e{};
@@ -1033,13 +1059,6 @@ void output_test_info()
 	OutputTypename(decltype(normal_fn) const);
 	OutputTypename(decltype(normal_fn) volatile);
 	OutputTypename(decltype(normal_fn) const volatile);
-
-	NormalTypeName<decltype(normal_fn) const>{}();
-	NormalTypeName<decltype(normal_volatile)>{}();
-	NormalTypeName<decltype(normal_cd_fn)>{}();
-
-	
-
 }
 
 

@@ -11,7 +11,7 @@
 			{                                                                                  \
 				template<typename U>                                                           \
 				static constexpr has_op choose(const U&,                                       \
-					fn_sfinae<Ret(T::*)(Args...), &U::sign> *ptr = nullptr)                    \
+					fn_sfinae<Ret(U::*)(Args...), &U::sign> *ptr = nullptr)                    \
 				{                                                                              \
 					return declval<has_op>();                                                  \
 				};                                                                             \
@@ -25,4 +25,4 @@
 		template<typename T,typename Ret, typename... Args>                                    \
 		struct has_ ## opname :public bool_< detail::has_ ## opname ## _helper <T, Ret, Args...>::value > {}; \
 		template<typename T, typename Ret, typename... Args>                                   \
-		using has_ ## opname ## _v = has_ ## opname<T, Ret, Args...>::value;
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret, Args...>::value;
