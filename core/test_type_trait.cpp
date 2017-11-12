@@ -187,8 +187,16 @@ namespace detail2
 	};
 };
 
+
+class TestDefaultConstructor { TestDefaultConstructor() {}; };
+
 int main()
 {
+	//test has constructor
+	//AssertTrue(has_default_constructor<TestDefaultConstructor>::value);
+	AssertTrue((has_constructor<TestDefaultConstructor, TestDefaultConstructor>::value));
+
+
 	//bool wrap
 	AssertTrue(true_::value);
 	AssertTrue(true_c);

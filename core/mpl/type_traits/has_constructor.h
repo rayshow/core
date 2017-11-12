@@ -9,7 +9,7 @@ namespace core
 	namespace mpl
 	{
 		//can modification  accord to platform
-#define HAS_CONSTRUCTOR(Type, Args)           __is_constructible(Type, Args)
+#define HAS_CONSTRUCTOR(Type, ...)           __is_constructible(Type, __VA_ARGS__)
 #define HAS_TRIVIAL_CONSTRUCTOR(Type, Args)   __is_trivially_constructible(Type, Args)
 #define HAS_NOTHROW_CONSTRUCTOR(Type, Args)   __is_nothrow_constructible(Type, Args)
 
