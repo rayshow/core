@@ -187,15 +187,38 @@ namespace detail2
 	};
 };
 
-
-class TestDefaultConstructor { TestDefaultConstructor() {}; };
-
+#include<type_traits>
 int main()
 {
 	//test has constructor
-	//AssertTrue(has_default_constructor<TestDefaultConstructor>::value);
-	AssertTrue((has_constructor<TestDefaultConstructor, TestDefaultConstructor>::value));
-
+	struct TestConstructor { TestConstructor() {}; };
+	struct TestNothrowConstructpr { TestNothrowConstructpr() noexcept {} };
+	struct TestDefaultConstructor1 {};
+	struct TestDefaultConstructor2 { TestDefaultConstructor2() = default; };
+	struct TestArgConstructor { TestArgConstructor(int) {} };
+	struct TestNoCopyConstructor { TestNoCopyConstructor(const TestNoCopyConstructor&) = delete; };
+	struct TestCopyConstructor { TestCopyConstructor(const TestCopyConstructor&) {} };
+	struct TestRefConstructor { TestRefConstructor(TestRefConstructor&) {} };
+	struct TestMoveConstructor { TestMoveConstructor(TestMoveConstructor&&) {} };
+	AssertTrue((has_constructor_v<TestConstructor>));
+	AssertTrue((has_constructor_v<TestDefaultConstructor1>));
+	AssertTrue((has_constructor_v<TestDefaultConstructor2>));
+	AssertTrue((has_constructor_v<TestArgConstructor,int>));
+	AssertFalse((has_constructor_v<TestArgConstructor, int,int>));
+	AssertFalse((has_constructor_v<TestArgConstructor>));
+	AssertTrue((has_empty_constructor_v<TestConstructor>));
+	AssertTrue((has_empty_constructor_v<TestDefaultConstructor1>));
+	AssertTrue((has_empty_constructor_v<TestDefaultConstructor2>));
+	AssertTrue((has_copy_constructor_v<TestArgConstructor>));
+	AssertFalse((has_copy_constructor_v<TestNoCopyConstructor>));
+	AssertFalse((has_copy_constructor_v<TestRefConstructor>));
+	AssertFalse((has_copy_constructor_v<TestMoveConstructor>));
+	AssertTrue((has_move_constructor_v<TestArgConstructor>));
+	AssertFalse((has_move_constructor_v<TestNoCopyConstructor>));
+	AssertTrue((has_move_constructor_v<TestRefConstructor>));
+	AssertTrue((has_move_constructor_v<TestMoveConstructor>));
+	AssertFalse((has_nothrow_constructor_v<TestArgConstructor>));
+	AssertTrue((has_nothrow_constructor_v<TestNothrowConstructpr>));
 
 	//bool wrap
 	AssertTrue(true_::value);

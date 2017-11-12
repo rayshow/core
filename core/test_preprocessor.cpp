@@ -2,6 +2,7 @@
 #include<iostream>
 #include<cassert>
 #include<string>
+#include<typeinfo>
 
 #include<core/preprocessor/stringize.h>
 #include<core/preprocessor/uint8_div.h>
