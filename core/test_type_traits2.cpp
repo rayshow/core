@@ -72,14 +72,14 @@
 #include<core/mpl/type_traits/is_arithmetic.h>
 #include<core/mpl/type_traits/is_abstract.h>
 #include<core/mpl/type_traits/is_instance_of.h>
-//#include<core/mpl/type_traits/is_compatible.h>
+#include<core/mpl/type_traits/is_compatible.h>
 #include<core/mpl/type_traits/is_convertible.h>
-
 
 //has_xx
 #include<core/mpl/type_traits/has_constructor.h>
 #include<core/mpl/type_traits/has_destructor.h>
-//#include<core/mpl/type_traits/has_add.h>
+#include<core/mpl/type_traits/has_add.h>
+#include<core/mpl/type_traits/has_post_inc.h>
 
 #define AssertFalse(v) static_assert(!v, "")
 #define AssertTrue(v) static_assert( v, "")
@@ -129,8 +129,31 @@ union TestUnion {};
 class TestAbstract { virtual void test() {} };
 class TestDerive :public TestAbstract { virtual void test() override final {} };
 
+class C1 { virtual void test() {} };
+class C2 :public C1 { virtual void test() {} };
+
+
+template<typename T>
+struct InnerType
+{
+	using LT =  add_lref_t<T>;
+
+};
+
+template<typename T>
+struct Inherit :public InnerType<T>
+{
+	typedef typename InnerType<T>::LT LT;
+	static_assert(is_same<T&, LT>::value, "");
+};
+
+class TestAdd { public: void operator+(int a) {} };
+
 int main()
 {
+	Inherit<int>{};
+
+
 	//bool wrap
 	AssertTrue(true_::value);
 	AssertTrue(true_c);
@@ -720,18 +743,7 @@ int main()
 	AssertFalse(is_empty_v<int>);
 
 
-	//is convertible
-	AssertTrue((is_convertible_v<int, float>));
-	AssertTrue((is_convertible_v<float, int>));
-	AssertFalse((is_convertible_v<C1*, C2*>));
-	AssertTrue((is_convertible_v<C1*, void*>));
-	AssertFalse((is_convertible_v<C1*, int>));
-	AssertTrue((is_convertible_v<C2*, C1*>));    //derived* -> base*
-	AssertTrue((is_convertible_v<C2&, C1&>));    //derived& -> base&
-	AssertFalse((is_convertible_v<C1&, C2&>));
-	AssertTrue((is_convertible_v<const char*, std::string>)); //explicit constructor
-	AssertTrue((is_convertible_v<int_<0>, int>)); //explicit convert function
-
+	
 
 	//is const
 	AssertFalse(is_const_v<int>);
@@ -749,26 +761,38 @@ int main()
 	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
 	AssertFalse(is_class_v<int>);
 
+	//is convertible
+	AssertTrue((is_convertible_v<int, float>));
+	AssertTrue((is_convertible_v<float, int>));
+	AssertFalse((is_convertible_v<C1*, C2*>));
+	AssertTrue((is_convertible_v<C1*, void*>));
+	AssertFalse((is_convertible_v<C1*, int>));
+	AssertTrue((is_convertible_v<C2*, C1*>));    //derived* -> base*
+	AssertTrue((is_convertible_v<C2&, C1&>));    //derived& -> base&
+	AssertFalse((is_convertible_v<C1&, C2&>));
+	AssertTrue((is_convertible_v<const char*, std::string>)); //explicit constructor
+	AssertTrue((is_convertible_v<int_<0>, int>));             //explicit convert function
+
 	//is compatible
-	class A {};
+	class TestComp {};
 	AssertTrue((is_compatible_v<int, float>));
 	AssertFalse((is_compatible_v<int, void>));
-	AssertFalse((is_compatible_v<int, A>));
-	AssertFalse((is_compatible_v<int, float, A>));
+	AssertFalse((is_compatible_v<int, TestComp>));
+	AssertFalse((is_compatible_v<int, float, TestComp>));
 
-	//// has_add
-	//class TestAdd { public: void operator+(int a) {} };
-	//AssertFalse((has_add_v<int, int, int const>));
-	//AssertFalse((has_add_v<int, int, int&&>));
-	//AssertFalse((has_add_v<int, int, TestAdd>));
-	//AssertTrue((has_add_v<TestAdd, int>));
-	//AssertTrue((has_add_v<TestAdd, float>));      //implicit convert to int
-	//AssertFalse((has_add_v<float, TestAdd>));
-	//AssertTrue((has_add_v<int, int>));
-	//AssertFalse((has_add_v<char*, int>));          //T* + integer is ill-formed
-	//AssertFalse((has_add_v<void*, int>));         //void* + integer is ill-formed
-	//AssertFalse((has_add_v<TestAdd*, TestAdd*>)); //T* + P* is ill-formed
-	//AssertFalse((has_add_v<int*&, int*&>));
+	// has_add
+	
+	AssertFalse((has_add_v<int, int, int const>));
+	AssertFalse((has_add_v<int, int, int&&>));
+	AssertFalse((has_add_v<int, int, TestAdd>));
+	AssertTrue((has_add_v<TestAdd, int>));
+	AssertTrue((has_add_v<TestAdd, float>));      //implicit convert to int
+	AssertFalse((has_add_v<float, TestAdd>));
+	AssertTrue((has_add_v<int, int>));
+	AssertFalse((has_add_v<char*, int>));          //T* + integer is ill-formed
+	AssertFalse((has_add_v<void*, int>));         //void* + integer is ill-formed
+	AssertFalse((has_add_v<TestAdd*, TestAdd*>)); //T* + P* is ill-formed
+	AssertFalse((has_add_v<int*&, int*&>));
 
 
 	//has constructor

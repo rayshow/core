@@ -27,25 +27,29 @@ namespace core
 		template<typename T> struct has_nothrow_move_constructor :public has_nothrow_constructor<T, add_rref_t<T>> {};
 
 #else
-		template<typename T, typename... Args>
-		struct has_constructor_helper
+		namespace detail
 		{
-			template<typename U, typename = decltype(::new U(declval<Args>()...)) >
-			static constexpr bool sfinae(int) { return true; }
+			template<typename T, typename... Args>
+			struct has_constructor_helper
+			{
+				template<typename U, typename = decltype(::new U(declval<Args>()...)) >
+				static constexpr bool sfinae(int) { return true; }
 
-			template<typename U> static constexpr bool sfinae(...) { return false; }
+				template<typename U> static constexpr bool sfinae(...) { return false; }
 
-			static constexpr bool value = sfinae<T>(0);
-		};
-		template<typename T, typename... Args> struct has_nothrow_constructor_helper :bool_< noexcept(T(declval<Args>()...))> {};
+				static constexpr bool value = sfinae<T>(0);
+			};
+			template<typename T, typename... Args> struct has_nothrow_constructor_helper :bool_< noexcept(T(declval<Args>()...))> {};
+		}
+		
 
 		//normal constructor family
-		template<typename T, typename...Args> struct has_constructor :bool_<has_constructor_helper<remove_rref_t<T>, Args...>::value> {};
+		template<typename T, typename...Args> struct has_constructor :bool_<detail::has_constructor_helper<remove_rref_t<T>, Args...>::value> {};
 		template<typename T> struct has_copy_constructor :has_constructor<T, add_lref_t<T>> {};
 		template<typename T> struct has_move_constructor :has_constructor<T, add_rref_t<T>> {};
 
 		//nothrow constructor family
-		template<typename T, typename... Args> struct has_nothrow_constructor :and_< has_constructor<remove_rref_t<T>, Args...>, has_nothrow_constructor_helper<remove_rref_t<T>, Args...>> {};
+		template<typename T, typename... Args> struct has_nothrow_constructor :and_<has_constructor<remove_rref_t<T>, Args...>, detail::has_nothrow_constructor_helper<remove_rref_t<T>, Args...>> {};
 		template<typename T> struct has_nothrow_copy_constructor :has_nothrow_constructor<T, add_lref_t<T>> {};
 		template<typename T> struct has_nothrow_move_constructor :has_nothrow_constructor<T, add_rref_t<T>> {};
 #endif

@@ -21,6 +21,9 @@
 //4913: exists user-define operator,(T1,T2), but not match all parameters, and use default inner operator,(prefix,...)
 //4505: un-reference local function had been removed
 #pragma warning(disable:4244 4913 4505)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused"
 #endif
 
 namespace core
@@ -30,20 +33,23 @@ namespace core
 		//ensure ImplicitConverted not pollute stand namespace
 		namespace op_detail
 		{
-			//Left op Right is forbidden
-			template<typename L, typename R = L> struct parameter_extracter
-			{
-				typedef remove_pointer_t<L>           left_noptr_t;
-				typedef remove_pointer_t<R>           right_noptr_t;
-				typedef remove_cv_t<remove_ref_t<L>>  left_nocv_t;
+
+#define A3D_TT_TYPEDEF_BINARY_TYPE(L,R)                                \
+				typedef remove_pointer_t<L>           left_noptr_t;    \
+				typedef remove_pointer_t<R>           right_noptr_t;   \
+				typedef remove_cv_t<remove_ref_t<L>>  left_nocv_t;     \
 				typedef remove_cv_t<remove_ref_t<R>>  right_nocv_t;
 
-			};
+#define A3D_TT_TYPEDEF_UNARY_TYPE(T)                                   \
+				typedef remove_pointer_t<T>           noptr_t;         \
+				typedef remove_cv_t<remove_ref_t<T>>  nocv_t;          \
+
 
 			//both parameter can't be void for unary or binary operation
 			template<typename L, typename R = L>
-			struct is_parameter_valid : public parameter_extracter<L, R>
+			struct is_parameter_valid 
 			{
+				A3D_TT_TYPEDEF_BINARY_TYPE(L, R);
 				static constexpr bool value = !is_void_v<left_nocv_t> && !is_void_v<right_nocv_t>;
 			};
 
@@ -51,12 +57,13 @@ namespace core
 			struct anything { template <class T> anything(T) {}; };
 
 			// anything op anything => no_op like: anything+anything => no_op
-#define BINARY_OPERATION(sign, ...) static no_op operator sign(const anything&, const anything&) { return declval<no_op>(); }
+#define BINARY_OPERATION(sign, ...)  inline no_op operator sign(const anything&, const anything&){ return declval<no_op>();}
 
-			// op anything => no_op like: +anything => no_op
-#define UNARY_PRE_OPERATION(sign, ...) static no_op operator sign(const anything&){ return declval<no_op>(); }
+			// op anything => no_op like: ++anything => no_op
+#define UNARY_PRE_OPERATION(sign, ...) inline no_op operator sign(const anything&){ return declval<no_op>();}
 
-#define UNARY_POST_OPERATION(sign, ...) static no_op operator sign(const anything&, int){ return declval<no_op>(); }
+			// op anything => no_op like: anything++ => no_op
+#define UNARY_POST_OPERATION(sign, ...) inline no_op operator sign(const anything&, int){ return declval<no_op>();}
 
 			//binary operator  + - * / % & | ^ >> <<  += -= *= /= %= |= &= ^= >>= <<= && || > >= < <= == != (except = refer to has assigner)
 			A3D_PP_FOREACH_ITEM(BINARY_OPERATION, (+, -, *, / , %, &, | , ^, +=, -=, *=, /=, %=, &=, |=, ^=, << , >> , >>=, <<=, &&, || , <, <= , >, >= , == , != ));
@@ -139,7 +146,7 @@ namespace core
 			struct has_unary_operation<OP, T, Ret, true> :public and_<
 				is_parameter_valid<T>,
 				is_operation_valid<OP>,
-				is_void_ret_valid<OP> >{};
+				is_void_ret_valid<OP> > {};
 
 			// operation check has three state: 
 			// 1. op exists and is public access, test parameter and ret if op is will-formed return true
@@ -158,9 +165,9 @@ namespace core
 						return makeval<remove_const_t<L>>() sign makeval<R>();                         \
 					}                                                                                  \
 				};                                                                                     \
-				template<typename left, typename right> struct check_ ## opname ## _parameter :        \
-					public parameter_extracter<left, right>                                            \
+				template<typename L, typename R> struct check_ ## opname ## _parameter                 \
 				{                                                                                      \
+					A3D_TT_TYPEDEF_BINARY_TYPE(L, R);                                                  \
 					static constexpr bool value = check_LR_fn;                                         \
 				};                                                                                     \
 			}                                                                                          \
@@ -189,8 +196,9 @@ namespace core
 					}                                                                            \
 				};                                                                               \
 				template<typename T>                                                             \
-				struct check_ ## opname ## _parameter :public parameter_extracter<T>             \
+				struct check_ ## opname ## _parameter                                            \
 				{                                                                                \
+					A3D_TT_TYPEDEF_UNARY_TYPE(T);                                                \
 					static const bool value = check_T_fn;                                        \
 				};                                                                               \
 			}                                                                                    \
@@ -209,4 +217,6 @@ namespace core
 }
 #if defined(AURORA3D_COMPILER_MSVC)
 #pragma warning(pop)
+#else
+#pragma GCC diagnostic pop
 #endif

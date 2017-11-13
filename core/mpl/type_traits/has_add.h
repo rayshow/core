@@ -17,7 +17,7 @@ namespace core
 		//has_add_assign<T>
 		//(const left) += right is ill-formed
 		HAS_BINARY_OPERATION_DECL(+=, add_assign, A3D_TT_ADD_SUB_NOT_MATCH(left_nocv_t, right_nocv_t,
-			left_noptr_t, right_noptr_t) || is_const_v<left>);
+			left_noptr_t, right_noptr_t) || is_const_v<L>);
 		
 	} 
 }

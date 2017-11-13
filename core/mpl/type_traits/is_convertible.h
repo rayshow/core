@@ -10,17 +10,16 @@ namespace core
 		template<typename T, typename P>
 		struct is_convertible_helper
 		{
-			static constexpr bool sfinae(T) { return true; }
+			template<typename U, typename = decltype(makeval<P>() = declval<U>())>
+			static constexpr bool sfinae(int) { return true; }
 
+			template<typename U>
 			static constexpr bool sfinae(...) { return false; }
 
-			static constexpr bool value = sfinae(declval<P>());
+			static constexpr bool value = sfinae<T>(0);
 		};
 
-
-		//implicitly convertible, use no-explicit-construction
-		//e.g.string a = 1.1; not works  no suitable construction
-		template<typename From, typename To> struct is_convertible : bool_<is_convertible_helper<From,To>::value> {};
+		template<typename From, typename To> struct is_convertible : bool_<is_convertible_helper<From, To>::value> {};
 
 		template<typename From, typename To> constexpr bool is_convertible_v = is_convertible<From, To>::value;
 	}

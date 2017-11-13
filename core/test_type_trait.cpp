@@ -832,12 +832,7 @@ int main()
 	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
 	AssertFalse(is_class_v<int>);
 
-	//is compatible
-	class A {};
-	AssertTrue((is_compatible_v<int, float>));
-	AssertFalse((is_compatible_v<int, void>));
-	AssertFalse((is_compatible_v<int, A>));
-	AssertFalse((is_compatible_v<int, float, A>));
+
 
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
