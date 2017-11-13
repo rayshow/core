@@ -60,7 +60,7 @@
 #include<core/mpl/type_traits/is_enum.h>
 #include<core/mpl/type_traits/is_empty.h>
 #include<core/mpl/type_traits/is_scalar.h>
-#include<core/mpl/type_traits/is_convertible.h>
+
 #include<core/mpl/type_traits/is_const.h>
 #include<core/mpl/type_traits/is_compound.h>
 #include<core/mpl/type_traits/is_class.h>
@@ -71,6 +71,9 @@
 #include<core/mpl/type_traits/is_abstract.h>
 #include<core/mpl/type_traits/is_instance_of.h>
 //#include<core/mpl/type_traits/is_compatible.h>
+//#include<core/mpl/type_traits/is_convertible.h>
+
+#include<core/mpl/type_traits/has_constructor.h>
 
 #define AssertFalse(v) static_assert(!v, "")
 #define AssertTrue(v) static_assert( v, "")
@@ -324,5 +327,15 @@ int main()
 	AssertTypeSame(remove_pointer_t<int*>, int);
 
 
+	struct A {};
+	struct B { B() {} };
+	struct C { C() = default; };
+	AssertTrue(has_empty_constructor_helper<A>::value);
+	AssertTrue(has_empty_constructor_helper<B>::value);
+	AssertTrue(has_empty_constructor_helper<C>::value);
+	AssertTrue(has_empty_constructor_helper<C[2]>::value);
+	AssertFalse(has_empty_constructor_helper<C&>::value);
+	AssertFalse(has_empty_constructor_helper<C&&>::value);
+	getchar();
 	return 0;
 }
