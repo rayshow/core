@@ -18,13 +18,13 @@ namespace core
 		//normal function default prefix width __cdecl
 		#define IS_FUNCTION(Prefix, ...)                                                                                    \
 			template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) Prefix> :public true_ {};      \
-			template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) Prefix> :public true_ {};      \
+			template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) Prefix> :public true_ {};   \
 			template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) Prefix> :public true_ {};    \
 			template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) Prefix> :public true_ {};   \
 			template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) Prefix> :public true_ {};      
 #else  
-		#define IS_FUNCTION(Prefix,...)                                                                          \
-			template<typename Ret, typename... Args> struct is_function< Ret(Args...) Prefix> :public true_ {};  \
+		#define IS_FUNCTION(Prefix,...)                                                                                     \
+			template<typename Ret, typename... Args> struct is_function< Ret(Args...) Prefix> :public true_ {};             \
 			template<typename Ret, typename... Args> struct is_function< Ret(Args......) Prefix> :public true_ {};    
 #endif
 		A3D_PP_FOREACH_ITEM(IS_FUNCTION, A3D_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))

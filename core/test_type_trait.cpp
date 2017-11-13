@@ -206,9 +206,6 @@ int main()
 	AssertTrue((has_constructor_v<TestArgConstructor,int>));
 	AssertFalse((has_constructor_v<TestArgConstructor, int,int>));
 	AssertFalse((has_constructor_v<TestArgConstructor>));
-	AssertTrue((has_empty_constructor_v<TestConstructor>));
-	AssertTrue((has_empty_constructor_v<TestDefaultConstructor1>));
-	AssertTrue((has_empty_constructor_v<TestDefaultConstructor2>));
 	AssertTrue((has_copy_constructor_v<TestArgConstructor>));
 	AssertFalse((has_copy_constructor_v<TestNoCopyConstructor>));
 	AssertFalse((has_copy_constructor_v<TestRefConstructor>));

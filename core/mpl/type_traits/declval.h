@@ -7,7 +7,7 @@ namespace core
 {
 	namespace mpl
 	{
-		template<typename T> typename add_rref_t<T> declval();
-		template<typename T> typename add_lref_t<T> makeval();
+		template<typename T>  add_rref_t<T> declval() noexcept;
+		template<typename T>  add_lref_t<T> makeval() noexcept;
 	}
 }
