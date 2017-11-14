@@ -15,7 +15,7 @@ namespace core
 
 
 		// const T &= P is ill-formed 
-		HAS_BINARY_OPERATION_DECL(&=, bit_and_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left> );
+		HAS_BINARY_OPERATION_DECL(&=, bit_and_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<L> );
 
 
 	}

@@ -12,6 +12,6 @@ namespace core
 		//pointer * fundemental is ill-formed
 		HAS_BINARY_OPERATION_DECL(%, mod, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t));
 
-		HAS_BINARY_OPERATION_DECL(%=, mod_assign, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left>);
+		HAS_BINARY_OPERATION_DECL(%=, mod_assign, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<L>);
 	}
 }

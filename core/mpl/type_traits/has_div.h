@@ -13,6 +13,6 @@ namespace core
 		HAS_BINARY_OPERATION_DECL(/, div, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t));
 
 		//const left is ill-formed
-		HAS_BINARY_OPERATION_DECL(/= , div_assign, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<left> );
+		HAS_BINARY_OPERATION_DECL(/= , div_assign, A3D_TT_MUL_DIV_MOD_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<L> );
 	}
 }

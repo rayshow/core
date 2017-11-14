@@ -78,8 +78,42 @@
 //has_xx
 #include<core/mpl/type_traits/has_constructor.h>
 #include<core/mpl/type_traits/has_destructor.h>
-#include<core/mpl/type_traits/has_add.h>
+#include<core/mpl/type_traits/has_post_dec.h>
 #include<core/mpl/type_traits/has_post_inc.h>
+#include<core/mpl/type_traits/has_add.h>
+#include<core/mpl/type_traits/has_sub.h>
+#include<core/mpl/type_traits/has_mul.h>
+#include<core/mpl/type_traits/has_div.h>
+#include<core/mpl/type_traits/has_mod.h>
+#include<core/mpl/type_traits/has_bit_or.h>
+#include<core/mpl/type_traits/has_bit_and.h>
+#include<core/mpl/type_traits/has_bit_xor.h>
+#include<core/mpl/type_traits/has_bit_reverse.h>
+#include<core/mpl/type_traits/has_shl.h>
+#include<core/mpl/type_traits/has_shr.h>
+#include<core/mpl/type_traits/has_lequal.h>
+#include<core/mpl/type_traits/has_nequal.h>
+#include<core/mpl/type_traits/has_gequal.h>
+#include<core/mpl/type_traits/has_equal.h>
+#include<core/mpl/type_traits/has_less.h>
+#include<core/mpl/type_traits/has_greater.h>
+#include<core/mpl/type_traits/has_logic_and.h>
+#include<core/mpl/type_traits/has_logic_or.h>
+
+#include<core/mpl/type_traits/has_front_dec.h>
+#include<core/mpl/type_traits/has_front_inc.h>
+#include<core/mpl/type_traits/has_post_dec.h>
+#include<core/mpl/type_traits/has_post_inc.h>
+#include<core/mpl/type_traits/has_positive.h>
+#include<core/mpl/type_traits/has_negative.h>
+#include<core/mpl/type_traits/has_deref.h>
+
+//#include<core/mpl/type_traits/has_delete.h>
+//#include<core/mpl/type_traits/has_new.h>
+//#include<core/mpl/type_traits/has_indexer.h>
+//#include<core/mpl/type_traits/has_invoker.h>
+#include<core/mpl/type_traits/has_arrow.h>
+#include<core/mpl/type_traits/has_inner_type.h>
 
 #define AssertFalse(v) static_assert(!v, "")
 #define AssertTrue(v) static_assert( v, "")
@@ -143,16 +177,16 @@ struct InnerType
 template<typename T>
 struct Inherit :public InnerType<T>
 {
-	typedef typename InnerType<T>::LT LT;
-	static_assert(is_same<T&, LT>::value, "");
+	//typedef typename InnerType<T>::LT LT;
+	//static_assert(is_same<T&, LT>::value, "");
 };
 
 class TestAdd { public: void operator+(int a) {} };
 
 int main()
 {
-	Inherit<int>{};
-
+	/*Inherit<int>{};
+	using T = typename Inherit<int>::LT;*/
 
 	//bool wrap
 	AssertTrue(true_::value);
@@ -781,7 +815,6 @@ int main()
 	AssertFalse((is_compatible_v<int, float, TestComp>));
 
 	// has_add
-	
 	AssertFalse((has_add_v<int, int, int const>));
 	AssertFalse((has_add_v<int, int, int&&>));
 	AssertFalse((has_add_v<int, int, TestAdd>));
@@ -794,6 +827,16 @@ int main()
 	AssertFalse((has_add_v<TestAdd*, TestAdd*>)); //T* + P* is ill-formed
 	AssertFalse((has_add_v<int*&, int*&>));
 
+	//has arrow
+	struct TestArrow { void* operator->() { return 0; } };
+	AssertTrue((has_arrow_v<TestArrow, void*>));
+	AssertFalse((has_arrow_v<TestArrow, char*>));
+	AssertFalse((has_arrow_v<int, int>));
+
+	//has inner type
+	AssertTrue(has_inner_type_v < false_>);
+	AssertTrue(has_inner_value_type_v< false_>);
+	AssertFalse(has_inner_type_v< int>);
 
 	//has constructor
 	struct TestConstructor { TestConstructor() {}; };

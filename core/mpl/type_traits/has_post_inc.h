@@ -41,7 +41,7 @@ namespace core
 			struct has_post_inc :public op_detail::has_unary_operation<
 			op_detail::post_inc_operation<T>, T, Ret> {};
 
-		template<typename T, typename Ret> struct has_post_inc<T, Ret, true> :public false_ {};
+		template<typename T, typename Ret> struct has_post_inc<T, Ret, true> : false_ {};
 
 		template<typename T, typename Ret = null_>
 		static constexpr bool has_post_inc_v = has_post_inc<T, Ret>::value;

@@ -28,9 +28,10 @@ namespace core
 				}
 			};
 			template<typename T>
-			struct check_post_dec_parameter :public parameter_extracter<T>
+			struct check_post_dec_parameter
 			{
-				static constexpr bool value = or_v< is_const<T>, is_rref<T>, is_enum<T>, is_nullptr_t<T>, is_void<left_noptr_t>>;
+				A3D_TT_TYPEDEF_UNARY_TYPE(T);
+				static constexpr bool value = or_v< is_const<T>, is_rref<T>, is_enum<T>, is_nullptr_t<T>, is_void<noptr_t>>;
 			};
 		}
 		template<typename T, typename Ret = null_,

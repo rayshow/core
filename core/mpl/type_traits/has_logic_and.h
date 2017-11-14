@@ -7,6 +7,6 @@ namespace core
 {
 	namespace mpl
 	{
-		HAS_BINARY_OPERATION_DECL(&& , logic_and, A3D_PP_LOGIC_NOT_MATCH(left, right));
+		HAS_BINARY_OPERATION_DECL(&& , logic_and, A3D_PP_LOGIC_NOT_MATCH(L, R));
 	}
 }

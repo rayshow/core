@@ -17,6 +17,6 @@ namespace core
 		// deref enum is ill-formed
 		// deref obj-member-ptr is ill-formed
 		// 
-		HAS_FRONT_UNARY_OPERATION_DECL(*, deref, (is_void_v<T> && is_void_v<left_noptr_t>) || is_fundamental_v<T> || is_enum_v<T> || is_member_ptr_v<T> );
+		HAS_FRONT_UNARY_OPERATION_DECL(*, deref, (is_void_v<T> && is_void_v<noptr_t>) || is_fundamental_v<T> || is_enum_v<T> || is_member_ptr_v<T> );
 	}
 }

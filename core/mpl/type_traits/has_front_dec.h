@@ -18,6 +18,6 @@ namespace core
 		// -- void  is ill-formed
 		// -- nullptr is ill-formed
 		// -- enum is ill-formed
-		HAS_FRONT_UNARY_OPERATION_DECL(--, front_dec, (or_v< is_const<T>, is_rref<T>, is_enum<T>, is_nullptr_t<T>, is_void<left_noptr_t>>) );
+		HAS_FRONT_UNARY_OPERATION_DECL(--, front_dec, (or_v< is_const<T>, is_rref<T>, is_enum<T>, is_nullptr_t<T>, is_void<noptr_t>>) );
 	}
 }
