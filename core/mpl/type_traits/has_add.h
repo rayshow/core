@@ -1,23 +1,40 @@
 #pragma once
 
+
+#include<core/mpl/base/and_.h>
+#include<core/mpl/base/not_.h>
+#include<core/mpl/type_traits/is_pointer.h>
+#include<core/mpl/type_traits/is_integer.h>
 #include<core/mpl/type_traits/impl/has_operator_decl.h>
-#include<core/mpl/type_traits/impl/binary_not_match.h>
-#include<core/mpl/type_traits/is_const.h>
 
 namespace core
 {
 	namespace mpl
 	{
-		//has_add<T> 
-		//pointer + pointer is ill-formed
-		//pointer + fundemental is ill-formed
-		HAS_BINARY_OPERATION_DECL(+, add, A3D_TT_ADD_SUB_NOT_MATCH(left_nocv_t, right_nocv_t,
-			left_noptr_t, right_noptr_t));
+		A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(+, add);
 
-		//has_add_assign<T>
-		//(const left) += right is ill-formed
-		HAS_BINARY_OPERATION_DECL(+=, add_assign, A3D_TT_ADD_SUB_NOT_MATCH(left_nocv_t, right_nocv_t,
-			left_noptr_t, right_noptr_t) || is_const_v<L>);
+		//clang T + P* will not report error
+		template<typename L, typename R>
+		struct add_assign_clang_fix :not_< and_< is_integer<L>, is_pointer<R> >> {};
+                
+		namespace operator_detail                                                    
+		{                                                                            
+			template<typename L, typename R>                                         
+			struct has_add_assign_helper                                          
+			{                                                                        
+				template<typename U, typename P,                                    
+				typename = decltype(makeval<U>() += declval<P>())>               
+					static constexpr bool sfinae(int) { return true; }               
+				template<typename U, typename P>                                     
+				static constexpr bool sfinae(...) { return false; }                  
+				static constexpr bool value = sfinae<L, R>(0);                       
+			};                                                                       
+		}                                                                            
+		template<typename L, typename R = L >                                        
+		struct has_add_assign: and_< add_assign_clang_fix<L,R>, operator_detail::has_add_assign_helper<L, R>> {};
+		template<typename L, typename R = L>                                         
+		static constexpr bool has_add_assign_v = has_add_assign<L,R>::value;
+
 		
 	} 
 }

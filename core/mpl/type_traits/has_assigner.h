@@ -19,7 +19,7 @@ namespace core
 
 		//string() = 1  right value assign,  for  compound type, works because compound inner member data is always left value
 		//int() = 1     literal assign ,  for  fundumental type, always false, not work 
-		template<typename L, typename R> struct has_assigner:public bool_<HAS_ASSIGNER(L, R)>{};
+		template<typename L, typename R> struct has_rassigner:public bool_<HAS_ASSIGNER(L, R)>{};
 		template<typename L, typename R> struct has_trivial_rassigner :public bool_<HAS_TRIVIAL_ASSIGNER(L, R)> {};
 		template<typename L, typename R> struct has_nothrow_rassigner :public bool_<HAS_NOTHROW_ASSIGNER(L, R)> {};
 		

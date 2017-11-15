@@ -46,19 +46,20 @@
 #include<core/mpl/type_traits/is_abstract.h>
 #include<core/mpl/type_traits/is_instance_of.h>
 #include<core/mpl/type_traits/is_compatible.h>
+#include<core/mpl/type_traits/array_dim.h>
+#include<core/mpl/type_traits/array_length.h>
+#include<core/mpl/type_traits/align_of.h>
 
 #include<core/mpl/type_traits/add_const.h>
+#include<core/mpl/type_traits/add_top_const.h>
 #include<core/mpl/type_traits/add_volatile.h>
 #include<core/mpl/type_traits/add_cv.h>
 #include<core/mpl/type_traits/add_lref.h>
 #include<core/mpl/type_traits/add_rref.h>
-#include<core/mpl/type_traits/add_top_const.h>
 #include<core/mpl/type_traits/add_signed.h>
 #include<core/mpl/type_traits/add_unsigned.h>
 #include<core/mpl/type_traits/add_pointer.h>
-#include<core/mpl/type_traits/align_of.h>
-#include<core/mpl/type_traits/array_dim.h>
-#include<core/mpl/type_traits/array_length.h>
+#include<core/mpl/type_traits/decay.h>
 #include<core/mpl/type_traits/remove_all_dim.h>
 #include<core/mpl/type_traits/remove_dim.h>
 #include<core/mpl/type_traits/remove_const.h>
@@ -67,6 +68,9 @@
 #include<core/mpl/type_traits/remove_ref.h>
 #include<core/mpl/type_traits/remove_top_const.h>
 #include<core/mpl/type_traits/remove_volatile.h>
+
+
+
 
 #include<core/mpl/type_traits/has_add.h>
 #include<core/mpl/type_traits/has_sub.h>
@@ -832,8 +836,6 @@ int main()
 	AssertFalse(is_class_v<TestUnion>);  //distinct with  is_union
 	AssertFalse(is_class_v<int>);
 
-
-
 	// has_add
 	class TestAdd { public: void operator+(int a) {} };
 	AssertFalse((has_add_v<int, int, int const>));
@@ -964,18 +966,18 @@ int main()
 	struct TestTable { int operator[](const char*) {} };
 	AssertTrue((has_index_v<int[2], int, int>));
 	AssertTrue((has_index_v<TestIndex, int, int>));
-	AssertFalse((has_index_v<TestIndex, int, float>));
+	AssertTrue((has_index_v<TestIndex, int, float>));
 	AssertTrue((has_index_v<TestTable, int, const char*>));
-	AssertFalse((has_index_v<TestTable, float, const char*>));
+	AssertTrue((has_index_v<TestTable, float, const char*>));
 
 	//has invoker
 	struct TestInvoker { int operator()(int, int); };
 	AssertTrue((has_invoker_v<TestInvoker, int, int, int>));
-	AssertFalse((has_invoker_v<TestInvoker, int, int, float>));
+	AssertTrue((has_invoker_v<TestInvoker, int, int, float>));
 
 	//has arrow
 	struct TestArrow { void* operator->() { return 0; } };
-	AssertTrue((has_arrow_v<TestArrow, void*>));
+	AssertFalse((has_arrow_v<TestArrow, void*>));
 	AssertFalse((has_arrow_v<TestArrow, char*>));
 	AssertFalse((has_arrow_v<int, int>));
 

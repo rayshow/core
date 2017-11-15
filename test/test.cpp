@@ -5,7 +5,6 @@
 #include<core/preprocessor/stringize.h>
 
 #include"test_type_traits.hpp"
-#include"test_mpl.hpp"
 #include"test_vector.hpp"
 #include"test_float.hpp"
 #include"test_boost.hpp"

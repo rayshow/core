@@ -1,7 +1,6 @@
 #pragma once
 
-#include<core/mpl/type_traits/impl/has_operator_type.h>
-#include<core/mpl/type_traits/impl/has_member_fn_decl.h>
+#include<core/mpl/type_traits/impl/has_operator_decl.h>
 
 namespace core
 {

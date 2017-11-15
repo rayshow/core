@@ -1,20 +1,15 @@
 #pragma once
 
 #include<core/mpl/type_traits/impl/has_operator_decl.h>
-#include<core/mpl/type_traits/impl/binary_not_match.h>
-#include<core/mpl/type_traits/is_const.h>
 
 namespace core
 {
 	namespace mpl
 	{
-		// T* | P* is ill-formed
-		// T* | fundamental is ill-formed
-		// integer | non-integer fundamental is ill-formed
-		HAS_BINARY_OPERATION_DECL(|, bit_or, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t));
+		//test R = T::operator|(P) or R = ::operator|(T,P)
+		A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(|, bit_or);
 
-		// const T |= P is ill-formed 
-		HAS_BINARY_OPERATION_DECL(|=, bit_or_assign, A3D_PP_BIT_OP_NOT_MATCH(left_nocv_t, right_nocv_t) || is_const_v<L>);
-
+		//test T::operator|=(P) or ::operator|=(T,P)
+		A3D_TT_HAS_SIDE_EFFECT_BINARY_OP(|=, bit_or_assign);
 	}
 }

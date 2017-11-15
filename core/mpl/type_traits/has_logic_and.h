@@ -1,12 +1,11 @@
 #pragma once
 
 #include<core/mpl/type_traits/impl/has_operator_decl.h>
-#include<core/mpl/type_traits/impl/binary_not_match.h>
 
 namespace core
 {
 	namespace mpl
 	{
-		HAS_BINARY_OPERATION_DECL(&& , logic_and, A3D_PP_LOGIC_NOT_MATCH(L, R));
+		A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(&&, logic_and);
 	}
 }

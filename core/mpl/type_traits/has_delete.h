@@ -1,8 +1,6 @@
 #pragma once
 
-#include<core/mpl/base/bool_.h>
-#include<core/mpl/type_traits/impl/has_operator_type.h>
-#include<core/mpl/type_traits/impl/has_new_delete_decl.h>
+#include<core/mpl/type_traits/impl/has_operator_decl.h>
 
 namespace core
 {

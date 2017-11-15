@@ -195,12 +195,7 @@
     <ClInclude Include="mpl\type_traits\has_shl.h" />
     <ClInclude Include="mpl\type_traits\has_shr.h" />
     <ClInclude Include="mpl\type_traits\has_sub.h" />
-    <ClInclude Include="mpl\type_traits\impl\binary_not_match.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_inner_decl.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_member_fn_decl.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_new_delete_decl.h" />
     <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_operator_type.h" />
     <ClInclude Include="mpl\type_traits\is_abstract.h" />
     <ClInclude Include="mpl\type_traits\is_arithmetic.h" />
     <ClInclude Include="mpl\type_traits\is_array.h" />

@@ -4,12 +4,11 @@
 #include<string>
 #include<typeinfo>
 
-//base lib
+//type traits base lib
 #include<core/mpl/base/bool_.h>
 #include<core/mpl/base/and_.h>
 #include<core/mpl/base/or_.h>
-
-//add remove
+//add remove type traits
 #include<core/mpl/type_traits/add_const.h>
 #include<core/mpl/type_traits/add_const.h>
 #include<core/mpl/type_traits/add_volatile.h>
@@ -33,8 +32,7 @@
 #include<core/mpl/type_traits/remove_top_const.h>
 #include<core/mpl/type_traits/remove_volatile.h>
 #include<core/mpl/type_traits/declval.h>
-
-//is_xx
+//is_xx type traits
 #include<core/mpl/type_traits/is_void.h>
 #include<core/mpl/type_traits/is_same.h>
 #include<core/mpl/type_traits/is_unsigned.h>
@@ -74,12 +72,10 @@
 #include<core/mpl/type_traits/is_instance_of.h>
 #include<core/mpl/type_traits/is_compatible.h>
 #include<core/mpl/type_traits/is_convertible.h>
-
-//has_xx
+//has_xx type traits
 #include<core/mpl/type_traits/has_constructor.h>
 #include<core/mpl/type_traits/has_destructor.h>
-#include<core/mpl/type_traits/has_post_dec.h>
-#include<core/mpl/type_traits/has_post_inc.h>
+#include<core/mpl/type_traits/has_assigner.h>
 #include<core/mpl/type_traits/has_add.h>
 #include<core/mpl/type_traits/has_sub.h>
 #include<core/mpl/type_traits/has_mul.h>
@@ -88,7 +84,6 @@
 #include<core/mpl/type_traits/has_bit_or.h>
 #include<core/mpl/type_traits/has_bit_and.h>
 #include<core/mpl/type_traits/has_bit_xor.h>
-#include<core/mpl/type_traits/has_bit_reverse.h>
 #include<core/mpl/type_traits/has_shl.h>
 #include<core/mpl/type_traits/has_shr.h>
 #include<core/mpl/type_traits/has_lequal.h>
@@ -99,19 +94,19 @@
 #include<core/mpl/type_traits/has_greater.h>
 #include<core/mpl/type_traits/has_logic_and.h>
 #include<core/mpl/type_traits/has_logic_or.h>
-
 #include<core/mpl/type_traits/has_front_dec.h>
 #include<core/mpl/type_traits/has_front_inc.h>
 #include<core/mpl/type_traits/has_post_dec.h>
 #include<core/mpl/type_traits/has_post_inc.h>
+#include<core/mpl/type_traits/has_bit_reverse.h>
 #include<core/mpl/type_traits/has_positive.h>
 #include<core/mpl/type_traits/has_negative.h>
 #include<core/mpl/type_traits/has_deref.h>
-
-//#include<core/mpl/type_traits/has_delete.h>
-//#include<core/mpl/type_traits/has_new.h>
-//#include<core/mpl/type_traits/has_indexer.h>
-//#include<core/mpl/type_traits/has_invoker.h>
+#include<core/mpl/type_traits/has_logic_not.h>
+#include<core/mpl/type_traits/has_delete.h>
+#include<core/mpl/type_traits/has_new.h>
+#include<core/mpl/type_traits/has_indexer.h>
+#include<core/mpl/type_traits/has_invoker.h>
 #include<core/mpl/type_traits/has_arrow.h>
 #include<core/mpl/type_traits/has_inner_type.h>
 
@@ -162,6 +157,18 @@ public: int public_obj;
 union TestUnion {};
 class TestAbstract { virtual void test() {} };
 class TestDerive :public TestAbstract { virtual void test() override final {} };
+class TestMul { public: TestMul operator*(int a) {} };
+class TestBitAnd { public: TestBitAnd operator&(int a) {} };
+class TestBitReverse { public: TestBitReverse operator~() {} };
+class TestLogic { public: constexpr operator bool() { return false; } };
+
+
+class TestPositive { public: TestPositive operator+() {} };
+class TestPositiveRet { public: TestPositiveRet(int) {} };
+
+
+enum TestNewEnum :unsigned char {};
+enum TestOldEnum {};
 
 class C1 { virtual void test() {} };
 class C2 :public C1 { virtual void test() {} };
@@ -171,7 +178,6 @@ template<typename T>
 struct InnerType
 {
 	using LT =  add_lref_t<T>;
-
 };
 
 template<typename T>
@@ -181,32 +187,30 @@ struct Inherit :public InnerType<T>
 	//static_assert(is_same<T&, LT>::value, "");
 };
 
-class TestAdd { public: void operator+(int a) {} };
 
+
+namespace detail2
+{
+	class TestHasDelete2
+	{
+	public:
+		void* operator new(size_t size) {}
+		void* operator new(size_t size, void* ptr) {}
+		void* operator new(size_t size, int) {}
+		void* operator new[](size_t size) {}
+		void operator delete(void * ptr) {}
+		void operator delete(void* ptr, size_t size) {}
+		void operator delete[](void* ptr) {}
+		void operator delete[](void* ptr, size_t size) {}
+	};
+};
 int main()
 {
-	/*Inherit<int>{};
-	using T = typename Inherit<int>::LT;*/
-
 	//bool wrap
 	AssertTrue(true_::value);
 	AssertTrue(true_c);
 	AssertFalse(false_::value);
 	AssertFalse(false_c);
-
-	//is_same
-	AssertTrue((is_same_v<int, int>));
-	AssertFalse((is_same_v<int, int const>));
-	AssertFalse((is_same_v<int, int volatile>));
-	AssertFalse((is_same_v<int, int const volatile>));
-	AssertFalse((is_same_v<int, char>));
-
-	//is_void
-	AssertTrue(is_void_v<void>);
-	AssertTrue(is_void_v<void const>);
-	AssertTrue(is_void_v<void volatile>);
-	AssertTrue(is_void_v<void const volatile>);
-	AssertFalse(is_void_v<int>);
 
 	//and_
 	AssertFalse(and_v<>);
@@ -226,210 +230,19 @@ int main()
 	AssertFalse((or_v< is_void<int>, is_void<int> >));        //both need to be false
 	AssertTrue((or_v< is_void<void>, is_void<char>, is_void<int>, is_void<long>>));
 
-	//add_const
-	AssertTypeSame(add_const_t<int>, int const);
-	AssertTypeSame(add_const_t<int const>, int const);
-	AssertTypeSame(add_const_t<int volatile>, int const volatile);
-	AssertTypeSame(add_const_t<int const volatile>, int const volatile);
-	AssertTypeSame(add_const_t<int&>, int&);       // &  const => &
-	AssertTypeSame(add_const_t<int&&>, int&&);     // && const => &&
-	AssertTypeSame(add_const_t<int*>, int* const);
-	AssertTypeSame(add_const_t<const int*>, const int* const);
-	AssertTypeSame(add_const_t<volatile int*>, volatile int* const);
-	AssertTypeSame(add_const_t<const volatile int*>, const volatile int* const);
-	AssertTypeSame(add_const_t<int[2]>, int const[2]);
-	AssertTypeSame(add_const_t<int[2]>, const int[2]);
+	//is_same
+	AssertTrue((is_same_v<int, int>));
+	AssertFalse((is_same_v<int, int const>));
+	AssertFalse((is_same_v<int, int volatile>));
+	AssertFalse((is_same_v<int, int const volatile>));
+	AssertFalse((is_same_v<int, char>));
 
-	// add_top_const
-	AssertTypeSame(add_top_const_t<int>, int);         //ingore
-	AssertTypeSame(add_top_const_t<int*>, const int*);
-	AssertTypeSame(add_top_const_t<int* volatile>, const int* volatile);
-	AssertTypeSame(add_top_const_t<int* const>, const int* const);
-	AssertTypeSame(add_top_const_t<int* const volatile>, const int* const volatile);
-	AssertTypeSame(add_top_const_t<int&>, const int&);
-	AssertTypeSame(add_top_const_t<volatile int&>, const volatile int&);
-	AssertTypeSame(add_top_const_t<const int&>, const int&);
-	AssertTypeSame(add_top_const_t<const volatile int&>, const volatile int&);
-	AssertTypeSame(add_top_const_t<int&&>, const int&&);
-
-	//add_volatile
-	AssertTypeSame(add_volatile_t<int>, int volatile);
-	AssertTypeSame(add_volatile_t<int const>, int volatile const);
-	AssertTypeSame(add_volatile_t<int volatile>, int volatile);
-	AssertTypeSame(add_volatile_t<int const volatile>, int const volatile);
-	AssertTypeSame(add_volatile_t<int&>, int&);       // &  const => &
-	AssertTypeSame(add_volatile_t<int&&>, int&&);     // && const => &&
-	AssertTypeSame(add_volatile_t<int*>, int* volatile);
-	AssertTypeSame(add_volatile_t<const int*>, const int* volatile);
-	AssertTypeSame(add_volatile_t<volatile int*>, volatile int* volatile);
-	AssertTypeSame(add_volatile_t<const volatile int*>, const volatile int* volatile);
-	AssertTypeSame(add_volatile_t<int[2]>, int volatile[2]);
-	AssertTypeSame(add_volatile_t<int[2]>, volatile int[2]);
-
-	//add_cv
-	AssertTypeSame(add_cv_t<int>, int const volatile);
-	AssertTypeSame(add_cv_t<int const>, int volatile const);
-	AssertTypeSame(add_cv_t<int volatile>, int volatile const);
-	AssertTypeSame(add_cv_t<int const volatile>, int const volatile);
-	AssertTypeSame(add_cv_t<int&>, int&);       // &  const => &
-	AssertTypeSame(add_cv_t<int&&>, int&&);     // && const => &&
-	AssertTypeSame(add_cv_t<int*>, int* volatile const);
-	AssertTypeSame(add_cv_t<const int*>, const int* const volatile);
-	AssertTypeSame(add_cv_t<volatile int*>, volatile int* volatile const);
-	AssertTypeSame(add_cv_t<const volatile int*>, const volatile int* const volatile);
-	AssertTypeSame(add_cv_t<int[2]>, int const volatile[2]);
-	AssertTypeSame(add_cv_t<int[2]>, volatile const int[2]);
-
-	//add_lref
-	AssertTypeSame(add_lref_t<int>, int&);
-	AssertTypeSame(add_lref_t<int&>, int&);  // & + & => &
-	AssertTypeSame(add_lref_t<int&&>, int&); //&& + & => &
-	AssertTypeSame(add_lref_t<int*>, int*&);
-	AssertTypeSame(add_lref_t<int[2]>, int2&);
-	AssertTypeSame(add_lref_t<int const>, const int&);
-	AssertTypeSame(add_lref_t<void>, void);
-	AssertTypeSame(add_lref_t<void const>, void const);
-	AssertTypeSame(add_lref_t<void volatile>, void volatile);
-	AssertTypeSame(add_lref_t<void const volatile>, void const volatile);
-
-	//add_rref
-	AssertTypeSame(add_rref_t<int>, int&&);
-	AssertTypeSame(add_rref_t<int&>, int&);
-	AssertTypeSame(add_rref_t<int&&>, int&&);
-	AssertTypeSame(add_rref_t<void>, void);
-	AssertTypeSame(add_rref_t<int[2]>, int2&&);
-	AssertTypeSame(add_rref_t<int const>, const int&&);
-	AssertTypeSame(add_rref_t<int volatile>, volatile int&&);
-
-	//add pointer
-	AssertTypeSame(add_pointer_t<int>, int*);
-	AssertTypeSame(add_pointer_t<int*>, int**);
-	AssertTypeSame(add_pointer_t<int&>, int*);
-	AssertTypeSame(add_pointer_t<int&&>, int*);
-	AssertTypeSame(add_pointer_t<int&>, int*);
-	AssertTypeSame(add_pointer_t<int[2]>, int2*);
-	AssertTypeSame(add_pointer_t<int const>, const int*);
-	AssertTypeSame(add_pointer_t<int volatile>, volatile int*);
-	AssertTypeSame(add_pointer_t<int const volatile>, const volatile int*);
-
-	//add_signed
-	AssertTypeSame(add_signed_t<int>, int);
-	AssertTypeSame(add_signed_t<unsigned int>, int);
-	AssertTypeSame(add_signed_t<unsigned int const>, int const);
-	AssertTypeSame(add_signed_t<unsigned char>, signed char);
-	AssertTypeSame(add_signed_t<char>, signed char);
-	AssertTypeSame(add_signed_t<unsigned short>, short);
-	AssertTypeSame(add_signed_t<unsigned long>, long);
-	AssertTypeSame(add_signed_t<unsigned long long>, long long);
-
-	//add_signed
-	AssertTypeSame(add_unsigned_t<int>, unsigned int);
-	AssertTypeSame(add_unsigned_t<char>, unsigned char);
-	AssertTypeSame(add_unsigned_t<signed char>, unsigned char);
-	AssertTypeSame(add_unsigned_t<int const>, unsigned int const);
-	AssertTypeSame(add_unsigned_t<int volatile>, unsigned int volatile);
-	AssertTypeSame(add_unsigned_t<int const volatile>, unsigned int const volatile);
-	AssertTypeSame(add_unsigned_t<short>, unsigned short);
-	AssertTypeSame(add_unsigned_t<long>, unsigned long);
-	AssertTypeSame(add_unsigned_t<long long>, unsigned long long);
-
-	//decay
-	AssertTypeSame(int, decay_t<int>);
-	AssertTypeSame(int*, decay_t<int[2]>);
-	AssertTypeSame(int(*)(int), decay_t<int(int)>);
-	AssertTypeSame(int, decay_t<const int>);
-	AssertTypeSame(int, decay_t<int&>);
-	AssertTypeSame(int, decay_t<const int&>);
-
-	//array dim
-	AssertTrue(0 == array_dim_v< int >);
-	AssertTrue(0 == array_dim_v< int* >);
-	AssertTrue(1 == array_dim_v< int[2] >);
-	AssertTrue(2 == array_dim_v< int[2][1] >);
-	AssertTrue(3 == array_dim_v< int[2][3][4] >);
-	AssertTrue(1 == array_dim_v< int[] >);
-	AssertTrue(2 == array_dim_v< int[][1] >);
-	AssertTrue(3 == array_dim_v< int[][1][1] >);
-
-	//array_len
-	AssertTrue(0 == array_len_v< int >);
-	AssertTrue(0 == array_len_v< int* >);
-	AssertTrue(2 == array_len_v< int[2] >);
-	AssertTrue(2 == array_len_v< int[2][1] >);
-	AssertTrue(2 == array_len_v< int[2][3][4] >);
-	AssertTrue(6 == array_len_v< int[6] >);
-	AssertTrue(0 == array_len_v< int[] >);
-
-	//remove_all_dim
-	AssertTypeSame(remove_all_dim_t< int>, int);
-	AssertTypeSame(remove_all_dim_t< int*>, int*);
-	AssertTypeSame(remove_all_dim_t< int[]>, int);
-	AssertTypeSame(remove_all_dim_t< int[1]>, int);
-	AssertTypeSame(remove_all_dim_t< int[1][2]>, int);
-	AssertTypeSame(remove_all_dim_t< int[][1]>, int);
-
-	//remove_dim
-	AssertTypeSame(remove_dim_t< int>, int);
-	AssertTypeSame(remove_dim_t< int*>, int*);
-	AssertTypeSame(remove_dim_t< const int[]>, const int);
-	AssertTypeSame(remove_dim_t< int const[2]>, const int);
-	AssertTypeSame(remove_dim_t< int[]>, int);
-	AssertTypeSame(remove_dim_t< int[1]>, int);
-	AssertTypeSame(remove_dim_t< int[1][2]>, int[2]);
-	AssertTypeSame(remove_dim_t< int[][1]>, int[1]);
-
-	//remove_cv
-	AssertTypeSame(remove_cv_t<int>, int);
-	AssertTypeSame(remove_cv_t<int const>, int);
-	AssertTypeSame(remove_cv_t<int volatile>, int);
-	AssertTypeSame(remove_cv_t<int const volatile>, int);
-	AssertTypeSame(remove_cv_t<const int&>, const int&);
-	AssertTypeSame(remove_cv_t<const int*>, const int*);
-
-	//remove_top_const
-	AssertTypeSame(remove_top_const_t<int>, int);
-	AssertTypeSame(remove_top_const_t<int const>, int const);
-	AssertTypeSame(remove_top_const_t<const int>, const int); //same as above
-	AssertTypeSame(remove_top_const_t<const int*>, int*);
-	AssertTypeSame(remove_top_const_t<const int* const >, int* const);
-	AssertTypeSame(remove_top_const_t<const int* volatile >, int* volatile);
-	AssertTypeSame(remove_top_const_t<const int* const volatile >, int* const volatile);
-	AssertTypeSame(remove_top_const_t<const int&>, int&);
-
-	//remove const
-	AssertTypeSame(remove_const_t<int>, int);
-	AssertTypeSame(remove_const_t<const int>, int);
-	AssertTypeSame(remove_const_t<const volatile int>, volatile int);
-	AssertTypeSame(remove_const_t<volatile int>, volatile int);
-	AssertTypeSame(remove_const_t<int const[2]>, int[2]);
-	AssertTypeSame(remove_const_t<int* const>, int*);
-	AssertTypeSame(remove_const_t<const int*>, const int*);
-
-	//remove volatile
-	AssertTypeSame(remove_volatile_t<int>, int);
-	AssertTypeSame(remove_volatile_t<volatile int>, int);
-	AssertTypeSame(remove_volatile_t<const volatile int>, const int);
-	AssertTypeSame(remove_volatile_t<const int>, const int);
-	AssertTypeSame(remove_volatile_t<int volatile[2]>, int[2]);
-	AssertTypeSame(remove_volatile_t<int* volatile>, int*);
-	AssertTypeSame(remove_volatile_t<volatile int*>, volatile int*);
-
-	//remove_ref
-	AssertTypeSame(remove_ref_t<int>, int);
-	AssertTypeSame(remove_ref_t<int&>, int);
-	AssertTypeSame(remove_ref_t<int&&>, int);
-	AssertTypeSame(remove_ref_t<const int&>, int const);
-	AssertTypeSame(remove_ref_t<volatile int&>, int volatile);
-	AssertTypeSame(remove_ref_t<const volatile int&>, int volatile const);
-	AssertTypeSame(remove_ref_t<const int*>, int const*);
-
-	//remove pointer
-	AssertTypeSame(remove_pointer_t<int>, int);
-	AssertTypeSame(remove_pointer_t<int*>, int);
-	AssertTypeSame(remove_pointer_t<int**>, int*);
-	AssertTypeSame(remove_pointer_t<const int*>, const int);
-	AssertTypeSame(remove_pointer_t<int* const>, int);
-	AssertTypeSame(remove_pointer_t<int*>, int);
+	//is_void
+	AssertTrue(is_void_v<void>);
+	AssertTrue(is_void_v<void const>);
+	AssertTrue(is_void_v<void volatile>);
+	AssertTrue(is_void_v<void const volatile>);
+	AssertFalse(is_void_v<int>);
 
 	//is float
 	AssertTrue(is_float_v<float>);
@@ -507,11 +320,11 @@ int main()
 	AssertFalse(is_nullptr_v<int>);
 
 	//is instance of
+	int runtime_val = 1;
 	AssertTrue(is_instance_of(2, int));
 	AssertTrue(is_instance_of('a', char));
 	AssertFalse(is_instance_of(2.5f, int));
-	int a = 1;
-	AssertTrue(is_instance_of(a, int));
+	AssertTrue(is_instance_of(runtime_val, int));
 	AssertTrue(is_instance_of(nullptr, nullptr_t));
 
 	//is fundamental
@@ -601,7 +414,7 @@ int main()
 	//is function
 	AssertTrue(is_function_v<decltype(normal_fn)>);
 	AssertTrue(is_function_v<decltype(varg_fn)>);
-#if !defined(AURORA3D_COMPILER_GCC)
+#if !defined(AURORA3D_COMPILER_GCC)   //gcc no function prefix like __cdcall 
 	void(*normal_p)() = normal_cd_fn;
 	void(*const normal_const)() = normal_cd_fn;
 	void(*volatile normal_volatile)() = normal_cd_fn;
@@ -616,14 +429,11 @@ int main()
 #endif
 
 	//enum_base
-	enum TestNewEnum :unsigned char {};
-	enum TestOldEnum {};
 	AssertTypeSame(enum_base_t<TestNewEnum>, unsigned char);
 	//AssertTypeSame(enum_base_t<TestOldEnum>, int);  //gcc is unsigned int , msvc clang is int
 	AssertTypeSame(enum_base_t<char>, char);
 	AssertTrue(sizeof(TestNewEnum) == 1);
 	AssertTrue(sizeof(TestOldEnum) == 4);
-
 
 	//is scaler
 	AssertTrue(is_scaler_v<int*>);
@@ -759,7 +569,6 @@ int main()
 	AssertTrue((is_child_of_v<C2, C1 const volatile>));
 	AssertFalse((is_child_of_v<C1, C1>));
 
-
 	//is final
 	class D1 final {};
 	AssertTrue(is_final_v<D1>);
@@ -775,9 +584,6 @@ int main()
 	AssertTrue(is_empty_v<D1 const volatile>);
 	AssertFalse(is_empty_v<TestUnion>);  //??
 	AssertFalse(is_empty_v<int>);
-
-
-	
 
 	//is const
 	AssertFalse(is_const_v<int>);
@@ -808,28 +614,334 @@ int main()
 	AssertTrue((is_convertible_v<int_<0>, int>));             //explicit convert function
 
 	//is compatible
-	class TestComp {};
+	struct TestComp {};
 	AssertTrue((is_compatible_v<int, float>));
 	AssertFalse((is_compatible_v<int, void>));
 	AssertFalse((is_compatible_v<int, TestComp>));
 	AssertFalse((is_compatible_v<int, float, TestComp>));
 
+	//add_const
+	AssertTypeSame(add_const_t<int>, int const);
+	AssertTypeSame(add_const_t<int const>, int const);
+	AssertTypeSame(add_const_t<int volatile>, int const volatile);
+	AssertTypeSame(add_const_t<int const volatile>, int const volatile);
+	AssertTypeSame(add_const_t<int&>, int&);       // &  const => &
+	AssertTypeSame(add_const_t<int&&>, int&&);     // && const => &&
+	AssertTypeSame(add_const_t<int*>, int* const);
+	AssertTypeSame(add_const_t<const int*>, const int* const);
+	AssertTypeSame(add_const_t<volatile int*>, volatile int* const);
+	AssertTypeSame(add_const_t<const volatile int*>, const volatile int* const);
+	AssertTypeSame(add_const_t<int[2]>, int const[2]);
+	AssertTypeSame(add_const_t<int[2]>, const int[2]);
+
+	// add_top_const
+	AssertTypeSame(add_top_const_t<int>, int);         //ingore
+	AssertTypeSame(add_top_const_t<int*>, const int*);
+	AssertTypeSame(add_top_const_t<int* volatile>, const int* volatile);
+	AssertTypeSame(add_top_const_t<int* const>, const int* const);
+	AssertTypeSame(add_top_const_t<int* const volatile>, const int* const volatile);
+	AssertTypeSame(add_top_const_t<int&>, const int&);
+	AssertTypeSame(add_top_const_t<volatile int&>, const volatile int&);
+	AssertTypeSame(add_top_const_t<const int&>, const int&);
+	AssertTypeSame(add_top_const_t<const volatile int&>, const volatile int&);
+	AssertTypeSame(add_top_const_t<int&&>, const int&&);
+
+	//add_volatile
+	AssertTypeSame(add_volatile_t<int>, int volatile);
+	AssertTypeSame(add_volatile_t<int const>, int volatile const);
+	AssertTypeSame(add_volatile_t<int volatile>, int volatile);
+	AssertTypeSame(add_volatile_t<int const volatile>, int const volatile);
+	AssertTypeSame(add_volatile_t<int&>, int&);       // &  const => &
+	AssertTypeSame(add_volatile_t<int&&>, int&&);     // && const => &&
+	AssertTypeSame(add_volatile_t<int*>, int* volatile);
+	AssertTypeSame(add_volatile_t<const int*>, const int* volatile);
+	AssertTypeSame(add_volatile_t<volatile int*>, volatile int* volatile);
+	AssertTypeSame(add_volatile_t<const volatile int*>, const volatile int* volatile);
+	AssertTypeSame(add_volatile_t<int[2]>, int volatile[2]);
+	AssertTypeSame(add_volatile_t<int[2]>, volatile int[2]);
+
+	//add_cv
+	AssertTypeSame(add_cv_t<int>, int const volatile);
+	AssertTypeSame(add_cv_t<int const>, int volatile const);
+	AssertTypeSame(add_cv_t<int volatile>, int volatile const);
+	AssertTypeSame(add_cv_t<int const volatile>, int const volatile);
+	AssertTypeSame(add_cv_t<int&>, int&);       // &  const => &
+	AssertTypeSame(add_cv_t<int&&>, int&&);     // && const => &&
+	AssertTypeSame(add_cv_t<int*>, int* volatile const);
+	AssertTypeSame(add_cv_t<const int*>, const int* const volatile);
+	AssertTypeSame(add_cv_t<volatile int*>, volatile int* volatile const);
+	AssertTypeSame(add_cv_t<const volatile int*>, const volatile int* const volatile);
+	AssertTypeSame(add_cv_t<int[2]>, int const volatile[2]);
+	AssertTypeSame(add_cv_t<int[2]>, volatile const int[2]);
+
+	//add_lref
+	AssertTypeSame(add_lref_t<int>, int&);
+	AssertTypeSame(add_lref_t<int&>, int&);  // & + & => &
+	AssertTypeSame(add_lref_t<int&&>, int&); //&& + & => &
+	AssertTypeSame(add_lref_t<int*>, int*&);
+	AssertTypeSame(add_lref_t<int[2]>, int2&);
+	AssertTypeSame(add_lref_t<int const>, const int&);
+	AssertTypeSame(add_lref_t<void>, void);
+	AssertTypeSame(add_lref_t<void const>, void const);
+	AssertTypeSame(add_lref_t<void volatile>, void volatile);
+	AssertTypeSame(add_lref_t<void const volatile>, void const volatile);
+
+	//add_rref
+	AssertTypeSame(add_rref_t<int>, int&&);
+	AssertTypeSame(add_rref_t<int&>, int&);
+	AssertTypeSame(add_rref_t<int&&>, int&&);
+	AssertTypeSame(add_rref_t<void>, void);
+	AssertTypeSame(add_rref_t<int[2]>, int2&&);
+	AssertTypeSame(add_rref_t<int const>, const int&&);
+	AssertTypeSame(add_rref_t<int volatile>, volatile int&&);
+
+	//add_unsigned
+	AssertTypeSame(add_unsigned_t<int>, unsigned int);
+	AssertTypeSame(add_unsigned_t<char>, unsigned char);
+	AssertTypeSame(add_unsigned_t<signed char>, unsigned char);
+	AssertTypeSame(add_unsigned_t<int const>, unsigned int const);
+	AssertTypeSame(add_unsigned_t<int volatile>, unsigned int volatile);
+	AssertTypeSame(add_unsigned_t<int const volatile>, unsigned int const volatile);
+	AssertTypeSame(add_unsigned_t<short>, unsigned short);
+	AssertTypeSame(add_unsigned_t<long>, unsigned long);
+	AssertTypeSame(add_unsigned_t<long long>, unsigned long long);
+
+	//add_signed
+	AssertTypeSame(add_signed_t<int>, int);
+	AssertTypeSame(add_signed_t<unsigned int>, int);
+	AssertTypeSame(add_signed_t<unsigned int const>, int const);
+	AssertTypeSame(add_signed_t<unsigned char>, signed char);
+	AssertTypeSame(add_signed_t<char>, signed char);
+	AssertTypeSame(add_signed_t<unsigned short>, short);
+	AssertTypeSame(add_signed_t<unsigned long>, long);
+	AssertTypeSame(add_signed_t<unsigned long long>, long long);
+
+	//add pointer
+	AssertTypeSame(add_pointer_t<int>, int*);
+	AssertTypeSame(add_pointer_t<int*>, int**);
+	AssertTypeSame(add_pointer_t<int&>, int*);
+	AssertTypeSame(add_pointer_t<int&&>, int*);
+	AssertTypeSame(add_pointer_t<int&>, int*);
+	AssertTypeSame(add_pointer_t<int[2]>, int2*);
+	AssertTypeSame(add_pointer_t<int const>, const int*);
+	AssertTypeSame(add_pointer_t<int volatile>, volatile int*);
+	AssertTypeSame(add_pointer_t<int const volatile>, const volatile int*);
+
+	//decay
+	AssertTypeSame(int, decay_t<int>);
+	AssertTypeSame(int*, decay_t<int[2]>);
+	AssertTypeSame(int(*)(int), decay_t<int(int)>);
+	AssertTypeSame(int, decay_t<const int>);
+	AssertTypeSame(int, decay_t<int&>);
+	AssertTypeSame(int, decay_t<const int&>);
+
+	//array dim
+	AssertTrue(0 == array_dim_v< int >);
+	AssertTrue(0 == array_dim_v< int* >);
+	AssertTrue(1 == array_dim_v< int[2] >);
+	AssertTrue(2 == array_dim_v< int[2][1] >);
+	AssertTrue(3 == array_dim_v< int[2][3][4] >);
+	AssertTrue(1 == array_dim_v< int[] >);
+	AssertTrue(2 == array_dim_v< int[][1] >);
+	AssertTrue(3 == array_dim_v< int[][1][1] >);
+
+	//array_len
+	AssertTrue(0 == array_len_v< int >);
+	AssertTrue(0 == array_len_v< int* >);
+	AssertTrue(2 == array_len_v< int[2] >);
+	AssertTrue(2 == array_len_v< int[2][1] >);
+	AssertTrue(2 == array_len_v< int[2][3][4] >);
+	AssertTrue(6 == array_len_v< int[6] >);
+	AssertTrue(0 == array_len_v< int[] >);
+
+	//remove_all_dim
+	AssertTypeSame(remove_all_dim_t< int>, int);
+	AssertTypeSame(remove_all_dim_t< int*>, int*);
+	AssertTypeSame(remove_all_dim_t< int[]>, int);
+	AssertTypeSame(remove_all_dim_t< int[1]>, int);
+	AssertTypeSame(remove_all_dim_t< int[1][2]>, int);
+	AssertTypeSame(remove_all_dim_t< int[][1]>, int);
+
+	//remove_dim
+	AssertTypeSame(remove_dim_t< int>, int);
+	AssertTypeSame(remove_dim_t< int*>, int*);
+	AssertTypeSame(remove_dim_t< const int[]>, const int);
+	AssertTypeSame(remove_dim_t< int const[2]>, const int);
+	AssertTypeSame(remove_dim_t< int[]>, int);
+	AssertTypeSame(remove_dim_t< int[1]>, int);
+	AssertTypeSame(remove_dim_t< int[1][2]>, int[2]);
+	AssertTypeSame(remove_dim_t< int[][1]>, int[1]);
+
+	//remove_cv
+	AssertTypeSame(remove_cv_t<int>, int);
+	AssertTypeSame(remove_cv_t<int const>, int);
+	AssertTypeSame(remove_cv_t<int volatile>, int);
+	AssertTypeSame(remove_cv_t<int const volatile>, int);
+	AssertTypeSame(remove_cv_t<const int&>, const int&);
+	AssertTypeSame(remove_cv_t<const int*>, const int*);
+
+	//remove_top_const
+	AssertTypeSame(remove_top_const_t<int>, int);
+	AssertTypeSame(remove_top_const_t<int const>, int const);
+	AssertTypeSame(remove_top_const_t<const int>, const int); //same as above
+	AssertTypeSame(remove_top_const_t<const int*>, int*);
+	AssertTypeSame(remove_top_const_t<const int* const >, int* const);
+	AssertTypeSame(remove_top_const_t<const int* volatile >, int* volatile);
+	AssertTypeSame(remove_top_const_t<const int* const volatile >, int* const volatile);
+	AssertTypeSame(remove_top_const_t<const int&>, int&);
+
+	//remove const
+	AssertTypeSame(remove_const_t<int>, int);
+	AssertTypeSame(remove_const_t<const int>, int);
+	AssertTypeSame(remove_const_t<const volatile int>, volatile int);
+	AssertTypeSame(remove_const_t<volatile int>, volatile int);
+	AssertTypeSame(remove_const_t<int const[2]>, int[2]);
+	AssertTypeSame(remove_const_t<int* const>, int*);
+	AssertTypeSame(remove_const_t<const int*>, const int*);
+
+	//remove volatile
+	AssertTypeSame(remove_volatile_t<int>, int);
+	AssertTypeSame(remove_volatile_t<volatile int>, int);
+	AssertTypeSame(remove_volatile_t<const volatile int>, const int);
+	AssertTypeSame(remove_volatile_t<const int>, const int);
+	AssertTypeSame(remove_volatile_t<int volatile[2]>, int[2]);
+	AssertTypeSame(remove_volatile_t<int* volatile>, int*);
+	AssertTypeSame(remove_volatile_t<volatile int*>, volatile int*);
+
+	//remove_ref
+	AssertTypeSame(remove_ref_t<int>, int);
+	AssertTypeSame(remove_ref_t<int&>, int);
+	AssertTypeSame(remove_ref_t<int&&>, int);
+	AssertTypeSame(remove_ref_t<const int&>, int const);
+	AssertTypeSame(remove_ref_t<volatile int&>, int volatile);
+	AssertTypeSame(remove_ref_t<const volatile int&>, int volatile const);
+	AssertTypeSame(remove_ref_t<const int*>, int const*);
+
+	//remove pointer
+	AssertTypeSame(remove_pointer_t<int>, int);
+	AssertTypeSame(remove_pointer_t<int*>, int);
+	AssertTypeSame(remove_pointer_t<int**>, int*);
+	AssertTypeSame(remove_pointer_t<const int*>, const int);
+	AssertTypeSame(remove_pointer_t<int* const>, int);
+	AssertTypeSame(remove_pointer_t<int*>, int);
+
+	
+
 	// has_add
-	AssertFalse((has_add_v<int, int, int const>));
-	AssertFalse((has_add_v<int, int, int&&>));
-	AssertFalse((has_add_v<int, int, TestAdd>));
+	struct TestAdd { public: TestAdd& operator+(int a) {} };
+	AssertFalse((has_add_v<int, int, int const>)); //const int = int + int
+	AssertTrue((has_add_v<int, int, int&&>));
+	AssertFalse((has_add_v<int, int, TestAdd>));   //TestAdd = int + int
 	AssertTrue((has_add_v<TestAdd, int>));
 	AssertTrue((has_add_v<TestAdd, float>));      //implicit convert to int
-	AssertFalse((has_add_v<float, TestAdd>));
+	AssertFalse((has_add_v<float, TestAdd>));     
 	AssertTrue((has_add_v<int, int>));
-	AssertFalse((has_add_v<char*, int>));          //T* + integer is ill-formed
+	AssertTrue((has_add_v<char*, int>));         
 	AssertFalse((has_add_v<void*, int>));         //void* + integer is ill-formed
 	AssertFalse((has_add_v<TestAdd*, TestAdd*>)); //T* + P* is ill-formed
 	AssertFalse((has_add_v<int*&, int*&>));
 
+	// has_add_assign
+	struct TestAddAssign { const TestAddAssign& operator+=(int) {} };
+	AssertTrue((has_add_assign_v<int, int>));
+	AssertFalse((has_add_assign_v<const int, int>)); //const lvalue + T is ill-formed
+	AssertFalse((has_add_assign_v<int, int*>));
+	AssertFalse((has_add_assign_v<TestAddAssign, int*>));
+	AssertTrue((has_add_assign_v<TestAddAssign, int>));
+
+	//has_mul
+	AssertTrue((has_mul_v<TestMul, int>));
+	AssertFalse((has_mul_v<int, TestMul>));
+	AssertFalse((has_mul_v<int*, int*>));
+	AssertFalse((has_mul_v<int*, int>));
+
+	//has mul assign
+	AssertFalse((has_mul_assign_v<TestMul, int>));
+	AssertTrue((has_mul_assign_v<int, int>));
+	AssertFalse((has_mul_assign_v<const int, int>));
+
+	//has bit and
+	AssertTrue((has_bit_and_v<TestBitAnd, int>));
+	AssertFalse((has_bit_and_v<int, TestBitAnd>));
+	AssertTrue((has_bit_and_v<int, int>));
+	AssertFalse((has_bit_and_v<float, int>));  // 
+	AssertFalse((has_bit_and_v<void, int>));   // non-fundamental & integer
+	AssertFalse((has_bit_and_v<float*, int>)); // pointer & fundamental
+
+	// has bit reverse
+	AssertTrue(has_bit_reverse_v<int>);
+	AssertFalse(has_bit_reverse_v<int*>);
+	AssertFalse(has_bit_reverse_v<void>);
+	AssertFalse(has_bit_reverse_v<nullptr_t>);
+	AssertTrue(has_bit_reverse_v<TestBitReverse>);
+
+	//has cmp 
+	AssertTrue((has_equal_v<int, int>));
+	AssertFalse((has_equal_v<int, TestDerive>));
+	AssertFalse((has_equal_v<int, TestDerive*>));
+	AssertTrue((has_equal_v<TestDerive*, TestAbstract*, bool>));
+
+	//has logic and
+	AssertTrue((has_logic_and_v<int, int>));
+	AssertTrue((has_logic_and_v<int, int*>));
+	AssertFalse((has_logic_and_v<int, void>));
+	AssertFalse((has_logic_and_v<int, TestBitAnd>));
+	AssertFalse((has_logic_and_v<int, TestBitAnd>));
+	AssertTrue((has_logic_and_v<int, TestLogic>));
+
+	//has front inc
+	class TestFrontInc { public: TestFrontInc operator++() {} };
+	class TestBackInc { public: TestBackInc operator++(int) {} };
+	AssertTrue(has_front_inc_v<int>);
+	AssertTrue(has_front_inc_v<float>);
+	AssertTrue(has_front_inc_v<int*>);
+	AssertTrue(has_front_inc_v<TestFrontInc>);
+	AssertFalse(has_front_inc_v<TestBackInc>);
+	AssertFalse(has_front_inc_v<TestNewEnum>); //enum no op
+	AssertFalse(has_front_inc_v<int const>);   //const can't change self
+	AssertFalse(has_front_inc_v<int&&>);       //not changable lvalue
+	AssertFalse(has_front_inc_v<void*>);
+	AssertFalse(has_front_inc_v<void>);
+	AssertFalse(has_front_inc_v<nullptr_t>);
+
+	//has post inc
+	AssertTrue(has_post_inc_v<int>);
+	AssertTrue(has_post_inc_v<float>);
+	AssertTrue(has_post_inc_v<int*>);
+	AssertFalse(has_post_inc_v<TestFrontInc>); //analyzer's fault
+	AssertTrue(has_post_inc_v<TestBackInc>);
+	AssertFalse(has_post_inc_v<TestNewEnum>); //enum no op
+	AssertFalse(has_post_inc_v<int const>);   //const can't change self
+	AssertFalse(has_post_inc_v<int&&>);       //not changable lvalue
+	AssertFalse(has_post_inc_v<void*>);
+	AssertFalse(has_post_inc_v<void>);
+	AssertFalse(has_post_inc_v<nullptr_t>);
+
+	//has positive/negative
+	AssertTrue(has_positive_v<int>);
+	AssertTrue((has_positive_v<int, int>));
+	AssertFalse((has_positive_v<int, const int>));   //const  ret
+	AssertFalse((has_positive_v<int, int&&>));       //rvalue ret
+	AssertFalse((has_positive_v<int, TestPositive>)); //no constructor
+	AssertTrue((has_positive_v<int, TestPositiveRet>)); //has constructor
+	AssertTrue((has_positive_v<const int,int>));
+	AssertTrue(has_positive_v<TestPositive>);
+	AssertTrue(has_positive_v<int*>);
+	AssertTrue((has_positive_v<TestNewEnum,int>));
+
+	//test has deref
+	class TestDeref { public: int operator*() {} };
+	AssertTrue((has_deref_v<TestDeref,int>));
+	AssertFalse(has_deref_v<int>);
+	AssertTrue((has_deref_v<int*,int>));
+	AssertFalse(has_deref_v<decltype(p_member_const_fn1)>);
+
 	//has arrow
-	struct TestArrow { void* operator->() { return 0; } };
-	AssertTrue((has_arrow_v<TestArrow, void*>));
+	struct Content { int a; };
+	struct TestArrow { Content* operator->() { return 0; } };
+	struct TestArrow2 { void* operator->() { return 0; } };
+	AssertTrue((has_arrow_v<TestArrow, Content*>));
+	AssertFalse((has_arrow_v<TestArrow2, void*>));
 	AssertFalse((has_arrow_v<TestArrow, char*>));
 	AssertFalse((has_arrow_v<int, int>));
 
@@ -837,6 +949,36 @@ int main()
 	AssertTrue(has_inner_type_v < false_>);
 	AssertTrue(has_inner_value_type_v< false_>);
 	AssertFalse(has_inner_type_v< int>);
+
+	//has invoker
+	struct TestInvoker { int operator()(int, int); };
+	AssertTrue((has_invoker_v<TestInvoker, int, int, int>)); 
+	AssertTrue((has_invoker_v<TestInvoker, int, int, float>));         // float convert to int
+	AssertFalse((has_invoker_v<TestInvoker, TestInvoker, int, int>));  // ret int != TestInvoker
+	AssertFalse((has_invoker_v<TestInvoker, int, float>));             // no parameter single float
+
+	//has new
+	AssertFalse(has_new_v<int>);
+	AssertTrue(has_new_v< detail2::TestHasDelete2>);
+	AssertTrue((has_new_v<detail2::TestHasDelete2, void*>));
+	AssertFalse((has_new_v<detail2::TestHasDelete2, int&>));
+
+	//has delete
+	AssertFalse(has_delete_v<int>);
+	AssertTrue(has_delete_v<detail2::TestHasDelete2>);
+	AssertTrue((has_delete_v<detail2::TestHasDelete2, size_t>));
+	AssertTrue((has_array_delete_v<detail2::TestHasDelete2, size_t>));
+	AssertFalse((has_array_delete_v<detail2::TestHasDelete2, int>));
+
+	//has indexer
+	struct TestIndex { int operator[](int) {} };
+	struct TestTable { int operator[](const char*) {} };
+	AssertTrue((has_index_v<int[2], int, int>));
+	AssertTrue((has_index_v<TestIndex, int, int>));
+	AssertTrue((has_index_v<TestIndex, int, float>));
+	AssertTrue((has_index_v<TestTable, int, const char*>));
+	AssertTrue((has_index_v<TestTable, float, const char*>));
+
 
 	//has constructor
 	struct TestConstructor { TestConstructor() {}; };
@@ -850,7 +992,7 @@ int main()
 	struct TestRefConstructor { TestRefConstructor(TestRefConstructor&) {} };
 	struct TestMoveConstructor { TestMoveConstructor(TestMoveConstructor&&) {} };
 	AssertTrue((has_constructor_v<TestConstructor>));
-	AssertFalse((has_constructor_v<TestConstructor&, TestConstructor>));
+	AssertFalse((has_constructor_v<TestConstructor&, TestConstructor>));  //analyzer's fault
 	AssertTrue((has_constructor_v<TestConstructor&&, TestConstructor>));
 	AssertTrue((has_constructor_v<TestConstructor const, TestConstructor>));
 	AssertTrue((has_constructor_v<TestDefaultConstructor1>));
@@ -877,6 +1019,8 @@ int main()
 	AssertFalse(has_destructor_v<TestDeleteDestructor>);
 	AssertTrue(has_destructor_v<TestDestructor>);
 	AssertTrue(has_nothrow_destructor_v<TestNothrowDeleteDestructor>);
+
+	//has assigner
 
 
 

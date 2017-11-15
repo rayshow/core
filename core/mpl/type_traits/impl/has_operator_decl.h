@@ -1,222 +1,188 @@
 #pragma once
 
-#include<core/compile.h>
-#include<core/preprocessor/seq_foreach_item.h>
-#include<core/mpl/base/bool_.h>
 #include<core/mpl/base/null_.h>
-#include<core/mpl/base/and_.h>
+#include<core/mpl/base/bool_.h>
 #include<core/mpl/base/not_.h>
-#include<core/mpl/type_traits/is_void.h>
-#include<core/mpl/type_traits/is_const.h>
-#include<core/mpl/type_traits/is_rref.h>
 #include<core/mpl/type_traits/declval.h>
-#include<core/mpl/type_traits/remove_cv.h>
-#include<core/mpl/type_traits/remove_pointer.h>
-#include<core/mpl/type_traits/remove_ref.h>
-#include<core/mpl/type_traits/impl/has_operator_type.h>
+#include<core/mpl/type_traits/is_rref.h>
 
-#if defined(AURORA3D_COMPILER_MSVC)
-#pragma warning(push)
-//4244: ReturnConvert<Ret>::Convert(T) precision loss, e.g.   float convert to int  
-//4913: exists user-define operator,(T1,T2), but not match all parameters, and use default inner operator,(prefix,...)
-//4505: un-reference local function had been removed
-#pragma warning(disable:4244 4913 4505)
-#else
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused"
-#endif
+
+
+//+ - * / % & | ^ && || >> << == !=  > < >= <=
+#define A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
+		namespace operator_detail                                                    \
+		{                                                                            \
+			template<typename L, typename R, typename Ret>                           \
+			struct has_ ## opname ## _ret                                            \
+			{                                                                        \
+				template<typename T, typename U, typename P,                         \
+				typename = decltype(makeval<P>() = declval<T>() opsign declval<U>())>\
+					static constexpr bool sfinae(int) { return true; }               \
+				template<typename T, typename U, typename P>                         \
+				static constexpr bool sfinae(...) { return false; }                  \
+				static constexpr bool value = sfinae<L, R, Ret>(0);                  \
+			};                                                                       \
+		}                                                                            \
+		template<typename L, typename R = L, typename Ret = L>                       \
+		struct has_ ## opname : public                                               \
+			operator_detail::has_ ## opname ##_ret<L, R, Ret> {};                    \
+		template<typename L, typename R = L, typename Ret = L>                       \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<L, R, Ret>::value;
+
+
+
+//TODO: clang  int+=int* will not report error, need to fix
+//+= -= *= /= %= &= |= ^= >>== <<== 
+#define A3D_TT_HAS_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
+		namespace operator_detail                                                    \
+		{                                                                            \
+			template<typename L, typename R>                                         \
+			struct has_ ## opname ## _ret                                            \
+			{                                                                        \
+				template<typename U, typename P,                                     \
+				typename = decltype(makeval<U>() opsign declval<P>())>               \
+					static constexpr bool sfinae(int) { return true; }               \
+				template<typename U, typename P>                                     \
+				static constexpr bool sfinae(...) { return false; }                  \
+				static constexpr bool value = sfinae<L, R>(0);                       \
+			};                                                                       \
+		}                                                                            \
+		template<typename L, typename R = L >                                        \
+		struct has_ ## opname : public                                               \
+			operator_detail:: has_ ## opname ##_ret<L, R> {};                        \
+		template<typename L, typename R = L>                                         \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<L,R>::value;
+
+//! ~ * - + T
+#define A3D_TT_HAS_RET_UNARY_OP(opsign, opname)										 \
+		namespace operator_detail                                                    \
+		{                                                                            \
+			template<typename T, typename Ret>                                       \
+			struct has_ ## opname ## _ret                                            \
+			{                                                                        \
+				template<typename U, typename P,                                     \
+				typename = decltype(makeval<P>() = opsign declval<U>())>             \
+				static constexpr bool sfinae(int) { return true; }                   \
+				template<typename U, typename P>                                     \
+				static constexpr bool sfinae(...) { return false; }                  \
+				static constexpr bool value = sfinae<T, Ret>(0);                     \
+			};                                                                       \
+		}                                                                            \
+		template<typename T, typename Ret = T>                                       \
+		struct has_ ## opname:and_<not_<is_rref<Ret>>,                               \
+			operator_detail::has_ ## opname ## _ret<T, Ret>> {};                     \
+		template<typename T, typename Ret = T>                                       \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret>::value;
+
+
+//++ T, -- T
+#define A3D_TT_HAS_PRE_UNARY_OP(opsign, opname)										 \
+		namespace operator_detail                                                    \
+		{                                                                            \
+			template<typename T, typename Ret>                                       \
+			struct has_ ## opname ## _ret                                            \
+			{                                                                        \
+				template<typename U, typename P,                                     \
+				typename = decltype(makeval<P>() = opsign makeval<U>())>             \
+				static constexpr bool sfinae(int) { return true; }                   \
+				template<typename U, typename P>                                     \
+				static constexpr bool sfinae(...) { return false; }                  \
+				static constexpr bool value = sfinae<T, Ret>(0);                     \
+			};                                                                       \
+		}                                                                            \
+		template<typename T, typename Ret = T>                                       \
+		struct has_ ## opname:and_<not_<is_rref<Ret>>,                               \
+			operator_detail::has_ ## opname ## _ret<T, Ret>> {};                     \
+		template<typename T, typename Ret = T>                                       \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret>::value;
+
+
+// T--, T++
+#define A3D_TT_HAS_POST_UNARY_OP(opsign, opname)									 \
+		namespace operator_detail                                                    \
+		{                                                                            \
+			template<typename T, typename Ret>                                       \
+			struct has_ ## opname ## _ret                                            \
+			{                                                                        \
+				template<typename U, typename P,                                     \
+				typename = decltype(makeval<P>() =  makeval<U>() opsign)>            \
+				static constexpr bool sfinae(int) { return true; }                   \
+				template<typename U, typename P>                                     \
+				static constexpr bool sfinae(...) { return false; }                  \
+				static constexpr bool value = sfinae<T, Ret>(0);                     \
+			};                                                                       \
+		}                                                                            \
+		template<typename T, typename Ret = T>                                       \
+		struct has_ ## opname:and_<not_<is_rref<Ret>>,                               \
+			operator_detail::has_ ## opname ## _ret<T, Ret>> {};                     \
+		template<typename T, typename Ret = T>                                       \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret>::value;
+
+
+// Ret = T.operator {-> / [] / () } ( Args... ) 
+#define HAS_MEMBER_FN_DECL(sign, opname )                                                                           \
+		namespace detail                                                                                            \
+		{                                                                                                           \
+			template<typename T, typename Ret, typename... Args>                                                    \
+			struct has_ ## opname ## _helper                                                                        \
+			{                                                                                                       \
+				template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().sign(declval<Args>()...) )> \
+				static constexpr bool sfinae(int){ return true;}                                                    \
+				template<typename U>                                                                                \
+				static constexpr bool sfinae(...) { return false;}                                                  \
+				static constexpr bool value = sfinae<T>(0);                                                         \
+			};                                                                                                      \
+		}                                                                                                           \
+		template<typename T,typename Ret, typename... Args>                                                         \
+		struct has_ ## opname :and_<not_<is_rref<Ret>>,                                                             \
+			bool_< detail::has_ ## opname ## _helper <T, Ret, Args...>::value >> {};                                \
+		template<typename T, typename Ret, typename... Args>                                                        \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret, Args...>::value;
+
+
+// void* = new(Args...) / new[](Args...) T;  void = delete(Args...) / delete[](Args...) T
+#define HAS_NEW_DELETE_DECL(sign, opname, ret, ... )                                          \
+		namespace  detail                                                                     \
+		{                                                                                     \
+			template<typename T,typename... Args>                                             \
+			struct has_ ## opname ## _helper                                                  \
+			{                                                                                 \
+				template<typename U, typename= fn_sfinae<ret (*)( Args...), &U::sign >>       \
+				static constexpr bool choose(int) {return true;}                              \
+				template<typename U>                                                          \
+				static constexpr bool choose(...) {return false;}                             \
+				static constexpr bool value = choose<T>(0);                                   \
+			};                                                                                \
+		}                                                                                     \
+		template<typename T,typename... Args>                                                 \
+		struct has_ ## opname:public bool_<detail::has_ ## opname ## _helper<T                \
+			, __VA_ARGS__, Args...>::value>{};                                                \
+		template<typename T,typename... Args>                                                 \
+		static constexpr bool has_ ## opname ## _v = has_ ## opname<T,Args...>::value;
+
+// T::type
+#define A3D_TT_HAS_INNER_DECL(name, inner_name)											   \
+		namespace detail                                                                   \
+		{                                                                                  \
+			template<typename T>                                                           \
+			struct has_inner_ ## name ## _helper                                           \
+			{                                                                              \
+				template<typename U, typename = typename U:: inner_name>                   \
+				constexpr static  bool sfinae(int) { return true; };                       \
+				template<typename U>                                                       \
+				constexpr static  bool  sfinae(...){ return false; };                      \
+				static constexpr bool value = sfinae<T>(0);                                \
+			};                                                                             \
+		}                                                                                  \
+		template<typename T> struct has_inner_ ## name:                                    \
+			public bool_< detail::has_inner_ ## name ## _helper<T>::value >{};             \
+		template<typename T>                                                               \
+			static constexpr bool has_inner_ ## name ## _v = has_inner_ ## name<T>::value;
 
 namespace core
 {
 	namespace mpl
 	{
-		//ensure ImplicitConverted not pollute stand namespace
-		namespace op_detail
-		{
-
-#define A3D_TT_TYPEDEF_BINARY_TYPE(L,R)                                \
-				typedef remove_pointer_t<L>           left_noptr_t;    \
-				typedef remove_pointer_t<R>           right_noptr_t;   \
-				typedef remove_cv_t<remove_ref_t<L>>  left_nocv_t;     \
-				typedef remove_cv_t<remove_ref_t<R>>  right_nocv_t;
-
-#define A3D_TT_TYPEDEF_UNARY_TYPE(T)                                   \
-				typedef remove_pointer_t<T>           noptr_t;         \
-				typedef remove_cv_t<remove_ref_t<T>>  nocv_t;          \
-
-
-			//both parameter can't be void for unary or binary operation
-			template<typename L, typename R = L>
-			struct is_parameter_valid 
-			{
-				A3D_TT_TYPEDEF_BINARY_TYPE(L, R);
-				static constexpr bool value = !is_void_v<left_nocv_t> && !is_void_v<right_nocv_t>;
-			};
-
-			//if OP::invoke() is ill-formed , T will implicitly convert to anything
-			struct anything { template <class T> anything(T) {}; };
-
-			// anything op anything => no_op like: anything+anything => no_op
-#define BINARY_OPERATION(sign, ...)  inline no_op operator sign(const anything&, const anything&){ return declval<no_op>();}
-
-			// op anything => no_op like: ++anything => no_op
-#define UNARY_PRE_OPERATION(sign, ...) inline no_op operator sign(const anything&){ return declval<no_op>();}
-
-			// op anything => no_op like: anything++ => no_op
-#define UNARY_POST_OPERATION(sign, ...) inline no_op operator sign(const anything&, int){ return declval<no_op>();}
-
-			//binary operator  + - * / % & | ^ >> <<  += -= *= /= %= |= &= ^= >>= <<= && || > >= < <= == != (except = refer to has assigner)
-			A3D_PP_FOREACH_ITEM(BINARY_OPERATION, (+, -, *, / , %, &, | , ^, +=, -=, *=, /=, %=, &=, |=, ^=, << , >> , >>=, <<=, &&, || , <, <= , >, >= , == , != ));
-			// pre-unary operator --T ++T -T +T *T !T ~T
-			A3D_PP_FOREACH_ITEM(UNARY_PRE_OPERATION, (++, --, !, ~, *, -, +));
-
-			A3D_PP_FOREACH_ITEM(UNARY_POST_OPERATION, (++, --));
-			//post operator []  ()  new  new[]  delete  delete[] ->  ->*  ,  T--  T++
-			//not allowd . .* :: ?:
-#undef  BINARY_OPERATION
-#undef  UNARY_PRE_OPERATION
-
-			//test return type
-			template<typename T> struct ret_convert
-			{
-				//match every type except NoOperation,HasOperation
-				static  constexpr has_op convert(const T&) { return declval<has_op>(); };
-
-				//match void
-				//static  constexpr no_op convert(const has_any&) { return declval<no_op>(); };
-
-				static  constexpr no_op convert(...) { return declval<no_op>(); };
-
-				//match NoOperation
-				//static  constexpr no_op convert(const no_op&) { return declval<no_op>(); };
-			};
-
-			//if   Left op Right exists,  OP::invoke() return HasOperation
-			//else return NoOperation,  do [ operator,(NoOperation, HasOperation) ] and GET NoOperation type
-			template<typename OP>
-			struct is_operation_valid :public bool_< A3D_TT_HAS_OP((  OP::invoke(), declval<has_op>()  )) > {};
-
-			//if    OP::invoke() valid and return void, (void, has_any) return HasAnyReturn =>NoOperation
-			//else  OP::invoke() exists and return Non-NoOperation type, (T, HasAnyReturn) return T
-			//else  OP::invoke() not exists(imply convert to ImplicitConverted op ImplicitConverted, return NoOperation)
-			//                     (NoOperation,HasAnyReturn) return NoOperation
-			//if    return type is ingored always true
-			template<typename OP, typename Ret, bool isConstOrRValue = or_v< is_const<Ret>, is_rref<Ret>> >
-			struct is_ret_valid :
-				public bool_< A3D_TT_HAS_OP( ret_convert<Ret>::convert((  OP::invoke()/**, declval<has_any>()*/  )) ) > { };
-
-			// Ret == null_ need ingore ret check
-			template<typename OP>  struct is_ret_valid<OP, null_, false> : public true_ {};
-
-			// Ret is const or rvalue, can't change
-			template<typename OP, typename T>  struct is_ret_valid<OP, T, true> : public false_ {};
-
-			//if    BinaryOp::Op() return Non-NoOperation type,  GET NoOperation
-			//else  BinaryOp::Op() return NoOperation type, GET HasVoidReturn
-			//if    return type is ingored always true
-			template<typename OP> struct is_void_ret_valid :
-				public bool_< A3D_TT_HAS_OP((  OP::invoke(), declval<has_void>()  ))> {};
-
-			//for binary operation
-			//operation overload contained in class(member function) left imply type is a left value reference, so Left can't be const T 
-			//Left or Right type qualified with & and && passed to operation will miss
-			template<typename OP, typename L, typename R, typename Ret, bool isVoid = is_void_v<Ret> >
-			struct has_binary_operation :public and_<
-				is_parameter_valid<L, R>,
-				is_operation_valid<OP>,
-				is_ret_valid<OP, Ret> > {};
-
-			//return void
-			template <typename OP, typename L, typename R, typename Ret>
-			struct has_binary_operation<OP, L, R, Ret, true> :public and_<
-				is_parameter_valid<L, R>,
-				is_operation_valid<OP>,
-				is_void_ret_valid<OP > > {};
-
-
-			//for unary Operation
-			template<typename OP, typename T, typename Ret, bool isVoid = is_void_v<Ret> >
-			struct has_unary_operation :public and_<
-				is_parameter_valid<T>,
-				is_operation_valid<OP>,
-				is_ret_valid<OP, Ret>> {};
-
-			//return is void
-			template<typename OP, typename T, typename Ret>
-			struct has_unary_operation<OP, T, Ret, true> :public and_<
-				is_parameter_valid<T>,
-				is_operation_valid<OP>,
-				is_void_ret_valid<OP> > {};
-
-			// operation check has three state: 
-			// 1. op exists and is public access, test parameter and ret if op is will-formed return true
-			// 2. op exists and is not public, static assert failed and cause a compile error(need imporve)
-			// 3. op not exists return false
-
-			//for binary operation declare,  Left OP Right 
-#define  HAS_BINARY_OPERATION_DECL(sign, opname, check_LR_fn )                                         \
-			namespace op_detail                                                                        \
-			{                                                                                          \
-				template<typename L, typename R>                                                       \
-					struct opname ## _operation                                                        \
-				{                                                                                      \
-					static constexpr decltype(auto) invoke()                                           \
-					{                                                                                  \
-						return makeval<remove_const_t<L>>() sign makeval<R>();                         \
-					}                                                                                  \
-				};                                                                                     \
-				template<typename L, typename R> struct check_ ## opname ## _parameter                 \
-				{                                                                                      \
-					A3D_TT_TYPEDEF_BINARY_TYPE(L, R);                                                  \
-					static constexpr bool value = check_LR_fn;                                         \
-				};                                                                                     \
-			}                                                                                          \
-			template<typename L, typename R = L, typename Ret = null_,                                 \
-				bool invalid = op_detail::check_ ## opname ## _parameter<L, R>::value >                \
-			struct has_## opname : public op_detail::has_binary_operation<                             \
-				op_detail::opname ## _operation<L, R>, L, R, Ret> {};                                  \
-                                                                                                       \
-			template<typename L, typename R, typename Ret>                                             \
-			struct has_## opname<L,R,Ret,true> : public false_ {};                                     \
-                                                                                                       \
-			template<typename L, typename R, typename Ret = null_>                                     \
-			constexpr bool has_ ## opname ## _v = has_ ## opname<L,R,Ret>::value
-		
-
-		//for pre-unary operation declare, OP T like -1 
-#define HAS_FRONT_UNARY_OPERATION_DECL(sign, opname, check_T_fn)                                 \
-			namespace op_detail                                                                  \
-			{                                                                                    \
-				template<typename T>                                                             \
-				struct opname ## _operation                                                      \
-				{                                                                                \
-					static constexpr decltype(auto) invoke()                                     \
-					{                                                                            \
-						return sign makeval<T>();                                                \
-					}                                                                            \
-				};                                                                               \
-				template<typename T>                                                             \
-				struct check_ ## opname ## _parameter                                            \
-				{                                                                                \
-					A3D_TT_TYPEDEF_UNARY_TYPE(T);                                                \
-					static const bool value = check_T_fn;                                        \
-				};                                                                               \
-			}                                                                                    \
-			template<typename T, typename Ret = null_,                                           \
-				bool invalid = op_detail::check_ ## opname ## _parameter<T>::value>              \
-			struct has_ ## opname :public op_detail::has_unary_operation<                        \
-				op_detail::opname ## _operation<T>,T,Ret> {};                                    \
-                                                                                                 \
-			template<typename T, typename Ret>                                                   \
-			struct has_ ## opname <T, Ret, true> :false_ {};                                     \
-			template<typename T, typename Ret = null_>                                           \
-			constexpr bool has_ ## opname ## _v = has_ ## opname<T,Ret>::value 
-
-		} //namespace op_detail
-	}//namespace mpl
+		template<typename T, T t> struct fn_sfinae {};
+	}
 }
-#if defined(AURORA3D_COMPILER_MSVC)
-#pragma warning(pop)
-#else
-#pragma GCC diagnostic pop
-#endif
