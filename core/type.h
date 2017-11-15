@@ -1,7 +1,9 @@
 #pragma once
 
+#include<core/compile.h>
+#include<cstddef>
 
-namespace Aurora3D
+namespace core
 {
 	//for short and clear
 	typedef unsigned char            uint8;
@@ -17,6 +19,8 @@ namespace Aurora3D
 	typedef char                     achar;  //ansi char
 	typedef char16_t                 char16;
 	typedef char32_t                 char32;
+	
+	typedef std::size_t size_t;
 
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");
 	static_assert(sizeof(int8) == 1, "int8 is not 1 byte.");

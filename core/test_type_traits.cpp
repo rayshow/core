@@ -4,6 +4,7 @@
 #include<string>
 #include<typeinfo>
 
+#include<core/type.h>
 //type traits base lib
 #include<core/mpl/base/bool_.h>
 #include<core/mpl/base/and_.h>
@@ -191,18 +192,7 @@ struct Inherit :public InnerType<T>
 
 namespace detail2
 {
-	class TestHasDelete2
-	{
-	public:
-		void* operator new(size_t size) {}
-		void* operator new(size_t size, void* ptr) {}
-		void* operator new(size_t size, int) {}
-		void* operator new[](size_t size) {}
-		void operator delete(void * ptr) {}
-		void operator delete(void* ptr, size_t size) {}
-		void operator delete[](void* ptr) {}
-		void operator delete[](void* ptr, size_t size) {}
-	};
+	
 };
 
 class Base { public:Base(int) {} };
@@ -211,14 +201,14 @@ class Derive:public Base {  };
 
 int main()
 {
-	Base* b = (Derive*)(0);
-	AssertTrue((__is_assignable(Base, Derive)));
-	AssertTrue((__is_assignable(Derive, Base)));
-	AssertTrue((__is_assignable(Base*, Derive*)));
-	AssertTrue((__is_assignable(Derive*, Base*)));    //Base* 
-	AssertTrue((__is_assignable(Base&, Derive&)));    //Base& = Derive&
-	AssertTrue((__is_assignable(Derive&, Base&)));    //Derive& = Base&
-	AssertTrue((__is_assignable(Base, int)));         //Base = int
+	//Base* b = (Derive*)(0);
+	//AssertTrue((__is_assignable(Base, Derive)));
+	//AssertTrue((__is_assignable(Derive, Base)));
+	//AssertTrue((__is_assignable(Base*, Derive*)));
+	//AssertTrue((__is_assignable(Derive*, Base*)));    //Base* 
+	//AssertTrue((__is_assignable(Base&, Derive&)));    //Base& = Derive&
+	//AssertTrue((__is_assignable(Derive&, Base&)));    //Derive& = Base&
+	//AssertTrue((__is_assignable(Base, int)));         //Base = int
 
 	//bool wrap
 	AssertTrue(true_::value);
@@ -621,8 +611,8 @@ int main()
 	AssertFalse((is_convertible_v<C1*, C2*>));
 	AssertTrue((is_convertible_v<C1*, void*>));
 	AssertFalse((is_convertible_v<C1*, int>));
-	AssertTrue((is_convertible_v<C2*, C1*>));    //derived* -> base*
-	AssertTrue((is_convertible_v<C2&, C1&>));    //derived& -> base&
+	AssertTrue((is_convertible_v<C2*, C1*>));                 //derived* -> base*
+	AssertTrue((is_convertible_v<C2&, C1&>));                 //derived& -> base&
 	AssertFalse((is_convertible_v<C1&, C2&>));
 	AssertTrue((is_convertible_v<const char*, std::string>)); //explicit constructor
 	AssertTrue((is_convertible_v<int_<0>, int>));             //explicit convert function
@@ -969,18 +959,31 @@ int main()
 	AssertFalse((has_invoker_v<TestInvoker, TestInvoker, int, int>));  // ret int != TestInvoker
 	AssertFalse((has_invoker_v<TestInvoker, int, float>));             // no parameter single float
 
-	//has new
-	AssertFalse(has_new_v<int>);
-	AssertTrue(has_new_v< detail2::TestHasDelete2>);
-	AssertTrue((has_new_v<detail2::TestHasDelete2, void*>));
-	AssertFalse((has_new_v<detail2::TestHasDelete2, int&>));
+	//has new / has delete
+	struct TestHasDelete2
+	{
+		void* operator new(std::size_t size)  {}
+		void* operator new(std::size_t size, std::nothrow_t) {};
+		void* operator new(std::size_t size, void* ptr) {}
+		void* operator new(std::size_t size, int) {}
+		void* operator new[](std::size_t size) {}
+		void operator delete(void * ptr) {}
+		void operator delete(void* ptr, core::size_t size) {}
+		void operator delete[](void* ptr) {}
+		void operator delete[](void* ptr, core::size_t size) {}
+	};
+	void*(*pp)(std::size_t) = &TestHasDelete2::operator new;
+	AssertFalse(has_default_new_v<int>);
+	AssertTrue(has_default_new_v<TestHasDelete2>);
+	AssertTrue((has_arg_new_v<TestHasDelete2, void*>));
+	AssertTrue((has_nothrow_default_new_v<TestHasDelete2>));
 
-	//has delete
-	AssertFalse(has_delete_v<int>);
-	AssertTrue(has_delete_v<detail2::TestHasDelete2>);
-	AssertTrue((has_delete_v<detail2::TestHasDelete2, size_t>));
-	AssertTrue((has_array_delete_v<detail2::TestHasDelete2, size_t>));
-	AssertFalse((has_array_delete_v<detail2::TestHasDelete2, int>));
+	//AssertFalse((has_new_v<TestHasDelete2, int&>));
+	//AssertFalse(has_delete_v<int>);
+	//AssertTrue(has_delete_v<TestHasDelete2>);
+	//AssertTrue((has_delete_v<TestHasDelete2, size_t>));
+	//AssertTrue((has_array_delete_v<TestHasDelete2, size_t>));
+	//AssertFalse((has_array_delete_v<TestHasDelete2, int>));
 
 	//has indexer
 	struct TestIndex { int operator[](int) {} };
@@ -1033,6 +1036,24 @@ int main()
 	AssertTrue(has_nothrow_destructor_v<TestNothrowDeleteDestructor>);
 
 	//has assigner
+	class TestAssigner1{};
+	class TestAssigner2 { public: const TestAssigner2& operator=(int) {} };
+	class TestAssigner3 { public: const TestAssigner3& operator=(const TestAssigner3&) {} };
+	class TestAssigner4 { public: const TestAssigner4& operator=(TestAssigner4&&) {} };
+	class TestAssigner5 { public: const TestAssigner5& operator=(int) noexcept {} };
+
+	//has assigner
+	AssertTrue((has_assigner_v<TestAssigner1, TestAssigner1>));
+	AssertTrue((has_assigner_v<TestAssigner1&, TestAssigner1>));
+	AssertFalse((has_assigner_v<TestAssigner1&&, TestAssigner1>));
+	AssertFalse((has_assigner_v<const TestAssigner1,  TestAssigner1>));
+	AssertFalse((has_assigner_v<const TestAssigner1&, TestAssigner1>));
+	AssertTrue((has_assigner_v< TestAssigner1, const TestAssigner1>));  //const can't be assign
+	AssertTrue((has_assigner_v< TestAssigner1, TestAssigner1&&>));    
+	AssertTrue((has_assigner_v< TestAssigner2, int>));
+
+	AssertFalse((has_nothrow_assigner_v<TestAssigner2, int>));
+	AssertTrue((has_nothrow_assigner_v<TestAssigner5, int>));
 
 
 

@@ -1,7 +1,8 @@
 #pragma once
 
+#include<core/type.h>
 #include<core/mpl/base/bool_.h>
-#include<core/mpl/base/size_.h>
+#include<core/mpl/base/and_.h>
 #include<core/mpl/type_traits/impl/has_operator_decl.h>
 
 namespace core
@@ -15,11 +16,16 @@ namespace core
 		* new(2, f) T[5] results in a call of operator new[](sizeof(T) * 5 + y, 2, f).
 		* x, y is overhead of array size
 		*/
+		HAS_MEMBER_FN_DECL(operator new, new);
+		HAS_MEMBER_FN_DECL(operator new[], array_new);
 
-		//has_new<T>   T::operator new(size_t, ...)
-		HAS_NEW_DELETE_DECL(operator new, new, void*, size_t);
+		template<typename T> struct has_default_new:has_new<T, void*, std::size_t>{};
 
-		//has_array_new<T>   T::operator new[](size_t, ...)
-		HAS_NEW_DELETE_DECL(operator new[], array_new, void*, size_t);
+		template<typename T> struct has_nothrow_default_new :has_new<T, void*, size_t, const std::nothrow_t&> {};
+		template<typename T, typename... Args> struct has_arg_new:has_new<T, void*, core::size_t, Args...> {};
+
+		template<typename T> static constexpr bool has_default_new_v = has_default_new<T>::value;
+		template<typename T> static constexpr bool has_nothrow_default_new_v = has_nothrow_default_new<T>::value;
+		template<typename T, typename... Args> static constexpr bool has_arg_new_v = has_arg_new<T,Args...>::value;
 	}
 }

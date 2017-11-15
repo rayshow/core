@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\core\test_type_traits2.cpp">
+    <ClCompile Include="..\core\test_type_traits.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
