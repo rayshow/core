@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\Test.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_core_pp", "test_pp\test_pp.vcxproj", "{CC478951-6A36-4A0D-B022-A846A6DE72F5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_type_trait", "test_type_trait\test_type_trait.vcxproj", "{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "linux_test", "linux_test\linux_test.vcxproj", "{A9F6F136-C21F-4B20-BCCA-D003ABD725DB}"
 EndProject
 Global
@@ -57,14 +55,6 @@ Global
 		{CC478951-6A36-4A0D-B022-A846A6DE72F5}.Release|Win32.Build.0 = Release|Win32
 		{CC478951-6A36-4A0D-B022-A846A6DE72F5}.Release|x64.ActiveCfg = Release|x64
 		{CC478951-6A36-4A0D-B022-A846A6DE72F5}.Release|x64.Build.0 = Release|x64
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Debug|Win32.Build.0 = Debug|Win32
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Debug|x64.ActiveCfg = Debug|x64
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Debug|x64.Build.0 = Debug|x64
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Release|Win32.ActiveCfg = Release|Win32
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Release|Win32.Build.0 = Release|Win32
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Release|x64.ActiveCfg = Release|x64
-		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}.Release|x64.Build.0 = Release|x64
 		{A9F6F136-C21F-4B20-BCCA-D003ABD725DB}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A9F6F136-C21F-4B20-BCCA-D003ABD725DB}.Debug|Win32.Build.0 = Debug|Win32
 		{A9F6F136-C21F-4B20-BCCA-D003ABD725DB}.Debug|x64.ActiveCfg = Debug|x64

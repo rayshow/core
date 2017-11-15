@@ -21,9 +21,6 @@
     <ClCompile Include="test_type_traits.hpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test_mpl.hpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="print_value.h">
@@ -36,9 +33,6 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="test_float.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="test_boost.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="c++11_feature.hpp">

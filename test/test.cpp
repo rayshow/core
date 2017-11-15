@@ -30,7 +30,6 @@ int main()
 	//TestMpl();
 	//TestVector();
 	//TestFloat();
-	TestBoost();
 	getchar();
 	return 0;
 }

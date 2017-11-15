@@ -204,8 +204,22 @@ namespace detail2
 		void operator delete[](void* ptr, size_t size) {}
 	};
 };
+
+class Base { public:Base(int) {} };
+class Derive:public Base {  };
+
+
 int main()
 {
+	Base* b = (Derive*)(0);
+	AssertTrue((__is_assignable(Base, Derive)));
+	AssertTrue((__is_assignable(Derive, Base)));
+	AssertTrue((__is_assignable(Base*, Derive*)));
+	AssertTrue((__is_assignable(Derive*, Base*)));    //Base* 
+	AssertTrue((__is_assignable(Base&, Derive&)));    //Base& = Derive&
+	AssertTrue((__is_assignable(Derive&, Base&)));    //Derive& = Base&
+	AssertTrue((__is_assignable(Base, int)));         //Base = int
+
 	//bool wrap
 	AssertTrue(true_::value);
 	AssertTrue(true_c);
@@ -824,9 +838,7 @@ int main()
 	AssertTypeSame(remove_pointer_t<const int*>, const int);
 	AssertTypeSame(remove_pointer_t<int* const>, int);
 	AssertTypeSame(remove_pointer_t<int*>, int);
-
 	
-
 	// has_add
 	struct TestAdd { public: TestAdd& operator+(int a) {} };
 	AssertFalse((has_add_v<int, int, int const>)); //const int = int + int

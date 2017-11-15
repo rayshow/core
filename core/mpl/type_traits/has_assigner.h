@@ -22,25 +22,26 @@ namespace core
 		template<typename L, typename R> struct has_rassigner:public bool_<HAS_ASSIGNER(L, R)>{};
 		template<typename L, typename R> struct has_trivial_rassigner :public bool_<HAS_TRIVIAL_ASSIGNER(L, R)> {};
 		template<typename L, typename R> struct has_nothrow_rassigner :public bool_<HAS_NOTHROW_ASSIGNER(L, R)> {};
-		
+	
+		template<typename L, typename R> struct has_nothrow_assigner :public or_ < bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<L>, R)>, is_base_same<L, R>> {};
+		template<typename T> struct has_nothrow_copy_assigner :public bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<T>, add_const_lref_t<T>)> {};
+		template<typename T> struct has_nothrow_move_assigner :public bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<T>, T)> {};
+
 		// use assign function to judge
 		//L t = R&&  left value assign
 		//const L = R&&  don't work???????? , use IsBaseSame workaround
 		//Base* = Derive*  works
 		//Base =  Derive   works
-		template<typename L, typename R> struct has_assigner : or_< bool_<HAS_ASSIGNER( add_lref_t<L>, R) >, is_base_same<L,R>> {};
+		template<typename L, typename R> struct has_assigner : or_< bool_<__is_trivially_assignable(add_lref_t<L>, R) >, is_base_same<L, R>> {};
+		template<typename T> struct has_copy_assigner :public bool_<__is_trivially_assignable(add_lref_t<T>, add_const_lref_t<T>)> {};
+		template<typename T> struct has_move_assigner :public bool_<__is_trivially_assignable(add_lref_t<T>, T)> {};
+
+		
+		
+
 		template<typename L, typename R> struct has_trivial_assigner :public or_ < bool_<HAS_TRIVIAL_ASSIGNER(add_lref_t<L>, R)>, is_base_same<L, R>> {};
-		template<typename L, typename R> struct has_nothrow_assigner :public or_ < bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<L>, R)>, is_base_same<L, R>> {};
-
-		//T a = const T& b
-		template<typename T> struct has_copy_assigner :public bool_<HAS_ASSIGNER(add_lref_t<T>,  add_const_lref_t<T> )> {};
 		template<typename T> struct has_trivial_copy_assigner :public bool_<HAS_TRIVIAL_ASSIGNER(add_lref_t<T>, add_const_lref_t<T>)> {};
-		template<typename T> struct has_nothrow_copy_assigner :public bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<T>, add_const_lref_t<T>)> {};
-
-		//T a = T&& b
-		template<typename T> struct HasMoveAssigner :public bool_<HAS_ASSIGNER(add_lref_t<T>, T)> {};
 		template<typename T> struct HasTriviallyMoveAssigner :public bool_<HAS_TRIVIAL_ASSIGNER(add_lref_t<T>, T)> {};
-		template<typename T> struct HasNoThrowMoveAssigner :public bool_<HAS_NOTHROW_ASSIGNER(add_lref_t<T>, T)> {};
 
 #undef HAS_ASSIGNER
 #undef HAS_TRIVIAL_ASSIGNER

@@ -128,14 +128,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
-    <ClCompile Include="test_mpl.hpp" />
     <ClCompile Include="test_type_traits.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="c++11_feature.hpp" />
     <ClInclude Include="print_type.h" />
     <ClInclude Include="print_value.h" />
-    <ClInclude Include="test_boost.hpp" />
     <ClInclude Include="test_float.hpp" />
     <ClInclude Include="test_vector.hpp" />
   </ItemGroup>
