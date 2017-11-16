@@ -16,7 +16,7 @@ namespace Aurora3D
 	
 #define ID(mudule, sub)  ((mudule<<8)| (sub))
 
-	struct A3DModule
+	struct CCDKModule
 	{
 		const static unsigned Common = 0;
 		const static unsigned Window = 1;
@@ -28,8 +28,8 @@ namespace Aurora3D
 	///fatal error, immedicately notify and stop
 	struct CommonEvt
 	{
-		const static EventID FatalError = ID(A3DModule::Common, 1);
-		const static EventID Quit = ID(A3DModule::Common, 2);
+		const static EventID FatalError = ID(CCDKModule::Common, 1);
+		const static EventID Quit = ID(CCDKModule::Common, 2);
 	};
 
 

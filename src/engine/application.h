@@ -21,7 +21,7 @@ namespace Aurora3D
 }
 
 //window console and open memory leak detection
-#if defined(AURORA3D_WINDOW) && defined(AURORA3D_DEBUG) 
+#if defined(AURORCCDK_WINDOW) && defined(AURORCCDK_DEBUG) 
 #include<windows.h>
 #include<crtdbg.h>
 #define OpenConsoleAndDetechMemoryLeak() \
@@ -44,7 +44,7 @@ namespace Aurora3D
 
 
 
-#define AURORA3D_MAIN_APPLICATION(app_class_name) \
+#define AURORCCDK_MAIN_APPLICATION(app_class_name) \
 int main(int argc, char** argv) { \
 	OpenConsoleAndDetechMemoryLeak \
 	Aurora3D::Application *app = new app_class_name{}; \

@@ -32,10 +32,10 @@ namespace Aurora3D
 		size_type begin;
 		size_type end;
 		size_type Length() const { return end - begin; }
-		A3D_FORCEINLINE bool IsValid() const { return Length()>0; }
-		A3D_FORCEINLINE Range(size_type Begin, size_type End):
+		CCDK_FORCEINLINE bool IsValid() const { return Length()>0; }
+		CCDK_FORCEINLINE Range(size_type Begin, size_type End):
 			begin(Begin), end(End){}
-		A3D_FORCEINLINE Range(const Range& range) = default;
+		CCDK_FORCEINLINE Range(const Range& range) = default;
 	};
 
 	//common string operation
@@ -56,7 +56,7 @@ namespace Aurora3D
 		}
 
 		template<>
-		A3D_FORCENOINLINE static void Copy<achar>(
+		CCDK_FORCENOINLINE static void Copy<achar>(
 			achar* dest,
 			const achar* src,
 			size_type src_begin,
@@ -67,7 +67,7 @@ namespace Aurora3D
 		}
 
 		template<typename Ch>
-		A3D_FORCEINLINE static Ch* AllocCopy(
+		CCDK_FORCEINLINE static Ch* AllocCopy(
 			const Ch* src,
 			size_type begin,
 			size_type end)
@@ -119,7 +119,7 @@ namespace Aurora3D
 
 
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static size_type FindFirst(
+		CCDK_FORCEINLINE static size_type FindFirst(
 			const Ch* src,
 			size_type begin,
 			size_type end,
@@ -276,7 +276,7 @@ namespace Aurora3D
 		}
 
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static size_type FindLast(
+		CCDK_FORCEINLINE static size_type FindLast(
 			const Ch* src,
 			size_type begin,
 			size_type end,
@@ -333,7 +333,7 @@ namespace Aurora3D
 		}
 
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static Range FindPair(
+		CCDK_FORCEINLINE static Range FindPair(
 			const Ch* src,
 			size_type begin,
 			size_type end,
@@ -353,7 +353,7 @@ namespace Aurora3D
 
 
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static Range FindPair(
+		CCDK_FORCEINLINE static Range FindPair(
 			const Ch* src,
 			size_type src_begin,
 			size_type src_end,
@@ -373,7 +373,7 @@ namespace Aurora3D
 
 		//find non-space-tab range from two side
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static Range Trim(
+		CCDK_FORCEINLINE static Range Trim(
 			const Ch* src,
 			size_type begin,
 			size_type end)
@@ -407,7 +407,7 @@ namespace Aurora3D
 		}
 
 		template<typename Ch, typename SinglePredict = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static bool Replace(Ch* src,
+		CCDK_FORCEINLINE static bool Replace(Ch* src,
 			size_type begin,
 			size_type end,
 			Ch from,
@@ -446,7 +446,7 @@ namespace Aurora3D
 		}
 
 		template<typename Ch, typename Condi = Char1stAppearCondi<Ch>::type>
-		A3D_FORCEINLINE static std::vector<size_type> Split(
+		CCDK_FORCEINLINE static std::vector<size_type> Split(
 			const Ch* src,
 			size_type begin,
 			size_type end,
@@ -468,7 +468,7 @@ namespace Aurora3D
 
 		//KMP-find all match split-string and return non-split-string ranges
 		template<typename Ch> 
-		A3D_FORCEINLINE static std::vector<size_type> Split(const Ch* src,
+		CCDK_FORCEINLINE static std::vector<size_type> Split(const Ch* src,
 			size_type src_begin,
 			size_type src_end,
 			const Ch* seq,

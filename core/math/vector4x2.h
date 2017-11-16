@@ -1,7 +1,7 @@
 #pragma once
 
 #include<core/type.h>
-#if defined(AURORA3D_SSE)
+#if defined(CCDK_SSE)
 #include<immintrin.h>  //for __m256 and function
 #include<core/math/vector4.h>
 

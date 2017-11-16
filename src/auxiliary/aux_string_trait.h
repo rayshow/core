@@ -74,15 +74,15 @@ namespace Aurora3D
 	template<typename Select>
 	struct LiteralBase
 	{
-		A3D_FORCEINLINE static CONSTEXPR achar  Select(const achar ansi, const wchar){ return ansi; }
-		A3D_FORCEINLINE static CONSTEXPR achar* Select(const achar* ansi, const wchar*){ return ansi; }
+		CCDK_FORCEINLINE static CONSTEXPR achar  Select(const achar ansi, const wchar){ return ansi; }
+		CCDK_FORCEINLINE static CONSTEXPR achar* Select(const achar* ansi, const wchar*){ return ansi; }
 	};
 
 	template<>
 	struct LiteralBase<wchar>
 	{
-		A3D_FORCEINLINE static CONSTEXPR wchar  Select(const achar, const wchar wch){ return wch; }
-		A3D_FORCEINLINE static CONSTEXPR wchar* Select(const achar*, const wchar* wch){ return wch; }
+		CCDK_FORCEINLINE static CONSTEXPR wchar  Select(const achar, const wchar wch){ return wch; }
+		CCDK_FORCEINLINE static CONSTEXPR wchar* Select(const achar*, const wchar* wch){ return wch; }
 	};
 
 

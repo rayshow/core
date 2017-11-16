@@ -6,6 +6,6 @@ namespace core
 {
 	namespace mpl
 	{
-		A3D_TT_HAS_RET_UNARY_OP(-, negative);
+		CCDK_TT_HAS_RET_UNARY_OP(-, negative);
 	}
 }

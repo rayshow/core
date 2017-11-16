@@ -9,7 +9,7 @@ namespace core
 {
 	namespace mpl
 	{
-#if defined(AURORA3D_COMPILER_MSVC) || defined(AURORA3D_COMPILER_CLANG) || defined(AURORA3D_COMPILER_INTEL)
+#if defined(CCDK_COMPILER_MSVC) || defined(CCDK_COMPILER_CLANG) || defined(CCDK_COMPILER_INTEL)
 		template<typename T> struct has_destructor:public bool_<__is_destructible(T)> {};
 		template<typename T> struct has_nothrow_destructor :public bool_<__is_nothrow_destructible(T)> {};
 #else

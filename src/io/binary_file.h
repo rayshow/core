@@ -14,12 +14,12 @@ namespace Aurora3D
 		FILE*        handle = nullptr;
 	public:
 		BinaryFileReader() = default;
-		A3D_FORCEINLINE BinaryFileReader(const std::string& file){ Open(file); }
+		CCDK_FORCEINLINE BinaryFileReader(const std::string& file){ Open(file); }
 		virtual ~BinaryFileReader() { if (IsOpened()) Close(); }
 
-		A3D_FORCEINLINE bool IsOpened() { return nullptr != handle; }
-		A3D_FORCEINLINE void Close(){ if (IsOpened()) fclose(handle); }
-		AURORA3D_API bool Open(const std::string& file);
+		CCDK_FORCEINLINE bool IsOpened() { return nullptr != handle; }
+		CCDK_FORCEINLINE void Close(){ if (IsOpened()) fclose(handle); }
+		AURORCCDK_API bool Open(const std::string& file);
 		virtual bool ReadEnd() override { return read_pos >= file_size;  }
 		virtual size_type Read(uint8* buf, size_type size) override;
 		virtual bool SkipFromBegin(size_type skip) override;
@@ -41,12 +41,12 @@ namespace Aurora3D
 		FILE*       handle = nullptr;
 	public:
 		BinaryFileWriter() = default;
-		A3D_FORCEINLINE BinaryFileWriter(const std::string& file, FileWriteMode mode = FileWriteMode::Replace){ Open(file, mode); }
+		CCDK_FORCEINLINE BinaryFileWriter(const std::string& file, FileWriteMode mode = FileWriteMode::Replace){ Open(file, mode); }
 		virtual ~BinaryFileWriter() { if (IsOpened()){ Close();  } }
 
-		A3D_FORCEINLINE bool IsOpened(){ return nullptr != handle; }
-		A3D_FORCEINLINE void Close(){ if (IsOpened()) fclose(handle); }
-		AURORA3D_API    bool Open(const std::string& file, FileWriteMode mode = FileWriteMode::Replace);
+		CCDK_FORCEINLINE bool IsOpened(){ return nullptr != handle; }
+		CCDK_FORCEINLINE void Close(){ if (IsOpened()) fclose(handle); }
+		AURORCCDK_API    bool Open(const std::string& file, FileWriteMode mode = FileWriteMode::Replace);
 		virtual size_type Write(const uint8* data, size_type size) override ;
 		virtual bool WritedEnd() override { return GetWritedSize() >= 0x7ffffffe; }
 	};

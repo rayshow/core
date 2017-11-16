@@ -5,5 +5,5 @@
 #include<core/preprocessor/impl/byte_to_uint8.h>
 #include<core/preprocessor/impl/byte_to_bool.h>
 
-#define A3D_PP_SHIFT_RIGHT(value, n)       A3D_PP_BYTE_INT( A3D_PP_BYTE_SHIFT_RIGHT( A3D_PP_INT_BYTE(value),n ))
-#define A3D_PP_SHIFT_RIGHT_BOOL(value, n)  A3D_PP_BYTE_BOOL( A3D_PP_BYTE_SHIFT_RIGHT( A3D_PP_INT_BYTE(value),n ))
+#define CCDK_PP_SHIFT_RIGHT(value, n)       CCDK_PP_BYTE_INT( CCDK_PP_BYTE_SHIFT_RIGHT( CCDK_PP_INT_BYTE(value),n ))
+#define CCDK_PP_SHIFT_RIGHT_BOOL(value, n)  CCDK_PP_BYTE_BOOL( CCDK_PP_BYTE_SHIFT_RIGHT( CCDK_PP_INT_BYTE(value),n ))

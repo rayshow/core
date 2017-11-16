@@ -15,7 +15,7 @@
 using namespace std;
 
   
-#if defined(AURORA3D_COMPILER_MSVC)
+#if defined(AURORCCDK_COMPILER_MSVC)
 //4514: un-used inline function had been removed
 //4710: function had not been inlined
 #pragma warning(disable:4514 4710)

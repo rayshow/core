@@ -15,7 +15,7 @@ namespace core
 #define IS_FN_DECL( name, index ,... )                    \
 			template<typename T> struct name;             \
 			template<typename T> struct trait_fn_indexer< name<T> > :public int_<index> {};
-			A3D_PP_FOREACH_ITEM(IS_FN_DECL, (is_void, is_integer, is_const, is_pointer))
+			CCDK_PP_FOREACH_ITEM(IS_FN_DECL, (is_void, is_integer, is_const, is_pointer))
 #undef  IS_FN_DECL
 
 			namespace detail

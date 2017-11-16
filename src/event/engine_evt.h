@@ -6,8 +6,8 @@ namespace Aurora3D
 {
 	struct EngineEvt
 	{
-		const static EventID FrameBegin = ID(A3DModule::Engine, 1);
-		const static EventID FrameEnd = ID(A3DModule::Engine, 2);
+		const static EventID FrameBegin = ID(CCDKModule::Engine, 1);
+		const static EventID FrameEnd = ID(CCDKModule::Engine, 2);
 
 		struct FrameBeginData
 		{

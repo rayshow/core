@@ -5,9 +5,9 @@
 #include<core/compile.h>
 #include<core/type.h>
 
-#if   defined(AURORA3D_SSE)
+#if   defined(CCDK_SSE)
 #	include<emmintrin.h>
-#elif defined(AURORA3D_NEON)
+#elif defined(CCDK_NEON)
 #	include <arm_neon.h>
 #endif
 
@@ -75,103 +75,103 @@ namespace Aurora3D
 			} component;
 		};
 
-		A3D_FORCEINLINE constexpr float FloatMax(float a, float b)
+		CCDK_FORCEINLINE constexpr float FloatMax(float a, float b)
 		{
 			return a >= b ? a : b;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatMin(float a, float b)
+		CCDK_FORCEINLINE constexpr float FloatMin(float a, float b)
 		{
 			return a < b ? a : b;
 		}
 
 		//clamped in [min,max]
-		A3D_FORCEINLINE constexpr float FloatClamp(float F, float min, float max)
+		CCDK_FORCEINLINE constexpr float FloatClamp(float F, float min, float max)
 		{
 			return FloatMax(FloatMin(F, max), min);
 		}
 
 		//clamped in [0,1]
-		A3D_FORCEINLINE constexpr float FloatSaturate(float F)
+		CCDK_FORCEINLINE constexpr float FloatSaturate(float F)
 		{
 			return FloatClamp(F, 0.0f, 1.0f);
 		}
 
 		//clamped in [-1,1]
-		A3D_FORCEINLINE constexpr float FloatSNorm(float F)
+		CCDK_FORCEINLINE constexpr float FloatSNorm(float F)
 		{
 			return FloatClamp(F, -1.0f, 1.0f);
 		}
 
 		//remove fraction part
-		A3D_FORCEINLINE constexpr float FloatIntPart(float F)
+		CCDK_FORCEINLINE constexpr float FloatIntPart(float F)
 		{
 			return (float)(int32)F;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatFracPart(float F)
+		CCDK_FORCEINLINE constexpr float FloatFracPart(float F)
 		{
 			return F - (float)(int32)F;
 		}
 
 		//
-		A3D_FORCEINLINE constexpr bool FloatIsNaN(float F)
+		CCDK_FORCEINLINE constexpr bool FloatIsNaN(float F)
 		{
 			return F != F;
 		}
 
-		A3D_FORCEINLINE constexpr bool FloatIsInfinite(float F)
+		CCDK_FORCEINLINE constexpr bool FloatIsInfinite(float F)
 		{
 			return F == kfPositiveInf || F == kfNegativeInf;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatSign(float F)
+		CCDK_FORCEINLINE constexpr float FloatSign(float F)
 		{
 			return F > 0.0f ? 1.0f : -1.0f;
 		}
 
 		// faster then fmodf
-		A3D_FORCEINLINE constexpr float FloatMod(float X, float Y)
+		CCDK_FORCEINLINE constexpr float FloatMod(float X, float Y)
 		{
 			return X - FloatIntPart(X / Y)*Y;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatStep(float F, float cmp)
+		CCDK_FORCEINLINE constexpr float FloatStep(float F, float cmp)
 		{
 			return F > cmp ? 1.0f : 0.0f;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatRStep(float F, float cmp)
+		CCDK_FORCEINLINE constexpr float FloatRStep(float F, float cmp)
 		{
 			return F < cmp ? 1.0f : 0.0f;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatCeil(float F)
+		CCDK_FORCEINLINE constexpr float FloatCeil(float F)
 		{
 			return FloatIntPart(F) + FloatStep(F, 0.f);
 		}
 
-		A3D_FORCEINLINE constexpr float FloatFloor(float F)
+		CCDK_FORCEINLINE constexpr float FloatFloor(float F)
 		{
 			return FloatIntPart(F) - FloatRStep(F, 0.f);
 		}
 
-		A3D_FORCEINLINE constexpr float FloatAbs(float F)
+		CCDK_FORCEINLINE constexpr float FloatAbs(float F)
 		{
 			return F > 0.0f ? F : -F;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatRound(float F)
+		CCDK_FORCEINLINE constexpr float FloatRound(float F)
 		{
 			return FloatFloor(F + 0.5f);
 		}
 
-		A3D_FORCEINLINE constexpr float FloatRadianToDegree(float F)
+		CCDK_FORCEINLINE constexpr float FloatRadianToDegree(float F)
 		{
 			return F * kf180OverPi;
 		}
 
-		A3D_FORCEINLINE constexpr float FloatDegreeToRadian(float F)
+		CCDK_FORCEINLINE constexpr float FloatDegreeToRadian(float F)
 		{
 			return F * kfPiOver180;
 		}
@@ -187,9 +187,9 @@ namespace Aurora3D
 		// Max Error F : 90.863388, FloatSin : 0.240447, std::sinf : 0.240420
 		//
 		// TODO: Test On Mac/Phone/Linux/Android
-		A3D_FORCEINLINE float FloatSin(float F)
+		CCDK_FORCEINLINE float FloatSin(float F)
 		{
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::sinf(F);
 #else
 			constexpr float t1 = -0.1666666660883;
@@ -204,7 +204,7 @@ namespace Aurora3D
 #endif
 		}
 
-		A3D_FORCEINLINE float FloatCos(float F)
+		CCDK_FORCEINLINE float FloatCos(float F)
 		{
 			return FloatSin(F + kfHalfPi);
 		}
@@ -224,9 +224,9 @@ namespace Aurora3D
 		//Max Error : 0.00009596 average Error : 0.00000015
 		//Max Error F : -1.56970215, FloatTan : -914.01513672, std::tanf : -913.927429
 		//
-		A3D_FORCEINLINE float FloatTan(float F)
+		CCDK_FORCEINLINE float FloatTan(float F)
 		{
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::tanf(F);
 #else
 			constexpr float p1 = -0.1282834704095743847;
@@ -255,9 +255,9 @@ namespace Aurora3D
 		//Max Error F       : -2.680664 ,FloatArctan : -1.213880, std::atanf : -1.213743
 		//
 		// TODO: Test On Mac/Phone/Linux/Android
-		A3D_FORCEINLINE float FloatArctan(float F)
+		CCDK_FORCEINLINE float FloatArctan(float F)
 		{
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::atanf(F);
 #else
 			constexpr float t1 = kfQuarterPi + 0.21758f;
@@ -292,9 +292,9 @@ namespace Aurora3D
 		// std::expf times : 79.340074 ms average times : 0.000079 ms
 		// Max Error       : 0.000028 average Error : 0.000003 (Absolute Error because 2^F always less then 1.0f )
 		// Max Error F     : -7.999992 Result1 : 0.003906, Result2 : 0.003906
-		A3D_FORCEINLINE float FloatExp2(float F)
+		CCDK_FORCEINLINE float FloatExp2(float F)
 		{
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::exp2f(F);
 #else
 			constexpr float t1 = kfLn2;
@@ -310,9 +310,9 @@ namespace Aurora3D
 #endif
 		}
 
-		A3D_FORCEINLINE float FloatExp(float F)
+		CCDK_FORCEINLINE float FloatExp(float F)
 		{
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::expf(F);
 #else
 			constexpr float OneOverLn2 = 0.69314718055994530941723212145818f;
@@ -320,17 +320,17 @@ namespace Aurora3D
 #endif
 		}
 
-		A3D_FORCEINLINE float FloatExp10(float F)
+		CCDK_FORCEINLINE float FloatExp10(float F)
 		{
 			constexpr float OneOverLog10_2 = 3.32192809488736234787f;
-#ifdef AURORA3D_FLOAT_HIGH_PRECISION
+#ifdef CCDK_FLOAT_HIGH_PRECISION
 			return std::exp2f(F*OneOverLog10_2);
 #else
 			return FloatExp2(F*OneOverLog10_2);
 #endif
 		}
 
-		A3D_FORCEINLINE float FloatPow(float base, float exp)
+		CCDK_FORCEINLINE float FloatPow(float base, float exp)
 		{
 			const float absBase = FloatAbs(base);
 			const float basExp = FloatAbs(exp);
@@ -338,7 +338,7 @@ namespace Aurora3D
 			return 0.0f;
 		}
 
-		A3D_FORCEINLINE float FloatArcsin(float F)
+		CCDK_FORCEINLINE float FloatArcsin(float F)
 		{
 			float absF = FloatAbs(F);
 			if (absF > 1.0f) return kfNaN;  //not a number
@@ -349,12 +349,12 @@ namespace Aurora3D
 			return F*(1 + F2*(1 / 6 + F2*(5 / 112 + +35 / 1152 * F2)));
 		}
 
-		A3D_FORCEINLINE float FloatArccos(float F)
+		CCDK_FORCEINLINE float FloatArccos(float F)
 		{
 			return acos(F);
 		}
 
-		A3D_FORCEINLINE double FloatLog2(double A, double B, double C, double F)
+		CCDK_FORCEINLINE double FloatLog2(double A, double B, double C, double F)
 		{
 			//uint32 iF = *reinterpret_cast<int*>(&F);
 			//int32 exp = (iF & kiFloatExpMask) >> kiFloatExpShiftCount;
@@ -370,17 +370,17 @@ namespace Aurora3D
    		}
 		
 		//logE(F)
-		A3D_FORCEINLINE float FloatLn(float F)
+		CCDK_FORCEINLINE float FloatLn(float F)
 		{
 			return logf(F);
 		}
 
-		A3D_FORCEINLINE float FloatLog10(float F)
+		CCDK_FORCEINLINE float FloatLog10(float F)
 		{
 
 		}
 
-		A3D_FORCEINLINE float FloatLog(float F, float base)
+		CCDK_FORCEINLINE float FloatLog(float F, float base)
 		{
 			return logf(F) / logf(base);
 		}
@@ -425,7 +425,7 @@ namespace Aurora3D
 			return t3;
 		}
 
-		A3D_FORCEINLINE int32 IntFloorLog2(int32 Value)
+		CCDK_FORCEINLINE int32 IntFloorLog2(int32 Value)
 		{
 			int32 pos = 0;
 			if (Value >= 1 << 16) { Value >>= 16; pos += 16; }
@@ -436,14 +436,14 @@ namespace Aurora3D
 			return (Value == 0) ? 0 : pos;
 		}
 
-		A3D_FORCEINLINE int32 IntCeilLog2(int32 V)
+		CCDK_FORCEINLINE int32 IntCeilLog2(int32 V)
 		{
 			int32 floor = IntFloorLog2(V);
 			if (V & (~(1 << floor))) return floor + 1;
 			return floor;
 		}
 
-		A3D_FORCEINLINE int32 CountHeadZero(int32 V)
+		CCDK_FORCEINLINE int32 CountHeadZero(int32 V)
 		{
 			if (0 == V) return 32;
 			return 31 - IntFloorLog2(V);
@@ -451,12 +451,12 @@ namespace Aurora3D
 
 	
 
-		A3D_FORCEINLINE float FloatPow2(float F)
+		CCDK_FORCEINLINE float FloatPow2(float F)
 		{
 			return powf(2.0f, F);
 		}
 
-		A3D_FORCEINLINE int32 CountTailZero(int32 V)
+		CCDK_FORCEINLINE int32 CountTailZero(int32 V)
 		{
 			if (0 == V) return 32;
 			int32 count = 0;
@@ -464,19 +464,19 @@ namespace Aurora3D
 			return count;
 		}
 
-		A3D_FORCEINLINE bool FloatNearlyEquals(float X, float Y, float tolerrent = kfMiddleEpiside)
+		CCDK_FORCEINLINE bool FloatNearlyEquals(float X, float Y, float tolerrent = kfMiddleEpiside)
 		{
 			return FloatAbs(X - Y) <= tolerrent;
 		}
 
-		A3D_FORCEINLINE bool FloatInBound(float F, float B)
+		CCDK_FORCEINLINE bool FloatInBound(float F, float B)
 		{
 			return FloatAbs(F) <= B;
 		}
 
-		A3D_FORCEINLINE float FloatSqrt(float F)
+		CCDK_FORCEINLINE float FloatSqrt(float F)
 		{   
-#if   defined(AURORA3D_SSE) 
+#if   defined(CCDK_SSE) 
 			return _mm_sqrt_ss(_mm_load1_ps(&F)).m128_f32[0];
 #elif 
 			return vsqrtq_f32(vdupq_n_f32(F)).n128_f32[0];
@@ -492,16 +492,16 @@ namespace Aurora3D
 		//1.0f/ std::sqrt : 11.520356 ms average times : 0.000012 ms
 		//Max Error       : 0.00000028 average Error : 0.00000004
 		//Max Error F     : 38.87512207, FloatRcpSqrt : 0.16038510, 1.0f/ std::sqrt : 0.160385
-		A3D_FORCEINLINE float FloatRcpSqrt(float F)
+		CCDK_FORCEINLINE float FloatRcpSqrt(float F)
 		{
 			float p = F / 2.0f;
-#if   defined(AURORA3D_SSE) 
+#if   defined(CCDK_SSE) 
 			constexpr __m128 OneDotHalf = { 1.5f,1.5f,1.5f,1.5f };
 			__m128 P = _mm_load_ss(&p);                                   //n/2
 			__m128 X = _mm_rsqrt_ss(_mm_load_ss(&F));                     //X
 			P = _mm_mul_ss(P, _mm_mul_ss(X, _mm_mul_ss(X, X)));           //n/2*x^3
 			return _mm_sub_ps(_mm_mul_ss(OneDotHalf, X), P).m128_f32[0];  //1.5*x - n/2*x^3
-#elif defined(AURORA3D_NEON)
+#elif defined(CCDK_NEON)
 			__n128 sqrt = vsqrtq_f32(vdupq_n_f32(F);
 			__n128 rcp_sqrt = vrecpeq_f32(sqrt);
 			return vmulq_f32(vrecpsq_f32(sqrt, rcp_sqrt), rcp_sqrt).n128_f32[0];  

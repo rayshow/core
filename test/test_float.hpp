@@ -247,14 +247,14 @@ float TestFastRcp(float F)
 	return _mm_rcp_ss(_mm_load_ps1(&F)).m128_f32[0];
 }
 
-A3D_FORCEINLINE float TestRcp(float F)
+CCDK_FORCEINLINE float TestRcp(float F)
 {
 	constexpr float one = 1.0f;
 	return _mm_div_ps(_mm_load_ps1(&one), _mm_load_ps(&F)).m128_f32[0];
 }
 
 
-A3D_FORCEINLINE float TestRcp2(float F)
+CCDK_FORCEINLINE float TestRcp2(float F)
 {
 	F = 1.4f / F;
 	F = 2.2f / F;
@@ -263,7 +263,7 @@ A3D_FORCEINLINE float TestRcp2(float F)
 }
 
 
-A3D_FORCENOINLINE __m128  LoadSint
+CCDK_FORCENOINLINE __m128  LoadSint
 (
 	const int* pSource
 )

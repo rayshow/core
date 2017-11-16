@@ -14,7 +14,7 @@
     <ProjectGuid>{9CF25D83-D719-4757-B9E5-D21517BD5A7C}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>core</ProjectName>
+    <ProjectName>ccdk</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -135,6 +135,7 @@
     <ClInclude Include="mpl\base\or_.h" />
     <ClInclude Include="mpl\base\short_.h" />
     <ClInclude Include="mpl\base\size_.h" />
+    <ClInclude Include="mpl\base\tag_.h" />
     <ClInclude Include="mpl\base\uint_.h" />
     <ClInclude Include="mpl\base\ullong.h" />
     <ClInclude Include="mpl\base\ushort.h" />
@@ -270,6 +271,8 @@
     <ClInclude Include="preprocessor\impl\byte_sub.h" />
     <ClInclude Include="preprocessor\impl\byte_to_bool.h" />
     <ClInclude Include="preprocessor\impl\byte_to_uint8.h" />
+    <ClInclude Include="preprocessor\impl\uint8_to_bool.h" />
+    <ClInclude Include="preprocessor\impl\uint8_to_byte.h" />
     <ClInclude Include="preprocessor\ingore.h" />
     <ClInclude Include="preprocessor\range_alias.h" />
     <ClInclude Include="preprocessor\range_call.h" />

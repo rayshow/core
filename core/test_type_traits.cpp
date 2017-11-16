@@ -120,7 +120,7 @@ using namespace core::mpl;
 void varg_fn(...) {}
 void normal_fn() {}
 
-#if defined(AURORA3D_COMPILER_MSVC) || defined(AURORA3D_COMPILER_CLANG) || defined(AURORA3D_COMPILER_INTEL)
+#if defined(CCDK_COMPILER_MSVC) || defined(CCDK_COMPILER_CLANG) || defined(CCDK_COMPILER_INTEL)
 void __cdecl varg_cd_fn(...) {}
 void __stdcall varg_sc_fn(...) {}
 //void __vectorcall varg_vc_fn(...) {}
@@ -418,7 +418,7 @@ int main()
 	//is function
 	AssertTrue(is_function_v<decltype(normal_fn)>);
 	AssertTrue(is_function_v<decltype(varg_fn)>);
-#if !defined(AURORA3D_COMPILER_GCC)   //gcc no function prefix like __cdcall 
+#if !defined(CCDK_COMPILER_GCC)   //gcc no function prefix like __cdcall 
 	void(*normal_p)() = normal_cd_fn;
 	void(*const normal_const)() = normal_cd_fn;
 	void(*volatile normal_volatile)() = normal_cd_fn;
@@ -596,7 +596,7 @@ int main()
 	AssertFalse(is_const_v<const int*>); //top const
 	AssertTrue(is_const_v<int* const>);  //
 
-										 //is class
+	//is class
 	AssertTrue(is_class_v<TestAbstract>);
 	AssertTrue(is_class_v<TestAbstract const>);
 	AssertTrue(is_class_v<TestAbstract volatile>);

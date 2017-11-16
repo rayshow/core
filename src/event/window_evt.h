@@ -7,8 +7,8 @@ namespace Aurora3D
 {
 	struct WindowEvt
 	{
-		const static EventID WindowCreated = ID(A3DModule::Window, 1);
-		const static EventID DisplayChanged = ID(A3DModule::Window, 2);
+		const static EventID WindowCreated = ID(CCDKModule::Window, 1);
+		const static EventID DisplayChanged = ID(CCDKModule::Window, 2);
 
 		struct DisplayData
 		{

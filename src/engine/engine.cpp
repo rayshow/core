@@ -102,7 +102,7 @@ namespace Aurora3D
 			SetStatus(Status::InitialFailed, "log system initialize failed"); 
 			return false;
 		}
-		A3D_INFO("log system initialized!");
+		CCDK_INFO("log system initialized!");
 
 		//initialize event system
 		auto dispatcher = EventDispatcher::Initialize();
@@ -111,7 +111,7 @@ namespace Aurora3D
 			SetStatus(Status::InitialFailed, "Event system initialize failed");
 			return false;
 		}
-		A3D_INFO("event system initialized!");
+		CCDK_INFO("event system initialized!");
 
 		//create graphics system
 		graphics_.reset(new Graphics());
@@ -145,8 +145,8 @@ namespace Aurora3D
 		//}
 
 		//subscribe to error event
-		A3D_SUBSCRIBE_EVENT(CommonEvt::FatalError, &Engine::OnFatalErrorOccured);
-		A3D_SUBSCRIBE_EVENT(CommonEvt::Quit, &Engine::Quit);
+		CCDK_SUBSCRIBE_EVENT(CommonEvt::FatalError, &Engine::OnFatalErrorOccured);
+		CCDK_SUBSCRIBE_EVENT(CommonEvt::Quit, &Engine::Quit);
 		return true;
 	}
 
@@ -173,7 +173,7 @@ namespace Aurora3D
 		{
 			//with log system
 			if (Logger::GetSingletonPtr())
-				A3D_FATAL( "engine exit of fatal error" );
+				CCDK_FATAL( "engine exit of fatal error" );
 		}
 		Logger::Destory();
 		EventDispatcher::Destory();

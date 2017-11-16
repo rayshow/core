@@ -10,28 +10,28 @@
 //	public:
 //		int32 x = 0;
 //		int32 y = 0;
-//		A3D_FORCEINLINE const int32* GetBuffer() const { return &x; }
+//		CCDK_FORCEINLINE const int32* GetBuffer() const { return &x; }
 //	
 //		///construct
 //		IntVector2() = default;
-//		A3D_FORCEINLINE IntVector2(const IntVector2& o) :x(o.x), y(o.y){}
-//		A3D_FORCEINLINE explicit IntVector2(int ax, int ay) : x(ax), y(ay) {}
-//		A3D_FORCEINLINE explicit IntVector2(const int* data) : x(data[0]), y(data[1]){}
-//		A3D_FORCEINLINE IntVector2& operator =(const IntVector2& rhs) { x = rhs.x; y = rhs.y; return *this; }
+//		CCDK_FORCEINLINE IntVector2(const IntVector2& o) :x(o.x), y(o.y){}
+//		CCDK_FORCEINLINE explicit IntVector2(int ax, int ay) : x(ax), y(ay) {}
+//		CCDK_FORCEINLINE explicit IntVector2(const int* data) : x(data[0]), y(data[1]){}
+//		CCDK_FORCEINLINE IntVector2& operator =(const IntVector2& rhs) { x = rhs.x; y = rhs.y; return *this; }
 //
 //		///operation
-//		A3D_FORCEINLINE bool operator ==(const IntVector2& r) const { return x == r.x && y == r.y; }
-//		A3D_FORCEINLINE bool operator !=(const IntVector2& r) const { return x != r.x || y != r.y; }
+//		CCDK_FORCEINLINE bool operator ==(const IntVector2& r) const { return x == r.x && y == r.y; }
+//		CCDK_FORCEINLINE bool operator !=(const IntVector2& r) const { return x != r.x || y != r.y; }
 //
-//		A3D_FORCEINLINE IntVector2 operator -() const { return IntVector2{ -x, -y }; }
-//		A3D_FORCEINLINE IntVector2 operator +(const IntVector2& r) const { IntVector2{ x + r.x, y + r.y }; }
-//		A3D_FORCEINLINE IntVector2 operator -(const IntVector2& r) const { IntVector2{ x - r.x, y - r.y }; }
-//		A3D_FORCEINLINE IntVector2 operator *(int I)  const { return IntVector2{ x*I, y*I }; }
-//		A3D_FORCEINLINE const IntVector2& operator +=(const IntVector2& rhs) { x += rhs.x; y += rhs.y; return *this; }
-//		A3D_FORCEINLINE const IntVector2& operator -=(const IntVector2& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
-//		A3D_FORCEINLINE const IntVector2& operator *=(int rhs) { x *= rhs; y *= rhs; return *this; }
+//		CCDK_FORCEINLINE IntVector2 operator -() const { return IntVector2{ -x, -y }; }
+//		CCDK_FORCEINLINE IntVector2 operator +(const IntVector2& r) const { IntVector2{ x + r.x, y + r.y }; }
+//		CCDK_FORCEINLINE IntVector2 operator -(const IntVector2& r) const { IntVector2{ x - r.x, y - r.y }; }
+//		CCDK_FORCEINLINE IntVector2 operator *(int I)  const { return IntVector2{ x*I, y*I }; }
+//		CCDK_FORCEINLINE const IntVector2& operator +=(const IntVector2& rhs) { x += rhs.x; y += rhs.y; return *this; }
+//		CCDK_FORCEINLINE const IntVector2& operator -=(const IntVector2& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
+//		CCDK_FORCEINLINE const IntVector2& operator *=(int rhs) { x *= rhs; y *= rhs; return *this; }
 //		
-//		A3D_FORCEINLINE AString ToAString()
+//		CCDK_FORCEINLINE AString ToAString()
 //		{
 //			return StringFormater<32>::Format("[%d, %d]", x, y);
 //		}

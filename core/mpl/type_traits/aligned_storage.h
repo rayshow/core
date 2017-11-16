@@ -3,7 +3,7 @@
 #include<core/type.h>
 #include<core/mpl/base/int_.h>
 
-#if defined(AURORA3D_COMPILER_MSVC)
+#if defined(CCDK_COMPILER_MSVC)
 #pragma warning(push)
 //4324 : because of align declare signature, MaxAlign_t had been filled
 #pragma warning(disable:4324)
@@ -78,6 +78,6 @@ namespace core
 	}
 }
 
-#if defined(AURORA3D_COMPILER_MSVC)
+#if defined(CCDK_COMPILER_MSVC)
 #pragma warning(pop)
 #endif

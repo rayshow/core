@@ -34,6 +34,15 @@
     <Filter Include="mpl\type_trait\impl">
       <UniqueIdentifier>{74b6b3cd-90c6-4cee-9395-db23514e5200}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mpl\container">
+      <UniqueIdentifier>{5c9414c8-2d0f-48b8-87ba-5b6ef3b7f54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\concept">
+      <UniqueIdentifier>{75224648-183e-4b8a-8dc8-936b311448ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\functional">
+      <UniqueIdentifier>{435ec450-2e2f-4bf5-8557-18f19ce3872f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
@@ -728,6 +737,15 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_compatible.h">
       <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\tag_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\uint8_to_bool.h">
+      <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\impl\uint8_to_byte.h">
+      <Filter>preprocessor\impl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

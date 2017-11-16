@@ -7,9 +7,9 @@ namespace core
 	namespace mpl
 	{
 		//test R = T::operator%(P) or R = ::operator%(T,P)
-		A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(% , mod);
+		CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(% , mod);
 
 		//test T::operator%=(P) or ::operator%=(T,P)
-		A3D_TT_HAS_SIDE_EFFECT_BINARY_OP(%=, mod_assign);
+		CCDK_TT_HAS_SIDE_EFFECT_BINARY_OP(%=, mod_assign);
 	}
 }

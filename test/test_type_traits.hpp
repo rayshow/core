@@ -225,22 +225,22 @@ inline void TestTypeTraits()
 {
 	//test set
 #define CLASS_SET       (void,nullptr_t, int,TestUnion,TestNormalEnum, TestEmpty, TestFinal, TestAbstract, TestDrivied, TestCopyConstructible, TestNoCopyConstructible, TestNoMoveConstructible, TestMoveConstructible, NoDefaultConstructible)
-#define QUALIFERED_SET  A3D_PP_COMPOSE_EX( (int, const int, volatile int, const volatile int), (A3D_PP_NULL, &, &&, *, * const, * volatile, * const volatile, [2], [2][3], []), void)
+#define QUALIFERED_SET  CCDK_PP_COMPOSE_EX( (int, const int, volatile int, const volatile int), (CCDK_PP_NULL, &, &&, *, * const, * volatile, * const volatile, [2], [2][3], []), void)
 #define ALL_TYPE_SET    (void, nullptr_t, int, float, void(int), int(*)(char), int*,int[2],int&,int&&, decltype(&TestDrivied::Test), decltype(&TestDrivied::data), TestEnumClassInt8, TestNormalEnum, TestUnion, TestEmpty, TestTrivialConstruct1, TestAbstract, TestDrivied)
-#define BINARY_TEST_SET ((void, A3D_PP_NULL, 0), (nullptr_t, A3D_PP_NULL, 0), (char*, A3D_PP_NULL, 0), (int, void, 1), (float, void, 1),(TestOperator, void, 1), (int, float, 1), (float, int, 1), (int, ingore_t, 1), (float, A3D_PP_NULL, 0),(ingore_t, A3D_PP_NULL, 0), (TestOperator, A3D_PP_NULL, 0), (int*, float*, 1))
+#define BINARY_TEST_SET ((void, CCDK_PP_NULL, 0), (nullptr_t, CCDK_PP_NULL, 0), (char*, CCDK_PP_NULL, 0), (int, void, 1), (float, void, 1),(TestOperator, void, 1), (int, float, 1), (float, int, 1), (int, ingore_t, 1), (float, CCDK_PP_NULL, 0),(ingore_t, CCDK_PP_NULL, 0), (TestOperator, CCDK_PP_NULL, 0), (int*, float*, 1))
 
 	//printf  format
 #define TEST_1TYPE_VALUE(Type, Templ)         TypeValue<Templ<Type>>{}();
 #define TEST_TYPE_CONVERTER(Type, Converter)  TypeName<Converter<Type>>{}();
-#define PRINT_HAS_BINARY_OP_VALUE(Right,Ret,NeedComma,Left,Templ)   TypeValue<Templ<Left,Right A3D_PP_IF_COMMA(NeedComma) Ret>>{}();
+#define PRINT_HAS_BINARY_OP_VALUE(Right,Ret,NeedComma,Left,Templ)   TypeValue<Templ<Left,Right CCDK_PP_IF_COMMA(NeedComma) Ret>>{}();
 #define PRINT_HAS_UNARY_OP_VALUE(Type, Ret, Templ) TypeValue<Templ<Type,Ret>>{}();
 
 	//test case
-#define TEST_TYPE_CONVERTER_BATCH(Func)               A3D_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, QUALIFERED_SET, Func) cout << endl;
-	//A3D_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, ALL_TYPE_SET, Func) 
-#define TEST_TYPE_CONVERTER_BATCH_SP(Func, Seq)       A3D_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, Seq, Func) cout << endl;
-#define TEST_TYPE_VALUE_BATCH(Templ, Seq)             A3D_PP_FOREACH_ITEM(TEST_1TYPE_VALUE, Seq, Templ);    cout << endl;
-#define TEST_HAS_OP_VALUE_BATCH(Func, Seq, ...)        A3D_PP_FOREACH_TUPLE(Func,Seq,__VA_ARGS__)
+#define TEST_TYPE_CONVERTER_BATCH(Func)               CCDK_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, QUALIFERED_SET, Func) cout << endl;
+	//CCDK_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, ALL_TYPE_SET, Func) 
+#define TEST_TYPE_CONVERTER_BATCH_SP(Func, Seq)       CCDK_PP_FOREACH_ITEM(TEST_TYPE_CONVERTER, Seq, Func) cout << endl;
+#define TEST_TYPE_VALUE_BATCH(Templ, Seq)             CCDK_PP_FOREACH_ITEM(TEST_1TYPE_VALUE, Seq, Templ);    cout << endl;
+#define TEST_HAS_OP_VALUE_BATCH(Func, Seq, ...)        CCDK_PP_FOREACH_TUPLE(Func,Seq,__VA_ARGS__)
 #define TEST_NORMAL_HAS(Templ)	TypeValue<Templ<float*, int*>>{}(); TypeValue<Templ<float*, int>>{}(); TypeValue<Templ<int, int>>{}(); TypeValue<Templ<void, char>>{}(); TypeValue<Templ<int, void>>{}(); TypeValue<Templ<void*, char>>{}();
 
 	cout << "==== Test Unary/Binary HasOperatorXX ====" << endl;
@@ -492,7 +492,7 @@ inline void TestTypeTraits()
 
 
 	cout << " 10. test IsRef " << endl;
-	//TEST_TYPE_VALUE_BATCH(IsRef, A3D_PP_COMPOSE((int, int const, int volatile, int const volatile), (A3D_PP_NULL, &, &&, *)));
+	//TEST_TYPE_VALUE_BATCH(IsRef, CCDK_PP_COMPOSE((int, int const, int volatile, int const volatile), (CCDK_PP_NULL, &, &&, *)));
 
 	cout << " test IsPointer" << endl;
 	//TEST_TYPE_VALUE_BATCH(IsPointer, (void, void * const, void*&, int **,void(*)(int), decltype(&TestFastCall), decltype(&TestAbstract::TestStatic) ) );

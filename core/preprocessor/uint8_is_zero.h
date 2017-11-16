@@ -4,4 +4,4 @@
 
 //x==0 return 1
 //x>0  return 0
-#define A3D_PP_IS_ZERO(x) A3D_PP_NOT( A3D_PP_INT_BOOL(x) )
+#define CCDK_PP_IS_ZERO(x) CCDK_PP_NOT( CCDK_PP_INT_BOOL(x) )

@@ -6,6 +6,6 @@ namespace core
 {
 	namespace mpl
 	{
-		A3D_TT_HAS_POST_UNARY_OP(--, post_dec);
+		CCDK_TT_HAS_POST_UNARY_OP(--, post_dec);
 	}
 }

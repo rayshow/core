@@ -18,9 +18,9 @@ namespace Aurora3D
 //		unsigned line_index = 0;
 //		for (i = 0; i < size; ++i)
 //		{
-//#if defined(AURORA3D_WINDOW) || defined(AURORA3D_APPLE)
+//#if defined(AURORCCDK_WINDOW) || defined(AURORCCDK_APPLE)
 //			if ('\r' == file_mapping[i])
-//#if defined(AURORA3D_WINDOW)
+//#if defined(AURORCCDK_WINDOW)
 //				if ('\n' == file_mapping[i + 1] && i + 1 < size)
 //#endif
 //#else 
@@ -37,12 +37,12 @@ namespace Aurora3D
 //						pairs.emplace(key, value);
 //					}
 //					else {
-//						A3D_WARNING("config file " + name + " line " + std::to_string(line_index) + " con't parse!");
+//						CCDK_WARNING("config file " + name + " line " + std::to_string(line_index) + " con't parse!");
 //						continue;
 //					}
 //				}
 //				last_pos = i + 1;
-//#ifdef AURORA3D_WINDOW
+//#ifdef AURORCCDK_WINDOW
 //				++last_pos;
 //#endif
 //				++line_index;
@@ -60,7 +60,7 @@ namespace Aurora3D
 //			}
 //		}
 //		else{
-//			A3D_WARNING("config file " + name + " last line con't parse!");
+//			CCDK_WARNING("config file " + name + " last line con't parse!");
 //		}
 //		return true;
 //	}

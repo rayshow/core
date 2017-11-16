@@ -17,8 +17,8 @@ namespace Aurora3D
 				AVX2,          //32 uint8, 16 float16 support
 			};
 			//runtime support check
-			AURORA3D_API static VectorLevel SupportLevel = VectorLevel::SSE;
-			AURORA3D_API static bool  SupportOpenCL = false;
+			CCDK_API static VectorLevel SupportLevel = VectorLevel::SSE;
+			CCDK_API static bool  SupportOpenCL = false;
 
 		}
 	}

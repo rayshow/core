@@ -54,15 +54,15 @@ namespace Aurora3D
 
 	typedef std::shared_ptr<EventDispatcher> EventDispatcherPtr;
 
-#define A3D_SUBSCRIBE_EVENT(evt_id, callback)  \
+#define CCDK_SUBSCRIBE_EVENT(evt_id, callback)  \
 	EventDispatcher::GetSingletonPtr()->SubscribeEvent( \
 		(evt_id), \
 		EventCallBackWarpper{ (this), (std::bind( (callback), this, std::placeholders::_1)) }  \
 	);
-#define A3D_CANCAL_EVENT(evt_id, callback) \
+#define CCDK_CANCAL_EVENT(evt_id, callback) \
 	EventDispatcher::GetSingletonPtr()->CancelEvent((evt_id), (callback))
-#define A3D_SEND_EVENT(evt_id, data) \
+#define CCDK_SEND_EVENT(evt_id, data) \
 	EventDispatcher::GetSingletonPtr()->TriggerEvent((evt_id), (data))
-#define A3D_SEND_FATAL() \
+#define CCDK_SEND_FATAL() \
 	EventDispatcher::GetSingletonPtr()->NotifyFatalError()
 }

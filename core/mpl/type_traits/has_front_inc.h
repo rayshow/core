@@ -6,6 +6,6 @@ namespace core
 {
 	namespace mpl
 	{
-		A3D_TT_HAS_PRE_UNARY_OP(++, front_inc);
+		CCDK_TT_HAS_PRE_UNARY_OP(++, front_inc);
 	}
 }

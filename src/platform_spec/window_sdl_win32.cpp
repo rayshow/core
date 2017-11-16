@@ -6,7 +6,7 @@
 #include"../precompile_def.h"
 
 
-#if defined(AURORA3D_WINDOW)
+#if defined(AURORCCDK_WINDOW)
 
 #include"../io/logger.h"
 #include"../event/window_evt.h"
@@ -54,7 +54,7 @@ namespace Aurora3D
 		window_ = SDL_CreateWindow("sdl window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
 		if (!window_)
 		{
-			A3D_ERROR("create sdl window failed.");
+			CCDK_ERROR("create sdl window failed.");
 			return false;
 		}
 		int x, y, w, h;
@@ -65,14 +65,14 @@ namespace Aurora3D
 		width_ = w;
 		height_ = h;
 
-		A3D_SUBSCRIBE_EVENT(InputEvt::WindowReleated, &Window::OnWindowChangeEvent);
+		CCDK_SUBSCRIBE_EVENT(InputEvt::WindowReleated, &Window::OnWindowChangeEvent);
 
 
 		std::shared_ptr<WindowEvt::DisplayData> display_data{ new WindowEvt::DisplayData };
 		display_data->width = width_;
 		display_data->height = height_;
 		display_data->window_handle = this->GetWindowHandle();
-		A3D_SEND_EVENT(WindowEvt::WindowCreated, display_data);
+		CCDK_SEND_EVENT(WindowEvt::WindowCreated, display_data);
 		return true;
 	}
 
@@ -88,14 +88,14 @@ namespace Aurora3D
 		if (new_width == width_ && new_height == height_)
 			return;
 
-		A3D_DEBUGGER("window resized");
+		CCDK_DEBUGGER("window resized");
 
 		width_ = new_width;
 		height_ = new_height;
 		display_data->width = width_;
 		display_data->height = height_;
 		display_data->window_handle = this->GetWindowHandle();
-		A3D_SEND_EVENT(WindowEvt::DisplayChanged, display_data);
+		CCDK_SEND_EVENT(WindowEvt::DisplayChanged, display_data);
 	}
 
 	void Window::OnMove()
@@ -107,7 +107,7 @@ namespace Aurora3D
 			return;
 		x_ = new_x;
 		y_ = new_y;
-		A3D_DEBUGGER("window moved");
+		CCDK_DEBUGGER("window moved");
 	}
 
 	void Window::OnWindowChangeEvent(EventData data)
@@ -158,7 +158,7 @@ namespace Aurora3D
 		display_data->width = width_;
 		display_data->height = height_;
 		display_data->window_handle = this->GetWindowHandle();
-		A3D_SEND_EVENT(WindowEvt::DisplayChanged, display_data );
+		CCDK_SEND_EVENT(WindowEvt::DisplayChanged, display_data );
 	}
 
 	void Window::GetDesktopResolutions(std::vector<Resolution>& rs)

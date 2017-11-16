@@ -7,7 +7,7 @@
 #include"../common_def.h"
 #include"../event/window_evt.h"
 
-#ifdef AURORA3D_DX11
+#ifdef AURORCCDK_DX11
 #include"dx11/graphics_dx11_impl.h"
 #endif
 
@@ -19,12 +19,12 @@ namespace Aurora3D
 		impl_.reset(new GraphicsImpl{});
 		if (!impl_)
 		{
-			A3D_FATAL("new graphics implements failed!");
-			A3D_SEND_FATAL();
+			CCDK_FATAL("new graphics implements failed!");
+			CCDK_SEND_FATAL();
 			return;
 		}
-		A3D_SUBSCRIBE_EVENT(WindowEvt::WindowCreated, &Graphics::OnWindowCreated);
-		A3D_SUBSCRIBE_EVENT(WindowEvt::DisplayChanged, &Graphics::OnWindowChanged);
+		CCDK_SUBSCRIBE_EVENT(WindowEvt::WindowCreated, &Graphics::OnWindowCreated);
+		CCDK_SUBSCRIBE_EVENT(WindowEvt::DisplayChanged, &Graphics::OnWindowChanged);
 	}
 
 	void Graphics::CheckMutilSample()
@@ -48,8 +48,8 @@ namespace Aurora3D
 		//create device
 		if (!impl_->CreateGraphicsContext())
 		{
-			A3D_FATAL("create graphics context failed!");
-			A3D_SEND_FATAL();
+			CCDK_FATAL("create graphics context failed!");
+			CCDK_SEND_FATAL();
 			return;
 		}
 		//check feature
@@ -60,15 +60,15 @@ namespace Aurora3D
 		if (!impl_->InitGraphicsContext(disply_data->window_handle,
 			disply_data->width, disply_data->height, mutilsamples_, vsync_, srgb_))
 		{
-			A3D_FATAL("initialize graphics context failed!");
-			A3D_SEND_FATAL();
+			CCDK_FATAL("initialize graphics context failed!");
+			CCDK_SEND_FATAL();
 			return;
 		}
 
 		this->ClearFullScreen();
 		impl_->Present();
 
-		A3D_INFO("context create with width:"
+		CCDK_INFO("context create with width:"
 			+ std::to_string(disply_data->width) 
 			+" height:" + std::to_string(disply_data->height)
 			+" mutilsample:"+std::to_string(mutilsamples_)
@@ -80,7 +80,7 @@ namespace Aurora3D
 	void Graphics::OnWindowChanged(EventData data)
 	{
 		auto disply_data = std::static_pointer_cast<WindowEvt::DisplayData>(data);
-		A3D_INFO( "on window changed with width:" + std::to_string(disply_data->width) + " height:" + std::to_string(disply_data->height));
+		CCDK_INFO( "on window changed with width:" + std::to_string(disply_data->width) + " height:" + std::to_string(disply_data->height));
 	}
 
 

@@ -37,27 +37,27 @@ namespace Aurora3D
 		switch (sdl_evt->type)
 		{
 		case SDL_QUIT:
-			A3D_SEND_EVENT(CommonEvt::Quit, nullptr);
+			CCDK_SEND_EVENT(CommonEvt::Quit, nullptr);
 			break;
 		case SDL_WINDOWEVENT:
 			SetWindowReleated(sdl_evt->window.type);
-			A3D_DEBUGGER("window event");
+			CCDK_DEBUGGER("window event");
 			break;
 		case SDL_KEYDOWN:
 			SetKey(sdl_evt->key.keysym.sym, sdl_evt->key.keysym.scancode, true);
-			A3D_DEBUGGER("key pressed");
+			CCDK_DEBUGGER("key pressed");
 			break;
 		case SDL_KEYUP:
 			SetKey(sdl_evt->key.keysym.sym, sdl_evt->key.keysym.scancode, false);
-			A3D_DEBUGGER("key released");
+			CCDK_DEBUGGER("key released");
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			SetMouse(sdl_evt->button.button, sdl_evt->button.clicks, true);
-			A3D_DEBUGGER("mouse pressed");
+			CCDK_DEBUGGER("mouse pressed");
 			break;
 		case SDL_MOUSEBUTTONUP:
 			SetMouse(sdl_evt->button.button, sdl_evt->button.clicks, false);
-			A3D_DEBUGGER("mouse released");
+			CCDK_DEBUGGER("mouse released");
 			break;
 		case SDL_MOUSEMOTION:
 		case SDL_MOUSEWHEEL:
@@ -71,7 +71,7 @@ namespace Aurora3D
 		std::shared_ptr<InputEvt::WindowReleatedData> data{
 			new InputEvt::WindowReleatedData };
 		data->evt_type = evt_type;
-		A3D_SEND_EVENT(InputEvt::WindowReleated, data);
+		CCDK_SEND_EVENT(InputEvt::WindowReleated, data);
 	}
 
 	void Input::SetKey(int key, int scancode,  bool released)
@@ -103,7 +103,7 @@ namespace Aurora3D
 		data->repeat = repeat;
 		data->scancode = scancode;
 		data->qualifier = GetQualifierKeys();
-		A3D_SEND_EVENT(released ? InputEvt::KeyReleased : InputEvt::KeyPressed, data);
+		CCDK_SEND_EVENT(released ? InputEvt::KeyReleased : InputEvt::KeyPressed, data);
 	}
 
 
@@ -126,7 +126,7 @@ namespace Aurora3D
 		mouse_evt->times = times;
 		mouse_evt->keys = mouse_pressed_;
 		mouse_evt->qualifiter = GetQualifierKeys();
-		A3D_SEND_EVENT(released ? InputEvt::MouseReleased : InputEvt::MousePressed, mouse_evt);
+		CCDK_SEND_EVENT(released ? InputEvt::MouseReleased : InputEvt::MousePressed, mouse_evt);
 	}
 
 	void Input::ResetState()

@@ -9,7 +9,7 @@
 
 
 //+ - * / % & | ^ && || >> << == !=  > < >= <=
-#define A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
+#define CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename L, typename R, typename Ret>                           \
@@ -33,7 +33,7 @@
 
 //TODO: clang  int+=int* will not report error, need to fix
 //+= -= *= /= %= &= |= ^= >>== <<== 
-#define A3D_TT_HAS_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
+#define CCDK_TT_HAS_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename L, typename R>                                         \
@@ -54,7 +54,7 @@
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<L,R>::value;
 
 //! ~ * - + T
-#define A3D_TT_HAS_RET_UNARY_OP(opsign, opname)										 \
+#define CCDK_TT_HAS_RET_UNARY_OP(opsign, opname)										 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename T, typename Ret>                                       \
@@ -76,7 +76,7 @@
 
 
 //++ T, -- T
-#define A3D_TT_HAS_PRE_UNARY_OP(opsign, opname)										 \
+#define CCDK_TT_HAS_PRE_UNARY_OP(opsign, opname)										 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename T, typename Ret>                                       \
@@ -98,7 +98,7 @@
 
 
 // T--, T++
-#define A3D_TT_HAS_POST_UNARY_OP(opsign, opname)									 \
+#define CCDK_TT_HAS_POST_UNARY_OP(opsign, opname)									 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename T, typename Ret>                                       \
@@ -161,7 +161,7 @@
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<T,Args...>::value;
 
 // T::type
-#define A3D_TT_HAS_INNER_DECL(name, inner_name)											   \
+#define CCDK_TT_HAS_INNER_DECL(name, inner_name)											   \
 		namespace detail                                                                   \
 		{                                                                                  \
 			template<typename T>                                                           \

@@ -52,19 +52,19 @@ namespace Aurora3D
 		}
 	};
 
-#ifdef AURORA3D_DEBUG
-#	define A3D_DEBUGGER(msg)         Logger::GetSingletonPtr()->Write(LogLevel::Debug, msg);
-#	define A3D_ASSERT(state)	     assert(state);           
-#	define A3D_CHECK_UNLIKELY(expr)  if(UNLIKELY(!(state)){ Logger::GetSingletonPtr()->WriteFormat(LogLevel::Warn,  __FILE__, __LINE__, "express unlikely happened:",#expr ); };
+#ifdef AURORCCDK_DEBUG
+#	define CCDK_DEBUGGER(msg)         Logger::GetSingletonPtr()->Write(LogLevel::Debug, msg);
+#	define CCDK_ASSERT(state)	     assert(state);           
+#	define CCDK_CHECK_UNLIKELY(expr)  if(UNLIKELY(!(state)){ Logger::GetSingletonPtr()->WriteFormat(LogLevel::Warn,  __FILE__, __LINE__, "express unlikely happened:",#expr ); };
 #else 
-#	define A3D_DEBUGGER(msg) 
-#	define A3D_ASSERT(state)     if(state) Logger::GetSingletonPtr()->Write(LogLevel::Error, "Assert Failed!", __FILE__, __LINE__);
-#	define A3D_CHECK_UNLIKELY(expr)  
+#	define CCDK_DEBUGGER(msg) 
+#	define CCDK_ASSERT(state)     if(state) Logger::GetSingletonPtr()->Write(LogLevel::Error, "Assert Failed!", __FILE__, __LINE__);
+#	define CCDK_CHECK_UNLIKELY(expr)  
 #endif
 
-#define A3D_INFO(msg)           Logger::GetSingletonPtr()->Write(LogLevel::Info, msg);
-#define A3D_WARNING(msg)        Logger::GetSingletonPtr()->Write(LogLevel::Warn, msg,  AString{__FILE__}, __LINE__);
-#define A3D_ERROR(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Error, msg, AString{__FILE__}, __LINE__);
-#define A3D_FATAL(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Fatal, msg, AString{__FILE__}, __LINE__);
-#define A3D_LOG_FORMAT(lv, prefix,...) Logger::GetSingletonPtr()->WriteFormat( (lv),  AString{__FILE__}, __LINE__, __VA_ARGS__ );
+#define CCDK_INFO(msg)           Logger::GetSingletonPtr()->Write(LogLevel::Info, msg);
+#define CCDK_WARNING(msg)        Logger::GetSingletonPtr()->Write(LogLevel::Warn, msg,  AString{__FILE__}, __LINE__);
+#define CCDK_ERROR(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Error, msg, AString{__FILE__}, __LINE__);
+#define CCDK_FATAL(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Fatal, msg, AString{__FILE__}, __LINE__);
+#define CCDK_LOG_FORMAT(lv, prefix,...) Logger::GetSingletonPtr()->WriteFormat( (lv),  AString{__FILE__}, __LINE__, __VA_ARGS__ );
 };

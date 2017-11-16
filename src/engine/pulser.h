@@ -32,13 +32,13 @@ namespace Aurora3D
 			loop_duration *= Clock::period::den / (double)fruquency;
 		}
 
-		A3D_FORCEINLINE void Pulse()
+		CCDK_FORCEINLINE void Pulse()
 		{
 			elapse = Clock::now() - start_point;
 			start_point = Clock::now();
 		}
 
-		A3D_FORCEINLINE void Sleep()
+		CCDK_FORCEINLINE void Sleep()
 		{
 			finished_point = Clock::now();
 			Clock::duration execute_time = finished_point - start_point;
@@ -49,35 +49,35 @@ namespace Aurora3D
 			}
 		}
 
-		A3D_FORCEINLINE long long GetElapseNanoSeconds()
+		CCDK_FORCEINLINE long long GetElapseNanoSeconds()
 		{
 			return elapse.count()*Clock::period::num;
 		}
 
-		A3D_FORCEINLINE double GetElapseMicroSeconds()
+		CCDK_FORCEINLINE double GetElapseMicroSeconds()
 		{
 			std::chrono::duration<double, std::micro> seconds(elapse);
 			return seconds.count();
 		}
 
-		A3D_FORCEINLINE double GetElapseMilliSeconds()
+		CCDK_FORCEINLINE double GetElapseMilliSeconds()
 		{
 			std::chrono::duration<double, std::milli> seconds(elapse);
 			return seconds.count();
 		}
 
-		A3D_FORCEINLINE double GetElapseSeconds()
+		CCDK_FORCEINLINE double GetElapseSeconds()
 		{
 			std::chrono::duration<double, std::ratio<1, 1>> seconds(elapse);
 			return seconds.count();
 		}
 
-		A3D_FORCEINLINE double GetFPS()
+		CCDK_FORCEINLINE double GetFPS()
 		{
 			return Clock::period::den / ((double)elapse.count());
 		}
 
-		A3D_FORCEINLINE double GetFruquencyElapse()
+		CCDK_FORCEINLINE double GetFruquencyElapse()
 		{
 			return (double)loop_duration.count() / Clock::period::den;
 		}

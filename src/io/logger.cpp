@@ -45,7 +45,7 @@ namespace Aurora3D
 		std::lock_guard<std::mutex> lock(mutex);
 		file.Write((const uint8*)log.c_str(), log.length());
 
-#ifdef AURORA3D_DEBUG 
+#ifdef AURORCCDK_DEBUG 
 		//debug mode to console also
 		fprintf(stdout, log.c_str());
 #endif

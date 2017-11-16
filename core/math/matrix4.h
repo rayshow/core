@@ -18,9 +18,9 @@ namespace Aurora3D
 
 			//default 
 			Matrix4() = default;
-			A3D_FORCEINLINE Matrix4(int row,const Vector4& v){ (&m0)[row] = v; };
-			A3D_FORCEINLINE Matrix4(const Vector4& r0, const Vector4& r1, const Vector4& r2, const Vector4& r3): m0(r0),m1(r1),m2(r2),m3(r3){}
-			A3D_FORCEINLINE const Vector4& operator[](uint32 index) { return (&m0)[index]; }
+			CCDK_FORCEINLINE Matrix4(int row,const Vector4& v){ (&m0)[row] = v; };
+			CCDK_FORCEINLINE Matrix4(const Vector4& r0, const Vector4& r1, const Vector4& r2, const Vector4& r3): m0(r0),m1(r1),m2(r2),m3(r3){}
+			CCDK_FORCEINLINE const Vector4& operator[](uint32 index) { return (&m0)[index]; }
 
 			std::string ToString()
 			{

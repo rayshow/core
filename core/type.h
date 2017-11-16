@@ -30,7 +30,6 @@ namespace core
 	static_assert(sizeof(int32) == 4, "int32 is not 4 byte.");
 	static_assert(sizeof(uint64) == 8, "uint64 is not 8 byte.");
 	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
-	
 }
 
 

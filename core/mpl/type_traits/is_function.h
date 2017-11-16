@@ -13,7 +13,7 @@ namespace core
 	namespace mpl
 	{
 		template<typename T> struct is_function :public false_ {};
-#ifdef AURORA3D_COMPILER_MSVC
+#ifdef CCDK_COMPILER_MSVC
 		//varg function always prefix with __cdecl, no matter explicitly with which prefix
 		//normal function default prefix width __cdecl
 		#define IS_FUNCTION(Prefix, ...)                                                                                    \
@@ -27,7 +27,7 @@ namespace core
 			template<typename Ret, typename... Args> struct is_function< Ret(Args...) Prefix> :public true_ {};             \
 			template<typename Ret, typename... Args> struct is_function< Ret(Args......) Prefix> :public true_ {};    
 #endif
-		A3D_PP_FOREACH_ITEM(IS_FUNCTION, A3D_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+		CCDK_PP_FOREACH_ITEM(IS_FUNCTION, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
 #undef IS_FUNCTION
 
 		template<typename T> constexpr bool is_function_v = is_function<T>::value;

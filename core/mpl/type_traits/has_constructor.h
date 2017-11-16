@@ -5,7 +5,7 @@
 #include<core/mpl/type_traits/add_const_lref.h>
 #include<core/mpl/type_traits/add_rref.h>
 
-#if defined(AURORA3D_COMPILER_GCC)
+#if defined(CCDK_COMPILER_GCC)
 #include<core/mpl/type_traits/is_array.h>
 #include<core/mpl/type_traits/remove_all_dim.h>
 #include<core/mpl/type_traits/declval.h>
@@ -16,7 +16,7 @@ namespace core
 {
 	namespace mpl
 	{
-#if defined(AURORA3D_COMPILER_MSVC) || defined(AURORA3D_COMPILER_CLANG) || defined(AURORA3D_COMPILER_INTEL)
+#if defined(CCDK_COMPILER_MSVC) || defined(CCDK_COMPILER_CLANG) || defined(CCDK_COMPILER_INTEL)
 		//normal constructor family
 		template<typename T, typename... Args> struct has_constructor :public bool_<__is_constructible(T, Args...)> {};
 		template<typename T> struct has_copy_constructor :public has_constructor<T, add_const_lref_t<T>> {};

@@ -6,11 +6,11 @@ namespace Aurora3D
 {
 	struct InputEvt
 	{
-		const static EventID KeyPressed = ID(A3DModule::Input, 1);
-		const static EventID KeyReleased = ID(A3DModule::Input, 2);
-		const static EventID MousePressed = ID(A3DModule::Input, 3);
-		const static EventID MouseReleased = ID(A3DModule::Input, 4);
-		const static EventID WindowReleated = ID(A3DModule::Input, 5);
+		const static EventID KeyPressed = ID(CCDKModule::Input, 1);
+		const static EventID KeyReleased = ID(CCDKModule::Input, 2);
+		const static EventID MousePressed = ID(CCDKModule::Input, 3);
+		const static EventID MouseReleased = ID(CCDKModule::Input, 4);
+		const static EventID WindowReleated = ID(CCDKModule::Input, 5);
 
 		struct KeyEventData
 		{

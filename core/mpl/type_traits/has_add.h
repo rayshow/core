@@ -11,7 +11,7 @@ namespace core
 {
 	namespace mpl
 	{
-		A3D_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(+, add);
+		CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(+, add);
 
 		//clang T + P* will not report error
 		template<typename L, typename R>

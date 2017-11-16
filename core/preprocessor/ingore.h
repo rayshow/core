@@ -1,3 +1,3 @@
 #pragma once
 
-#define A3D_PP_INGORE(...) 
+#define CCDK_PP_INGORE(...) 

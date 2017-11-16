@@ -14,7 +14,7 @@ namespace core
 			template<typename T> struct add_signed_helper { typedef T type; };
 			template<> struct add_signed_helper<char> { typedef signed char type; };
 #define ADD_SIGNED(T,...)  template<> struct add_signed_helper<unsigned T>{ typedef signed T type;  };
-			A3D_PP_FOREACH_ITEM(ADD_SIGNED, A3D_PP_COMPOSE((char, short, int, long, long long), (,const, volatile, const volatile)));
+			CCDK_PP_FOREACH_ITEM(ADD_SIGNED, CCDK_PP_COMPOSE((char, short, int, long, long long), (,const, volatile, const volatile)));
 #undef  ADD_SIGNED
 		}
 

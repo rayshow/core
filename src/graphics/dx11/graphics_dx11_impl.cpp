@@ -15,10 +15,10 @@ namespace Aurora3D
 		}
 		if (!device_ || !context_)
 		{
-			A3D_ERROR("create grapphics device or context failed!");
+			CCDK_ERROR("create grapphics device or context failed!");
 			return false;
 		}
-		A3D_INFO("create dx11 device and context success!");
+		CCDK_INFO("create dx11 device and context success!");
 		return true;
 	}
 
@@ -58,10 +58,10 @@ namespace Aurora3D
 
 		if (!swapchain_)
 		{
-			A3D_ERROR("create graphics swap chain failed!");
+			CCDK_ERROR("create graphics swap chain failed!");
 			return false;
 		}
-		A3D_INFO("create dx11 swap chain successed!");
+		CCDK_INFO("create dx11 swap chain successed!");
 		return true;
 	}
 

@@ -11,7 +11,7 @@ public:
 };
 
 
-//AURORA3D_MAIN_APPLICATION(SampleApplication)
+//AURORCCDK_MAIN_APPLICATION(SampleApplication)
 
 int main(int argc, char** argv) { 
 
