@@ -199,15 +199,6 @@ class Derive:public Base {  };
 
 int main()
 {
-	//Base* b = (Derive*)(0);
-	//AssertTrue((__is_assignable(Base, Derive)));
-	//AssertTrue((__is_assignable(Derive, Base)));
-	//AssertTrue((__is_assignable(Base*, Derive*)));
-	//AssertTrue((__is_assignable(Derive*, Base*)));    //Base* 
-	//AssertTrue((__is_assignable(Base&, Derive&)));    //Base& = Derive&
-	//AssertTrue((__is_assignable(Derive&, Base&)));    //Derive& = Base&
-	//AssertTrue((__is_assignable(Base, int)));         //Base = int
-
 	//bool wrap
 	AssertTrue(true_::value);
 	AssertTrue(true_c);

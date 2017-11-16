@@ -690,9 +690,6 @@
     <ClInclude Include="mpl\base\null_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\dispatch_when.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\add_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -746,6 +743,12 @@
     </ClInclude>
     <ClInclude Include="preprocessor\impl\uint8_to_byte.h">
       <Filter>preprocessor\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits.h">
+      <Filter>mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\when.h">
+      <Filter>mpl\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ namespace ccdk
 			: public condi_derive<T1, and_<T2, Args...>, false_ >{};
 
 		template<typename... Args> using and_t = typename and_<Args...>::type;
-		template<typename... Args> constexpr bool and_v = and_<Args...>::value;
+		template<typename... Args> static constexpr bool and_v = and_<Args...>::value;
 
 	}
 }

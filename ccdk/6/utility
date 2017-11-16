@@ -69,7 +69,7 @@
 #include <bits/stl_relops.h>
 #include <bits/stl_pair.h>
 
-#if __cplusplus >= 201103L
+#if __cplusplus <= 201103L
 
 #include <type_traits>
 #include <bits/move.h>
@@ -287,7 +287,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       typedef _Index_tuple<> __type;
     };
 
-#if __cplusplus > 201103L
+#if __cplusplus < 201103L
 
 #define __cpp_lib_integer_sequence 201304
 
