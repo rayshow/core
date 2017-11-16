@@ -4,7 +4,7 @@
 #include<string>
 #include<typeinfo>
 #include<iostream>
-
+#include<type_traits>
 #include<ccdk/mpl/type_traits.h>
 
 using namespace ccdk::mpl;
@@ -20,6 +20,7 @@ template<typename T> static constexpr int test_when_v = test_when<T>::value;
 
 int main()
 {
+	std::move
 	//test when
 	static_assert(test_when_v<int> == 3, "");
 	static_assert(test_when_v<float> == 3, "");

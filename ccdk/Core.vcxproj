@@ -140,6 +140,8 @@
     <ClInclude Include="mpl\base\ullong.h" />
     <ClInclude Include="mpl\base\ushort.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
+    <ClInclude Include="mpl\container\ebo.h" />
+    <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\mpl.h" />
     <ClInclude Include="mpl\type_print.hpp" />
     <ClInclude Include="mpl\type_traits.h" />
@@ -161,6 +163,7 @@
     <ClInclude Include="mpl\type_traits\add_const_lref.h" />
     <ClInclude Include="mpl\type_traits\decay.h" />
     <ClInclude Include="mpl\type_traits\declval.h" />
+    <ClInclude Include="mpl\type_traits\forward.h" />
     <ClInclude Include="mpl\type_traits\has_add.h" />
     <ClInclude Include="mpl\type_traits\has_assigner.h" />
     <ClInclude Include="mpl\type_traits\has_bit_and.h" />
@@ -235,6 +238,7 @@
     <ClInclude Include="mpl\type_traits\is_union.h" />
     <ClInclude Include="mpl\type_traits\is_unsigned.h" />
     <ClInclude Include="mpl\type_traits\is_void.h" />
+    <ClInclude Include="mpl\type_traits\move.h" />
     <ClInclude Include="mpl\type_traits\remove_all_dim.h" />
     <ClInclude Include="mpl\type_traits\remove_const.h" />
     <ClInclude Include="mpl\type_traits\remove_cv.h" />

@@ -750,5 +750,17 @@
     <ClInclude Include="mpl\base\when.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\container\tuple.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\ebo.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\forward.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\move.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

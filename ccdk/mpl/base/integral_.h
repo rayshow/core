@@ -23,7 +23,7 @@ namespace ccdk
 		template<typename T> struct is_integer_t
 		{
 			static constexpr bool value = true;
-		};
+		}; 
 
 		template<typename T, T v> struct is_integer_t< integer_<T, v> >
 		{
