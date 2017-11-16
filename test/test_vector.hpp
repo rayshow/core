@@ -1,7 +1,7 @@
 #pragma once
 
 #include<cassert>
-#include<core/math/vector4.h>
+#include<ccdk/math/vector4.h>
 
 
 using namespace Aurora3D::math;

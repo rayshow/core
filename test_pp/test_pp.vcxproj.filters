@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\core\test_preprocessor.cpp">
+    <ClCompile Include="..\ccdk\test_preprocessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

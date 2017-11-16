@@ -2,7 +2,7 @@
 #include<string>
 #include<type_traits>
 #include<tuple>
-#include<core/preprocessor/stringize.h>
+#include<ccdk/preprocessor/stringize.h>
 
 #include"test_type_traits.hpp"
 #include"test_vector.hpp"
