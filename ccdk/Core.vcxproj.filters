@@ -762,5 +762,8 @@
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\base\index_sequence.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

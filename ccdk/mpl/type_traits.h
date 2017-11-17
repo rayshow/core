@@ -30,6 +30,10 @@
 #include<ccdk/mpl/type_traits/remove_top_const.h>
 #include<ccdk/mpl/type_traits/remove_volatile.h>
 #include<ccdk/mpl/type_traits/declval.h>
+#include<ccdk/mpl/type_print.hpp>
+
+#include<ccdk/mpl/type_traits/forward.h>
+#include<ccdk/mpl/type_traits/move.h>
 //is_xx type traits
 #include<ccdk/mpl/type_traits/is_void.h>
 #include<ccdk/mpl/type_traits/is_same.h>

@@ -16,8 +16,8 @@
 // tt lib
 #include<ccdk/type.h>
 #include<ccdk/mpl/type_traits/is_void.h>
-#include<ccdk/mpl/type_traits/is_lvalue_ref.h>
-#include<ccdk/mpl/type_traits/is_rvalue_ref.h>
+#include<ccdk/mpl/type_traits/is_lref.h>
+#include<ccdk/mpl/type_traits/is_rref.h>
 #include<ccdk/mpl/type_traits/is_integral.h>
 #include<ccdk/mpl/type_traits/is_float.h>
 #include<ccdk/mpl/type_traits/is_arithmetic.h>

@@ -30,15 +30,6 @@ namespace ccdk
 			static constexpr bool value = false;
 		};
 
-		template<typename T, T... args >
-		struct integer_sequence
-		{
-			typedef T value_type;
-			static constexpr unsigned int size() { return sizeof...(args); }
-		};
-
-		template<unsigned int... args> struct index_sequence :integer_sequence<unsigned int, args...> {};
-
 
 	}
 }

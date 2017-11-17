@@ -1,5 +1,5 @@
 #pragma once
-namespace Aurora3D
+namespace ccdk
 {
 	namespace mpl
 	{

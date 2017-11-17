@@ -6,6 +6,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T> inline constexpr T&& forward(remove_ref_t<T>&& inT) { return inT; }
+		template<typename T> inline constexpr T&& forward(remove_ref_t<T>& inT) noexcept { return static_cast<T&&>(inT); }
+		template<typename T> inline constexpr T&& forward(remove_ref_t<T>&& inT) noexcept { return static_cast<T&&>(inT); }
 	}
 }

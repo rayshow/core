@@ -124,6 +124,7 @@
     <ClInclude Include="mpl\base\choose.h" />
     <ClInclude Include="mpl\base\condi_derive.h" />
     <ClInclude Include="mpl\base\condi_enable.h" />
+    <ClInclude Include="mpl\base\index_sequence.h" />
     <ClInclude Include="mpl\base\when.h" />
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\integral_.h" />
