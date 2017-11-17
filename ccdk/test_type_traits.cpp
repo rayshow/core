@@ -564,6 +564,7 @@ int main()
 
 	//is final
 	class D1 final {};
+	AssertTrue(!is_final_v<int>);
 	AssertTrue(is_final_v<D1>);
 	AssertTrue(is_final_v<D1 const>);
 	AssertTrue(is_final_v<D1 volatile>);

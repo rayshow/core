@@ -7,6 +7,7 @@
 #include<type_traits>
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/base/index_sequence.h>
+#include<ccdk/mpl/container/tuple.h>
 
 using namespace ccdk::mpl;
 
@@ -20,9 +21,11 @@ template<typename T> static constexpr int test_when_v = test_when<T>::value;
 template<typename T>
 inline constexpr void TestType(T inT)
 {
-	
-	std::cout << TypeNameHelper<T>{}() << std::endl;
+	std::cout << " type:" << TypeNameHelper<T>{}();
 }
+
+#define OutputValue(v) std::cout << " value: " << v << std::endl
+#define OutputTandV(v) TestType(v); OutputValue(v);
 
 inline  void TestType2(const int& inn)
 {
@@ -61,28 +64,48 @@ inline constexpr V & pair_value(pair<K, V> & p)
 template<typename K, typename V>
 inline constexpr V&& pair_value(pair<K, V>&& p)
 {
-	return forward<V&&>(p);
+	return util::forward<V&&>(p);
 }
 
 struct TestIndexDerive :pair<int_<0>, int_<10>>, pair<int_<1>, int_<11>> {};
 
+class test_empty {};
+class test_empty2 {};
+class test_empty3 {};
+class test_empty4 {};
+
+class test_derive:public test_empty, public test_empty2, public test_empty3, public test_empty4 {};
+
+template<typename T, typename U>
+inline decltype(auto) test_auto(T inT, U inU)
+{
+	return inT + inU;
+}
+
 int main()
 {
+	std::cout << sizeof(test_empty) << std::endl;
+	std::cout << sizeof(test_derive) << std::endl;
+
 	TestIndexDerive dd;
 	TestType(pair_value<int_<1>>(dd));
+	TestType(make_index_sequence<8>{});
 
 	
-	TestType(make_index_sequence<8>{});
 
 	std::cout << "test forward lvalue" << std::endl;
 	TestForward a{};
-	TestForward b{ forward<TestForward&>(a) };
+	TestForward b{ util::forward<TestForward&>(a) };
 	std::cout << "test forward rvalue" << std::endl;
-	TestForward c{ forward<TestForward&&>(a) };
+	TestForward c{ util::forward<TestForward&&>(a) };
 	std::cout << "test static_cast lvalue" << std::endl;
 	TestForward d{ static_cast<TestForward&>(a) };
 	std::cout << "test static_cast rvalue" << std::endl;
 	TestForward e{ static_cast<TestForward&&>(a) };
+	std::cout << "test move lvalue" << std::endl;
+	TestForward f{ util::move(a) };
+	std::cout << "test move rvalue" << std::endl;
+	TestForward g{ util::move(a) };
 	std::cout << std::endl;
 
 	std::forward<int>(0);
@@ -100,7 +123,24 @@ int main()
 	static_assert(test_when_v<nullptr_t> == 1, "");
 	using T = decltype(static_cast<false_>(declval<false_>()));
 	std::cout << typeid(T).name() << std::endl;
+
+	std::cout << " test type: " << std::endl;
+	OutputTandV(test_auto(1, 'a'));
+	OutputTandV(test_auto(1, 1.0));
+	OutputTandV(test_auto(1, 1.0f));
+
+	//test tuple
+	std::cout << " test tuple " << std::endl;
 	
+	const tuple<int, char, std::string, float> tuple1( 1 ,'a', "hello", 1.0f);
+	tuple<int, char, std::string, float> tuple2(1, 'a', "hello", 1.0f);
+	std::cout << sizeof(tuple1.storage) << std::endl;
+	std::cout << tuple1[int_<0>{}] << std::endl;
+	std::cout << tuple1[int_<1>{}] << std::endl;
+	std::cout << tuple1[int_<2>{}] << std::endl;
+	std::cout << tuple1[int_<3>{}] << std::endl;
+	tuple1[int_<0>{}] = 2;
+
 	getchar();
 	return 0;
 }

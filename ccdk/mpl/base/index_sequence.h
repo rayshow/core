@@ -7,7 +7,7 @@ namespace ccdk
 		template<typename T, T... args>
 		struct integer_sequence
 		{
-			static constexpr unsigned int size = sizeof...(args);
+			//static constexpr unsigned int size = sizeof...(args);
 			typedef integer_sequence<T, args...> type;
 			typedef T value_type;
 		};
