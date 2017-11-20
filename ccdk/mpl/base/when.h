@@ -16,6 +16,8 @@ namespace ccdk
 
 		template<typename T> using match = when_impl<T::value>;
 		template<typename T, typename... Args> using match_both = when_impl< and_<T,Args...>::value >;
+
+		//match one condition of arg
 		template<typename T, typename... Args> using match_one = when_impl< or_<T, Args...>::value >;
 	}
 }

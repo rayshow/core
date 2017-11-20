@@ -125,6 +125,7 @@
     <ClInclude Include="mpl\base\condi_derive.h" />
     <ClInclude Include="mpl\base\condi_enable.h" />
     <ClInclude Include="mpl\base\index_sequence.h" />
+    <ClInclude Include="mpl\base\literals.h" />
     <ClInclude Include="mpl\base\when.h" />
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\integral_.h" />
@@ -144,7 +145,7 @@
     <ClInclude Include="mpl\container\ebo.h" />
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\mpl.h" />
-    <ClInclude Include="mpl\type_print.hpp" />
+    <ClInclude Include="mpl\debug_type.hpp" />
     <ClInclude Include="mpl\type_traits.h" />
     <ClInclude Include="mpl\type_traits\add_const.h" />
     <ClInclude Include="mpl\type_traits\add_cv.h" />

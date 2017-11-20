@@ -1,7 +1,9 @@
 #pragma once
-#include<cstdio>
+#include<iostream>
 #include<string>
-//#include<ccdk/mpl/type_traits/first_template.h>
+#include<cassert>
+#include<ccdk/compile.h>
+
 
 
 template<typename T>
@@ -94,20 +96,18 @@ struct TypeNameHelper<T* const volatile>
 	}
 };
 
-//template<typename T>
-//struct TypeName
-//{
-//	void operator()()
-//	{
-//		cout << "      " << left << setw(40) << TypeNameHelper<typename FirstTemplateType<T>::type >{}() << " ==> " << TypeNameHelper<typename T::type >{}() << endl;
-//	}
-//};
+#if  defined(CCDK_COMPILER_MSVC)
+#define DebugFunctionName()  std::cout << " *** function name: " << __FUNCSIG__ <<std::endl;
+#else
+#define DebugFunctionName()  std::cout << " *** function name: " << __PRETTY_FUNCTION__ <<std::endl;
+#endif
 
-template<typename T>
-struct NormalTypeName
-{
-	void operator()()
-	{
-		printf("%s\n", TypeNameHelper<T>{}().c_str() );
-	}
-};
+#define AssertTrue(v)  static_assert(v, "");
+#define AssertFalse(v) static_assert(!v, "");
+#define RuntimeAssertTrue(v) assert(v)
+#define DebugNewTitle(T)  std::cout<<"\n ================ " << T << " ================" << std::endl;
+#define DebugSubTitle(T)  std::cout<<"\n --- " << T << " --- " << std::endl;
+#define DebugValue(v)     std::cout<<" *** " << v <<std::endl;
+#define DebugTypeName(T) std::cout<<" *** typename: " << TypeNameHelper<T>{}()<< std::endl;
+#define DebugValueTypeName(V) DebugTypeName(decltype(V));
+#define DebugValueTypeAndValue(V) std::cout<<" *** typename: " << TypeNameHelper<decltype(V)>{}() << " -- value: "<< V << std::endl;

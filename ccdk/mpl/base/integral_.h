@@ -9,6 +9,7 @@ namespace ccdk
 		template<typename T, T v>
 		struct integer_
 		{
+			constexpr integer_() = default;
 			typedef integer_<T, v> type;
 			typedef T value_type;
 			static constexpr T value = v;

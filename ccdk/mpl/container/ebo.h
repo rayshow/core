@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/type_traits/is_empty.h>
 #include<ccdk/mpl/type_traits/is_final.h>
-#include<ccdk/mpl/type_traits/move.h>
+#include<ccdk/mpl/type_traits/forward.h>
 #include<cstdio>
 
 namespace ccdk
@@ -14,9 +14,11 @@ namespace ccdk
 		template<typename K, typename V, bool = is_empty_v<V> && !is_final_v<V> >
 		struct ebo:public V
 		{
-			constexpr ebo() :V() { printf("empty"); }
+			constexpr ebo() :V() {}
+
+			//prefect forward
 			template<typename U>
-			constexpr ebo(U&& inU) : V(util::move(inU)) { printf("empty"); }
+			constexpr ebo(U&& inU) : V(util::forward<U>(inU)) {}
 		};
 
 		//V is not empty
@@ -25,8 +27,10 @@ namespace ccdk
 		{
 			V v;
 			constexpr ebo() :v() {}
+
+			//use () initalize to allow narrow conversion like int to float
 			template<typename U>
-			constexpr ebo(U&& inU) :v(util::move(inU) ) {}
+			constexpr ebo(U&& inU) : v( util::forward<U>(inU) ) {}
 		};
 
 		//empty class
