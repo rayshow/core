@@ -19,6 +19,10 @@ namespace ccdk
 			//prefect forward
 			template<typename U>
 			constexpr ebo(U&& inU) : V(util::forward<U>(inU)) {}
+
+			template<typename U>
+			constexpr ebo(const U& inU): V(inU) {}
+
 		};
 
 		//V is not empty
@@ -30,7 +34,10 @@ namespace ccdk
 
 			//use () initalize to allow narrow conversion like int to float
 			template<typename U>
-			constexpr ebo(U&& inU) : v( util::forward<U>(inU) ) {}
+			constexpr ebo(U && inU) : v( util::forward<U>(inU) ) {}
+
+			template<typename U>
+			constexpr ebo(const U& inU) : v(inU) {}
 		};
 
 		//empty class

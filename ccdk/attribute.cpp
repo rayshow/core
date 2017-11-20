@@ -89,7 +89,30 @@ constexpr decltype(auto) test_forward(T&& t)
 	return util::forward<T>(t);
 }
 
+//empty class optimization if V is empty
+// V and U can be different type but U can be convert to V
+template<typename T >
+struct test_ctor 
+{
+	T v;
+	constexpr test_ctor() :v{} {}
 
+	//prefect forward
+	template<typename U>
+	constexpr test_ctor(U&& inU) : v(util::forward<U>(inU)) 
+	{
+		DebugFunctionName();
+		DebugValue("&&");
+	}
+
+	template<typename U>
+	constexpr test_ctor(const U& inU) : v(inU) 
+	{
+		DebugFunctionName();
+		DebugValue("const &");
+	}
+
+};
 
 
 int main()
@@ -113,6 +136,19 @@ int main()
 	DebugValueTypeName(test_forward(ib));
 	test_forward("abc");
 	DebugValueTypeName(test_forward("abc"));
+
+	//test ctor
+	DebugNewTitle("test template cotr");
+	test_ctor<int> a11{1};
+	int a = 1;
+	test_ctor<int&> a22{a};
+	DebugValue(a);
+	DebugValue(a11.v);
+	DebugValue(a22.v);
+	a = 2;
+	DebugValue(a);
+	DebugValue(a11.v);
+	DebugValue(a22.v);
 
 
 	//test auto

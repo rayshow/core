@@ -219,22 +219,27 @@ namespace ccdk
 			}
 		};
 
-		//tuple back add a new element, not this tuple will moved to new tuple for effcient and useless
-		//do forward of T
+		//tuple back add a new element
+		//note orginal tuple will moved to new tuple for effcient and will be  useless
+		//note if T is lvalue, will do once copy and once move constructor to final storage
+		//     if T is rvalue, will do two move constructor to final storage
 		template<typename T, typename... Args>
-		constexpr auto operator+(tuple<Args...>& tp, T&& t )
+		constexpr auto operator+(tuple<Args...>& tp, T t )
 		{
+			DebugFunctionName();
 			typedef tuple<Args..., T> new_tuple;
-			return new_tuple{ util::move(tp), util::forward<T>(t) };
+			return new_tuple{ util::move(tp), util::move(t) };
 		}
-		//tuple front add a new element, not this tuple will moved to new tuple for effcient and useless
-		//do forward of T
+		//tuple front add a new element
+		//note orginal tuple will moved to new tuple for effcient and will be useless
+		//note if T is lvalue, will do once copy and once move constructor to final storage
+		//     if T is rvalue, will do two move constructor to final storage
 		template<typename T, typename... Args>
-		constexpr auto operator+(T&& t, tuple<Args...>& tp)
+		constexpr auto operator+(T t, tuple<Args...>& tp)
 		{
 			DebugFunctionName();
 			typedef tuple<T, Args...> new_tuple;
-			return new_tuple{ util::forward<T>(t), util::move(tp)};
+			return new_tuple{ util::move(t), util::move(tp)};
 		}
 		
 		

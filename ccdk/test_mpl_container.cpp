@@ -88,13 +88,14 @@ int main()
 	char a = 'a';
 	tuple<char, char, std::string, float> tuple6{ a, 'b', "hello", 1.0f};
 	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
-	tuple<char> tuple8{ 'a'};
+	tuple<char> tuple8{ a}; 
 	tuple<float> tuple9{ 2.0f };
 
 	auto tuple10 = tuple8 + tuple9;
 	char acc = 'c';
+	const char dcc = 'b';
 	auto tuple11 = tuple10 + acc;
-	auto tuple12 = 1 + tuple11;
+	auto tuple12 = dcc + tuple11;
 	DebugValueTypeName(tuple10);
 	DebugValueTypeName(tuple11);
 	DebugValueTypeName(tuple12);
@@ -102,6 +103,8 @@ int main()
 	DebugValueTypeAndValue(tuple12[1_th]);
 	DebugValueTypeAndValue(tuple12[2_th]);
 	DebugValueTypeAndValue(tuple12[3_th]);
+	tuple12[3_th] = 'd';
+	DebugValue(acc);
 
 
 	getchar();
