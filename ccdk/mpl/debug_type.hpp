@@ -4,8 +4,6 @@
 #include<cassert>
 #include<ccdk/compile.h>
 
-
-
 template<typename T>
 struct TypeNameHelper
 {

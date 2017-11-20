@@ -5,8 +5,9 @@
 #include<typeinfo>
 #include<iostream>
 #include<type_traits>
-#include<assert.h>
+#include<cassert>
 #include<ccdk/mpl/type_traits.h>
+#include<ccdk/mpl/base/arg_pack.h>
 
 using namespace ccdk::mpl;
 
@@ -89,8 +90,17 @@ constexpr decltype(auto) test_forward(T&& t)
 }
 
 
+
+
 int main()
 {
+	//test arg pack
+	typedef arg_pack<int, short, long, char, float> pack5;
+	typedef arg_pack_ingore_index< 2,2, pack5> ingore_index;
+	DebugTypeName(typename ingore_index::head_pack);
+	DebugTypeName(typename ingore_index::tail_pack);
+
+
 	//test forward
 	DebugNewTitle("test forward");
 	test_forward(0);

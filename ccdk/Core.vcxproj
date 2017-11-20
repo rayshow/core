@@ -119,6 +119,7 @@
     <ClInclude Include="memory\heap_allocator.h" />
     <ClInclude Include="memory\place_new.h" />
     <ClInclude Include="mpl\base\add_.h" />
+    <ClInclude Include="mpl\base\arg_pack.h" />
     <ClInclude Include="mpl\base\bool_.h" />
     <ClInclude Include="mpl\base\char.h" />
     <ClInclude Include="mpl\base\choose.h" />

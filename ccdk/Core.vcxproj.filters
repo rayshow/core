@@ -768,5 +768,8 @@
     <ClInclude Include="mpl\base\literals.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

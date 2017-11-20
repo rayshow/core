@@ -18,7 +18,7 @@ namespace ccdk
 		template<unsigned int n, unsigned int... args>
 		struct make_index_sequence_t:make_index_sequence_t<n-1, n-1, args...> 
 		{
-			static_assert(n >= 0, "index_sequence size need greater or equal then 0");
+			
 		};
 
 		template<unsigned int... args>
@@ -27,7 +27,16 @@ namespace ccdk
 			typedef index_sequence< args...> type;
 		};
 
+		template<unsigned int n, unsigned count,   unsigned int... args>
+		struct make_index_sequence_count_t :make_index_sequence_count_t<n - 1, count-1, n - 1, args...>{};
+
+		template<unsigned int n, unsigned int... args>
+		struct make_index_sequence_count_t<n, 0, args...> {};
+
 		template<unsigned int size>
 		using make_index_sequence = typename make_index_sequence_t<size>::type;
+
+		template<unsigned int size, unsigned index>
+		using make_index_sequence_util = typename make_index_sequence_count_t<size, size - index>::type;
 	}
 }
