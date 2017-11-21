@@ -31,12 +31,15 @@ namespace ccdk
 		struct make_index_sequence_count_t :make_index_sequence_count_t<n - 1, count-1, n - 1, args...>{};
 
 		template<unsigned int n, unsigned int... args>
-		struct make_index_sequence_count_t<n, 0, args...> {};
+		struct make_index_sequence_count_t<n, 0, args...> 
+		{
+			typedef index_sequence< args...> type;
+		};
 
 		template<unsigned int size>
 		using make_index_sequence = typename make_index_sequence_t<size>::type;
 
-		template<unsigned int size, unsigned index>
-		using make_index_sequence_util = typename make_index_sequence_count_t<size, size - index>::type;
+		template<unsigned int size, unsigned int index>
+		using make_index_sequence_until = typename make_index_sequence_count_t<size, size - index>::type;
 	}
 }

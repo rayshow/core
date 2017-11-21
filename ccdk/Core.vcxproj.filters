@@ -771,5 +771,8 @@
     <ClInclude Include="mpl\base\arg_pack.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\container\type_vector.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

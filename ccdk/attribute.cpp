@@ -121,10 +121,16 @@ int main()
 {
 	//test arg pack
 	typedef arg_pack<int, short, long, char, float> pack5;
-	typedef arg_pack_ingore_index< 4,1, pack5> ingore_index;
-	DebugTypeName(typename ingore_index::head_pack);
-	DebugTypeName(typename ingore_index::tail_pack);
+	typedef arg_pack_split< 4, 1, pack5> ingore_index;
+	typedef arg_pack_split< 4, 0, pack5> ingore_index2;
+	DebugTypeName(typename ingore_index::head);
+	DebugTypeName(typename ingore_index::tail);
+	DebugTypeName(typename ingore_index2::head);
+	DebugTypeName(typename ingore_index2::tail);
 
+	typedef make_index_sequence_until<5, 2> index_until;
+	DebugTypeName(make_index_sequence<0>);
+	DebugTypeName(index_until);
 
 	//test forward
 	DebugNewTitle("test forward");

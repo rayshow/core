@@ -49,7 +49,7 @@ int main()
 	//test tuple 
 	DebugNewTitle("test tuple operation")
 	
-	constexpr tuple<int, char, double, float> tuple1(1, 'a', 2.0, 1.0f);
+	//constexpr tuple<int, char, double, float> tuple1(1, 'a', 2.0, 1.0f);
 	const char* aa = "hello";
 	const tuple<int, char, std::string, float> tuple2( 2 ,'a', "hello", 1.0f);
 	tuple<int, char, std::string, float> tuple3(3, 'a', aa, 1.0f);
@@ -70,7 +70,7 @@ int main()
 	DebugValue(tuple3[int_<3>{}]);
 
 	DebugSubTitle("debug type");
-	DebugValueTypeName(tuple1[1_th]);
+	//DebugValueTypeName(tuple1[1_th]);
 	DebugValueTypeName(tuple2[1_th]);
 	DebugValueTypeName(tuple3[1_th]);
 	DebugValueTypeName(util::move(tuple3)[1_th]);
@@ -87,28 +87,31 @@ int main()
 	char a = 'a';
 	tuple<char, char, std::string, float> tuple6{ a, 'b', "hello", 1.0f};
 	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
-	tuple<char> tuple8{ a}; 
+	tuple<char,int> tuple8{ a,1}; 
 	tuple<float> tuple9{ 2.0f };
-	auto tuple10 = tuple8 + tuple9;
-	char acc = 'c';
-	const char dcc = 'b';
-	auto tuple11 = tuple10 + acc;
-	auto tuple12 = dcc + tuple11;
-	DebugValueTypeName(tuple10);
-	DebugValueTypeName(tuple11);
-	DebugValueTypeName(tuple12);
-	DebugValueTypeAndValue(tuple12[0_th]);
-	DebugValueTypeAndValue(tuple12[1_th]);
-	DebugValueTypeAndValue(tuple12[2_th]);
-	DebugValueTypeAndValue(tuple12[3_th]);
-	tuple12[3_th] = 'd';
-	DebugValue(acc);
+	auto tuple10 = tuple8 | tuple9;
+	//char acc = 'c';
+	//const char dcc = 'b';
+	//auto tuple11 = tuple10 + acc;
+	//auto tuple12 = dcc + tuple11;
+	//DebugValueTypeName(tuple10);
+	//DebugValueTypeName(tuple11);
+	//DebugValueTypeName(tuple12);
+	//DebugValueTypeAndValue(tuple12[0_th]);
+	//DebugValueTypeAndValue(tuple12[1_th]);
+	//DebugValueTypeAndValue(tuple12[2_th]);
+	//DebugValueTypeAndValue(tuple12[3_th]);
+	//tuple12[3_th] = 'd';
+	//DebugValue(acc);
 
-	DebugSubTitle("test tuple pop ");
-	auto tuple13 = tuple12.pop_back();
-	auto tuple14 = tuple13.pop_front();
-	DebugValueTypeAndValue(tuple14[0_th]);
-	DebugValueTypeAndValue(tuple14[1_th]);
+	//DebugSubTitle("test tuple pop ");
+	//auto tuple13 = tuple12.pop_back();
+	//auto tuple14 = tuple13.pop_front();
+	//DebugValueTypeAndValue(tuple14[0_th]);
+	//DebugValueTypeAndValue(tuple14[1_th]);
+
+	//DebugSubTitle("test insert tuple");
+	//auto tuple15 = tuple14.insert<1>(1.2f);
 
 
 	getchar();

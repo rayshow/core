@@ -145,6 +145,7 @@
     <ClInclude Include="mpl\base\wchar_.h" />
     <ClInclude Include="mpl\container\ebo.h" />
     <ClInclude Include="mpl\container\tuple.h" />
+    <ClInclude Include="mpl\container\type_vector.h" />
     <ClInclude Include="mpl\mpl.h" />
     <ClInclude Include="mpl\debug_type.hpp" />
     <ClInclude Include="mpl\type_traits.h" />
