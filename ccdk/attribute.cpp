@@ -115,11 +115,13 @@ struct test_ctor
 };
 
 
+
+
 int main()
 {
 	//test arg pack
 	typedef arg_pack<int, short, long, char, float> pack5;
-	typedef arg_pack_ingore_index< 2,2, pack5> ingore_index;
+	typedef arg_pack_ingore_index< 4,1, pack5> ingore_index;
 	DebugTypeName(typename ingore_index::head_pack);
 	DebugTypeName(typename ingore_index::tail_pack);
 

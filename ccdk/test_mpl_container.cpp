@@ -84,13 +84,11 @@ int main()
 	DebugValue(move_from);
 
 	DebugSubTitle("debug tuple concat");
-
 	char a = 'a';
 	tuple<char, char, std::string, float> tuple6{ a, 'b', "hello", 1.0f};
 	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
 	tuple<char> tuple8{ a}; 
 	tuple<float> tuple9{ 2.0f };
-
 	auto tuple10 = tuple8 + tuple9;
 	char acc = 'c';
 	const char dcc = 'b';
@@ -105,6 +103,12 @@ int main()
 	DebugValueTypeAndValue(tuple12[3_th]);
 	tuple12[3_th] = 'd';
 	DebugValue(acc);
+
+	DebugSubTitle("test tuple pop ");
+	auto tuple13 = tuple12.pop_back();
+	auto tuple14 = tuple13.pop_front();
+	DebugValueTypeAndValue(tuple14[0_th]);
+	DebugValueTypeAndValue(tuple14[1_th]);
 
 
 	getchar();

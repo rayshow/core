@@ -27,8 +27,8 @@ namespace ccdk
 		template<typename T, typename... TArgs, typename... UArgs>
 		struct arg_pack_ingore_index<0, 1, arg_pack<T, TArgs...>, arg_pack<UArgs...>>
 		{
-			typedef arg_pack<UArgs...> head_pack;
-			typedef arg_pack<TArgs...> tail_pack;
+			typedef arg_pack<UArgs...> head;
+			typedef arg_pack<TArgs...> tail;
 		};
 	}
 }
