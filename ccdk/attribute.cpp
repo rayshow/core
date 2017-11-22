@@ -129,9 +129,11 @@ int main()
 	DebugTypeName(typename ingore_index2::tail);
 
 	typedef make_index_sequence_until<5, 2> index_until;
+	typedef make_index_sequence_ingore<7, 0, 2> ingore_some;
 	DebugTypeName(make_index_sequence<0>);
 	DebugTypeName(make_index_sequence<1>);
 	DebugTypeName(index_until);
+	DebugTypeName(ingore_some);
 
 	//test forward
 	DebugNewTitle("test forward");

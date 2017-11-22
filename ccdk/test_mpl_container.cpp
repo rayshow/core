@@ -8,6 +8,7 @@
 #include<assert.h>
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/base/literals.h>
+#include<ccdk/mpl/container/constexpr_string.h>
 
 using namespace ccdk::mpl;
 template<typename T, typename=void> struct test_when :test_when<T, when > {};
@@ -130,6 +131,9 @@ int main()
 
 	//DebugSubTitle("test insert tuple");
 	//auto tuple15 = tuple14.insert<1>(1.2f);
+
+	constexpr_string<'a', 'b', 'c', 'd'> str{};
+	//constexpr int* asr = 0;
 
 
 	getchar();

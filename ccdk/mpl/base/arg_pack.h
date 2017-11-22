@@ -20,7 +20,7 @@ namespace ccdk
 
 		template< unsigned int index, unsigned int length, typename T, typename... TArgs, typename... UArgs>
 		struct arg_pack_split< index, length, arg_pack<T, TArgs...>, arg_pack<UArgs...>>
-			:arg_pack_split<index - 1, length, arg_pack<TArgs...>, arg_pack<UArgs..., T>> {};
+			: arg_pack_split<index - 1, length, arg_pack<TArgs...>, arg_pack<UArgs..., T>> {};
 
 		template< unsigned int length, typename T, typename... TArgs, typename... UArgs>
 		struct arg_pack_split<0, length, arg_pack<T, TArgs...>, arg_pack<UArgs...>>
@@ -31,6 +31,7 @@ namespace ccdk
 		{
 			typedef arg_pack<UArgs...> head;
 			typedef arg_pack<TArgs...> tail;
+			typedef arg_pack<UArgs..., TArgs...> type;
 		};
 
 		template<typename T, typename... TArgs, typename... UArgs>
@@ -38,6 +39,8 @@ namespace ccdk
 		{
 			typedef arg_pack<UArgs...> head;
 			typedef arg_pack<T, TArgs...> tail;
+			typedef arg_pack<UArgs...,T, TArgs...> type;
 		};
+
 	}
 }

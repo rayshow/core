@@ -143,9 +143,16 @@
     <ClInclude Include="mpl\base\ullong.h" />
     <ClInclude Include="mpl\base\ushort.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
+    <ClInclude Include="mpl\container\constexpr_string.h" />
     <ClInclude Include="mpl\container\ebo.h" />
+    <ClInclude Include="mpl\container\lazy.h" />
+    <ClInclude Include="mpl\container\maybe.h" />
+    <ClInclude Include="mpl\container\range.h" />
     <ClInclude Include="mpl\container\tuple.h" />
-    <ClInclude Include="mpl\container\type_vector.h" />
+    <ClInclude Include="mpl\function\function.h" />
+    <ClInclude Include="mpl\function\infix.h" />
+    <ClInclude Include="mpl\function\overload.h" />
+    <ClInclude Include="mpl\function\partial.h" />
     <ClInclude Include="mpl\mpl.h" />
     <ClInclude Include="mpl\debug_type.hpp" />
     <ClInclude Include="mpl\type_traits.h" />

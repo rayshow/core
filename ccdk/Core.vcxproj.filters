@@ -43,6 +43,9 @@
     <Filter Include="mpl\functional">
       <UniqueIdentifier>{435ec450-2e2f-4bf5-8557-18f19ce3872f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mpl\units">
+      <UniqueIdentifier>{d2be537e-e5f8-434c-aee5-13fdbb1ed1d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
@@ -771,7 +774,28 @@
     <ClInclude Include="mpl\base\arg_pack.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\type_vector.h">
+    <ClInclude Include="mpl\container\lazy.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\maybe.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\range.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\function.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\overload.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\infix.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\partial.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\constexpr_string.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
   </ItemGroup>

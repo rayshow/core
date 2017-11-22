@@ -7,8 +7,6 @@ namespace ccdk
 {
 	namespace mpl
 	{
-
-
 		//template syntax suger
 		template<bool> struct when_impl;
 		using when = when_impl<true>;
