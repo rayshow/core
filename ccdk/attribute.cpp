@@ -130,6 +130,7 @@ int main()
 
 	typedef make_index_sequence_until<5, 2> index_until;
 	DebugTypeName(make_index_sequence<0>);
+	DebugTypeName(make_index_sequence<1>);
 	DebugTypeName(index_until);
 
 	//test forward

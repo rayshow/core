@@ -88,12 +88,30 @@ int main()
 	tuple<char, char, std::string, float> tuple6{ a, 'b', "hello", 1.0f};
 	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
 	tuple<char,int> tuple8{ a,1}; 
-	tuple<float> tuple9{ 2.0f };
+	tuple<float> tuple9{ 2.23f };
 	auto tuple10 = tuple8 | tuple9;
-	//char acc = 'c';
-	//const char dcc = 'b';
-	//auto tuple11 = tuple10 + acc;
-	//auto tuple12 = dcc + tuple11;
+	DebugValueTypeAndValue(tuple10[0_th]);
+	DebugValueTypeAndValue(tuple10[1_th]);
+	DebugValueTypeAndValue(tuple10[2_th]);
+
+	DebugSubTitle("debug tuple push back push front");
+	char acc = 'c'; const char dcc = 'b';
+	auto tuple11 = tuple10.push_back('B', acc );
+	auto tuple12 = tuple11.push_front('F', 1.222f);
+	DebugValueTypeAndValue(tuple12[0_th]);
+	DebugValueTypeAndValue(tuple12[1_th]);
+	DebugValueTypeAndValue(tuple12[2_th]);
+	DebugValueTypeAndValue(tuple12[3_th]);
+	DebugValueTypeAndValue(tuple12[4_th]);
+	DebugValueTypeAndValue(tuple12[5_th]);
+	DebugValueTypeAndValue(tuple12[6_th]);
+	DebugSubTitle("debug tuple pop back pop front");
+	//auto tuple13 = tuple12.pop_back();
+	//auto tuple14 = tuple13.pop_front();
+	//DebugValueTypeAndValue(tuple14[0_th]);
+	//DebugValueTypeAndValue(tuple14[1_th]);
+	//DebugValueTypeAndValue(tuple14[2_th]);
+
 	//DebugValueTypeName(tuple10);
 	//DebugValueTypeName(tuple11);
 	//DebugValueTypeName(tuple12);

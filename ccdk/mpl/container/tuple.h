@@ -9,8 +9,8 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
 #include<ccdk/mpl/container/ebo.h>
-
 #include<ccdk/mpl/base/literals.h>
+#include<ccdk/type.h>
 
 
 namespace ccdk
@@ -127,6 +127,8 @@ namespace ccdk
 
 			};
 		}
+		struct tuple_push_back_t {};
+		struct tuple_push_front_t {};
 
 		template<typename... Args>
 		struct tuple 
@@ -135,8 +137,10 @@ namespace ccdk
 			typedef detail::tuple_storage<L, make_index_sequence<L>, Args...> value_type;
 			typedef tuple<Args...> type;
 			typedef tuple_tag tag;
+			struct erase_t {};
 			value_type storage;
 			
+
 			constexpr tuple() : storage{} {}
 
 			//move from args
@@ -148,13 +152,13 @@ namespace ccdk
 			//copy from same tuple
 			constexpr tuple(tuple const& t) : storage{ t.storage }
 			{ 
-				static_assert(t.length() == L, "2 tuple length need to be equal");
+				static_assert(t.L == L, "2 tuple length need to be equal");
 			}
 
 			//move from same tuple
 			constexpr tuple(tuple && t) : storage{ util::move(t.storage) }
 			{
-				static_assert(t.length() == L, "2 tuple length need to be equal");
+				static_assert(t.L == L, "2 tuple length need to be equal");
 			}
 			
 			//copy from not same but compatable tuple
@@ -162,7 +166,7 @@ namespace ccdk
 			constexpr tuple(const tuple<Args2...>& t)
 				: storage{ util::move(t.storage) }
 			{ 
-				static_assert(t.length() == L, "2 tuple length need to be equal");
+				static_assert(t.L == L, "2 tuple length need to be equal");
 			}
 
 			//move from not same but compatable tuple
@@ -174,59 +178,49 @@ namespace ccdk
 			}
 
 	
-
-
 			//merge two tuple, note that original 2 tuple will be moved and can't use again
-			template<typename... Args2, typename... Args3>
-			constexpr tuple(tuple<Args2...>&& t1, tuple<Args3...>&& t2) 
-				: storage{ util::move(t1.storage), util::move(t2.storage) }
+			template<uint32... indice1, uint32... indice2,typename... Args1, typename... Args2>
+			constexpr tuple(index_sequence<indice1...>, index_sequence<indice2...>, tuple<Args1...>&& t1, tuple<Args2...>&& t2)
+				: storage{ ebo_value<uint_<indice1>>(t1.storage)..., ebo_value<uint_<indice2>>(t2.storage)... }
 			{
 				static_assert(t1.length() + t2.length() == length(), "sum of T1 and T2's length need equal to merged tuple ");
 			}
 
-			//back add tuple with a value, note that original 2 tuple will be moved and can't use again
-			template<typename... Args2, typename T>
-			constexpr tuple(tuple<Args2...>&& t1, T&& t2)
-				: storage{ util::move(t1.storage), util::forward<T>(t2) }
+
+			//use to push back
+			template<uint32... indice, typename... Args1, typename... Args2>
+			constexpr tuple( index_sequence<indice...>, tuple<Args1...>&& tp, Args2&&... args)
+				: storage{ ebo_value<uint_<indice>>( util::move(tp.storage))..., util::move(args)... }
 			{
-				static_assert(t1.length() + 1 == length(), "merge tuple and typle T length need equal to merged tuple ");
+				static_assert(tp.L + sizeof...(Args2) == L, "pop back tuple and new typle length need equal");
 			}
 
-			//front add a value with a tuple, note that original 2 tuple will be moved and can't use again
-			template<typename... Args2, typename T>
-			constexpr tuple(T&& t2, tuple<Args2...>&& t1)
-				: storage{  util::forward<T>(t2), util::move(t1.storage) }
+			//use to push front
+			template<uint32... indice, typename... Args1, typename... Args2>
+			constexpr tuple( int, index_sequence<indice...>, tuple<Args1...>&& tp, Args2&&... args)
+				: storage{ util::move(args)..., ebo_value<uint_<indice>>(util::move(tp.storage))...  }
 			{
-				static_assert(t1.length() + 1 == length(), "merge tuple and typle T length need equal to merged tuple ");
+				static_assert(tp.L + sizeof...(Args2) == L, "pop back tuple and new typle length need equal");
 			}
 
-			//use to pop back
-			template<typename... Args2>
-			constexpr tuple(detail::storage_pop_back_t, tuple<Args2...>&& t1)
-				: storage{ detail::storage_pop_back, util::move(t1.storage) }
+			//use to erase or pop front / pop back
+			template<uint32... indice, typename... Args2, uint32 len>
+			constexpr tuple(index_sequence<indice...>, tuple<Args2...>&& tp, uint_<len>)
+				: storage{ ebo_value<uint_<indice>>(util::move(tp.storage))... }
 			{
-				static_assert(t1.length() - 1 == length(), "pop back tuple and new typle length need equal");
-			}
-
-			//use to pop front element
-			template<typename... Args2>
-			constexpr tuple(detail::storage_pop_front_t, tuple<Args2...>&& t1)
-				: storage{ detail::storage_pop_front, util::move(t1.storage) }
-			{
-				static_assert(t1.length() - 1 == length(), "pop front tuple and new typle length need equal");
-			}
-
-			template<typename P, typename I, typename Is1, typename Is2, typename As1, typename As2, typename... Args2>
-			constexpr tuple(detail::storage_insert_t, tuple<Args2...>&& t1, P&& p, I i, Is1 is1, Is2 is2, As1 as1, As2 as2)
-				: storage{ detail::storage_insert,  t1.storage, util::move(p), i, is1, is2, as1, as2}
-			{
-
+				static_assert(tp.L - len == L, "after erase size not match");
 			}
 
 
 
-			//length of tuple, compiler constant
-			static constexpr unsigned int length() { return L; }
+			//template<typename P, typename I, typename Is1, typename Is2, typename As1, typename As2, typename... Args2>
+			//constexpr tuple(detail::storage_insert_t, tuple<Args2...>&& t1, P&& p, I i, Is1 is1, Is2 is2, As1 as1, As2 as2)
+			//	: storage{ detail::storage_insert,  t1.storage, util::move(p), i, is1, is2, as1, as2}
+			//{
+
+			//}
+
+
 
 			template<typename T, T v>
 			constexpr auto& operator[](integer_<T, v> index) &
@@ -248,34 +242,30 @@ namespace ccdk
 				static_assert(v >= 0 && v < L, "index out of range");
 				return ebo_value<uint_<v>>(util::move(storage));
 			}
+			
+			//length of tuple, compiler constant
+			static constexpr unsigned int length() { return L; }
 
-			template<typename T>
-			constexpr auto&& push_back(const T& t) const & 
+			template<typename... Args1>
+			constexpr auto push_back(Args1... args)
 			{
-				typedef tuple<Args..., T> new_type;
+				return tuple<Args..., Args1...>{ make_index_sequence<L>{}, util::move(*this), util::move(args)... };
 			}
+
+			template<typename... Args1>
+			constexpr auto push_front(Args1... args)
+			{
+				//0 use for dummy
+				return tuple<Args1... , Args... >{ 0, make_index_sequence<L>{},  util::move(*this), util::move(args)... };
+			}
+
 
 			//merge two tuple and create concat tuple , note both tuple will be moved for effcient and useless
 			template<typename... Args2>
-			constexpr auto operator|(tuple<Args2...>& t2)
+			constexpr auto operator|(tuple<Args2...>& tp)
 			{
 				typedef tuple<Args..., Args2...> new_tuple;
-				return new_tuple{ util::move(*this), util::move(t2) };
-			}
-
-
-			template<typename... Args2>
-			constexpr auto __pop_back_impl(arg_pack<Args2...>)
-			{
-				typedef tuple<Args2...> new_typle;
-				return new_typle{ detail::storage_pop_back, util::move(*this) };
-			}
-
-			template<typename ... Args2>
-			constexpr auto __pop_front_impl(arg_pack<Args2...>)
-			{
-				typedef tuple<Args2...> new_typle;
-				return new_typle{ detail::storage_pop_front, util::move(*this) };
+				return new_tuple{ make_index_sequence<L>{}, make_index_sequence<tp.L>{}, util::move(*this), util::move(tp) };
 			}
 
 			template<unsigned int index, typename T, typename... Args2, typename... Args3>
@@ -287,16 +277,32 @@ namespace ccdk
 				return new_tuple{ detail::storage_insert, util::move(*this), util::move(t), uint_<index>{}, front_index{}, back_index{}, as1, as2 };
 			}
 
-			//dispatch to remove last type
-			constexpr auto pop_back()
+			template<uint32 len, typename... Args2>
+			constexpr auto __pop_back_impl(arg_pack<Args2...>)
 			{
-				return __pop_back_impl(typename arg_pack_split<L - 1, 1, arg_pack<Args...>>::head{});
+				typedef tuple<Args2...> new_tuple;
+				return new_tuple{ make_index_sequence<L - 1>{}, util::move(*this),  uint_<len>{} };
 			}
 
 			//dispatch to remove last type
+			template<uint32 len>
+			constexpr auto pop_back()
+			{
+				return __pop_back_impl<len>(typename arg_pack_split<L - 1, len, arg_pack<Args...>>::head{});
+			}
+
+			template<uint32 len, typename ... Args1>
+			constexpr auto __pop_front_impl(arg_pack<Args1...>)
+			{
+				typedef tuple<Args1...> new_tuple;
+				return new_tuple{ make_index_sequence_until<L,len>{}, util::move(*this),  uint_<len>{} };
+			}
+
+			//dispatch to remove last type
+			template<uint32 len>
 			constexpr auto pop_front()
 			{
-				return __pop_front_impl(typename arg_pack_split<0, 1, arg_pack<Args...>>::tail{});
+				return __pop_front_impl<len>(typename arg_pack_split<0, 1, arg_pack<Args...>>::tail{});
 			}
 
 			//
@@ -319,7 +325,6 @@ namespace ccdk
 			{
 
 			}
-
 		};
 
 		//tuple back add a new element
@@ -327,20 +332,18 @@ namespace ccdk
 		//note if T is lvalue, will do once copy and once move constructor to final storage
 		//     if T is rvalue, will do two move constructor to final storage
 		template<typename T, typename... Args>
-		constexpr auto operator+(tuple<Args...>& tp, T t )
+		constexpr auto operator+(tuple<Args...>& tp, const T& t )
 		{
-			typedef tuple<Args..., T> new_tuple;
-			return new_tuple{ util::move(tp), util::move(t) };
+			return tp.push_back(t);
 		}
 		//tuple front add a new element
 		//note orginal tuple will moved to new tuple for effcient and will be useless
 		//note if T is lvalue, will do once copy and once move constructor to final storage
 		//     if T is rvalue, will do two move constructor to final storage
 		template<typename T, typename... Args>
-		constexpr auto operator+(T t, tuple<Args...>& tp)
+		constexpr auto operator+(const T& t, tuple<Args...>& tp)
 		{
-			typedef tuple<T, Args...> new_tuple;
-			return new_tuple{ util::move(t), util::move(tp)};
+			return tp.push_front(t);
 		}
 		
 		
