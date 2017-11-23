@@ -798,5 +798,8 @@
     <ClInclude Include="mpl\container\constexpr_string.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\container\string_view.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

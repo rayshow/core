@@ -148,6 +148,7 @@
     <ClInclude Include="mpl\container\lazy.h" />
     <ClInclude Include="mpl\container\maybe.h" />
     <ClInclude Include="mpl\container\range.h" />
+    <ClInclude Include="mpl\container\string_view.h" />
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\function\function.h" />
     <ClInclude Include="mpl\function\infix.h" />

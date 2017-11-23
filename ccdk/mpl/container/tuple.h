@@ -234,8 +234,8 @@ namespace ccdk
 				return __erase_impl<start, end-start>(arg_pack_split<start, end - start, arg_pack<Args...>>{});
 			}
 
-			template<uint32 start, uint32 end, uint32 len, typename... Args1, typename... Args2, typename... Args3>
-			constexpr auto __replace_impl(arg_pack<Args1...>,  Args2&&... args, arg_pack<Args3...>)
+			template<uint32 start, uint32 end, uint32 len, typename... Args1, typename... Args3, typename... Args2>
+			constexpr auto __replace_impl(arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args)
 			{
 				return tuple<Args1..., Args2..., Args3...>{ 
 						make_index_sequence_ingore<L-(end-start)+len, start, end-start>{}, 
@@ -247,11 +247,11 @@ namespace ccdk
 			constexpr auto replace(Args1... args)
 			{
 				typedef arg_pack_split<start, end-1, arg_pack<Args...>> pack;
-				return __replace_impl<start, end>(typename pack::head{}, util::move(args)..., typename pack::tail{});
+				return __replace_impl<start, end>(typename pack::head{}, typename pack::tail{}, util::move(args)...);
 			}
 
-			template<uint32 start, uint32 len, typename... Args1, typename... Args2, typename... Args3>
-			constexpr auto __insert_impl(arg_pack<Args1...>, Args2&&... args, arg_pack<Args3...>)
+			template<uint32 start, uint32 len, typename... Args1, typename... Args3, typename... Args2>
+			constexpr auto __insert_impl(arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args)
 			{
 				return tuple<Args1..., Args2..., Args3...>{
 						make_index_sequence_ingore<L + len, start, len>{},
@@ -265,7 +265,7 @@ namespace ccdk
 				// split Args... at start
 				typedef arg_pack_split<start, 0, arg_pack<Args...>> pack;
 				// insert args at middle of head and tail
-				return __insert_impl<start, len>(typename pack::head{}, util::move(args)..., typename pack::tail{});
+				return __insert_impl<start, len>(typename pack::head{}, typename pack::tail{}, util::move(args)...);
 			}
 		};
 
