@@ -1,0 +1,51 @@
+test_unpack.cpp: In function ‘int main()’:
+test_unpack.cpp:111:19: error: no match for ‘operator[]’ (operand types are ‘sp_tuple<char, int, float> {aka const sp_tuple_t<integer_sequence<unsigned int, 0u, 1u, 2u>, char, int, float>}’ and ‘idx<0> {aka std::integral_constant<int, 0>}’)
+  static_assert(tp1[idx<0>{}] == 'a', "");
+                   ^
+test_unpack.cpp:90:23: note: candidate: template<unsigned int i> constexpr const auto sp_tuple_t<integer_sequence<unsigned int, args ...>, Args ...>::operator[](idx<i>) const [with unsigned int i = i; unsigned int ...indice = {0u, 1u, 2u}; Args = {char, int, float}]
+  constexpr const auto operator[](idx<i>) const
+                       ^~~~~~~~
+test_unpack.cpp:90:23: note:   template argument deduction/substitution failed:
+test_unpack.cpp:111:28: note:   mismatched types ‘unsigned int’ and ‘int’
+  static_assert(tp1[idx<0>{}] == 'a', "");
+                            ^
+test_unpack.cpp:112:19: error: no match for ‘operator[]’ (operand types are ‘sp_tuple<char, int, float> {aka const sp_tuple_t<integer_sequence<unsigned int, 0u, 1u, 2u>, char, int, float>}’ and ‘idx<1> {aka std::integral_constant<int, 1>}’)
+  static_assert(tp1[idx<1>{}] == 2, "");
+                   ^
+test_unpack.cpp:90:23: note: candidate: template<unsigned int i> constexpr const auto sp_tuple_t<integer_sequence<unsigned int, args ...>, Args ...>::operator[](idx<i>) const [with unsigned int i = i; unsigned int ...indice = {0u, 1u, 2u}; Args = {char, int, float}]
+  constexpr const auto operator[](idx<i>) const
+                       ^~~~~~~~
+test_unpack.cpp:90:23: note:   template argument deduction/substitution failed:
+test_unpack.cpp:112:28: note:   mismatched types ‘unsigned int’ and ‘int’
+  static_assert(tp1[idx<1>{}] == 2, "");
+                            ^
+test_unpack.cpp:113:19: error: no match for ‘operator[]’ (operand types are ‘sp_tuple<char, int, float> {aka const sp_tuple_t<integer_sequence<unsigned int, 0u, 1u, 2u>, char, int, float>}’ and ‘idx<2> {aka std::integral_constant<int, 2>}’)
+  static_assert(tp1[idx<2>{}] == 1.3f, "");
+                   ^
+test_unpack.cpp:90:23: note: candidate: template<unsigned int i> constexpr const auto sp_tuple_t<integer_sequence<unsigned int, args ...>, Args ...>::operator[](idx<i>) const [with unsigned int i = i; unsigned int ...indice = {0u, 1u, 2u}; Args = {char, int, float}]
+  constexpr const auto operator[](idx<i>) const
+                       ^~~~~~~~
+test_unpack.cpp:90:23: note:   template argument deduction/substitution failed:
+test_unpack.cpp:113:28: note:   mismatched types ‘unsigned int’ and ‘int’
+  static_assert(tp1[idx<2>{}] == 1.3f, "");
+                            ^
+test_unpack.cpp:116:19: error: no match for ‘operator[]’ (operand types are ‘sp_tuple<char, char> {aka const sp_tuple_t<integer_sequence<unsigned int, 0u, 1u>, char, char>}’ and ‘idx<0> {aka std::integral_constant<int, 0>}’)
+  static_assert(tp2[idx<0>{}] == 'b', "");
+                   ^
+test_unpack.cpp:90:23: note: candidate: template<unsigned int i> constexpr const auto sp_tuple_t<integer_sequence<unsigned int, args ...>, Args ...>::operator[](idx<i>) const [with unsigned int i = i; unsigned int ...indice = {0u, 1u}; Args = {char, char}]
+  constexpr const auto operator[](idx<i>) const
+                       ^~~~~~~~
+test_unpack.cpp:90:23: note:   template argument deduction/substitution failed:
+test_unpack.cpp:116:28: note:   mismatched types ‘unsigned int’ and ‘int’
+  static_assert(tp2[idx<0>{}] == 'b', "");
+                            ^
+test_unpack.cpp:117:19: error: no match for ‘operator[]’ (operand types are ‘sp_tuple<char, char> {aka const sp_tuple_t<integer_sequence<unsigned int, 0u, 1u>, char, char>}’ and ‘idx<1> {aka std::integral_constant<int, 1>}’)
+  static_assert(tp2[idx<1>{}] == 'c', "");
+                   ^
+test_unpack.cpp:90:23: note: candidate: template<unsigned int i> constexpr const auto sp_tuple_t<integer_sequence<unsigned int, args ...>, Args ...>::operator[](idx<i>) const [with unsigned int i = i; unsigned int ...indice = {0u, 1u}; Args = {char, char}]
+  constexpr const auto operator[](idx<i>) const
+                       ^~~~~~~~
+test_unpack.cpp:90:23: note:   template argument deduction/substitution failed:
+test_unpack.cpp:117:28: note:   mismatched types ‘unsigned int’ and ‘int’
+  static_assert(tp2[idx<1>{}] == 'c', "");
+                            ^
