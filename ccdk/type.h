@@ -30,6 +30,19 @@ namespace ccdk
 		typedef typename ptr_traits<sizeof(void*)>::size_t size_t;
 		typedef typename ptr_traits<sizeof(void*)>::diff_t diff_t;
 	}
+
+	namespace test
+	{
+		static constexpr bool in_range(uint32 index, uint32 min, uint32 max)
+		{
+			return index >= min && index < max;
+		}
+
+		static constexpr bool in_range(uint32 start, uint32 end, uint32 min, uint32 max )
+		{
+			return start >= min && end <= max && end > start;
+		}
+	}
 	
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");
 	static_assert(sizeof(int8) == 1, "int8 is not 1 byte.");

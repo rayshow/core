@@ -1,4 +1,0 @@
-﻿  test_unpack.cpp
-d:\git\core\bug1\test_unpack.cpp(58): error C2065: “t1”: 未声明的标识符
-  d:\git\core\bug1\test_unpack.cpp(78): note: 参见对正在编译的 类 模板 实例化 "sp_tuple_t<std::integer_sequence<::size_t,_Vals...>,Args...>" 的引用
-d:\git\core\bug1\test_unpack.cpp(53): fatal error C1004: 发现意外的文件尾

@@ -119,14 +119,13 @@
     <ClInclude Include="memory\heap_allocator.h" />
     <ClInclude Include="memory\place_new.h" />
     <ClInclude Include="mpl\base\add_.h" />
-    <ClInclude Include="mpl\base\arg_pack.h" />
     <ClInclude Include="mpl\base\bool_.h" />
     <ClInclude Include="mpl\base\char.h" />
     <ClInclude Include="mpl\base\choose.h" />
     <ClInclude Include="mpl\base\condi_derive.h" />
-    <ClInclude Include="mpl\base\condi_enable.h" />
-    <ClInclude Include="mpl\base\index_sequence.h" />
+    <ClInclude Include="mpl\base\enable_if.h" />
     <ClInclude Include="mpl\base\literals.h" />
+    <ClInclude Include="mpl\base\util.h" />
     <ClInclude Include="mpl\base\when.h" />
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\integral_.h" />
@@ -143,7 +142,10 @@
     <ClInclude Include="mpl\base\ullong.h" />
     <ClInclude Include="mpl\base\ushort.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
-    <ClInclude Include="mpl\container\constexpr_string.h" />
+    <ClInclude Include="mpl\container\arg_pack.h" />
+    <ClInclude Include="mpl\container\val_pack.h" />
+    <ClInclude Include="mpl\container\index_seq.h" />
+    <ClInclude Include="mpl\container\string_literial.h" />
     <ClInclude Include="mpl\container\ebo.h" />
     <ClInclude Include="mpl\container\lazy.h" />
     <ClInclude Include="mpl\container\maybe.h" />
@@ -154,7 +156,6 @@
     <ClInclude Include="mpl\function\infix.h" />
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
-    <ClInclude Include="mpl\mpl.h" />
     <ClInclude Include="mpl\debug_type.hpp" />
     <ClInclude Include="mpl\type_traits.h" />
     <ClInclude Include="mpl\type_traits\add_const.h" />

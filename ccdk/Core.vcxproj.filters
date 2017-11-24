@@ -639,9 +639,6 @@
     <ClInclude Include="mpl\base\choose.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\condi_enable.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\if_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -698,9 +695,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_gequal.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\mpl.h">
-      <Filter>mpl</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_nequal.h">
       <Filter>mpl\type_trait</Filter>
@@ -762,16 +756,10 @@
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\index_sequence.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\debug_type.hpp">
       <Filter>mpl</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\literals.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\container\lazy.h">
@@ -795,10 +783,25 @@
     <ClInclude Include="mpl\function\partial.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\constexpr_string.h">
+    <ClInclude Include="mpl\container\string_view.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\string_view.h">
+    <ClInclude Include="mpl\base\util.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\string_literial.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\enable_if.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\index_seq.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\arg_pack.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\val_pack.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
   </ItemGroup>

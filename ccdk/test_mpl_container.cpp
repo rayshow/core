@@ -8,7 +8,7 @@
 #include<assert.h>
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/base/literals.h>
-#include<ccdk/mpl/container/constexpr_string.h>
+#include<ccdk/mpl/container/string_literial.h>
 #include<ccdk/mpl/container/string_view.h>
 #include<ccdk/type.h>
 
@@ -28,21 +28,7 @@ struct test_tag { typedef int tag; };
 
 using namespace literals;
 
-template<typename T, int... args>
-struct test_char_arr {};
 
-template<uint32 N, typename T, int... args>
-struct test_char_arr< T[N],args... > 
-{
-	int a[N];
-	constexpr test_char_arr(const int* b) :a{ b[args]... } {}
-
-	template<typename T,T index>
-	constexpr auto operator[](integer_<T,index>) const noexcept
-	{
-		return a[index];
-	}
-};
 
 constexpr int const_int(int size)
 {
@@ -55,26 +41,38 @@ constexpr int const_int(int size)
 //	constexpr test_char_arr<int[4], 0, 1, 2, 3> arr{ a4 };
 //}
 
+template<uint32 L>
+constexpr auto get_literal(char ch[L])
+{
+	return str_literial<char, array_len< decltype("abc")>::value>{ "abc" };
+}
 
+template<typename T>
+constexpr auto test_array(T&& t)
+{
+	DebugFunctionName();
+	return array_len<T>::value;
+}
 
 int main()
 {
-	constexpr char ad = "abcd"_cs;
-	uint_<"abc"_cs>{};
-	printf("%c", ad);
-	"fdasf"_cc;
+	DebugNewTitle("string literial");
+	DebugValueTypeName(_literal("hello,world"));
+	constexpr auto sl = _literal("hello,world");
+	DebugValue(sl);
+	DebugValue(sl[3_th]);
+	
+	DebugValue(sl.find_first('l'));
+	DebugValue(sl.find_last('l'));
+	DebugValue((sl.substr<0, 3>()));
+	AssertTrue((sl.substr<2, 5>()) == _literal("llo"));
+	DebugValue(sl.replace<strlit.find_first('w')>('F'));
 
-	//arr.print();
-	typedef int int2[2];
-	constexpr int2 a = { 1,2 };
-	constexpr int2 b = { a[0],a[1] };
-	//constexpr int2 c = { a };
 
-	DebugValueTypeName("fdsa");
-
+	
 	AssertTrue(has_inner_tag<test_tag>::value);
 	DebugNewTitle("test when dispatch");
-	AssertTrue(test_when_v<int> == 3);   //analyizer's error, not compiler
+	AssertTrue(test_when_v<int> == 3);   
 	AssertTrue(test_when_v<float> == 3);
 	AssertTrue(test_when_v<void> == 2);
 	AssertTrue(test_when_v<const int*> == 4);
@@ -92,7 +90,6 @@ int main()
 	
 	//test tuple 
 	DebugNewTitle("test tuple operation")
-	
 	//constexpr tuple<int, char, double, float> tuple1(1, 'a', 2.0, 1.0f);
 	const char* aa = "hello";
 	const tuple<int, char, std::string, float> tuple2( 2 ,'a', "hello", 1.0f);
