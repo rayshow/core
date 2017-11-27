@@ -54,6 +54,11 @@ constexpr auto test_array(T&& t)
 	return array_len<T>::value;
 }
 
+struct test_auto
+{
+	
+};
+
 int main()
 {
 	DebugNewTitle("string literial");

@@ -132,10 +132,12 @@ int main()
 	DebugNewTitle("test dispatcher when");
 	//constexpr int a = constexpr []() {return 0; };
 
+	std::function<void(void)> fn;
+	
 	return 0;
 
 	DebugNewTitle("test arg and arg pack find");
-	std::function<void(void)> fn{};
+	
 	struct B {};
 	struct A
 	{

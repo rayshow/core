@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/compile.h>
+#include<new>
 
 namespace ccdk
 {
@@ -24,10 +25,11 @@ namespace ccdk
 		template<int32 size> struct ptr_traits { static_assert(size != 4 || size != 8, "unkown ptr size."); };
 		template<> struct ptr_traits<4> { typedef uint32 size_t;  typedef int32 diff_t; };
 		template<> struct ptr_traits<8> { typedef uint64 size_t;  typedef int64 diff_t; };
-
 		typedef typename ptr_traits<sizeof(void*)>::size_t size_t;
 		typedef typename ptr_traits<sizeof(void*)>::diff_t diff_t;
 		typedef decltype(nullptr) nullptr_t;
+		typedef std::nothrow_t nothrow_t;
+		constexpr nothrow_t nothrow;
 	}
 
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");

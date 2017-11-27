@@ -1,8 +1,9 @@
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/integral_.h>
+#include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/base/uint_.h>
+#include<ccdk/mpl/type_traits/char_traits.h>
 #include<ccdk/mpl/type_traits/array_dim.h>
 #include<ccdk/mpl/container/string_view.h>
 #include<ccdk/mpl/container/val_pack.h>
@@ -22,23 +23,23 @@ namespace ccdk
 
 			
 			template<uint32... args>
-			constexpr string_literial(index_sequence<args...>, pointer arr):
+			constexpr string_literial(indice_pack<args...>, pointer arr):
 				storage{ arr[args]..., char_traits<Ch>::end }
 			{}
 
 			template<uint32... args1, uint32... args2, uint32... args3>
-			constexpr string_literial(index_sequence<args1...>, index_sequence<args2...>,
-				index_sequence<args3...>, pointer arr1, pointer arr2)
+			constexpr string_literial(indice_pack<args1...>, indice_pack<args2...>,
+				indice_pack<args3...>, pointer arr1, pointer arr2)
 			{}
 
 			template<uint32... args1, uint32... args2>
-				constexpr string_literial(index_sequence<args1...>, index_sequence<args2...>,
+				constexpr string_literial(indice_pack<args1...>, indice_pack<args2...>,
 					Ch c, pointer arr)
 				:storage { arr[args1]..., c, arr[args2]...}
 			{}
 
 			constexpr string_literial(pointer arr) :
-				string_literial(make_index_sequence<L-1>{}, arr) {}
+				string_literial(make_indice<L-1>{}, arr) {}
 
 
 			template<typename T, T index>
@@ -73,17 +74,17 @@ namespace ccdk
 				return L;
 			}
 
-			template<uint32 start, uint32 end, typename = check_t< test::in_range(start, end, 0, L)> >
+			template<uint32 start, uint32 end, typename = check_in_range2<start, end, 0, L> >
 			constexpr auto substr() const
 			{
 				typedef string_literial<Ch, end - start + 1> new_type;
-				return new_type{ make_index_sequence_until<end, start>{}, storage };
+				return new_type{ make_indice_from<start, end>{}, storage };
 			}
 
-			template<uint32 index, typename = check_t< test::in_range(index , 0, L)> >
+			template<uint32 index, typename = check_in_range<index , 0, L> >
 			constexpr auto  replace(Ch a) const
 			{
-				return string_literial<Ch, L>{ make_index_sequence<index>{}, make_index_sequence_until<L, index + 1>{}, a, storage };
+				return string_literial<Ch, L>{ make_indice<index>{}, make_indice_from<index + 1,L>{}, a, storage };
 			}
 		};
 
