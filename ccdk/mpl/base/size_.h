@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/mpl/base/integral_.h>
+#include<ccdk/mpl/base/integer_.h>
 #include<ccdk/type.h>
 
 namespace ccdk
@@ -8,7 +8,7 @@ namespace ccdk
 	namespace mpl
 	{
 
-		template<size_t v> using size_ = integer_<size_t, v>;
-		template<size_t v> constexpr size_<v> size_c{};
+		template<ptr::size_t v > using size_ = integer_<ptr::size_t, v>;
+		template<ptr::size_t v> constexpr size_<v> size_c{};
 	}
 }

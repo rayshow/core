@@ -19,10 +19,10 @@ namespace ccdk
 		HAS_MEMBER_FN_DECL(operator new, new);
 		HAS_MEMBER_FN_DECL(operator new[], array_new);
 
-		template<typename T> struct has_default_new:has_new<T, void*, std::size_t>{};
+		template<typename T> struct has_default_new:has_new<T, void*, ptr::size_t>{};
 
-		template<typename T> struct has_nothrow_default_new :has_new<T, void*, size_t, const std::nothrow_t&> {};
-		template<typename T, typename... Args> struct has_arg_new:has_new<T, void*, ccdk::size_t, Args...> {};
+		template<typename T> struct has_nothrow_default_new :has_new<T, void*, ptr::size_t, const std::nothrow_t&> {};
+		template<typename T, typename... Args> struct has_arg_new:has_new<T, void*, ptr::size_t, Args...> {};
 
 		template<typename T> static constexpr bool has_default_new_v = has_default_new<T>::value;
 		template<typename T> static constexpr bool has_nothrow_default_new_v = has_nothrow_default_new<T>::value;

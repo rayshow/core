@@ -5,7 +5,7 @@
 #include<ccdk/mpl/base/bool_.h>
 #include<ccdk/mpl/base/and_.h>
 #include<ccdk/mpl/base/or_.h>
-#include<ccdk/mpl/base/when.h>
+#include<ccdk/mpl/base/when_match.h>
 //add remove type traits
 #include<ccdk/mpl/type_traits/add_const.h>
 #include<ccdk/mpl/type_traits/add_const.h>
@@ -32,8 +32,6 @@
 #include<ccdk/mpl/type_traits/declval.h>
 #include<ccdk/mpl/debug_type.hpp>
 
-#include<ccdk/mpl/base/when.h>
-#include<ccdk/mpl/base/index_sequence.h>
 #include<ccdk/mpl/container/tuple.h>
 
 #include<ccdk/mpl/type_traits/forward.h>

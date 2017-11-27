@@ -585,9 +585,6 @@
     <ClInclude Include="mpl\type_traits\remove_volatile.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\integral_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\bool_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -595,21 +592,6 @@
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\uint_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\ushort.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\short_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\llong_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\ullong.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\char.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\wchar_.h">
@@ -741,9 +723,6 @@
     <ClInclude Include="mpl\type_traits.h">
       <Filter>mpl</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\when.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\tuple.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
@@ -761,9 +740,6 @@
     </ClInclude>
     <ClInclude Include="mpl\base\literals.h">
       <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\lazy.h">
-      <Filter>mpl\container</Filter>
     </ClInclude>
     <ClInclude Include="mpl\container\maybe.h">
       <Filter>mpl\container</Filter>
@@ -786,23 +762,53 @@
     <ClInclude Include="mpl\container\string_view.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\util.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\string_literial.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\index_seq.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\arg_pack.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
     <ClInclude Include="mpl\container\val_pack.h">
       <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\placeholder.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\tuple_storage.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\integer_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\char_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\int64_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\uint64_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\uint16.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\int16_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\when_match.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\dispatch_when.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_function_obj.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\arg.h">
+      <Filter>mpl\functional</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

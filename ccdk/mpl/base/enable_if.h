@@ -16,10 +16,19 @@ namespace ccdk
 		template<bool B,typename T> 
 		using enable_if_t = typename enable_if<B, T>::type;
 
-		template<bool B>
-		using check_t = typename enable_if<B, void>::type;
-
 		template<bool B, typename T>
 		using disable_if_t = typename disable_if<B, T>::type;
+
+		template<bool B>
+		using check = typename enable_if<B, void>::type;
+
+		template<uint32 start, uint32 end>
+		using check_range = typename enable_if< (end>start && start>=0), void > ::type;
+
+		template<uint32 index, uint32 max, uint32 min= 0>
+		using check_in_range = typename enable_if< (index >= min && index < max && min >= 0), void>::type;
+		
+		template<uint32 start, uint32 end, uint32 max, uint32 min=0>
+		using check_in_range2 = typename enable_if< (start >= min && end <= max && end >= start && min>=0 ), void>::type;
 	}
 }

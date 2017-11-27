@@ -7,7 +7,5 @@ namespace ccdk
 	namespace mpl
 	{
 		template<typename T> struct not_ : public bool_< !T::value > {};
-
-
 	}
 }

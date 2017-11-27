@@ -1,9 +1,9 @@
 #pragma once
 
+#include<ccdk/mpl/base/uint_.h>
 #include<ccdk/mpl/type_traits/is_empty.h>
 #include<ccdk/mpl/type_traits/is_final.h>
 #include<ccdk/mpl/type_traits/forward.h>
-#include<cstdio>
 
 namespace ccdk
 {
@@ -40,6 +40,9 @@ namespace ccdk
 			constexpr ebo(const U& inU) : v(inU) {}
 		};
 
+		template<uint32 index, typename V>
+		using iebo = ebo<uint_<index>, V>;
+
 		//empty class
 		template<typename K, typename V> inline constexpr V& ebo_value(ebo<K, V, true>& inEbo) noexcept { return inEbo; }
 		template<typename K, typename V> inline constexpr V const& ebo_value(ebo<K, V, true> const& inEbo) noexcept { return inEbo; }
@@ -48,5 +51,14 @@ namespace ccdk
 		template<typename K, typename V> inline constexpr V& ebo_value(ebo<K, V, false>& inEbo) noexcept { return inEbo.v; }
 		template<typename K, typename V> inline constexpr V const& ebo_value(ebo<K, V, false> const& inEbo) noexcept { return inEbo.v; }
 		template<typename K, typename V> inline constexpr V&& ebo_value(ebo<K, V, false>&& inEbo) noexcept { return util::move(inEbo.v); }
+
+		//empty class
+		template<uint32 index, typename V> inline constexpr V& ebo_at(ebo<uint_<index>, V, true>& inEbo) noexcept { return inEbo; }
+		template<uint32 index, typename V> inline constexpr V const& ebo_at(ebo<uint_<index>, V, true> const& inEbo) noexcept { return inEbo; }
+		template<uint32 index, typename V> inline constexpr V&& ebo_at(ebo<uint_<index>, V, true>&& inEbo) noexcept { return util::move(inEbo); }
+		//non-empty
+		template<uint32 index, typename V> inline constexpr V& ebo_at(ebo<uint_<index>, V, false>& inEbo) noexcept { return inEbo.v; }
+		template<uint32 index, typename V> inline constexpr V const& ebo_at(ebo<uint_<index>, V, false> const& inEbo) noexcept { return inEbo.v; }
+		template<uint32 index, typename V> inline constexpr V&& ebo_at(ebo<uint_<index>, V, false>&& inEbo) noexcept { return util::move(inEbo.v); }
 	}
 }

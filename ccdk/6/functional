@@ -48,7 +48,7 @@
 #include <bits/c++config.h>
 #include <bits/stl_function.h>
 
-#if __cplusplus >= 201103L
+#if __cplusplus <= 201103L
 
 #include <typeinfo>
 #include <new>

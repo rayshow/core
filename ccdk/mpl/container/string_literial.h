@@ -3,9 +3,9 @@
 #include<ccdk/mpl/base/integral_.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/base/uint_.h>
-#include<ccdk/mpl/base/index_sequence.h>
 #include<ccdk/mpl/type_traits/array_dim.h>
 #include<ccdk/mpl/container/string_view.h>
+#include<ccdk/mpl/container/val_pack.h>
 
 namespace ccdk
 {
@@ -80,12 +80,6 @@ namespace ccdk
 				return new_type{ make_index_sequence_until<end, start>{}, storage };
 			}
 
-			constexpr auto test() const
-			{
-				string_literial<Ch, 4> a( index_sequence<0, 1, 2>{}, storage );
-				return a;
-			}
-
 			template<uint32 index, typename = check_t< test::in_range(index , 0, L)> >
 			constexpr auto  replace(Ch a) const
 			{
@@ -97,7 +91,7 @@ namespace ccdk
 		namespace literals
 		{
 			template<typename T>
-			constexpr auto _literal(const T& arr)
+			inline constexpr auto _literal(const T& arr)
 			{
 				return string_literial<remove_dim_t<T>, array_len<T>::value>{ arr };
 			}

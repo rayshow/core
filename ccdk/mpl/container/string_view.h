@@ -10,7 +10,7 @@ namespace ccdk
 		{
 			const char *ptr;
 
-			constexpr string_view(const char*inPtr) :ptr(inPtr) {}
+			constexpr string_view(const char* inPtr) :ptr(inPtr) {}
 
 			constexpr ptr::size_t find(char c) const
 			{

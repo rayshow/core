@@ -100,12 +100,36 @@ struct TypeNameHelper<T* const volatile>
 #define DebugFunctionName()  std::cout << " *** function name: " << __PRETTY_FUNCTION__ <<std::endl;
 #endif
 
+
+
 #define AssertTrue(v)  static_assert(v, "");
 #define AssertFalse(v) static_assert(!v, "");
 #define RuntimeAssertTrue(v) assert(v)
 #define DebugNewTitle(T)  std::cout<<"\n ================ " << T << " ================" << std::endl;
 #define DebugSubTitle(T)  std::cout<<"\n --- " << T << " --- " << std::endl;
-#define DebugValue(v)     std::cout<<" *** " << v <<std::endl;
-#define DebugTypeName(T) std::cout<<" *** typename: " << TypeNameHelper<T>{}()<< std::endl;
-#define DebugValueTypeName(V) DebugTypeName(decltype(V));
-#define DebugValueTypeAndValue(V) std::cout<<" *** typename: " << TypeNameHelper<decltype(V)>{}() << " -- value: "<< V << std::endl;
+//#define DebugValue(v)     std::cout<<" *** " << v <<std::endl;
+//#define DebugTypeName(T) 
+
+template<typename T>
+inline void DebugValue(T&& t)
+{
+	std::cout << " *** " << t << std::endl;
+}
+
+template<typename T>
+inline void DebugTypeName()
+{
+	std::cout << " *** typename: " << TypeNameHelper<T>{}() << std::endl;
+}
+
+template<typename T>
+inline void DebugValueTypeName(T&& v)
+{
+	DebugTypeName<T>();
+}
+
+template<typename T>
+inline void DebugTypeAndValue(T&& v)
+{
+	std::cout << " *** typename: " << TypeNameHelper<decltype(v)>{}() << " -- value: " << v << std::endl;
+}

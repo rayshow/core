@@ -15,5 +15,11 @@ namespace ccdk
 		// else derive T2
 		template<typename C, typename T1, typename T2>
 		struct condi_derive :public bool_condi_derive<C::value, T1, T2> {};
+
+		template<typename T>
+		struct identity
+		{
+			typedef T type;
+		};
 	}
 }

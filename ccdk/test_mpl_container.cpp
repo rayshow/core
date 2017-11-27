@@ -130,7 +130,7 @@ int main()
 	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
 	tuple<char,int> tuple8{ acc,1}; 
 	tuple<float> tuple9{ 2.23f };
-	//auto tuple10 = tuple8 | tuple9;
+	auto tuple10 = tuple8 | tuple9;
 	//DebugValueTypeAndValue(tuple10[0_th]);
 	//DebugValueTypeAndValue(tuple10[1_th]);
 	//DebugValueTypeAndValue(tuple10[2_th]);

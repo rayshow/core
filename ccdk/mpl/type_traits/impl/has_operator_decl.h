@@ -133,10 +133,10 @@
 				static constexpr bool value = sfinae<T>(0);                                                         \
 			};                                                                                                      \
 		}                                                                                                           \
-		template<typename T,typename Ret, typename... Args>                                                         \
+		template<typename T,typename Ret = null_, typename... Args>                                                 \
 		struct has_ ## opname :and_<not_<is_rref<Ret>>,                                                             \
 			bool_< detail::has_ ## opname ## _helper <T, Ret, Args...>::value >> {};                                \
-		template<typename T, typename Ret, typename... Args>                                                        \
+		template<typename T, typename Ret = null_, typename... Args>                                                \
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret, Args...>::value;
 
 
@@ -161,7 +161,7 @@
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<T,Args...>::value;
 
 // T::type
-#define CCDK_TT_HAS_INNER_DECL(name, inner_name)											   \
+#define CCDK_TT_HAS_INNER_DECL(name, inner_name)										   \
 		namespace detail                                                                   \
 		{                                                                                  \
 			template<typename T>                                                           \
