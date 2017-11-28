@@ -30,6 +30,9 @@ namespace ccdk
 		typedef decltype(nullptr) nullptr_t;
 		typedef std::nothrow_t nothrow_t;
 		constexpr nothrow_t nothrow;
+
+#define CCDK_SAFE_DELETE(p) if(p){ delete p; p=nullptr;  }
+#define CCDK_SAFE_DELETE_ARRAY(p) if(p){ delete[] p; p=nullptr; }
 	}
 
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");

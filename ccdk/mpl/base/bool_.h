@@ -6,7 +6,10 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<bool v> struct bool_ :public integer_<bool, v> {};
+		template<bool v> struct bool_ :public integer_<bool, v>
+		{
+			typedef bool_<v> type;
+		};
 
 		template<bool v> bool_<v> bool_c{};
 

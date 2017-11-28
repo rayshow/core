@@ -2,9 +2,8 @@
 
 #include<ccdk/preprocessor/seq_compose.h>
 #include<ccdk/preprocessor/seq_foreach_item.h>
-#include<ccdk/preprocessor/sign.h>
+#include<ccdk/mpl/type_traits/remove_pointer.h>
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/type.h>
 #include<ccdk/compile.h>
 
 
@@ -32,5 +31,8 @@ namespace ccdk
 
 		template<typename T> constexpr bool is_function_v = is_function<T>::value;
 
+		template<typename T> struct is_function_ptr : is_function< remove_pointer_t<T> > {};
+
+		template<typename T> constexpr bool is_function_ptr_v = is_function_ptr<T>::value;
 	} 
 }

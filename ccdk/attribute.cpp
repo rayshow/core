@@ -127,48 +127,75 @@ struct IsIntOrNullptr
 	struct apply :or_< is_integer<T>, is_nullptr_t<T>> {};
 };
 
+void test_normal(int a)
+{
+	DebugValue(a);
+}
+
+struct test_member_obj
+{
+	void operator()(const char* string)
+	{
+		DebugValue(string);
+	}
+};
+
+template<typename T>
+void test_fn_type(T n)
+{
+	DebugFunctionName();
+	DebugTypeName<typename is_function_ptr<T>::type>();
+	DebugTypeName<typename is_function_obj<T>::type>();
+	DebugTypeName<typename is_mfn_ptr<T>::type>();
+}
+
+struct test_member_type
+{
+	int print(const char* h)
+	{
+		DebugValue(h);
+		return 0;
+	}
+};
+
+
+template<typename T>
+void test(T&&)
+{
+	DebugTypeName<T>();
+}
+
+
 int main()
 {
+	const int tia = 1;
+	int tib = 2;
+	test(1);
+	test(util::move(tib));
+	test(tia);
+	test(tib);
+
 	DebugNewTitle("test dispatcher when");
 	//constexpr int a = constexpr []() {return 0; };
 
-	std::function<void(void)> fn;
+	test_fn_type(test_normal);
+	function<void(int)> fn1{ test_normal };
+	fn1(1);
 	
+	test_fn_type(test_member_obj{});
+	function<void(const char*)> fn2{ test_member_obj{} };
+	fn2("hello,world");
+
+	test_fn_type(&test_member_type::print);
+	DebugTypeName<mfn_class_t<decltype(&test_member_type::print)>>();
+	function<void(test_member_type&, const char*)> fn3{ &test_member_type::print };
+	test_member_type tt;
+	fn3(tt, "hhhh");
+
+
+	getchar();
 	return 0;
 
-	DebugNewTitle("test arg and arg pack find");
-	
-	struct B {};
-	struct A
-	{
-		auto operator()()
-		{
-			return 0;
-		}
-	};
-
-	DebugValue(IsIntOrNullptr::template apply<int>::value);
-	DebugTypeName<arg_pack_find_if_t< IsIntOrNullptr, null_, void, char, void*>>();
-	DebugValue(arg_pack_find_if_v< IsIntOrNullptr, null_, void, char, void*>);
-	DebugValue(arg_t<0>{}(1, 'a', 1.3f, "fds", 'b',1u, 4.3,'$'));
-	DebugValue(arg_t<1>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<2>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<3>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<4>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<5>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<6>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	DebugValue(arg_t<7>{}(1, 'a', 1.3f, "fds", 'b', 1u, 4.3, '$'));
-	
-	//constexpr static_case<is_void<void>> a{
-	//	[]() {}
-	//};
-
-
-
-
-	DebugValueTypeName( &A::operator() );
-
-	//iebo<0, int>{};
 	DebugNewTitle("test val_pack");
 	DebugTypeName<make_indice<0>>();
 	DebugTypeName<make_indice<10>>();
