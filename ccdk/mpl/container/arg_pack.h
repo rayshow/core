@@ -12,6 +12,15 @@ namespace ccdk
 		template<typename... Args>
 		struct arg_pack {};
 
+		template<typename... Args>
+		struct arg_pack_first;
+
+		template<typename T, typename... Args>
+		struct arg_pack_first<T, Args...> { typedef T type; };
+
+		template<typename... Args>
+		using arg_pack_first_t = typename arg_pack_first<Args...>::type;
+
 		//split Args... by index and ingore length element
 		template< unsigned int index, unsigned int length, typename T, typename U = arg_pack<> >
 		struct arg_pack_split

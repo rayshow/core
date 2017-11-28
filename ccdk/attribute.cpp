@@ -157,7 +157,16 @@ struct test_member_type
 		return 0;
 	}
 };
-
+struct test_member_type2
+{
+	int a;
+	int b;
+	int print(const char* h)
+	{
+		DebugValue(h);
+		return 0;
+	}
+};
 
 template<typename T>
 void test(T&&)
@@ -188,10 +197,16 @@ int main()
 
 	test_fn_type(&test_member_type::print);
 	DebugTypeName<mfn_class_t<decltype(&test_member_type::print)>>();
-	function<void(test_member_type&, const char*)> fn3{ &test_member_type::print };
-	test_member_type tt;
-	fn3(tt, "hhhh");
+	function<void( const char*)> fn3{ &test_member_type::print };
+	const test_member_type tt;
+	//test_member_type* ptt = &tt;
+	test_member_type2 tt2;
+	DebugValueTypeName(&tt);
+	fn3(tt,"hhhh");
 
+	//DebugValue(is_mfn_ptr_v<decltype(&test_member_type::print)>);
+	auto mfn = bind_mfn(&test_member_type::print, &tt);
+	mfn("fdas");
 
 	getchar();
 	return 0;

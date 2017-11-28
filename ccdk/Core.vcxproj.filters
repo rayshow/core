@@ -810,5 +810,8 @@
     <ClInclude Include="mpl\function\arg.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\bind.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
