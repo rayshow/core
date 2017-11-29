@@ -159,6 +159,7 @@
     <ClInclude Include="mpl\function\compose_dispatch.h" />
     <ClInclude Include="mpl\function\compose_map.h" />
     <ClInclude Include="mpl\function\compose_overlay.h" />
+    <ClInclude Include="mpl\function\create.h" />
     <ClInclude Include="mpl\function\function.h" />
     <ClInclude Include="mpl\function\fwd.h" />
     <ClInclude Include="mpl\function\infix.h" />

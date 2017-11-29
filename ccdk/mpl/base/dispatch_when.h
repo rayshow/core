@@ -23,8 +23,6 @@ namespace ccdk
 			}
 		};
 
-
-
 		struct is_match_case
 		{
 			template<typename T> struct apply:public T{};
@@ -36,7 +34,7 @@ namespace ccdk
 			constexpr auto operator()(D d, Cs... cs)
 			{
 				constexpr uint32 index = arg_pack_find_if_v<is_match_case, D, Cs...>;
-				auto Fn = arg_t<index>{}(cs..., d);
+				auto Fn = arg<index>(cs..., d);
 				return Fn();
 			}
 		};
@@ -45,7 +43,7 @@ namespace ccdk
 		inline constexpr decltype(auto) dispatch(D d, Cs... cs)
 		{
 			constexpr uint32 index = arg_pack_find_if_v<is_match_case, D, Cs...>;
-			auto Fn = arg_t<index>{}(cs..., d);
+			auto Fn = arg<index>(cs..., d);
 			return Fn();
 		}
 

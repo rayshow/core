@@ -181,6 +181,9 @@ void test(T&&)
 
 int main()
 {
+	DebugValue(arg<0>(1, 2));
+	getchar();
+	return 0;
 	const int tia = 1;
 	int tib = 2;
 	test(1);

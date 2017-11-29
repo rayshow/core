@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace function_detail
 		{
 			template<typename F, typename C, typename Ret, typename... Args>
 			struct member_function_t
@@ -22,34 +22,37 @@ namespace ccdk
 				member_function_t(F inFn, C* inObj) noexcept
 					: fn(inFn), obj(inObj) {}
 
-				Ret operator()(Args... args)
+				Ret operator()(Args... args) const noexcept
 				{
 					return (obj->*fn)(args...);
 				}
 			};
 
-			template<typename F, typename C, typename Ret, typename... Args>
-			auto bind_mfn_impl(F f, C* c, mfn_args<Args...>)
+			struct bind_mfn_t
 			{
-				return member_function_t< F, C, Ret, Args...>(f, c);
-			}
+				template<typename F, typename C, typename Ret, typename... Args>
+				auto bind_mfn_impl(F f, C* c, mfn_args<Args...>) const noexcept
+				{
+					return member_function_t< F, C, Ret, Args...>(f, c);
+				}
+
+				template<typename F, typename B = mfn_body<F>, typename C = typename B::clazz, typename = check< is_mfn_ptr_v<F>> >
+				auto operator()(F f, C& c) const noexcept
+				{
+					typedef remove_const_t<C> NC;
+					return bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(&c), typename B::args{});
+				}
+
+				template<typename F, typename B = mfn_body<F>, typename C = typename B::clazz, typename = check< is_mfn_ptr_v<F>> >
+				auto operator()(F f, C* c) const noexcept
+				{
+					typedef remove_const_t<C> NC;
+					return bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(c), typename B::args{});
+				}
+			};
 		}
 
-		//object style, bind object with member function
-		template<typename F, typename B = mfn_body<F>, typename C = typename B::clazz, typename = check< is_mfn_ptr_v<F>> >
-		auto bind_mfn(F f, C& c)
-		{
-			typedef remove_const_t<C> NC;
-			return detail::bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(&c), typename B::args{});
-		}
-
-		//object pointer style, bind object pointer with member function
-		template<typename F, typename B = mfn_body<F>, typename C = typename B::clazz, typename = check< is_mfn_ptr_v<F>> >
-		auto bind_mfn(F f, C* c)
-		{
-			typedef remove_const_t<C> NC;
-			return detail::bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(c), typename B::args{});
-		}
-
+		//bind_mfn is function object
+		constexpr function_detail::bind_mfn_t bind_mfn{};
 	}
 }
