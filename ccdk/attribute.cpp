@@ -15,6 +15,7 @@
 #include<ccdk/mpl/base/dispatch_when.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
+#include<ccdk/mpl/function/bind.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -183,6 +184,10 @@ int main()
 	test(util::move(tib));
 	test(tia);
 	test(tib);
+	test_member_obj obj;
+	DebugTypeName<decltype(&test_member_obj::operator())>();
+
+	DebugTypeName<typename mfn_body<decltype(&test_member_obj::operator())>::args>();
 
 	DebugNewTitle("test dispatcher when");
 	//constexpr int a = constexpr []() {return 0; };
@@ -197,15 +202,14 @@ int main()
 
 	test_fn_type(&test_member_type::print);
 	DebugTypeName<mfn_class_t<decltype(&test_member_type::print)>>();
-	function<void( const char*)> fn3{ &test_member_type::print };
+	function<int( const char*)> fn3{ &test_member_type::print };
 	const test_member_type tt;
-	//test_member_type* ptt = &tt;
+
 	test_member_type2 tt2;
 	DebugValueTypeName(&tt);
 	fn3(tt,"hhhh");
 
-	//DebugValue(is_mfn_ptr_v<decltype(&test_member_type::print)>);
-	auto mfn = bind_mfn(&test_member_type::print, &tt);
+	function<int(const char*)> mfn = bind_mfn(&test_member_type::print, &tt);
 	mfn("fdas");
 
 	getchar();

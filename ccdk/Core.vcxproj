@@ -154,6 +154,7 @@
     <ClInclude Include="mpl\function\arg.h" />
     <ClInclude Include="mpl\function\bind.h" />
     <ClInclude Include="mpl\function\function.h" />
+    <ClInclude Include="mpl\function\fwd.h" />
     <ClInclude Include="mpl\function\infix.h" />
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />

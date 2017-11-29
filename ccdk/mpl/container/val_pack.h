@@ -165,8 +165,8 @@ namespace ccdk
 				return __merge3(typename pack::head{}, val_pack<T, c,args1...>{}, typename pack::tail{});
 			}
 
-			template<typename T, T index, T c, T... args1>
-			constexpr auto insert(integer_<T, index>, val_pack<T, c ,args1...>) const noexcept
+			template<typename I, T index, T c, T... args1>
+			constexpr auto insert(integer_<I, index>, val_pack<T, c ,args1...>) const noexcept
 			{
 				return insert< index, c,args1...>();
 			}

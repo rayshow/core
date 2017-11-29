@@ -17,7 +17,7 @@ namespace ccdk
 			//void* ptr;
 			//Fn need to be a lambda or function obj
 			template<typename Fn, typename = check< is_function_obj_v<Fn> >>
-			static_case(Fn fn):ptr(&fn)
+			static_case(Fn fn)
 			{
 
 			}

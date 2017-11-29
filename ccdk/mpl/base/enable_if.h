@@ -22,7 +22,8 @@ namespace ccdk
 		template<bool B>
 		using check = typename enable_if<B, void>::type;
 
-		
+		template<typename T>
+		using check_t = check< T::value >;
 
 
 
