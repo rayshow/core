@@ -11,15 +11,15 @@ namespace ccdk
 		namespace detail
 		{
 			template<typename F, typename C, typename Ret, typename... Args>
-			struct member_function
+			struct member_function_t
 			{
 				//keep member function pointer
 				F  fn;
 				//keep object pointer
 				C *obj; 
 
-				member_function(const member_function&) = default;
-				member_function(F inFn, C* inObj) noexcept
+				member_function_t(const member_function_t&) = default;
+				member_function_t(F inFn, C* inObj) noexcept
 					: fn(inFn), obj(inObj) {}
 
 				Ret operator()(Args... args)
@@ -31,7 +31,7 @@ namespace ccdk
 			template<typename F, typename C, typename Ret, typename... Args>
 			auto bind_mfn_impl(F f, C* c, mfn_args<Args...>)
 			{
-				return member_function< F, C, Ret, Args...>(f, c);
+				return member_function_t< F, C, Ret, Args...>(f, c);
 			}
 		}
 

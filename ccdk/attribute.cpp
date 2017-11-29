@@ -16,6 +16,7 @@
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
 #include<ccdk/mpl/function/bind.h>
+#include<ccdk/mpl/function/partial.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -41,7 +42,7 @@ struct test_copy_constructor
 template<typename T>
 struct test_copy_constructor2
 {
-	test_copy_constructor2() = default;
+	test_copy_constructor2() { DebugValue("2 default ctor"); }
 
 	test_copy_constructor2(test_copy_constructor2& t) { DebugValue("2 copy ctor"); }
 
@@ -73,6 +74,11 @@ struct test_copy_constructor2
 	template<typename U>
 	void operator=(const test_copy_constructor2<U>& t) { DebugValue("2 tmpl const copy assign"); }
 };
+
+auto create_test_ret()
+{
+	return test_copy_constructor2<int>();
+}
 
 template<typename T, typename U, bool = is_lref_v<T>, bool = is_rref_v<T>>
 struct adjust_from_this
@@ -144,10 +150,7 @@ struct test_member_obj
 template<typename T>
 void test_fn_type(T n)
 {
-	DebugFunctionName();
-	DebugTypeName<typename is_function_ptr<T>::type>();
-	DebugTypeName<typename is_function_obj<T>::type>();
-	DebugTypeName<typename is_mfn_ptr<T>::type>();
+	//DebugFunctionName();
 }
 
 struct test_member_type
@@ -192,25 +195,35 @@ int main()
 	DebugNewTitle("test dispatcher when");
 	//constexpr int a = constexpr []() {return 0; };
 
-	test_fn_type(test_normal);
+	test_fn_type(&test_normal);
+	auto pfn1 = partial(&test_normal, 1);
+	pfn1();
 	function<void(int)> fn1{ test_normal };
 	fn1(1);
-	
+	 
 	test_fn_type(test_member_obj{});
 	function<void(const char*)> fn2{ test_member_obj{} };
-	fn2("hello,world");
+	auto pfn2 = partial( test_member_obj{}, "hello,world");
+	fn2("hello,world partial");
 
 	test_fn_type(&test_member_type::print);
 	DebugTypeName<mfn_class_t<decltype(&test_member_type::print)>>();
 	function<int( const char*)> fn3{ &test_member_type::print };
+	
+	 
 	const test_member_type tt;
 
 	test_member_type2 tt2;
 	DebugValueTypeName(&tt);
+	auto pfn3 = partial(&test_member_type::print, tt, "hhhh partial");
 	fn3(tt,"hhhh");
+	pfn3();
 
 	function<int(const char*)> mfn = bind_mfn(&test_member_type::print, &tt);
 	mfn("fdas");
+
+	
+
 
 	getchar();
 	return 0;

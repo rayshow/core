@@ -15,6 +15,7 @@ namespace ccdk
 
 		template<typename T> struct is_function :public false_ {};
 		template<typename T> struct function_body {};
+		template<typename T> struct function_body<T*> :function_body<T> {};
 #ifdef CCDK_COMPILER_MSVC
 		//varg function always prefix with __cdecl, no matter explicitly with which prefix
 		//normal function default prefix width __cdecl

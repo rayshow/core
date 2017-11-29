@@ -37,9 +37,6 @@
     <Filter Include="mpl\container">
       <UniqueIdentifier>{5c9414c8-2d0f-48b8-87ba-5b6ef3b7f54f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mpl\concept">
-      <UniqueIdentifier>{75224648-183e-4b8a-8dc8-936b311448ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mpl\functional">
       <UniqueIdentifier>{435ec450-2e2f-4bf5-8557-18f19ce3872f}</UniqueIdentifier>
     </Filter>
@@ -744,9 +741,6 @@
     <ClInclude Include="mpl\container\maybe.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\range.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\function.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
@@ -815,6 +809,33 @@
     </ClInclude>
     <ClInclude Include="mpl\function\fwd.h">
       <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\capture.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\invoke.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\compose.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\always.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\compose_map.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\compose_overlay.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\lazy.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\compose_dispatch.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\const_range.h">
+      <Filter>mpl\container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
