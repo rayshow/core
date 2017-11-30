@@ -21,9 +21,9 @@ namespace ccdk
 			constexpr tuple_storage() :iebo< indice, Args >{}... {}
 
 			//for initalize from another tuple_storage with prefect forward
-			template<typename T>
-			constexpr tuple_storage(T&& t) 
-				: iebo< indice, Args>( ebo_at<indice>(util::forward<T>(t)) )...
+			template<typename... Args1>
+			constexpr tuple_storage(const tuple_storage<size, indice_pack<indice...>, Args1...>& t)
+				: iebo< indice, Args>( ebo_at<indice>( util::move(t) ) )...
 			{}
 
 			//move

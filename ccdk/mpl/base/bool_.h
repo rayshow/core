@@ -18,8 +18,5 @@ namespace ccdk
 		
 		constexpr false_ false_c{};
 		constexpr true_  true_c{};
-
-		//template<typename T, typename = void> struct is_false_ :false_ {};
-		//template<typename T> struct is_false_< T, decltype((void)static_cast<false_>(declval<T>()))> :true_ {};
 	}
 }

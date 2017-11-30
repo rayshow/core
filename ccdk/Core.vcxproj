@@ -125,7 +125,6 @@
     <ClInclude Include="mpl\base\condi_derive.h" />
     <ClInclude Include="mpl\base\dispatch_when.h" />
     <ClInclude Include="mpl\base\enable_if.h" />
-    <ClInclude Include="mpl\base\literals.h" />
     <ClInclude Include="mpl\base\when_match.h" />
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\integer_.h" />
@@ -137,7 +136,6 @@
     <ClInclude Include="mpl\base\or_.h" />
     <ClInclude Include="mpl\base\int16_.h" />
     <ClInclude Include="mpl\base\size_.h" />
-    <ClInclude Include="mpl\base\tag_.h" />
     <ClInclude Include="mpl\base\uint_.h" />
     <ClInclude Include="mpl\base\uint64_.h" />
     <ClInclude Include="mpl\base\uint16.h" />
@@ -153,9 +151,8 @@
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\function\always.h" />
     <ClInclude Include="mpl\function\arg.h" />
-    <ClInclude Include="mpl\function\bind.h" />
+    <ClInclude Include="mpl\function\bind_mfn.h" />
     <ClInclude Include="mpl\function\capture.h" />
-    <ClInclude Include="mpl\function\compose.h" />
     <ClInclude Include="mpl\function\compose_dispatch.h" />
     <ClInclude Include="mpl\function\compose_map.h" />
     <ClInclude Include="mpl\function\compose_overlay.h" />
@@ -225,6 +222,7 @@
     <ClInclude Include="mpl\type_traits\has_shl.h" />
     <ClInclude Include="mpl\type_traits\has_shr.h" />
     <ClInclude Include="mpl\type_traits\has_sub.h" />
+    <ClInclude Include="mpl\type_traits\identity.h" />
     <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h" />
     <ClInclude Include="mpl\type_traits\is_abstract.h" />
     <ClInclude Include="mpl\type_traits\is_arithmetic.h" />

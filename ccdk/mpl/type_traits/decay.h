@@ -27,6 +27,10 @@ namespace ccdk
 		//lvalue/rvalue => remove reference
 		//lazy 
 		template<typename T> struct decay:public detail::decay_helper<T>{};
+		template<typename T> struct decay<T&> : decay<T> {};
+		template<typename T> struct decay<T&&> : decay<T> {};
+
 		template<typename T> using  decay_t = typename decay<T>::type;
+
 	}
 }

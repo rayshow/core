@@ -94,6 +94,8 @@ struct TypeNameHelper<T* const volatile>
 	}
 };
 
+
+
 #if  defined(CCDK_COMPILER_MSVC)
 #define DebugFunctionName()  std::cout << " *** function name: " << __FUNCSIG__ <<std::endl;
 #else
@@ -133,3 +135,54 @@ inline void DebugTypeAndValue(T&& v)
 {
 	std::cout << " *** typename: " << TypeNameHelper<decltype(v)>{}() << " -- value: " << v << std::endl;
 }
+
+
+
+
+// if T& version constructor not exists, will call const T& version
+struct test_copy_t
+{
+	test_copy_t() = default;
+	test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
+	test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
+
+	void operator=(test_copy_t& t) { DebugValue("copy assign"); }
+	void operator=(test_copy_t&& t) { DebugValue("move assign"); }
+	void operator=(const test_copy_t& t) { DebugValue("const copy assign"); }
+};
+
+template<typename T>
+struct test_copy_assign_t
+{
+	test_copy_assign_t() { DebugValue("default ctor"); }
+
+	test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
+
+	test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }
+
+	test_copy_assign_t(const test_copy_assign_t& t) { DebugValue("const copy ctor"); }
+
+	template<typename U>
+	test_copy_assign_t(test_copy_assign_t<U>& t) { DebugValue("tmpl copy ctor"); }
+
+	template<typename U>
+	test_copy_assign_t(test_copy_assign_t<U>&& t) { DebugValue("tmpl move ctor"); }
+
+	template<typename U>
+	test_copy_assign_t(const test_copy_assign_t<U>& t) { DebugValue("2 tmpl const copy ctor"); }
+
+	void operator=(test_copy_assign_t& t) { DebugValue("copy assign"); }
+
+	void operator=(test_copy_assign_t&& t) { DebugValue("move assign"); }
+
+	void operator=(const test_copy_assign_t& t) { DebugValue("const copy assign"); }
+
+	template<typename U>
+	void operator=(test_copy_assign_t<U>& t) { DebugValue("tmpl copy assign"); }
+
+	template<typename U>
+	void operator=(test_copy_assign_t<U>&& t) { DebugValue("tmpl move assign"); }
+
+	template<typename U>
+	void operator=(const test_copy_assign_t<U>& t) { DebugValue("tmpl const copy assign"); }
+};

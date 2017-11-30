@@ -34,10 +34,10 @@ namespace ccdk
 
 			//use () initalize to allow narrow conversion like int to float
 			template<typename U>
-			constexpr ebo(U && inU) : v( util::forward<U>(inU) ) {}
+			constexpr ebo(U && inU) : v{ util::forward<U>(inU) } {}
 
 			template<typename U>
-			constexpr ebo(const U& inU) : v(inU) {}
+			constexpr ebo(const U& inU) : v{ inU } {}
 		};
 
 		template<uint32 index, typename V>

@@ -18,89 +18,90 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		struct bad_invoke_exception:public std::exception
+		namespace function_detail
 		{
-			const char* msg;
-
-			bad_invoke_exception(const char* inMsg)
-				:msg{ inMsg } {}
-
-			virtual char const* what() const noexcept  override
+			struct bad_invoke_exception :public std::exception
 			{
-				return msg;
-			}
+				const char* msg;
 
-		};
+				bad_invoke_exception(const char* inMsg)
+					:msg{ inMsg } {}
 
-		template<typename Ret, typename... Args>
-		struct invoker
-		{
-			//should be override
-			virtual void set_private_data(void* data)
-			{ 
-				throw bad_invoke_exception{ "invoker::set_private_data should been override." }; 
+				virtual char const* what() const noexcept  override
+				{
+					return msg;
+				}
 			};
 
-			virtual Ret invoke(Args...)=0;
-		};
-
-		//T is function object
-		template<typename T, typename Ret, typename... Args>
-		struct function_object_invoker 
-			:public invoker<Ret, Args...>
-		{
-			T t;
-			function_object_invoker(T&& inT) :t{ util::move(inT) } {}
-
-			virtual Ret invoke(Args... args) override
+			template<typename Ret, typename... Args>
+			struct invoker
 			{
-				return t(util::forward<Args>(args)...);
-			}
-		};
+				//should be override
+				virtual void set_private_data(void* data)
+				{
+					throw bad_invoke_exception{ "invoker::set_private_data should been override." };
+				};
 
-		//T is normal function ptr
-		template<typename T, typename Ret, typename... Args>
-		struct normal_function_invoker
-			:public invoker<Ret, Args...>
-		{
-			T t;
+				virtual Ret invoke(Args...) = 0;
+			};
 
-			//template<typename = check< is_callable
-			normal_function_invoker(T inT) : t(inT) {}
-
-			virtual Ret invoke(Args... args) override
+			//T is function object
+			template<typename T, typename Ret, typename... Args>
+			struct function_object_invoker
+				:public invoker<Ret, Args...>
 			{
-				return t(util::forward<Args>(args)...);
-			}
-		};
+				T t;
+				function_object_invoker(T&& inT) :t{ util::move(inT) } {}
 
-		//T is member function ptr, P is class type 
-		template<typename T, typename P, typename Ret, typename... Args>
-		struct member_function_invoker :public invoker<Ret, Args...>
-		{
-			P  p;
-			T* t;
-			member_function_invoker(P inP) : p(inP), t(nullptr){}
+				virtual Ret invoke(Args... args) override
+				{
+					return t(util::forward<Args>(args)...);
+				}
+			};
 
-			virtual void set_private_data(void* inT) override
+			//T is normal function ptr
+			template<typename T, typename Ret, typename... Args>
+			struct normal_function_invoker
+				:public invoker<Ret, Args...>
 			{
-				t = (T*)inT;
-			}
+				T t;
 
-			Ret __invoke_impl(Args... arg)
+				//template<typename = check< is_callable
+				normal_function_invoker(T inT) : t(inT) {}
+
+				virtual Ret invoke(Args... args) override
+				{
+					return t(util::forward<Args>(args)...);
+				}
+			};
+
+			//T is member function ptr, P is class type 
+			template<typename T, typename P, typename Ret, typename... Args>
+			struct member_function_invoker :public invoker<Ret, Args...>
 			{
-				if(!t) throw bad_invoke_exception{ "member_function_invoker::__invoke_impl t is nullptr." };
-				return (t->*p)(util::forward<Args>(arg)...);
-			}
+				P  p;
+				T* t;
+				member_function_invoker(P inP) : p(inP), t(nullptr) {}
 
-			//is pointer
-			virtual Ret invoke(Args... args) override
-			{
-				return __invoke_impl(util::forward<Args>(args)...);
-			}
-		};
+				virtual void set_private_data(void* inT) override
+				{
+					t = (T*)inT;
+				}
 
-		
+				Ret __invoke_impl(Args... arg)
+				{
+					if (!t) throw bad_invoke_exception{ "member_function_invoker::__invoke_impl t is nullptr." };
+					return (t->*p)(util::forward<Args>(arg)...);
+				}
+
+				//is pointer
+				virtual Ret invoke(Args... args) override
+				{
+					return __invoke_impl(util::forward<Args>(args)...);
+				}
+			};
+		}
+
 		//this implements of function have some defects
 		//1. member function's owner object lost const info, so const obj can also call non-const member function
 		//2. can't valid member function 's owner type is coincide with input object
@@ -115,17 +116,18 @@ namespace ccdk
 		{
 			typedef function<Ret(Args...)> type;
 			static constexpr uint32 L = sizeof...(Args);
-			invoker<Ret, Args...> *fn;
+			function_detail::invoker<Ret, Args...> *fn;
 
-			function() noexcept : fn{nullptr} {}
+			function() noexcept : fn{ nullptr } {}
 
 			function(ptr::nullptr_t) noexcept : fn{ nullptr } {}
 
 			~function() { CCDK_SAFE_DELETE(fn); }
-			
+
 			template<typename Fn>
 			function(Fn&& fn, true_, false_, false_) noexcept
-				:fn(new(ptr::nothrow) normal_function_invoker<Fn, Ret, Args...>{ fn })
+				: fn(new(ptr::nothrow) function_detail::normal_function_invoker<
+					Fn, Ret, Args...>{ fn })
 			{
 				DebugValue("function: normal ");
 			}
@@ -133,7 +135,8 @@ namespace ccdk
 			//is function obj
 			template<typename Fn>
 			function(Fn&& fn, false_, true_, false_) noexcept
-				:fn{ new(ptr::nothrow) function_object_invoker<Fn, Ret, Args...>{ util::move(fn) } }
+				:fn{ new(ptr::nothrow) function_detail::function_object_invoker<
+					Fn, Ret, Args...>{ util::move(fn) } }
 			{
 				DebugValue("function: object ");
 			}
@@ -141,7 +144,8 @@ namespace ccdk
 			//is mfn function ptr
 			template<typename Fn>
 			function(Fn&& fn, false_, false_, true_) noexcept
-				:fn{ new(ptr::nothrow) member_function_invoker<mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+				:fn{ new(ptr::nothrow) function_detail::member_function_invoker<
+					mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
 			{
 				DebugValue("function: member ");
 			}
@@ -149,7 +153,7 @@ namespace ccdk
 			//just copy and then move it, call proxy constructor
 			template<typename Fn>
 			function(Fn fn) noexcept
-				: function( util::move(fn),
+				: function(util::move(fn),
 					typename is_function_ptr<Fn>::type{},
 					typename is_function_obj<Fn>::type{},
 					typename is_mfn_ptr<Fn>::type{})

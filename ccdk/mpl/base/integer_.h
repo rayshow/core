@@ -31,9 +31,6 @@ namespace ccdk
 			static constexpr bool value = false;
 		};
 
-
-
-
 		namespace literals
 		{
 			constexpr long long parse_char(char a) noexcept

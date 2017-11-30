@@ -708,9 +708,6 @@
     <ClInclude Include="mpl\type_traits\is_compatible.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\tag_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="preprocessor\impl\uint8_to_bool.h">
       <Filter>preprocessor\impl</Filter>
     </ClInclude>
@@ -734,9 +731,6 @@
     </ClInclude>
     <ClInclude Include="mpl\debug_type.hpp">
       <Filter>mpl</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\literals.h">
-      <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\container\maybe.h">
       <Filter>mpl\container</Filter>
@@ -804,9 +798,6 @@
     <ClInclude Include="mpl\function\arg.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\bind.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\fwd.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
@@ -814,9 +805,6 @@
       <Filter>mpl\functional</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\invoke.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\compose.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\always.h">
@@ -839,6 +827,12 @@
     </ClInclude>
     <ClInclude Include="mpl\function\create.h">
       <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\bind_mfn.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\identity.h">
+      <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

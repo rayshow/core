@@ -4,13 +4,10 @@ namespace ccdk
 {
 	namespace mpl
 	{
-
 		template<typename T>
-		struct function;
-
-
-
-
-		
+		struct identity
+		{
+			typedef T type;
+		};
 	}
 }
