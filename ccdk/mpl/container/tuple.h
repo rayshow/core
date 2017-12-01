@@ -8,8 +8,8 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
 #include<ccdk/mpl/container/tuple_storage.h>
-#include<ccdk/mpl/container/arg_pack.h>
-#include<ccdk/mpl/container/val_pack.h>
+#include<ccdk/mpl/base/arg_pack_split.h>
+#include<ccdk/mpl/base/make_indice.h>
 
 
 namespace ccdk
@@ -310,17 +310,5 @@ namespace ccdk
 		{
 			return tp.push_front(t);
 		}
-
-
-		namespace detail
-		{
-			template<typename T, typename = typename T::tag> struct is_tuple_impl :false_ {};
-			template<typename T> struct is_tuple_impl<T, tuple_tag> :true_ {};
-		}
-
-		template<typename T> struct is_tuple : public and_<has_inner_tag<T>, detail::is_tuple_impl<T> > {};
-		template<typename T> struct is_tuple<const T> :is_tuple<T> {};
-		template<typename T> struct is_tuple<T&&> :is_tuple<T> {};
-		template<typename T> struct is_tuple<T&> :is_tuple<T> {};
 	}
 }

@@ -11,7 +11,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace tt_detail
 		{
 			template<typename T, bool isFn = is_function_v<T>, bool isArray = is_array_v<T> > 
 								 struct decay_helper { typedef remove_cv_t<remove_ref_t<T>> type; };
@@ -26,7 +26,7 @@ namespace ccdk
 		//Pointer  => remove low-level const
 		//lvalue/rvalue => remove reference
 		//lazy 
-		template<typename T> struct decay:public detail::decay_helper<T>{};
+		template<typename T> struct decay:public tt_detail::decay_helper<T>{};
 		template<typename T> struct decay<T&> : decay<T> {};
 		template<typename T> struct decay<T&&> : decay<T> {};
 

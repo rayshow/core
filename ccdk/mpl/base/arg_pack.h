@@ -1,16 +1,10 @@
 #pragma once
 
+
 namespace ccdk
 {
 	namespace mpl
 	{
-
-		template<typename T>
-		struct function;
-
-
-
-
-		
+		template<typename... Args> struct arg_pack {};
 	}
 }

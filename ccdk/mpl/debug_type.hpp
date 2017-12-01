@@ -127,7 +127,7 @@ inline void DebugTypeName()
 template<typename T>
 inline void DebugValueTypeName(T&& v)
 {
-	DebugTypeName<T>();
+	DebugTypeName<decltype(v)>();
 }
 
 template<typename T>

@@ -5,6 +5,7 @@
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
+#include<ccdk/mpl/type_traits/is_invokable.h>
 #include<ccdk/mpl/type_traits/forward.h>
 #include<ccdk/mpl/type_traits/move.h>
 #include<ccdk/mpl/type_traits/decay.h>
@@ -27,8 +28,9 @@ namespace ccdk
 				value_type storage;
 				Fn fn;
 
-				partial_t(Fn inFn, Args&&... args)
-					:fn{ util::move(inFn) }, storage{ util::move(args)... }
+				partial_t(Fn inFn, Args... args)
+					:fn{ util::forward<Fn>(inFn) },
+					 storage{ util::forward<Args>(args)... }
 				{}
 
 				template<typename... Args1, uint32... indice>
@@ -53,20 +55,20 @@ namespace ccdk
 			struct partial_create_t
 			{
 				template<typename Ret, typename Fn, typename... Args1, typename... Args2>
-				auto partial_normal_function(fn_args<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
+				auto partial_normal_function(arg_pack<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
 				{
 					return partial_t<sizeof...(Args2), decay_t<Fn>, Ret, Args1...>{
-						fn,
-							util::move(args1)...
+							fn,
+							util::forward<Args1>(args1)...
 					};
 				}
 
 				template<typename Ret, typename Fn, typename... Args1, typename... Args2>
-				auto partial_member_function(mfn_args<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
+				auto partial_function_obj(arg_pack<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
 				{
 					return partial_t<sizeof...(Args2), decay_t<Fn>, Ret, Args1...>{
-						util::move(fn),
-							util::move(args1)...
+							util::forward<Fn>(fn),
+							util::forward<Args1>(args1)...
 					};
 				}
 
@@ -75,51 +77,60 @@ namespace ccdk
 				template<typename Fn, typename... Args>
 				auto partial_create_impl(true_, false_, Fn&& fn, Args&&... args) const noexcept
 				{
-					typedef function_body<Fn> FB;
-					return partial_normal_function<typename FB::ret>(
-						typename FB::args{},
+					typedef function_traits<Fn> FT;
+					return partial_normal_function<typename FT::ret>(
+						typename FT::args{},
 						fn,
-						util::move(args)...);
+						util::forward<Args>(args)...
+					);
 				}
 
-				//is member function
+				//is member function pointer
 				template<typename Fn, typename C, typename... Args>
 				auto partial_create_impl(false_, true_, Fn&& fn, C&& c, Args&&... args) const noexcept
 				{ 
-					typedef mfn_body<Fn> MB;
-					return partial_member_function<typename MB::ret>(
-						typename MB::args{},
+					typedef mfn_traits<Fn> MT;
+					return partial_function_obj<typename MT::ret>(
+						typename MT::args{}, 
 						bind_mfn(fn, c),
-						util::move(args)...);
+						util::forward<Args>(args)...
+					);
 				}
 
 				//is function object, need check
-				template<typename Fn, typename... Args, typename = check< is_function_obj_v<Fn>> >
+				template<typename Fn, typename... Args, typename = check_t< is_function_obj<Fn>> >
 				auto partial_create_impl(false_, false_, Fn&& fn, Args&&... args) const noexcept
 				{
-					typedef mfn_body<decltype(&Fn::operator())> MB;
-					return partial_member_function<typename MB::ret>(
-						typename MB::args{},
-						util::move(fn),
-						util::move(args)...);
+					typedef mfn_traits<decltype(&Fn::operator())> MT;
+					return partial_function_obj<typename MT::ret>(
+						typename MT::args{},
+						util::forward<Fn>(fn),
+						util::forward<Args>(args)...
+					);
 				}
 
-				template<typename Fn, typename... Args>
+				template<typename Fn, typename = check_t< is_invokable<remove_ref_t<Fn>>>, typename... Args>
 				auto operator()(Fn&& fn, Args&&... args) const noexcept
 				{
+					
+
 					//static dispatch
 					//1. first make sure Fn is function ptr or member function ptr
 					//2. default check is function obj
 					//3. or will rise no-match function error
-					return partial_create_impl(
+					/*return partial_create_impl(
 						typename is_function_ptr<Fn>::type{},
 						typename is_mfn_ptr<Fn>::type{},
-						util::move(fn),
-						util::move(args)...);
+						util::forward<Fn>(fn),
+						util::forward<Args>(args)...
+					);*/
+					return 0;
 				}
 			};
 		}
 
+
+		//partialize for non-override function/function pointer/ member function pointer/ function object with operator()
 		constexpr function_detail::partial_create_t partial{};
 	}
 }

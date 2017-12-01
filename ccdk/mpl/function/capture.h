@@ -33,12 +33,20 @@ namespace ccdk
 					return partial(util::forward<Fn>(fn), ebo_at<indice>(util::move(storage))...);
 				}
 
-				template<typename Fn, typename = check< or_v< is_function_ptr<Fn>, is_function_obj<Fn>>>  >
-				constexpr auto operator()(Fn&& fn) const noexcept
+				//function ptr
+				template<typename Fn, typename = check_t< is_function<Fn> >>
+				constexpr auto operator()(Fn* fn) const noexcept
 				{
-					return __invoke_impl(util::forward<Fn>(fn), make_indice<L>{});
+					return __invoke_impl(util::forward<Fn*>(fn), make_indice<L>{});
+				}
+
+				template<typename Fn, typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>  >
+				constexpr auto operator()(Fn& fn) const noexcept
+				{
+					return __invoke_impl(util::forward<Fn&>(fn), make_indice<L>{});
 				}
 			};
+
 
 			struct make_capture_t
 			{

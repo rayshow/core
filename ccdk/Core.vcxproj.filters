@@ -741,9 +741,6 @@
     <ClInclude Include="mpl\function\overload.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\infix.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\partial.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
@@ -755,12 +752,6 @@
     </ClInclude>
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\arg_pack.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\val_pack.h">
-      <Filter>mpl\container</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\placeholder.h">
       <Filter>mpl\functional</Filter>
@@ -798,9 +789,6 @@
     <ClInclude Include="mpl\function\arg.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\fwd.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\capture.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
@@ -833,6 +821,45 @@
     </ClInclude>
     <ClInclude Include="mpl\function\dispatch.h">
       <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_invokable.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack_split.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack_first.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack_find_if.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_split.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_at.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_create.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_find.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\make_indice.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\val_sequence.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\switch_case.h">
+      <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

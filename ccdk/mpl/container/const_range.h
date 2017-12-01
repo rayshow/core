@@ -6,10 +6,9 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		struct const_range
+		template<typename T, T start, T end>
+		struct range_
 		{
-			ptr::size_t start = 0;
-			ptr::size_t end = 1;
 
 		};
 	}

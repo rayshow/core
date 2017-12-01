@@ -12,7 +12,6 @@
 #include<ccdk/mpl/type_traits/move.h>
 #include<ccdk/mpl/container/tuple_storage.h>
 #include<ccdk/mpl/container/tuple.h>
-#include<ccdk/mpl/function/fwd.h>
 
 namespace ccdk
 {
@@ -111,6 +110,9 @@ namespace ccdk
 		//1. universal interface
 		//2. lighter and effecient then std::function, only 2-3 pointer, a virtual call consume
 		//3. clear then std::function
+		template<typename T>
+		struct function;
+
 		template<typename Ret, typename... Args>
 		struct function<Ret(Args...)>
 		{

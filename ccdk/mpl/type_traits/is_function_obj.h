@@ -8,7 +8,8 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		//a function object is a class has override operator()
+		//a function object is a class has  operator()
+		// defect : can't check override operator()
 		template<typename T>
 		struct is_function_obj :and_<is_class<T>, has_invoker<T>> {};
 
