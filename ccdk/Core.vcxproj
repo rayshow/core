@@ -153,13 +153,12 @@
     <ClInclude Include="mpl\function\arg.h" />
     <ClInclude Include="mpl\function\bind_mfn.h" />
     <ClInclude Include="mpl\function\capture.h" />
-    <ClInclude Include="mpl\function\compose_dispatch.h" />
-    <ClInclude Include="mpl\function\compose_map.h" />
-    <ClInclude Include="mpl\function\compose_overlay.h" />
+    <ClInclude Include="mpl\function\dispatch.h" />
+    <ClInclude Include="mpl\function\fmap.h" />
+    <ClInclude Include="mpl\function\combine.h" />
     <ClInclude Include="mpl\function\create.h" />
     <ClInclude Include="mpl\function\function.h" />
     <ClInclude Include="mpl\function\fwd.h" />
-    <ClInclude Include="mpl\function\infix.h" />
     <ClInclude Include="mpl\function\invoke.h" />
     <ClInclude Include="mpl\function\lazy.h" />
     <ClInclude Include="mpl\function\overload.h" />

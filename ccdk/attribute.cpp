@@ -23,20 +23,18 @@ using namespace ccdk::mpl;
 using namespace ccdk::mpl::literals;
 
 
-template<typename T, typename P = decay_t<T>>
-auto test(T&& t)
+template<typename... Args>
+auto test(Args&& ... args)
 {
-	DebugValue(&"fdas");
 	DebugFunctionName();
-	//return tuple_storage<1, make_indice<1>,decay_t<T>>{ t };
 	return 0;
 }
 
+void test_n() {}
 
 int main()
 {
-	auto a = test("fdas");
-
+	
 	getchar();
 	return 0;
 }

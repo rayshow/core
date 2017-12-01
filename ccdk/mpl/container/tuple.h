@@ -23,7 +23,7 @@ namespace ccdk
 		struct tuple 
 		{ 
 			static constexpr unsigned int L = sizeof...(Args);
-			typedef tuple_storage<L, make_indice<L>, Args...> value_type;
+			typedef tuple_storage<L, make_indice<L>, decay_t<Args>...> value_type;
 			typedef tuple<Args...> type;
 			typedef tuple_tag tag;
 			struct erase_t {};

@@ -23,7 +23,7 @@ namespace ccdk
 				constexpr static uint32 arg_length = sizeof...(Args);
 				constexpr static uint32 left_length = L - arg_length;
 				typedef partial_t<L, Fn, Ret, Args...> type;
-				typedef tuple_storage< arg_length, make_indice<arg_length>, Args...> value_type;
+				typedef tuple_storage< arg_length, make_indice<arg_length>, decay_t<Args>...> value_type;
 				value_type storage;
 				Fn fn;
 

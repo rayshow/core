@@ -810,16 +810,7 @@
     <ClInclude Include="mpl\function\always.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\compose_map.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\compose_overlay.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\lazy.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\compose_dispatch.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
     <ClInclude Include="mpl\container\const_range.h">
@@ -833,6 +824,15 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\identity.h">
       <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\combine.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\fmap.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\dispatch.h">
+      <Filter>mpl\functional</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
