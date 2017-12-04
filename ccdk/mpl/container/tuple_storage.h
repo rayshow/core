@@ -11,6 +11,14 @@ namespace ccdk
 		template<uint32 size, typename T, typename... Args>
 		struct tuple_storage;
 
+		
+		template<>
+		struct tuple_storage<0, indice_pack<>>
+		{
+			constexpr tuple_storage() = default;
+		};
+
+
 		template<uint32 size, uint32... indice, typename... Args>
 		struct tuple_storage<size, indice_pack<indice...>, Args...> 
 			:public iebo< indice, Args>...

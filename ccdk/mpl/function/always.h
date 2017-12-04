@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_detail
 		{
 			template<typename T>
 			struct always_t
@@ -34,6 +34,6 @@ namespace ccdk
 			};
 		}
 
-		constexpr function_detail::create<function_detail::always_t> always{};
+		constexpr fn_detail::create<fn_detail::always_t> always{};
 	}
 }

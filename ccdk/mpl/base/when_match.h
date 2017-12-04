@@ -12,7 +12,6 @@ namespace ccdk
 
 		using when = when_impl<true>;
 		
-
 		template<bool condi> using match_default = when_impl<condi>;
 
 		template<typename T> using match = when_impl<T::value>;

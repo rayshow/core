@@ -13,6 +13,8 @@ namespace ccdk
 		template<typename T>
 		struct is_function_obj :and_<is_class<T>, has_invoker<T>> {};
 
+		CCDK_TT_COMPOSE_RANK(1, is_function_obj, is_class, has_invoker);
+
 		template<typename T>
 		static constexpr bool is_function_obj_v = is_function_obj<T>::value;
 	}

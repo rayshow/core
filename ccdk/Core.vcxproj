@@ -71,7 +71,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="auxililty\forward.h" />
     <ClInclude Include="auxililty\ingore_unused.h" />
     <ClInclude Include="auxililty\noncopyable.h" />
     <ClInclude Include="auxililty\optional.h" />
@@ -90,6 +89,7 @@
     <ClInclude Include="container\string.h" />
     <ClInclude Include="container\string_ref.h" />
     <ClInclude Include="container\vector.h" />
+    <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="filesystem\path.h" />
     <ClInclude Include="filesystem\reader.h" />
     <ClInclude Include="filesystem\writer.h" />
@@ -127,14 +127,14 @@
     <ClInclude Include="mpl\base\char_.h" />
     <ClInclude Include="mpl\base\choose.h" />
     <ClInclude Include="mpl\base\condi_derive.h" />
-    <ClInclude Include="mpl\base\dispatch_when.h" />
     <ClInclude Include="mpl\base\enable_if.h" />
     <ClInclude Include="mpl\base\make_indice.h" />
-    <ClInclude Include="mpl\base\switch_case.h" />
+    <ClInclude Include="mpl\base\noncopyable.h" />
     <ClInclude Include="mpl\base\val_pack.h" />
     <ClInclude Include="mpl\base\val_pack_at.h" />
     <ClInclude Include="mpl\base\val_pack_create.h" />
     <ClInclude Include="mpl\base\val_pack_find.h" />
+    <ClInclude Include="mpl\base\val_pack_merge.h" />
     <ClInclude Include="mpl\base\val_pack_split.h" />
     <ClInclude Include="mpl\base\when_match.h" />
     <ClInclude Include="mpl\base\if_.h" />
@@ -151,6 +151,7 @@
     <ClInclude Include="mpl\base\uint64_.h" />
     <ClInclude Include="mpl\base\uint16.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
+    <ClInclude Include="mpl\container\any.h" />
     <ClInclude Include="mpl\container\tuple_storage.h" />
     <ClInclude Include="mpl\container\string_literial.h" />
     <ClInclude Include="mpl\container\ebo.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="mpl\container\string_view.h" />
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\container\val_sequence.h" />
+    <ClInclude Include="mpl\container\varient.h" />
     <ClInclude Include="mpl\function\always.h" />
     <ClInclude Include="mpl\function\arg.h" />
     <ClInclude Include="mpl\function\bind_mfn.h" />
@@ -168,12 +170,15 @@
     <ClInclude Include="mpl\function\combine.h" />
     <ClInclude Include="mpl\function\create.h" />
     <ClInclude Include="mpl\function\function.h" />
-    <ClInclude Include="mpl\function\invoke.h" />
     <ClInclude Include="mpl\function\lazy.h" />
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
-    <ClInclude Include="mpl\debug_type.hpp" />
     <ClInclude Include="mpl\function\placeholder.h" />
+    <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
+    <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\share_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\unique_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\weak_ptr.h" />
     <ClInclude Include="mpl\type_traits.h" />
     <ClInclude Include="mpl\type_traits\add_const.h" />
     <ClInclude Include="mpl\type_traits\add_cv.h" />
@@ -193,6 +198,7 @@
     <ClInclude Include="mpl\type_traits\add_const_lref.h" />
     <ClInclude Include="mpl\type_traits\decay.h" />
     <ClInclude Include="mpl\type_traits\declval.h" />
+    <ClInclude Include="mpl\type_traits\dispatch_case.h" />
     <ClInclude Include="mpl\type_traits\forward.h" />
     <ClInclude Include="mpl\type_traits\has_add.h" />
     <ClInclude Include="mpl\type_traits\has_assigner.h" />
@@ -281,6 +287,8 @@
     <ClInclude Include="mpl\type_traits\remove_top_const.h" />
     <ClInclude Include="mpl\type_traits\remove_volatile.h" />
     <ClInclude Include="mpl\type_traits\enum_base.h" />
+    <ClInclude Include="mpl\type_traits\select_case.h" />
+    <ClInclude Include="mpl\type_traits\traits_case.h" />
     <ClInclude Include="preprocessor\bool_and.h" />
     <ClInclude Include="preprocessor\bool_equal.h" />
     <ClInclude Include="preprocessor\bool_if.h" />

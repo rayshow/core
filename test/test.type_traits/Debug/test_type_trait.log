@@ -1,0 +1,161 @@
+﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
+clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
+..\test_mpl_type_traits.cpp(117,9): warning : 'AssertFalse' macro redefined [-Wmacro-redefined]
+  #define AssertFalse(v) static_assert(!v, "")
+          ^
+  ../..\ccdk/debug_type.hpp(108,9):  note: previous definition is here
+  #define AssertFalse(v) static_assert(!v, "");
+          ^
+..\test_mpl_type_traits.cpp(118,9): warning : 'AssertTrue' macro redefined [-Wmacro-redefined]
+  #define AssertTrue(v) static_assert( v, "")
+          ^
+  ../..\ccdk/debug_type.hpp(107,9):  note: previous definition is here
+  #define AssertTrue(v)  static_assert(v, "");
+          ^
+..\test_mpl_type_traits.cpp(126,6): warning : stdcall calling convention ignored on variadic function [-Wignored-attributes]
+  void __stdcall varg_sc_fn(...) {}
+       ^
+..\test_mpl_type_traits.cpp(128,6): warning : fastcall calling convention ignored on variadic function [-Wignored-attributes]
+  void __fastcall varg_fc_fn(...) {}
+       ^
+..\test_mpl_type_traits.cpp(144,27): warning : control reaches end of non-void function [-Wreturn-type]
+                  static int static_fn() {};
+                                          ^
+..\test_mpl_type_traits.cpp(162,47): warning : unused parameter 'a' [-Wunused-parameter]
+  class TestMul { public: TestMul operator*(int a) {} };
+                                                ^
+..\test_mpl_type_traits.cpp(162,51): warning : control reaches end of non-void function [-Wreturn-type]
+  class TestMul { public: TestMul operator*(int a) {} };
+                                                    ^
+..\test_mpl_type_traits.cpp(163,53): warning : unused parameter 'a' [-Wunused-parameter]
+  class TestBitAnd { public: TestBitAnd operator&(int a) {} };
+                                                      ^
+..\test_mpl_type_traits.cpp(163,57): warning : control reaches end of non-void function [-Wreturn-type]
+  class TestBitAnd { public: TestBitAnd operator&(int a) {} };
+                                                          ^
+..\test_mpl_type_traits.cpp(164,60): warning : control reaches end of non-void function [-Wreturn-type]
+  class TestBitReverse { public: TestBitReverse operator~() {} };
+                                                             ^
+..\test_mpl_type_traits.cpp(168,56): warning : control reaches end of non-void function [-Wreturn-type]
+  class TestPositive { public: TestPositive operator+() {} };
+                                                         ^
+..\test_mpl_type_traits.cpp(826,50): warning : unused parameter 'a' [-Wunused-parameter]
+          struct TestAdd { public: TestAdd& operator+(int a) {} };
+                                                          ^
+..\test_mpl_type_traits.cpp(826,54): warning : control reaches end of non-void function [-Wreturn-type]
+          struct TestAdd { public: TestAdd& operator+(int a) {} };
+                                                              ^
+..\test_mpl_type_traits.cpp(840,63): warning : control reaches end of non-void function [-Wreturn-type]
+          struct TestAddAssign { const TestAddAssign& operator+=(int) {} };
+                                                                       ^
+..\test_mpl_type_traits.cpp(888,58): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestFrontInc { public: TestFrontInc operator++() {} };
+                                                                  ^
+..\test_mpl_type_traits.cpp(889,59): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestBackInc { public: TestBackInc operator++(int) {} };
+                                                                   ^
+..\test_mpl_type_traits.cpp(928,45): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestDeref { public: int operator*() {} };
+                                                     ^
+..\test_mpl_type_traits.cpp(958,34): warning : unused parameter 'size' [-Wunused-parameter]
+                  void* operator new(std::size_t size)  {}
+                                                 ^
+..\test_mpl_type_traits.cpp(958,42): warning : control reaches end of non-void function [-Wreturn-type]
+                  void* operator new(std::size_t size)  {}
+                                                         ^
+..\test_mpl_type_traits.cpp(959,34): warning : unused parameter 'size' [-Wunused-parameter]
+                  void* operator new(std::size_t size, std::nothrow_t) {};
+                                                 ^
+..\test_mpl_type_traits.cpp(959,57): warning : control reaches end of non-void function [-Wreturn-type]
+                  void* operator new(std::size_t size, std::nothrow_t) {};
+                                                                        ^
+..\test_mpl_type_traits.cpp(960,34): warning : unused parameter 'size' [-Wunused-parameter]
+                  void* operator new(std::size_t size, void* ptr) {}
+                                                 ^
+..\test_mpl_type_traits.cpp(960,46): warning : unused parameter 'ptr' [-Wunused-parameter]
+                  void* operator new(std::size_t size, void* ptr) {}
+                                                             ^
+..\test_mpl_type_traits.cpp(960,52): warning : control reaches end of non-void function [-Wreturn-type]
+                  void* operator new(std::size_t size, void* ptr) {}
+                                                                   ^
+..\test_mpl_type_traits.cpp(961,34): warning : unused parameter 'size' [-Wunused-parameter]
+                  void* operator new(std::size_t size, int) {}
+                                                 ^
+..\test_mpl_type_traits.cpp(961,46): warning : control reaches end of non-void function [-Wreturn-type]
+                  void* operator new(std::size_t size, int) {}
+                                                             ^
+..\test_mpl_type_traits.cpp(962,36): warning : unused parameter 'size' [-Wunused-parameter]
+                  void* operator new[](std::size_t size) {}
+                                                   ^
+..\test_mpl_type_traits.cpp(962,43): warning : control reaches end of non-void function [-Wreturn-type]
+                  void* operator new[](std::size_t size) {}
+                                                          ^
+..\test_mpl_type_traits.cpp(963,31): warning : unused parameter 'ptr' [-Wunused-parameter]
+                  void operator delete(void * ptr) {}
+                                              ^
+..\test_mpl_type_traits.cpp(964,30): warning : unused parameter 'ptr' [-Wunused-parameter]
+                  void operator delete(void* ptr, ptr::size_t size) {}
+                                             ^
+..\test_mpl_type_traits.cpp(964,47): warning : unused parameter 'size' [-Wunused-parameter]
+                  void operator delete(void* ptr, ptr::size_t size) {}
+                                                              ^
+..\test_mpl_type_traits.cpp(965,32): warning : unused parameter 'ptr' [-Wunused-parameter]
+                  void operator delete[](void* ptr) {}
+                                               ^
+..\test_mpl_type_traits.cpp(966,32): warning : unused parameter 'ptr' [-Wunused-parameter]
+                  void operator delete[](void* ptr, ptr::size_t size) {}
+                                               ^
+..\test_mpl_type_traits.cpp(966,49): warning : unused parameter 'size' [-Wunused-parameter]
+                  void operator delete[](void* ptr, ptr::size_t size) {}
+                                                                ^
+..\test_mpl_type_traits.cpp(982,42): warning : control reaches end of non-void function [-Wreturn-type]
+          struct TestIndex { int operator[](int) {} };
+                                                  ^
+..\test_mpl_type_traits.cpp(983,50): warning : control reaches end of non-void function [-Wreturn-type]
+          struct TestTable { int operator[](const char*) {} };
+                                                          ^
+..\test_mpl_type_traits.cpp(1033,69): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestAssigner2 { public: const TestAssigner2& operator=(int) {} };
+                                                                             ^
+..\test_mpl_type_traits.cpp(1034,86): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestAssigner3 { public: const TestAssigner3& operator=(const TestAssigner3&) {} };
+                                                                                              ^
+..\test_mpl_type_traits.cpp(1035,81): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestAssigner4 { public: const TestAssigner4& operator=(TestAssigner4&&) {} };
+                                                                                         ^
+..\test_mpl_type_traits.cpp(1036,78): warning : control reaches end of non-void function [-Wreturn-type]
+          class TestAssigner5 { public: const TestAssigner5& operator=(int) noexcept {} };
+                                                                                      ^
+..\test_mpl_type_traits.cpp(416,17): warning : unused variable 'normal_volatile' [-Wunused-variable]
+          void(*volatile normal_volatile)() = normal_cd_fn;
+                         ^
+..\test_mpl_type_traits.cpp(415,14): warning : unused variable 'normal_const' [-Wunused-variable]
+          void(*const normal_const)() = normal_cd_fn;
+                      ^
+..\test_mpl_type_traits.cpp(968,9): warning : unused variable 'pp' [-Wunused-variable]
+          void*(*pp)(std::size_t) = &TestHasDelete2::operator new;
+                 ^
+..\test_mpl_type_traits.cpp(417,23): warning : unused variable 'normal_cv' [-Wunused-variable]
+          void(*const volatile normal_cv)() = normal_cd_fn;
+                               ^
+..\test_mpl_type_traits.cpp(358,36): warning : unused variable 'p_member_noexcept_fn3' [-Wunused-variable]
+          constexpr void (TestMemberClass::*p_member_noexcept_fn3)() noexcept = &TestMemberClass::member_noexcept_fn;
+                                            ^
+..\test_mpl_type_traits.cpp(414,8): warning : unused variable 'normal_p' [-Wunused-variable]
+          void(*normal_p)() = normal_cd_fn;
+                ^
+..\test_mpl_type_traits.cpp(136,14): warning : private field 'private_obj' is not used [-Wunused-private-field]
+  private: int private_obj;
+               ^
+..\test_mpl_type_traits.cpp(514,17): warning : private field 'a' is not used [-Wunused-private-field]
+          class T1 { int a = 1; };
+                         ^
+..\test_mpl_type_traits.cpp(524,28): warning : private field 'a' is not used [-Wunused-private-field]
+          class B2 :public B1 { int a; };
+                                    ^
+..\test_mpl_type_traits.cpp(526,28): warning : private field 'b' is not used [-Wunused-private-field]
+          class B4 :public B3 { int b; };
+                                    ^
+  50 warnings generated.
+  test_type_trait.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.type_traits.exe
+  test_type_trait.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.type_traits.pdb (Partial PDB)

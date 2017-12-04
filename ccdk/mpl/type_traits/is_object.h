@@ -14,5 +14,7 @@ namespace ccdk
 			public or_< is_scaler<T>, is_union<T>, is_class<T>, is_array<T>> {};
 
 		template<typename T>  constexpr bool is_object_v = is_object<T>::value;
+
+		
 	}
 }

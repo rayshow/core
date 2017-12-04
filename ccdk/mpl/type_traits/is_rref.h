@@ -2,6 +2,7 @@
 
 
 #include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/type_traits/traits_case.h>
 
 namespace ccdk
 {
@@ -12,5 +13,6 @@ namespace ccdk
 		template<typename T> struct is_rref<T&&> :public true_ {};
 		template<typename T> constexpr bool is_rref_v = is_rref<T>::value;
 
+		CCDK_TT_SINGLE_RANK(is_rref);
 	}
 }

@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_detail
 		{
 			template<typename F, typename C, typename Ret, typename... Args>
 			struct member_function_t
@@ -53,6 +53,6 @@ namespace ccdk
 		}
 
 		//bind_mfn is function object
-		constexpr function_detail::bind_mfn_t bind_mfn{};
+		constexpr fn_detail::bind_mfn_t bind_mfn{};
 	}
 }

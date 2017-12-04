@@ -43,6 +43,12 @@
     <Filter Include="mpl\units">
       <UniqueIdentifier>{d2be537e-e5f8-434c-aee5-13fdbb1ed1d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mpl\atom">
+      <UniqueIdentifier>{ef401aba-c6d1-4604-bfbd-27671efc094f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\smart_ptr">
+      <UniqueIdentifier>{5d6b5634-5177-412f-ae32-617d3e997e36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
@@ -167,9 +173,6 @@
     </ClInclude>
     <ClInclude Include="memory\place_new.h">
       <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="auxililty\forward.h">
-      <Filter>auxililty</Filter>
     </ClInclude>
     <ClInclude Include="math\vector4x2.h">
       <Filter>math</Filter>
@@ -729,9 +732,6 @@
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\debug_type.hpp">
-      <Filter>mpl</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\maybe.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
@@ -780,9 +780,6 @@
     <ClInclude Include="mpl\base\when_match.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\dispatch_when.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\is_function_obj.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -790,9 +787,6 @@
       <Filter>mpl\functional</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\capture.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\invoke.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\always.h">
@@ -858,8 +852,42 @@
     <ClInclude Include="mpl\container\val_sequence.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\switch_case.h">
+    <ClInclude Include="mpl\type_traits\traits_case.h">
       <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_merge.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\dispatch_case.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\select_case.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\any.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\container\varient.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\unique_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\share_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\scope_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\normal_deleter.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_type.hpp" />
+    <ClInclude Include="mpl\base\noncopyable.h">
+      <Filter>mpl\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

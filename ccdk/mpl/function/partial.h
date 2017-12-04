@@ -9,8 +9,10 @@
 #include<ccdk/mpl/type_traits/forward.h>
 #include<ccdk/mpl/type_traits/move.h>
 #include<ccdk/mpl/type_traits/decay.h>
+#include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/container/tuple_storage.h>
 #include<ccdk/mpl/function/bind_mfn.h>
+
 
 namespace ccdk
 {
@@ -28,24 +30,52 @@ namespace ccdk
 				value_type storage;
 				Fn fn;
 
-				partial_t(Fn inFn, Args... args)
-					:fn{ util::forward<Fn>(inFn) },
-					 storage{ util::forward<Args>(args)... }
+				partial_t(const Fn& inFn, const Args&... args)
+					:fn{ inFn },
+					 storage{ args... }
 				{}
 
+				partial_t(Fn&& inFn, const Args&... args)
+					:fn{ util::move(inFn) },
+					storage{ args... }
+				{}
+
+				//use for re-partial
+				partial_t( int, const Fn& inFn, const Args&... args)
+					:fn{ util::move(inFn) },
+					storage{ util::move(args)... }
+				{}
+
+				//args is fulfiled / execute
 				template<typename... Args1, uint32... indice>
-				Ret __invoke_impl(indice_pack<indice...>, Args1&&... args1)
+				Ret __invoke_impl( true_, indice_pack<indice...>, Args1&&... args1)
 				{
-					DebugFunctionName();
-					return fn(ebo_at<indice>(storage)...,
+					return fn(ebo_at<indice>(util::move(storage))...,
 						args1...
 					);
 				}
 
-				template<typename... Args1>
-				Ret operator()(Args1&&... args1)
+				//args is not fulfiled / return new partial_t and move parameter
+				template<typename... Args1,  uint32... indice>
+				auto __invoke_impl( false_, indice_pack<indice...>, Args1&&... args1)
+				{
+					static_assert(sizeof...(Args1) < left_length, "parameter length out of limit");
+
+					//always move all parameters
+					return partial_t< L, Fn, Ret, Args..., Args1...>{
+						0,
+						util::move(fn),
+						ebo_at<indice>(util::move(storage))...,
+						args1...
+					};
+				}
+
+
+				template<typename... Args1, typename = check< (sizeof...(Args1)>0) > >
+				auto operator()(Args1&&... args1)
 				{
 					return __invoke_impl(
+						bool_<  sizeof...(Args1) == left_length >{},
 						make_indice<arg_length>{},
 						util::forward<Args1>(args1)...
 					);
@@ -73,11 +103,11 @@ namespace ccdk
 				}
 
 
-				//is function
+				//case is function / function pointer
 				template<typename Fn, typename... Args>
-				auto partial_create_impl(true_, false_, Fn&& fn, Args&&... args) const noexcept
+				auto partial_create_impl(case_or< is_function>, Fn&& fn, Args&&... args) const noexcept
 				{
-					typedef function_traits<Fn> FT;
+					typedef function_traits<remove_ref_t<Fn>> FT;
 					return partial_normal_function<typename FT::ret>(
 						typename FT::args{},
 						fn,
@@ -85,11 +115,13 @@ namespace ccdk
 					);
 				}
 
-				//is member function pointer
-				template<typename Fn, typename C, typename... Args>
-				auto partial_create_impl(false_, true_, Fn&& fn, C&& c, Args&&... args) const noexcept
+				//case is member function pointer, need wrap with object
+				template<typename Fn,
+					typename Fn1 = remove_ref_t<Fn>,
+					typename C, typename... Args>
+				auto partial_create_impl(case_t< is_mfn_ptr> , Fn&& fn, C&& c, Args&&... args) const noexcept
 				{ 
-					typedef mfn_traits<Fn> MT;
+					typedef mfn_traits<Fn1> MT;
 					return partial_function_obj<typename MT::ret>(
 						typename MT::args{}, 
 						bind_mfn(fn, c),
@@ -97,11 +129,13 @@ namespace ccdk
 					);
 				}
 
-				//is function object, need check
-				template<typename Fn, typename... Args, typename = check_t< is_function_obj<Fn>> >
-				auto partial_create_impl(false_, false_, Fn&& fn, Args&&... args) const noexcept
+				//case is function object
+				template<typename Fn,
+					typename Fn1 = remove_ref_t<Fn>,
+					typename... Args>
+				auto partial_create_impl(case_t< is_function_obj>, Fn&& fn, Args&&... args) const noexcept
 				{
-					typedef mfn_traits<decltype(&Fn::operator())> MT;
+					typedef mfn_traits<decltype(&Fn1::operator())> MT;
 					return partial_function_obj<typename MT::ret>(
 						typename MT::args{},
 						util::forward<Fn>(fn),
@@ -109,22 +143,22 @@ namespace ccdk
 					);
 				}
 
-				template<typename Fn, typename = check_t< is_invokable<remove_ref_t<Fn>>>, typename... Args>
+				template<typename Fn,
+					typename Fn1 = remove_ref_t<Fn>,         
+					typename = check_t< is_invokable<Fn1>>,  //check Fn is  
+					typename... Args>
 				auto operator()(Fn&& fn, Args&&... args) const noexcept
 				{
-					
-
 					//static dispatch
-					//1. first make sure Fn is function ptr or member function ptr
-					//2. default check is function obj
-					//3. or will rise no-match function error
-					/*return partial_create_impl(
-						typename is_function_ptr<Fn>::type{},
-						typename is_mfn_ptr<Fn>::type{},
+					//Fn can be function/function pointer/member pointer/function object
+					return partial_create_impl(
+						select_case<
+							is_function<Fn1>,
+							is_mfn_ptr<Fn1>,
+							is_function_obj<Fn1>>,
 						util::forward<Fn>(fn),
 						util::forward<Args>(args)...
-					);*/
-					return 0;
+					);
 				}
 			};
 		}

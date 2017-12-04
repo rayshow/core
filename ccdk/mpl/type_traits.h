@@ -30,7 +30,7 @@
 #include<ccdk/mpl/type_traits/remove_top_const.h>
 #include<ccdk/mpl/type_traits/remove_volatile.h>
 #include<ccdk/mpl/type_traits/declval.h>
-#include<ccdk/mpl/debug_type.hpp>
+#include<ccdk/debug_type.hpp>
 
 #include<ccdk/mpl/container/tuple.h>
 

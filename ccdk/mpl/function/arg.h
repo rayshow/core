@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_detail
 		{
 			template<uint32 n>
 			struct arg_t
@@ -93,8 +93,7 @@ namespace ccdk
 			};
 		}
 		
-
 		template<uint32 n>
-		constexpr function_detail::arg_t<n> arg{};
+		constexpr fn_detail::arg_t<n> arg{};
 	}
 }

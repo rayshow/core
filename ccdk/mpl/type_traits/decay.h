@@ -13,9 +13,9 @@ namespace ccdk
 	{
 		namespace tt_detail
 		{
-			template<typename T, bool isFn = is_function_v<T>, bool isArray = is_array_v<T> > 
+			template<typename T, bool isFn = is_function_v<T> && !is_pointer_v<T>, bool isArray = is_array_v<T> > 
 								 struct decay_helper { typedef remove_cv_t<remove_ref_t<T>> type; };
-			template<typename T> struct decay_helper<T, false, true> { typedef add_pointer_t< remove_dim_t < remove_ref_t<T>>> type; };
+			template<typename T> struct decay_helper<T, false, true> { typedef add_pointer_t< remove_dim_t <T>> type; };
 			template<typename T> struct decay_helper<T, true, false> { typedef add_pointer_t<T> type; };
 		}
 

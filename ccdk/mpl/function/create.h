@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_detail
 		{
 			template<template<typename...> typename T>
 			struct create

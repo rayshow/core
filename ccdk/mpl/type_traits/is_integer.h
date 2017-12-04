@@ -2,6 +2,7 @@
 
 #include<ccdk/mpl/base/bool_.h>
 #include<ccdk/mpl/type_traits/is_enum.h>
+#include<ccdk/mpl/type_traits/traits_case.h>
 
 namespace ccdk
 {   
@@ -28,6 +29,8 @@ namespace ccdk
 		template<typename T> struct is_integer<T const volatile> : public is_integer<T> {};
 
 		template<typename T> constexpr bool is_integer_v = is_integer<T>::value;
+
+		CCDK_TT_SINGLE_RANK(is_integer);
 
 	}
 }

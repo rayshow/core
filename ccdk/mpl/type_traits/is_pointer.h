@@ -2,6 +2,7 @@
 
 #include<ccdk/mpl/base/bool_.h>
 #include<ccdk/mpl/type_traits/remove_cv.h>
+#include<ccdk/mpl/type_traits/traits_case.h>
 
 namespace ccdk
 {
@@ -18,6 +19,8 @@ namespace ccdk
 			public detail::is_pointer_helper< remove_cv_t<T> > {};
 		
 		template<typename T> constexpr bool is_pointer_v = is_pointer<T>::value;
+
+		CCDK_TT_SINGLE_RANK(is_pointer);
 		
 	}
 }

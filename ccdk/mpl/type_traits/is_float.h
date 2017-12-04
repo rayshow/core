@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/type_traits/traits_case.h>
 
 namespace ccdk
 {
@@ -16,5 +17,7 @@ namespace ccdk
 
 
 		template<typename T> constexpr bool is_float_v = is_float<T>::value;
+
+		CCDK_TT_SINGLE_RANK(is_float);
 	}
 }

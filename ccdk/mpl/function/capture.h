@@ -8,12 +8,13 @@
 #include<ccdk/mpl/type_traits/is_function_obj.h>
 #include<ccdk/mpl/container/tuple_storage.h>
 #include<ccdk/mpl/function/partial.h>
+#include<ccdk/mpl/function/create.h>
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_detail
 		{
 			template<typename... Args>
 			struct capture_t
@@ -46,20 +47,8 @@ namespace ccdk
 					return __invoke_impl(util::forward<Fn&>(fn), make_indice<L>{});
 				}
 			};
-
-
-			struct make_capture_t
-			{
-				template<typename... Args>
-				auto operator()(Args&&... args) const noexcept
-				{
-					return capture_t<Args...>{  util::forward<Args>(args)... };
-				}
-			};
 		}
 
-		//only capture normal function pointer or function object
-		//member function pointer use bind_mfn 
-		constexpr function_detail::make_capture_t capture{};
+		constexpr fn_detail::create< fn_detail::capture_t > capture{};
 	}
 }

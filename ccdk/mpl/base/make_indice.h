@@ -6,11 +6,12 @@
 #include<ccdk/mpl/base/val_pack_split.h>
 
 
+
 namespace ccdk
 {
 	namespace mpl
 	{
-		template<uint32... indice> using indice_pack = val_pack<uint32, indice...>;
+		
 
 		template<uint32 end>
 		using make_indice = typename val_pack_create<uint32, 0, end>::type;

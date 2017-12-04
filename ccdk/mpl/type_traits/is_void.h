@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/type_traits/traits_case.h>
 
 namespace ccdk
 {
@@ -13,5 +14,9 @@ namespace ccdk
 		template<> struct is_void<void const volatile> :public true_ {};
 
 		template<typename T>  constexpr bool  is_void_v = is_void<T>::value;
+
+		//for static dispatch
+		CCDK_TT_SINGLE_RANK(is_void);
+
 	}
 }

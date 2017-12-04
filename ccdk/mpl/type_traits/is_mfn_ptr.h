@@ -11,6 +11,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
+		//mfn ptr is not pointer but rather slot number
 		template<typename T> struct is_mfn_ptr :public false_ {};
 		template<typename T> struct mfn_traits {  };
 
@@ -34,5 +35,9 @@ namespace ccdk
 		template<typename T> using mfn_args_t = typename mfn_traits<T>::args;
 
 		template<typename T> using mfn_ret_t = typename mfn_traits<T>::ret;
+
+		
+		CCDK_TT_SINGLE_RANK(is_mfn_ptr);
+
 	}
 }
