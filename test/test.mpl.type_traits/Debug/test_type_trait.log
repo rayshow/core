@@ -126,24 +126,24 @@ clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-com
 ..\test_mpl_type_traits.cpp(1036,78): warning : control reaches end of non-void function [-Wreturn-type]
           class TestAssigner5 { public: const TestAssigner5& operator=(int) noexcept {} };
                                                                                       ^
-..\test_mpl_type_traits.cpp(416,17): warning : unused variable 'normal_volatile' [-Wunused-variable]
-          void(*volatile normal_volatile)() = normal_cd_fn;
-                         ^
+..\test_mpl_type_traits.cpp(358,36): warning : unused variable 'p_member_noexcept_fn3' [-Wunused-variable]
+          constexpr void (TestMemberClass::*p_member_noexcept_fn3)() noexcept = &TestMemberClass::member_noexcept_fn;
+                                            ^
 ..\test_mpl_type_traits.cpp(415,14): warning : unused variable 'normal_const' [-Wunused-variable]
           void(*const normal_const)() = normal_cd_fn;
                       ^
+..\test_mpl_type_traits.cpp(414,8): warning : unused variable 'normal_p' [-Wunused-variable]
+          void(*normal_p)() = normal_cd_fn;
+                ^
 ..\test_mpl_type_traits.cpp(968,9): warning : unused variable 'pp' [-Wunused-variable]
           void*(*pp)(std::size_t) = &TestHasDelete2::operator new;
                  ^
 ..\test_mpl_type_traits.cpp(417,23): warning : unused variable 'normal_cv' [-Wunused-variable]
           void(*const volatile normal_cv)() = normal_cd_fn;
                                ^
-..\test_mpl_type_traits.cpp(358,36): warning : unused variable 'p_member_noexcept_fn3' [-Wunused-variable]
-          constexpr void (TestMemberClass::*p_member_noexcept_fn3)() noexcept = &TestMemberClass::member_noexcept_fn;
-                                            ^
-..\test_mpl_type_traits.cpp(414,8): warning : unused variable 'normal_p' [-Wunused-variable]
-          void(*normal_p)() = normal_cd_fn;
-                ^
+..\test_mpl_type_traits.cpp(416,17): warning : unused variable 'normal_volatile' [-Wunused-variable]
+          void(*volatile normal_volatile)() = normal_cd_fn;
+                         ^
 ..\test_mpl_type_traits.cpp(136,14): warning : private field 'private_obj' is not used [-Wunused-private-field]
   private: int private_obj;
                ^
@@ -157,5 +157,5 @@ clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-com
           class B4 :public B3 { int b; };
                                     ^
   50 warnings generated.
-  test_type_trait.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.type_traits.exe
-  test_type_trait.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.type_traits.pdb (Partial PDB)
+  test_type_trait.vcxproj -> D:\Git\core\Debug\test.mpl.type_traits.exe
+  test_type_trait.vcxproj -> D:\Git\core\Debug\test.mpl.type_traits.pdb (Partial PDB)

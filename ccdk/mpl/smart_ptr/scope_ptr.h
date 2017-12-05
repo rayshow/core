@@ -33,7 +33,7 @@ namespace ccdk
 
 			//non-copy
 			template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
-			template<typename P> operator=(const scope_ptr<P>&) = delete;
+			template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
 
 			//refer member
 			T* operator->() noexcept { return t; }
@@ -73,7 +73,7 @@ namespace ccdk
 
 			//non-copy
 			template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
-			template<typename P> operator=(const scope_ptr<P>&) = delete;
+			template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
 
 			//index
 			T& operator[](int index)& { return t[index]; }

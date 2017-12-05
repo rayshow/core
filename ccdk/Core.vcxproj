@@ -171,10 +171,12 @@
     <ClInclude Include="mpl\function\create.h" />
     <ClInclude Include="mpl\function\function.h" />
     <ClInclude Include="mpl\function\lazy.h" />
+    <ClInclude Include="mpl\function\operator.h" />
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
     <ClInclude Include="mpl\function\placeholder.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
+    <ClInclude Include="mpl\smart_ptr\proxy_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\share_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\unique_ptr.h" />
@@ -198,7 +200,6 @@
     <ClInclude Include="mpl\type_traits\add_const_lref.h" />
     <ClInclude Include="mpl\type_traits\decay.h" />
     <ClInclude Include="mpl\type_traits\declval.h" />
-    <ClInclude Include="mpl\type_traits\dispatch_case.h" />
     <ClInclude Include="mpl\type_traits\forward.h" />
     <ClInclude Include="mpl\type_traits\has_add.h" />
     <ClInclude Include="mpl\type_traits\has_assigner.h" />

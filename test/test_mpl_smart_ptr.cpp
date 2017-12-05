@@ -18,9 +18,11 @@
 #include<ccdk/mpl/function/partial.h>
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
+#include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/smart_ptr/scope_ptr.h>
 using namespace ccdk::mpl;
+using namespace ccdk;
 
 struct base
 {
@@ -47,6 +49,7 @@ struct derive :public base
 	}
 };
 
+using namespace ccdk::mpl;
 int main()
 {
 	{
