@@ -892,5 +892,8 @@
     <ClInclude Include="mpl\function\operator.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\container\ref_tuple.h">
+      <Filter>mpl\container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

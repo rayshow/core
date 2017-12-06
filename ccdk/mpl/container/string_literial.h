@@ -24,19 +24,36 @@ namespace ccdk
 
 			
 			template<uint32... args>
-			constexpr string_literial(indice_pack<args...>, pointer arr) noexcept
-				: storage{ arr[args]..., char_traits<Ch>::end }
+			constexpr string_literial(
+				indice_pack<args...>,
+				pointer arr) noexcept
+				: storage{ 
+					arr[args]..., 
+					char_traits<Ch>::end }
 			{}
 
-			template<uint32... args1, uint32... args2, uint32... args3>
-			constexpr string_literial(indice_pack<args1...>, indice_pack<args2...>,
-				indice_pack<args3...>, pointer arr1, pointer arr2)
+			template<uint32... args1,
+				uint32... args2,
+				uint32... args3>
+			constexpr string_literial(
+				indice_pack<args1...>,
+				indice_pack<args2...>,
+				indice_pack<args3...>,
+				pointer arr1,
+				pointer arr2)
 			{}
 
-			template<uint32... args1, uint32... args2>
-				constexpr string_literial(indice_pack<args1...>, indice_pack<args2...>,
-					Ch c, pointer arr)
-				:storage { arr[args1]..., c, arr[args2]...}
+			template<uint32... args1,
+				uint32... args2>
+				constexpr string_literial(
+					indice_pack<args1...>,
+					indice_pack<args2...>,
+					Ch c,
+					pointer arr)
+				:storage { 
+					arr[args1]...,
+					c,
+					arr[args2]...}
 			{}
 
 			constexpr string_literial(pointer arr) :
@@ -78,7 +95,7 @@ namespace ccdk
 			template<uint32 start, uint32 end, typename = check_in_range2<start, end, 0, L> >
 			constexpr auto substr() const
 			{
-				typedef string_literial<Ch, end - start + 1>{
+				return string_literial<Ch, end - start + 1>{
 					make_indice_from<start, end>{},
 					storage
 				};

@@ -37,7 +37,7 @@ namespace ccdk
 			constexpr ebo(U && inU) : v{ util::forward<U>(inU) } {}
 
 			template<typename U>
-			constexpr ebo(const U& inU) : v{ inU } {}
+			constexpr ebo(const U& inU) : v( inU ) {}
 		};
 
 		template<uint32 index, typename V>

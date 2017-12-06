@@ -7,19 +7,14 @@
 #include<type_traits>
 #include<assert.h>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/base/literals.h>
 #include<ccdk/mpl/container/string_literial.h>
 #include<ccdk/mpl/container/string_view.h>
+#include<ccdk/mpl/container/ref_tuple.h>
 #include<ccdk/type.h>
 
 using namespace ccdk::mpl;
 using namespace ccdk;
-template<typename T, typename=void> struct test_when :test_when<T, when > {};
-template<typename T, bool condi>    struct test_when<T, match_default<condi> >{ static constexpr int value = 1; };
-template<typename T> struct test_when<T, match< is_void<T>> > { static constexpr int value = 2; };
-template<typename T> struct test_when<T, match_one< is_float<T>, is_integer<T> >> { static constexpr int value = 3; };
-template<typename T> struct test_when<T, match_both< is_top_const<T>, is_pointer<T> >> { static constexpr int value = 4;};
-template<typename T> static constexpr int test_when_v = test_when<T>::value;
+
 
 template<typename T, T t>
 struct test_float {};
@@ -59,8 +54,22 @@ struct test_auto
 	
 };
 
+
+
 int main()
 {
+
+	DebugNewTitle("ref tuple");
+	const char* str = "abc";
+	const char* const instr = "fdsa";
+	auto ref_tuple = create_ref_tuple(1, "fdas", str, instr);
+
+	DebugTypeName<decltype(ref_tuple.at<1>())>();
+	DebugValue(ref_tuple.at<1>());
+
+	getchar();
+	return 0;
+
 	DebugNewTitle("string literial");
 	DebugValueTypeName(_literal("hello,world"));
 	constexpr auto sl = _literal("hello,world");
@@ -69,19 +78,9 @@ int main()
 	
 	DebugValue(sl.find_first('l'));
 	DebugValue(sl.find_last('l'));
-	DebugValue((sl.substr<0, 3>()));
+	DebugValue(sl.substr<0, 3>());
 	AssertTrue((sl.substr<2, 5>()) == _literal("llo"));
-	DebugValue(sl.replace<strlit.find_first('w')>('F'));
-
-
-	
-	AssertTrue(has_inner_tag<test_tag>::value);
-	DebugNewTitle("test when dispatch");
-	AssertTrue(test_when_v<int> == 3);   
-	AssertTrue(test_when_v<float> == 3);
-	AssertTrue(test_when_v<void> == 2);
-	AssertTrue(test_when_v<const int*> == 4);
-	AssertTrue(test_when_v<nullptr_t> == 1);
+	DebugValue(sl.replace<sl.find_first('w')>('F'));
 
 	//test parse literal integer
 	DebugNewTitle("test literals");
@@ -177,29 +176,6 @@ int main()
 	//DebugSubTitle("test insert tuple");
 	//auto tuple15 = tuple14.insert<1>(1.2f);
 
-	constexpr constexpr_string<char,'a', 'b', 'c', 'd'> str{};
-	str[1_th];
-	str.length();
-	//"fdsa"_cs;
-	
-	
-
-	constexpr char *aptr = 0;
-	constexpr string_view cstr{ "abcd" };
-	constexpr int find = cstr.find('b');
-	uint_<find>{};
-	
-	constexpr int aaaa[2] = { 1,2 };
-	
-
-	//AssertTrue(str == "abcd");
-	constexpr auto c = str.find<'e'>();
-	constexpr auto d = str.replace<'f'>(str.find<'c'>());
-
-	constexpr char*p = 0;
-	DebugValueTypeName(d);
-	DebugValue(d.c_str());
-	DebugValue((int)c);
 
 
 	getchar();

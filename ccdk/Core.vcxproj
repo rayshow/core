@@ -152,6 +152,7 @@
     <ClInclude Include="mpl\base\uint16.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
     <ClInclude Include="mpl\container\any.h" />
+    <ClInclude Include="mpl\container\ref_tuple.h" />
     <ClInclude Include="mpl\container\tuple_storage.h" />
     <ClInclude Include="mpl\container\string_literial.h" />
     <ClInclude Include="mpl\container\ebo.h" />

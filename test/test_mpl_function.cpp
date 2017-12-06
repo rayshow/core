@@ -25,6 +25,13 @@ using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::mpl::literals;
 
+template<typename T, typename = void> struct test_when :test_when<T, when > {};
+template<typename T, bool condi>    struct test_when<T, match_default<condi> > { static constexpr int value = 1; };
+template<typename T> struct test_when<T, match< is_void<T>> > { static constexpr int value = 2; };
+template<typename T> struct test_when<T, match_one< is_float<T>, is_integer<T> >> { static constexpr int value = 3; };
+template<typename T> struct test_when<T, match_both< is_top_const<T>, is_pointer<T> >> { static constexpr int value = 4; };
+template<typename T> static constexpr int test_when_v = test_when<T>::value;
+
 template<typename T>
 void fn_impl(case_t< is_function >, T&& t)
 {
@@ -156,26 +163,12 @@ struct derive :public base
 
 int main()
 {	
-	{
-		int *p = new int;
-		int *a = new int[2];
-		DebugValue((int)p);
-		DebugValue((int)&a[0]);
-		DebugValue((int)&a[1]);
-		base *ba = new base();
-		base *bb = new derive();
-		{
-			scope_ptr<int> ptr = p;
-			scope_ptr<int[]> arr_ptr = a;
-			scope_ptr<base> bp1 = ba;
-			scope_ptr<base> bp2 = bb;
-			bp1->test_size();
-			bp2->test_size();
-		}
-		DebugValue((int)p);
-		DebugValue((int)&a[0]);
-		DebugValue((int)&a[1]);
-	}
+	DebugNewTitle("test when dispatch");
+	AssertTrue(test_when_v<int> == 3);
+	AssertTrue(test_when_v<float> == 3);
+	AssertTrue(test_when_v<void> == 2);
+	AssertTrue(test_when_v<const int*> == 4);
+	AssertTrue(test_when_v<nullptr_t> == 1);
 
 	DebugNewTitle("function static dispatch");
 	fn_select_test(0);

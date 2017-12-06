@@ -1,3 +1,46 @@
 ﻿  test_mpl_container.cpp
-d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
-d:\git\core\test\test_mpl_container.cpp(10): fatal error C1083: 无法打开包括文件: “ccdk/mpl/base/literals.h”: No such file or directory
+d:\____git\aurora3d\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
+d:\____git\aurora3d\core\ccdk\mpl\container\ebo.h(40): warning C4244: “初始化”: 从“const int”转换到“float”，可能丢失数据
+  d:\____git\aurora3d\core\ccdk\mpl\container\tuple_storage.h(35): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::ebo<ccdk::mpl::integer_<unsigned int,0>,float,false>::ebo<V>(const U &)”的引用
+          with
+          [
+              V=int,
+              U=int
+          ]
+  d:\____git\aurora3d\core\ccdk\mpl\container\tuple_storage.h(34): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::ebo<ccdk::mpl::integer_<unsigned int,0>,float,false>::ebo<V>(const U &)”的引用
+          with
+          [
+              V=int,
+              U=int
+          ]
+  d:\____git\aurora3d\core\ccdk\mpl\container\tuple.h(60): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::tuple_storage<4,ccdk::mpl::val_pack<T,0,1,2,3>,float,int,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,double>::tuple_storage<int,char,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,float>(const ccdk::mpl::tuple_storage<4,ccdk::mpl::val_pack<T,0,1,2,3>,int,char,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,float> &)”的引用
+          with
+          [
+              T=ccdk::uint32
+          ]
+  d:\____git\aurora3d\core\ccdk\mpl\container\tuple.h(59): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::tuple_storage<4,ccdk::mpl::val_pack<T,0,1,2,3>,float,int,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,double>::tuple_storage<int,char,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,float>(const ccdk::mpl::tuple_storage<4,ccdk::mpl::val_pack<T,0,1,2,3>,int,char,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,float> &)”的引用
+          with
+          [
+              T=ccdk::uint32
+          ]
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(102): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::tuple<float,int,std::string,double>::tuple<int,char,std::string,float>(const ccdk::mpl::tuple<int,char,std::string,float> &)”的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(102): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::tuple<float,int,std::string,double>::tuple<int,char,std::string,float>(const ccdk::mpl::tuple<int,char,std::string,float> &)”的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::integer_<__int64,7>" 的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 查看指向正在编译的变量模板“const ccdk::mpl::integer_<__int64,7> integer_c<__int64,7>”的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(93): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::integer_<__int64,7> ccdk::mpl::literals::operator ""_ci<48,98,48,48,48,48,48,49,49,49>(void)”的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::integer_<__int64,8>" 的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 查看指向正在编译的变量模板“const ccdk::mpl::integer_<__int64,8> integer_c<__int64,8>”的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(91): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::integer_<__int64,8> ccdk::mpl::literals::operator ""_ci<48,49,48>(void)”的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::integer_<__int64,255>" 的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 查看指向正在编译的变量模板“const ccdk::mpl::integer_<__int64,255> integer_c<__int64,255>”的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(89): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::integer_<__int64,255> ccdk::mpl::literals::operator ""_ci<48,120,102,102>(void)”的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::integer_<__int64,11>" 的引用
+  d:\____git\aurora3d\core\ccdk\mpl\base\integer_.h(85): note: 查看指向正在编译的变量模板“const ccdk::mpl::integer_<__int64,11> integer_c<__int64,11>”的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(87): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::integer_<__int64,11> ccdk::mpl::literals::operator ""_ci<49,49>(void)”的引用
+  d:\____git\aurora3d\core\ccdk\mpl\container\string_literial.h(122): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::string_literial<char,12>" 的引用
+  d:\____git\aurora3d\core\test\test_mpl_container.cpp(74): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::string_literial<char,12> ccdk::mpl::literals::_literal<char[12]>(const T (&))”的引用
+          with
+          [
+              T=char [12]
+          ]
+  test_container.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.container.exe
