@@ -10,7 +10,12 @@ namespace ccdk
 	{
 		namespace fn_detail
 		{
-			template<typename F, typename C, typename Ret, typename... Args>
+			template<
+				typename F,
+				typename C,
+				typename Ret,
+				typename... Args
+			>
 			struct member_function_t
 			{
 				//keep member function pointer
@@ -19,10 +24,15 @@ namespace ccdk
 				C *obj; 
 
 				member_function_t(const member_function_t&) = default;
-				member_function_t(F inFn, C* inObj) noexcept
-					: fn(inFn), obj(inObj) {}
 
-				Ret operator()(Args... args) const noexcept
+				member_function_t( F inFn, C* inObj) noexcept
+					:fn(inFn),
+					obj(inObj)
+				{}
+
+				Ret operator()(
+					Args... args
+					) const noexcept
 				{
 					return (obj->*fn)(args...);
 				}
@@ -30,24 +40,58 @@ namespace ccdk
 
 			struct bind_mfn_t
 			{
-				template<typename F, typename C, typename Ret, typename... Args>
-				auto bind_mfn_impl(F f, C* c, arg_pack<Args...>) const noexcept
+				template<
+					typename F,
+					typename C,
+					typename Ret,
+					typename... Args
+				>
+					auto 
+					bind_mfn_impl(
+						F f,
+						C* c,
+						arg_pack<Args...>
+					) const noexcept
 				{
 					return member_function_t< F, C, Ret, Args...>(f, c);
 				}
 
-				template<typename F, typename B = mfn_traits<F>, typename C = typename B::clazz, typename = check_t< is_mfn_ptr<F>> >
-				auto operator()(F f, C& c) const noexcept
+				template<typename F,
+					typename B = mfn_traits<F>,
+					typename C = typename B::clazz,
+					typename = check_t< is_mfn_ptr<F>>
+				>
+					auto 
+					operator()(
+						F f,
+						C& c
+					)const noexcept
 				{
 					typedef remove_const_t<C> NC;
-					return bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(&c), typename B::args{});
+					return bind_mfn_impl<F, NC, typename B::ret>(
+						f, 
+						(NC*)(&c),
+						typename B::args{}
+					);
 				}
 
-				template<typename F, typename B = mfn_traits<F>, typename C = typename B::clazz, typename = check_t< is_mfn_ptr<F>> >
-				auto operator()(F f, C* c) const noexcept
+				template<typename F,
+					typename B = mfn_traits<F>,
+					typename C = typename B::clazz,
+					typename = check_t< is_mfn_ptr<F>>
+				>
+					auto 
+					operator()(
+						F f,
+						C* c
+					) const noexcept
 				{
 					typedef remove_const_t<C> NC;
-					return bind_mfn_impl<F, NC, typename B::ret>(f, (NC*)(c), typename B::args{});
+					return bind_mfn_impl<F, NC, typename B::ret>(
+						f, 
+						(NC*)(c),
+						typename B::args{}
+					);
 				}
 			};
 		}

@@ -71,10 +71,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="auxililty\ingore_unused.h" />
-    <ClInclude Include="auxililty\noncopyable.h" />
-    <ClInclude Include="auxililty\optional.h" />
-    <ClInclude Include="auxililty\singletonable.h" />
     <ClInclude Include="compile.h" />
     <ClInclude Include="container\bidirection_list.h" />
     <ClInclude Include="container\char_trait.h" />

@@ -4,9 +4,6 @@
     <Filter Include="math">
       <UniqueIdentifier>{bf9df51c-06bf-4bf1-a08d-b8fb0eef3de1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="auxililty">
-      <UniqueIdentifier>{d9b6b7df-d2cf-4576-82ce-12fdf5886032}</UniqueIdentifier>
-    </Filter>
     <Filter Include="filesystem">
       <UniqueIdentifier>{399943a3-a555-4a86-84b3-b2c080dcd2d8}</UniqueIdentifier>
     </Filter>
@@ -54,18 +51,6 @@
     <ClInclude Include="compile.h" />
     <ClInclude Include="type.h" />
     <ClInclude Include="log\log.h" />
-    <ClInclude Include="auxililty\ingore_unused.h">
-      <Filter>auxililty</Filter>
-    </ClInclude>
-    <ClInclude Include="auxililty\noncopyable.h">
-      <Filter>auxililty</Filter>
-    </ClInclude>
-    <ClInclude Include="auxililty\optional.h">
-      <Filter>auxililty</Filter>
-    </ClInclude>
-    <ClInclude Include="auxililty\singletonable.h">
-      <Filter>auxililty</Filter>
-    </ClInclude>
     <ClInclude Include="filesystem\path.h">
       <Filter>filesystem</Filter>
     </ClInclude>

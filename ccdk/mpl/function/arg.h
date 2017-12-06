@@ -13,13 +13,19 @@ namespace ccdk
 			template<uint32 n>
 			struct arg_t
 			{
-				template<typename T0, typename T1, typename T2,
-					typename T3, typename T4, typename T5,
+				template<
+					typename T0, typename T1,
+					typename T2, typename T3,
+					typename T4, typename T5,
 					typename... Args,
-					typename = check<(sizeof...(Args) >= n - 5)> >
-
-					constexpr decltype(auto) operator()(T0&& t0, T1&& t1, T2&& t2,
-						T3&& t3, T4&& t4, T5&& t5, Args&&... args) const noexcept
+					typename = check<(sizeof...(Args) >= n - 5)>
+				>
+					constexpr decltype(auto) 
+					operator()(
+						T0&& t0, T1&& t1,
+						T2&& t2, T3&& t3,
+						T4&& t4, T5&& t5,
+						Args&&... args) const noexcept
 				{
 					return arg_t<n - 6>{}(util::forward<Args>(args)...);
 				}
