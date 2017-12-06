@@ -2,12 +2,5 @@
 d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
 d:\git\core\ccdk\mpl\function\operator.h(44): warning C4002: “CCDK_DEFINE_BINARY_FN_OBJECT”宏的实参太多
 d:\git\core\ccdk\mpl\function\operator.h(53): warning C4002: “CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT”宏的实参太多
-d:\git\core\ccdk\mpl\function\operator.h(14): warning C4552: “+”: 运算符不起任何作用；应输入带副作用的运算符
-  d:\git\core\test\test_mpl_smart_ptr.cpp(78): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::op::add::operator ()<int,int>(T1 &&,T2 &&)”的引用
-          with
-          [
-              T1=int,
-              T2=int
-          ]
   test.mpl.smart_ptr.vcxproj -> D:\Git\core\Debug\test.mpl.smart_ptr.exe
   test.mpl.smart_ptr.vcxproj -> D:\Git\core\Debug\test.mpl.smart_ptr.pdb (Partial PDB)

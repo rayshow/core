@@ -30,7 +30,7 @@ namespace ccdk
 				template<typename... Args>
 				constexpr auto operator()(Args&& ...args) const noexcept
 				{
-					DebugFunctionName();
+					//DebugFunctionName();
 					return T<Args...>{ util::forward<Args>(args)... };
 				}
 			};

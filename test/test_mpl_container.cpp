@@ -12,60 +12,23 @@
 #include<ccdk/mpl/container/ref_tuple.h>
 #include<ccdk/type.h>
 
-using namespace ccdk::mpl;
 using namespace ccdk;
-
-
-template<typename T, T t>
-struct test_float {};
-
-struct test_tag { typedef int tag; };
-
-using namespace literals;
-
-
-
-constexpr int const_int(int size)
-{
-	return size;
-}
-
-//constexpr auto test(const char* str,int size)
-//{
-//	constexpr int a4[const_int(size)] = { 3,2,3,4 };
-//	constexpr test_char_arr<int[4], 0, 1, 2, 3> arr{ a4 };
-//}
-
-template<uint32 L>
-constexpr auto get_literal(char ch[L])
-{
-	return str_literial<char, array_len< decltype("abc")>::value>{ "abc" };
-}
-
-template<typename T>
-constexpr auto test_array(T&& t)
-{
-	DebugFunctionName();
-	return array_len<T>::value;
-}
-
-struct test_auto
-{
-	
-};
-
-
+using namespace ccdk::mpl;
+using namespace ccdk::mpl::literals;
 
 int main()
 {
-
 	DebugNewTitle("ref tuple");
 	const char* str = "abc";
 	const char* const instr = "fdsa";
 	auto ref_tuple = create_ref_tuple(1, "fdas", str, instr);
 
 	DebugTypeName<decltype(ref_tuple.at<1>())>();
+	DebugValue(ref_tuple.at<0>());
 	DebugValue(ref_tuple.at<1>());
+	DebugValue(ref_tuple.at<2>());
+	DebugValue(ref_tuple.at<3>());
+
 
 	getchar();
 	return 0;

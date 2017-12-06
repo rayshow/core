@@ -19,7 +19,8 @@
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
 #include<ccdk/mpl/type_traits/select_case.h>
-#include<ccdk/mpl/smart_ptr/scope_ptr.h>
+#include<ccdk/mpl/function/placeholder.h>
+#include<ccdk/mpl/container/ref_tuple.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -161,8 +162,46 @@ struct derive :public base
 	}
 };
 
+using namespace ccdk::mpl::placeholder;
+
+struct change_t {
+	void change() 
+	{
+		a = 1;
+	}
+	int a = 0;
+};
+
+template<typename T>
+auto test_const(const T& t)
+{
+	return T{ const_cast<T&&>(t) };
+}
+
+
 int main()
-{	
+{
+	test_const(test_copy_t{});
+	//auto fn = 1 + _;
+	//auto fn2 = _ + 2;
+	//auto fn3 = _ + _;
+	//DebugValue(fn(2));
+	//DebugValue(fn2(1));
+	//DebugValue(fn3(1, 1));
+
+	/*struct ccdk::mpl::placeholder::placeholder_t<
+		struct ccdk::mpl::placeholder::operation_t<2, struct ccdk::mpl::op::add_t,
+		struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::placeholder::operation_t<1, struct ccdk::mpl::op::add_t, struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::null_>, int>>,
+		struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::null_> >
+	>;*/
+
+
+	auto fn4 = _ + 2;// +_ + 4 + _;
+	DebugValueTypeName(fn4);
+	DebugValue(fn4(1));
+
+	getchar();
+	return 0;
 	DebugNewTitle("test when dispatch");
 	AssertTrue(test_when_v<int> == 3);
 	AssertTrue(test_when_v<float> == 3);
