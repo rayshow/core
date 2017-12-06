@@ -13,7 +13,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace placeholder
+		namespace placeholder2
 		{
 			//declare
 			template<uint32 N, typename Op, typename F, typename...>
@@ -184,7 +184,6 @@ namespace ccdk
 					return ptr->template invoke<0>(create_ref_tuple(args...));
 				}
 
-
 				~placeholder_t() 
 				{
 					ptr::safe_delete(ptr);
@@ -242,7 +241,7 @@ namespace ccdk
 			auto operator+(const placeholder_t<T>& t, const placeholder_t<U>& u)
 			{
 				DebugValue("2 _");
-				typedef operation_t< t.L + u.L , op::add_t, placeholder_t<T>, placeholder_t<U>> operation;
+				typedef operation_t< t.L + u.L , op::add_t, T, U> operation;
 				return placeholder_t< operation >{ new  operation{ const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u) } };
 			}
 

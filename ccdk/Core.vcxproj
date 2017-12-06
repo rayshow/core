@@ -176,6 +176,7 @@
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
     <ClInclude Include="mpl\function\placeholder.h" />
+    <ClInclude Include="mpl\function\placeholder2.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
     <ClInclude Include="mpl\smart_ptr\proxy_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />

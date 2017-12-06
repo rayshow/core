@@ -19,7 +19,7 @@
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
 #include<ccdk/mpl/type_traits/select_case.h>
-#include<ccdk/mpl/function/placeholder.h>
+#include<ccdk/mpl/function/placeholder2.h>
 #include<ccdk/mpl/container/ref_tuple.h>
 
 using namespace ccdk;
@@ -162,7 +162,7 @@ struct derive :public base
 	}
 };
 
-using namespace ccdk::mpl::placeholder;
+using namespace ccdk::mpl::ph;
 
 struct change_t {
 	void change() 
@@ -196,9 +196,9 @@ int main()
 	>;*/
 
 
-	auto fn4 = _ + 2;// +_ + 4 + _;
+	auto fn4 = _ + 2 + _ + 4 + _ + _ + 2 + _ + 4 + _+ _ + 2 + _ + 4 + _+ _ + 2 + _ + 4 + _;
 	DebugValueTypeName(fn4);
-	DebugValue(fn4(1));
+	DebugValue(fn4(1,3,5, 1, 3, 5, 1, 3, 5, 1, 3, 5));
 
 	getchar();
 	return 0;

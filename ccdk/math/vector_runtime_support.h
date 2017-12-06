@@ -2,7 +2,7 @@
 
 #include<ccdk/type.h>
 
-namespace Aurora3D
+namespace ccdk
 {
 	namespace math
 	{
