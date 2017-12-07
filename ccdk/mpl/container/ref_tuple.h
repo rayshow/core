@@ -27,17 +27,24 @@ namespace ccdk
 			}
 
 
-			template<typename I, typename... Args>
+			template<
+				typename I,
+				typename... Args
+			>
 			struct ref_tuple_impl;
 
-			template<uint32... indice, typename... Args>
-			struct ref_tuple_impl<indice_pack<indice...>, Args...>
+			template<
+				uint32... indice,
+				typename... Args
+			>
+			struct ref_tuple_impl<
+				indice_pack<indice...>, Args...>
 				:ref_item_t<indice, Args>...
 			{
 				ref_tuple_impl(Args&... args)
 					:ref_item_t<indice, Args>( args )...
 				{
-					//DebugFunctionName();
+					
 				}
 			};
 
@@ -67,8 +74,6 @@ namespace ccdk
 				return container::ref_at<K>(t.storage);
 			}
 		}
-
-		
 
 		constexpr fn_detail::create_raw<container::ref_tuple> create_ref_tuple{};
 

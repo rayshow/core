@@ -19,7 +19,7 @@
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
 #include<ccdk/mpl/type_traits/select_case.h>
-#include<ccdk/mpl/function/placeholder2.h>
+#include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/container/ref_tuple.h>
 
 using namespace ccdk;
@@ -162,7 +162,7 @@ struct derive :public base
 	}
 };
 
-using namespace ccdk::mpl::ph;
+
 
 struct change_t {
 	void change() 
@@ -179,26 +179,28 @@ auto test_const(const T& t)
 }
 
 
+using namespace ccdk::mpl::placeholder;
+
+struct test_ret
+{
+	int value = 1;
+	test_ret& operator+=(const test_ret& t) &
+	{
+		value += t.value;
+		return *this;
+	}
+
+	const test_ret& operator+=(const test_ret& t) const &
+	{
+		return *this;
+	}
+};
+
+
 int main()
 {
-	test_const(test_copy_t{});
-	//auto fn = 1 + _;
-	//auto fn2 = _ + 2;
-	//auto fn3 = _ + _;
-	//DebugValue(fn(2));
-	//DebugValue(fn2(1));
-	//DebugValue(fn3(1, 1));
-
-	/*struct ccdk::mpl::placeholder::placeholder_t<
-		struct ccdk::mpl::placeholder::operation_t<2, struct ccdk::mpl::op::add_t,
-		struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::placeholder::operation_t<1, struct ccdk::mpl::op::add_t, struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::null_>, int>>,
-		struct ccdk::mpl::placeholder::placeholder_t<struct ccdk::mpl::null_> >
-	>;*/
-
-
-	auto fn4 = _ + 2 + _ + 4 + _ + _ + 2 + _ + 4 + _+ _ + 2 + _ + 4 + _+ _ + 2 + _ + 4 + _;
-	DebugValueTypeName(fn4);
-	DebugValue(fn4(1,3,5, 1, 3, 5, 1, 3, 5, 1, 3, 5));
+	auto judge = _ == _;
+	DebugValue(judge(1, 1));
 
 	getchar();
 	return 0;
