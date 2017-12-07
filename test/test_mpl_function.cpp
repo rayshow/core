@@ -199,7 +199,8 @@ struct test_ret
 
 int main()
 {
-	auto judge = _ == _;
+	auto judge = 1_ == 2_;
+	DebugTypeName<decltype(judge)>();
 	DebugValue(judge(1, 1));
 
 	getchar();

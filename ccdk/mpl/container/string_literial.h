@@ -14,7 +14,10 @@ namespace ccdk
 	namespace mpl
 	{
 		//L length of string include '\0'
-		template<typename Ch, uint32 L>
+		template<
+			typename Ch,
+			uint32 L
+		>
 		struct string_literial
 		{
 			Ch storage[L];
@@ -29,12 +32,15 @@ namespace ccdk
 				pointer arr) noexcept
 				: storage{ 
 					arr[args]..., 
-					char_traits<Ch>::end }
+					char_traits<Ch>::end 
+			}
 			{}
 
-			template<uint32... args1,
+			template<
+				uint32... args1,
 				uint32... args2,
-				uint32... args3>
+				uint32... args3
+			>
 			constexpr string_literial(
 				indice_pack<args1...>,
 				indice_pack<args2...>,
@@ -43,31 +49,40 @@ namespace ccdk
 				pointer arr2)
 			{}
 
-			template<uint32... args1,
-				uint32... args2>
-				constexpr string_literial(
-					indice_pack<args1...>,
-					indice_pack<args2...>,
-					Ch c,
-					pointer arr)
-				:storage { 
-					arr[args1]...,
-					c,
-					arr[args2]...}
+			template<
+				uint32... args1,
+				uint32... args2
+			>
+			constexpr string_literial(
+				indice_pack<args1...>,
+				indice_pack<args2...>,
+				Ch c,
+				pointer arr)
+			:storage { 
+				arr[args1]...,
+				c,
+				arr[args2]...
+			}
 			{}
 
 			constexpr string_literial(pointer arr) :
-				string_literial(make_indice<L-1>{}, arr) {}
+				string_literial(make_indice<L-1>{}, arr)
+			{}
 
 
-			template<typename T, T index>
-			constexpr auto operator[](integer_<T,index>) const
+			template<
+				typename T,
+				T index
+			>
+			constexpr auto
+				operator[](integer_<T,index>) const
 			{
 				return storage[index];
 			}
 
 			template<uint32 L2>
-			constexpr bool operator==(const string_literial<Ch,L2>& l)
+			constexpr bool 
+				operator==(const string_literial<Ch,L2>& l)
 			{
 				if (L != L2) return false;
 				for (uint32 i = 0; i < L; ++i) if (storage[i] != l.storage[i]) return false;
@@ -88,12 +103,18 @@ namespace ccdk
 
 			constexpr int find_last(Ch a) const
 			{
-				for (int i = L - 1; i >= 0; --i) { if (a == storage[i]) return i; }
+				for (int i = L - 1; i >= 0; --i) 
+				{ if (a == storage[i]) return i; }
 				return L;
 			}
 
-			template<uint32 start, uint32 end, typename = check_in_range2<start, end, 0, L> >
-			constexpr auto substr() const
+			template<
+				uint32 start,
+				uint32 end,
+				typename = check_in_range2<start, end, 0, L>
+			>
+			constexpr auto 
+				substr() const
 			{
 				return string_literial<Ch, end - start + 1>{
 					make_indice_from<start, end>{},
@@ -101,8 +122,12 @@ namespace ccdk
 				};
 			}
 
-			template<uint32 index, typename = check_in_range<index , 0, L> >
-			constexpr auto  replace(Ch c) const
+			template<
+				uint32 index,
+				typename = check_in_range<index , 0, L>
+			>
+			constexpr auto  
+				replace(Ch c) const
 			{
 				return string_literial<Ch, L>{ 
 					make_indice<index>{},

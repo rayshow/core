@@ -729,9 +729,6 @@
     <ClInclude Include="mpl\function\partial.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\string_view.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\string_literial.h">
       <Filter>mpl\container</Filter>
     </ClInclude>

@@ -6,9 +6,22 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T, T start, T end>
-		struct range_
+		template<typename T>
+		struct range
 		{
+			T start;
+			T end;
+
+			constexpr range()
+				: start{}, end{}
+			{}
+
+			constexpr range(const T& s, const T& e)
+				: start{ s },
+				end{ e }
+			{}
+
+
 
 		};
 	}
