@@ -10,11 +10,11 @@ namespace ccdk
 		{
 			struct index_t
 			{
-				template<typename T>
+				template<typename T, typename U>
 				constexpr decltype(auto)
 					operator()(
 						T&& t,
-						uint32 index
+						U&& index
 						) const
 				{
 					return t[index];
@@ -104,12 +104,12 @@ namespace ccdk
 				}
 			};
 
-			constexpr invoke_t  invoke{};
+			
 			constexpr post_dec_t post_dec{};
 			constexpr post_inc_t post_inc{};
-			constexpr index_t index{};
-			constexpr arrow_t arrow{};
-			
+			constexpr index_t    index{};
+			constexpr arrow_t    arrow{};
+			constexpr invoke_t   invoke{};
 			
 
 #define CCDK_DEFINE_BINARY_FN_OBJECT(name, op,...) struct name ## _t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 op t2; } };  constexpr name ## _t name{};

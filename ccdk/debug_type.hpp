@@ -142,7 +142,7 @@ inline void DebugTypeAndValue(T&& v)
 // if T& version constructor not exists, will call const T& version
 struct test_copy_t
 {
-	test_copy_t() = default;
+	test_copy_t() { DebugValue("default ctor"); }
 	test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
 	test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
 

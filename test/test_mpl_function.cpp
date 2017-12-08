@@ -181,36 +181,41 @@ auto test_const(const T& t)
 
 using namespace ccdk::mpl::placeholder;
 
-struct test_ret
+struct test_arrow
 {
 	int value = 1;
-	test_ret& operator+=(const test_ret& t) &
-	{
-		value += t.value;
-		return *this;
-	}
-
-	const test_ret& operator+=(const test_ret& t) const &
-	{
-		return *this;
-	}
-
-	test_ret* operator->()
-	{
-		return this;
-	}
 };
 
-
+int print(int i)
+{
+	DebugValue(i);
+	return i;
+}
 
 int main()
 {
+	//auto get_element = _->value;
+	//test_arrow *ta = new test_arrow{};
+	
+	//op::arrow(ta)->value;
+
+	//_->value;
+
+	
+	auto invoke = _(1)+_;
+	DebugValueTypeName(invoke);
+	invoke(print,1);
+
+	/*auto invoke2 = _(indice_pack<1>{});
+	invoke2(print, 1);*/
+
+	
 	getchar();
 	return 0;
 	DebugNewTitle("test when dispatch");
 	AssertTrue(test_when_v<int> == 3);
 	AssertTrue(test_when_v<float> == 3);
-	AssertTrue(test_when_v<void> == 2);
+	AssertTrue(test_when_v<void> == 2); 
 	AssertTrue(test_when_v<const int*> == 4);
 	AssertTrue(test_when_v<nullptr_t> == 1);
 

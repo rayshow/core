@@ -11,8 +11,6 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		
-
 		template<uint32 end>
 		using make_indice = typename val_pack_create<uint32, 0, end>::type;
 

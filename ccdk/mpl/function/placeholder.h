@@ -35,6 +35,65 @@ namespace ccdk
 				return a < b ? b : a;
 			}
 
+			//single operation no placeholder
+			template<typename Op, typename T>
+			struct operation_t<0, 0, 0, Op, T>
+			{
+				static constexpr int N = 0;
+				static constexpr int L = 0;
+				typedef operation_t type;
+
+				Op fn;
+				T t;
+
+				operation_t(const T& inT)
+					:t{ inT }
+				{}
+
+				operation_t(T&& inT)
+					:t{ util::move(inT) }
+				{}
+
+				template<
+					int S,
+					typename T,
+					typename = check_t< is_ref_tuple<T> >
+				>
+					decltype(auto)
+					invoke(T& t)
+				{
+					fn(t);
+				}
+			};
+
+
+			//single operation with one placeholder
+			template<int8 NC, int8 LT,  typename Op, typename T>
+			struct operation_t<NC, LT, 0, Op, T>
+			{
+				static constexpr int N = NC;
+				static constexpr int L = LT;
+				typedef operation_t type;
+
+				Op fn;
+				placeholder_t<T> t;
+
+				operation_t(placeholder_t<T>&& inT)
+					:t{ util::move(inT) }
+				{}
+
+				template<
+					int S,
+					typename U,
+					typename = check_t< is_ref_tuple<U> >
+				>
+					decltype(auto)
+					invoke(const U& u)
+				{
+					return fn( t.template invoke<S>(u) );
+				}
+			};
+
 
 			//left and right is instant veriable, no number placeholder
 			template<typename Op, typename T1, typename T2 >
@@ -44,7 +103,7 @@ namespace ccdk
 				static constexpr int N = 0;
 				static constexpr int L = 0;
 				typedef operation_t<0, 0,0, Op, T1, T2> type;
-			public:
+
 				Op fn;
 				T1 t1;
 				T2 t2;
@@ -190,6 +249,12 @@ namespace ccdk
 				}
 			};
 
+
+			//these function can't be implements outside of placeholder, so just copy it to each implement of placeholder
+#define CCDK_MPL_PLACEHOLDER_SPECIAL_FN()/* \
+			decltype(auto) operator->() const {   typedef operation_t<N, L, 0, op::arrow_t, null_> operation; \
+				return placeholder_t<operation>{ new operation{ placeholder_t<null_>{} }}; }*/
+
 			template<typename T>
 			struct placeholder_t
 			{
@@ -228,7 +293,7 @@ namespace ccdk
 					return  ptr->template invoke<S>(t);
 				}
 
-				//enter point
+				//placeholder invoke enter point
 				template<
 					typename... Args, 
 					typename = check< sizeof...(Args) == CL >
@@ -248,6 +313,34 @@ namespace ccdk
 					DebugValue("destruct");
 					ptr::safe_delete(ptr);
 				}
+
+
+				// (_+_)( 1 )
+				template<
+					typename U,
+					typename = check_t< is_indice_pack<U> >
+				>
+					decltype(auto)
+					operator()(U&& u)
+				{
+					typedef operation_t<N, L, 0, op::invoke_t, T, U> operation;
+					return placeholder_t<operation>{
+						new operation{  util::move(*this) , util::forward<U>(u) }
+					};
+				}
+
+				// _( _ )
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) 
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, null_, U> operation;
+					return placeholder_t<operation>{
+						new operation{ util::move(*this), const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+
+				CCDK_MPL_PLACEHOLDER_SPECIAL_FN();
 			};
 
 			template<>
@@ -259,8 +352,8 @@ namespace ccdk
 				template<
 					int S,
 					typename U
-				  >
-				  decltype(auto)
+				>
+					decltype(auto)
 					invoke(
 						U& t
 					) const noexcept
@@ -268,6 +361,33 @@ namespace ccdk
 					return t.template at<S>();
 				}
 
+				// _( 1 )
+				template<
+					typename U,
+					typename = check_t< not_< is_placeholder<U>>>
+					>
+				decltype(auto)
+					operator()(U&& u) const
+				{
+					DebugTypeName<U>();
+					typedef operation_t<N, L, 0, op::invoke_t, null_,  U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t<null_>{}, util::forward<U>(u) }
+					};
+				}
+
+				// _( _ )
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) const
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, null_, U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+
+				CCDK_MPL_PLACEHOLDER_SPECIAL_FN();
 			};
 
 
@@ -289,6 +409,35 @@ namespace ccdk
 				{
 					return t.template at<index-1>();
 				}
+
+
+				// _1( 1 )
+				template<
+					typename U,
+					typename = check_t< not_< is_placeholder<U>>>
+				>
+					decltype(auto)
+					operator()(U&& u) const
+				{
+					typedef operation_t<N, L, 0, op::invoke_t, int_<index>, U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, util::forward<U>(u) }
+					};
+				}
+
+				// _2( _ )
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) const
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, int_<index> , U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+				
+
+				CCDK_MPL_PLACEHOLDER_SPECIAL_FN();
 			};
 
 			template<> struct placeholder_t<int_<0>> { placeholder_t() = delete; };
@@ -314,7 +463,7 @@ namespace ccdk
 		//overide all operation of placeholder_t
 		namespace ph
 		{
-#define CCDK_MPL_PLACEHOLDER_BINARY(name, opsign) \
+#define CCDK_MPL_PLACEHOLDER_BINARY(name, opsign,...) \
 			template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>>                 \
 				auto operator opsign (const placeholder_t<T>& p, U&& u)                                  \
 				{	typedef operation_t< p.N, p.L, 0, op:: name ## _t, T, U> operation;                  \
@@ -330,6 +479,19 @@ namespace ccdk
 				{	typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: name ## _t, T, U> operation;   \
 					return placeholder_t< operation >{                                                   \
 					new  operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};}
+
+#define CCDK_MPL_PLACEHOLDER_UNARY(name, opsign,...) \
+			template<typename T> decltype(auto) operator opsign (const placeholder_t<T>& t)  \
+			{ typedef  operation_t< t.N, t.L, 0, op:: name ## _t, T> operation;              \
+				return placeholder_t< operation >{                                           \
+					new operation{ const_cast<placeholder_t<T>&&>(t) } };}
+
+#define CCDK_MPL_PLACEHOLDER_UNARY_POST(name, opsign,...) \
+			template<typename T> decltype(auto) operator opsign (const placeholder_t<T>& t, int)  \
+			{ typedef  operation_t< t.N, t.L, 0, op:: name ## _t, T> operation;                   \
+				return placeholder_t< operation >{                                                \
+					new operation{ const_cast<placeholder_t<T>&&>(t) } };}
+
 
 			CCDK_PP_FOREACH_TUPLE(CCDK_MPL_PLACEHOLDER_BINARY, (
 				(add, +),
@@ -359,7 +521,21 @@ namespace ccdk
 				(lequal, <= ),
 				(gequal, >= ),
 				(equal, == ),
-				(nequal, != )));
+				(nequal, != )
+				));
+
+			CCDK_PP_FOREACH_TUPLE(CCDK_MPL_PLACEHOLDER_UNARY, (
+				(deref, *),
+				(inc, ++),
+				(dec, --),
+				(negative, -),
+				(positive, +),
+				(logic_not, !),
+				(bit_reverse, ~)));
+
+			CCDK_PP_FOREACH_TUPLE(CCDK_MPL_PLACEHOLDER_UNARY_POST, (
+				(post_inc, ++),
+				(post_dec, --)));
 		}
 
 	}

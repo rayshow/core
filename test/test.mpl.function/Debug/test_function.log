@@ -1,4 +1,18 @@
-﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
-clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
-  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.exe
-  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.pdb (Partial PDB)
+﻿  test_mpl_function.cpp
+d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
+d:\git\core\ccdk\mpl\function\operator.h(118): warning C4552: “+”: 运算符不起任何作用；应输入带副作用的运算符
+  d:\git\core\ccdk\mpl\function\placeholder.h(248): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::op::add_t::operator ()<int,int&>(T1 &&,T2) noexcept const”的引用
+          with
+          [
+              T1=int,
+              T2=int &
+          ]
+  d:\git\core\ccdk\mpl\function\placeholder.h(308): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::ph::operation_t<0,1,1,ccdk::mpl::op::add_t,T,U>::invoke<0,ccdk::mpl::container::ref_tuple<int (__cdecl &)(int),int &>,void>(const ccdk::mpl::container::ref_tuple<int (__cdecl &)(int),int &> &) const”的引用
+          with
+          [
+              T=operation,
+              U=ccdk::mpl::null_
+          ]
+  d:\git\core\test\test_mpl_function.cpp(207): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::ph::placeholder_t<operation>::operator ()<int(__cdecl &)(int),int,void>(int (__cdecl &)(int),int &&) const”的引用
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.exe
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.pdb (Partial PDB)
