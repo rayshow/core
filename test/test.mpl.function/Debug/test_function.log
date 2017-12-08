@@ -1,4 +1,4 @@
 ﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
 clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
-  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.exe
-  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.pdb (Partial PDB)
+  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.exe
+  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.pdb (Partial PDB)

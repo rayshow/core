@@ -194,15 +194,17 @@ struct test_ret
 	{
 		return *this;
 	}
+
+	test_ret* operator->()
+	{
+		return this;
+	}
 };
+
 
 
 int main()
 {
-	auto judge = 1_ == 2_;
-	DebugTypeName<decltype(judge)>();
-	DebugValue(judge(1, 1));
-
 	getchar();
 	return 0;
 	DebugNewTitle("test when dispatch");

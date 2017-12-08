@@ -877,8 +877,5 @@
     <ClInclude Include="mpl\container\ref_tuple.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\placeholder2.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
