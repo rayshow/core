@@ -14,8 +14,5 @@ namespace ccdk
 		template<uint32... indice> struct is_indice_pack< indice_pack<indice...>> :true_ {};
 
 		template<typename T, T c, T... args> struct val_first { static constexpr T value = c; };
-
-
-
 	}
 }

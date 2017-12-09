@@ -20,8 +20,6 @@ namespace ccdk
 						util::forward<Args>(args)...
 					};
 				}
-
-
 			};
 
 			template<template<typename...> typename T>
@@ -30,8 +28,17 @@ namespace ccdk
 				template<typename... Args>
 				constexpr auto operator()(Args&& ...args) const noexcept
 				{
-					//DebugFunctionName();
 					return T<Args...>{ util::forward<Args>(args)... };
+				}
+			};
+
+			template<template<typename...> typename T>
+			struct create_const_raw
+			{
+				template<typename... Args>
+				constexpr auto operator()(Args&& ...args) const noexcept
+				{
+					return T<Args const...>{ util::forward<Args>(args)... };
 				}
 			};
 		}

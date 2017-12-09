@@ -125,7 +125,6 @@
     <ClInclude Include="mpl\base\condi_derive.h" />
     <ClInclude Include="mpl\base\enable_if.h" />
     <ClInclude Include="mpl\base\make_indice.h" />
-    <ClInclude Include="mpl\base\noncopyable.h" />
     <ClInclude Include="mpl\base\val_pack.h" />
     <ClInclude Include="mpl\base\val_pack_at.h" />
     <ClInclude Include="mpl\base\val_pack_create.h" />
@@ -157,7 +156,9 @@
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\container\val_sequence.h" />
     <ClInclude Include="mpl\container\varient.h" />
-    <ClInclude Include="mpl\function\always.h" />
+    <ClInclude Include="mpl\function\ref.h" />
+    <ClInclude Include="mpl\function\swap.h" />
+    <ClInclude Include="mpl\function\val.h" />
     <ClInclude Include="mpl\function\arg.h" />
     <ClInclude Include="mpl\function\bind_mfn.h" />
     <ClInclude Include="mpl\function\capture.h" />
@@ -286,6 +287,11 @@
     <ClInclude Include="mpl\type_traits\enum_base.h" />
     <ClInclude Include="mpl\type_traits\select_case.h" />
     <ClInclude Include="mpl\type_traits\traits_case.h" />
+    <ClInclude Include="mpl\util\addressof.h" />
+    <ClInclude Include="mpl\util\forward.h" />
+    <ClInclude Include="mpl\util\move.h" />
+    <ClInclude Include="mpl\util\noncopyable.h" />
+    <ClInclude Include="mpl\util\swap.h" />
     <ClInclude Include="preprocessor\bool_and.h" />
     <ClInclude Include="preprocessor\bool_equal.h" />
     <ClInclude Include="preprocessor\bool_if.h" />
