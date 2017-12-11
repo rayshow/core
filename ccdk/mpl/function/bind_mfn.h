@@ -3,6 +3,7 @@
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/type_traits/remove_const.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
+#include<ccdk/mpl/util/addressof.h>
 
 namespace ccdk
 {
@@ -23,13 +24,16 @@ namespace ccdk
 				//keep object pointer
 				C *obj; 
 
+
 				member_function_t(const member_function_t&) = default;
 
-				member_function_t( F inFn, C* inObj) noexcept
-					:fn(inFn),
-					obj(inObj)
+				CCDK_FORCEINLINE
+				member_function_t( F inFn, const C& inObj) noexcept
+					:fn( inFn ),
+					obj( util::addressof(inObj) )
 				{}
 
+				CCDK_FORCEINLINE
 				Ret operator()(
 					Args... args
 					) const noexcept
@@ -46,6 +50,7 @@ namespace ccdk
 					typename Ret,
 					typename... Args
 				>
+					CCDK_FORCEINLINE
 					auto 
 					bind_mfn_impl(
 						F f,
@@ -56,11 +61,13 @@ namespace ccdk
 					return member_function_t< F, C, Ret, Args...>(f, c);
 				}
 
-				template<typename F,
+				template<
+					typename F,
 					typename B = mfn_traits<F>,
 					typename C = typename B::clazz,
 					typename = check_t< is_mfn_ptr<F>>
 				>
+					CCDK_FORCEINLINE
 					auto 
 					operator()(
 						F f,
@@ -80,6 +87,7 @@ namespace ccdk
 					typename C = typename B::clazz,
 					typename = check_t< is_mfn_ptr<F>>
 				>
+					CCDK_FORCEINLINE 
 					auto 
 					operator()(
 						F f,
@@ -96,7 +104,11 @@ namespace ccdk
 			};
 		}
 
-		//bind_mfn is function object
-		constexpr fn_detail::bind_mfn_t bind_mfn{};
+		namespace fn
+		{
+			//bind_mfn is function object
+			constexpr fn_detail::bind_mfn_t bind_mfn{};
+		}
+		
 	}
 }

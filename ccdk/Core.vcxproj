@@ -167,7 +167,6 @@
     <ClInclude Include="mpl\function\combine.h" />
     <ClInclude Include="mpl\function\create.h" />
     <ClInclude Include="mpl\function\function.h" />
-    <ClInclude Include="mpl\function\lazy.h" />
     <ClInclude Include="mpl\function\operator.h" />
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />

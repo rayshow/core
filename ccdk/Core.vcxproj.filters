@@ -771,9 +771,6 @@
     <ClInclude Include="mpl\function\capture.h">
       <Filter>mpl\functional</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\lazy.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\container\const_range.h">
       <Filter>mpl\container</Filter>
     </ClInclude>
