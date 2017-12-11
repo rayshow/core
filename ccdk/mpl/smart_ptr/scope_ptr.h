@@ -3,7 +3,7 @@
 #include<ccdk/mpl/type_traits/is_base_of.h>
 #include<ccdk/mpl/type_traits/has_destructor.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/noncopyable.h>
+#include<ccdk/mpl/util/noncopyable.h>
 
 namespace ccdk
 {
@@ -11,10 +11,10 @@ namespace ccdk
 	{
 		template<typename T>
 		struct scope_ptr
-			:noncopyable< scope_ptr<T> >
+			:util::noncopyable
 		{
 		public:
-			typedef scope_ptr<T> type;
+			typedef scope_ptr type;
 			typedef T* value_type;
 
 		private:
@@ -26,7 +26,10 @@ namespace ccdk
 			{}
 
 			//P is derive from T
-			template<typename P, typename = check_t< is_child_of<P, T>>>
+			template<
+				typename P,
+				typename = check_t< is_child_of<P, T>>
+			>
 			scope_ptr( P* inP) noexcept
 				: t(inP)
 			{}
@@ -52,9 +55,10 @@ namespace ccdk
 		};
 
 
+		//for array
 		template<typename T> 
 		struct scope_ptr<T[]>
-			: noncopyable< scope_ptr<T[]> >
+			: util::noncopyable
 		{
 			typedef scope_ptr<T[]> type;
 			typedef T* value_type;
@@ -66,7 +70,10 @@ namespace ccdk
 			{}
 
 			//P is derive from T
-			template<typename P, typename = check_t< is_child_of<P, T>>>
+			template<
+				typename P,
+				typename = check_t< is_child_of<P, T>>
+			>
 			scope_ptr(P*& inP) noexcept
 				: t(inP)
 			{}
@@ -80,7 +87,7 @@ namespace ccdk
 			const T& operator[](int index) const & { return t[index]; }
 			T&& operator[](int index) && { return t[index]; }
 
-			//delete
+			//deletes
 			~scope_ptr() noexcept(has_nothrow_destructor_v<T>)
 			{
 				ptr::safe_delete_array(t);

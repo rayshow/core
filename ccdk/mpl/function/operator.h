@@ -113,7 +113,7 @@ namespace ccdk
 			
 
 #define CCDK_DEFINE_BINARY_FN_OBJECT(name, op,...) struct name ## _t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 op t2; } };  constexpr name ## _t name{};
-#define CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT(name, op,...) struct name ## _t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return op t; } };
+#define CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT(name, op,...) struct name ## _t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return op t; } }; constexpr name ## _t name{};
 
 			CCDK_PP_FOREACH_TUPLE(CCDK_DEFINE_BINARY_FN_OBJECT, (
 				(add, +),

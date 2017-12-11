@@ -10,14 +10,14 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<template<typename...> typename T>
 			struct create
 			{
 				template<typename... Args>
 				CCDK_FORCEINLINE constexpr 
-				auto  operator()(Args&& ...args) const noexcept
+				auto operator()(Args&& ...args) const noexcept
 				{
 					return T<decay_t<Args>...>{
 						util::forward<Args>(args)...

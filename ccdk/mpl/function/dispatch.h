@@ -12,7 +12,7 @@ namespace ccdk
 	{
 		// dispatch(f , gs...)(args...)
 		// = f( gs(args)...)
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename Fn, typename... Fs>
 			struct dispatch_t
@@ -77,7 +77,7 @@ namespace ccdk
 
 		namespace fn
 		{
-			constexpr fn_detail::create< fn_detail::dispatch_t >  dispatch{};
+			constexpr fn_impl::create< fn_impl::dispatch_t >  dispatch{};
 		}
 		
 	}

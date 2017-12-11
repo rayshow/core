@@ -4,10 +4,10 @@
 #include<ccdk/mpl/base/and_.h>
 #include<ccdk/mpl/base/uint_.h>
 #include<ccdk/mpl/type_traits/decay.h>
-#include<ccdk/mpl/type_traits/forward.h>
-#include<ccdk/mpl/type_traits/move.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
+#include<ccdk/mpl/util/forward.h>
+#include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/container/tuple_storage.h>
 #include<ccdk/mpl/base/arg_pack_split.h>
 #include<ccdk/mpl/base/make_indice.h>

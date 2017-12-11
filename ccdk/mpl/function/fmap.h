@@ -12,7 +12,7 @@ namespace ccdk
 	{
 		// fmap(f)( gs...)(args...)
 		// = f( gs(args...)...)
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename Fn, typename... Fs>
 			struct fmap_t
@@ -67,6 +67,6 @@ namespace ccdk
 			};
 		}
 
-		constexpr fn_detail::create< fn_detail::fmap_t >  fmap{};
+		constexpr fn_impl::create< fn_impl::fmap_t >  fmap{};
 	}
 }

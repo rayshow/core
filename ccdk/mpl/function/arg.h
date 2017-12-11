@@ -9,7 +9,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<uint32 n>
 			struct arg_t
@@ -24,17 +24,10 @@ namespace ccdk
 					typename... Args,
 					typename = check<(sizeof...(Args) >= n - 5)>
 				>
-					CCDK_FORCEINLINE constexpr
-					decltype(auto) 
-					operator()(
-						T0&& t0, 
-						T1&& t1,
-						T2&& t2,
-						T3&& t3,
-						T4&& t4,
-						T5&& t5,
-						Args&&... args
-					) const noexcept
+				CCDK_FORCEINLINE constexpr
+				decltype(auto) 
+				operator()( T0&& t0,  T1&& t1, T2&& t2, T3&& t3, T4&& t4,
+					T5&& t5, Args&&... args ) const noexcept
 				{
 					return arg_t<n - 6>{}(util::forward<Args>(args)...);
 				}
@@ -47,12 +40,9 @@ namespace ccdk
 					typename T,
 					typename... Args
 				>
-					CCDK_FORCEINLINE constexpr
-					decltype(auto) 
-					operator()(
-						T&& t,
-						Args&&... args
-					) const noexcept
+				CCDK_FORCEINLINE constexpr
+				decltype(auto) 
+				operator()( T&& t, Args&&... args ) const noexcept
 				{
 					return util::forward<T>(t);
 				}
@@ -68,10 +58,7 @@ namespace ccdk
 				>
 					CCDK_FORCEINLINE constexpr
 					decltype(auto) 
-					operator()(
-						T0&& t0, 
-						T1&& t1,
-						Args&&... args) const noexcept
+					operator()( T0&& t0, T1&& t1, Args&&... args) const noexcept
 				{
 					return util::forward<T1>(t1);
 				}
@@ -86,13 +73,9 @@ namespace ccdk
 					typename T2,
 					typename... Args
 				>
-					CCDK_FORCEINLINE constexpr
-					decltype(auto) 
-					operator()(
-						T0&& t0,
-						T1&& t1,
-						T2&& t2,
-						Args&&... args) const noexcept
+				CCDK_FORCEINLINE constexpr
+				decltype(auto) 
+				operator()( T0&& t0, T1&& t1, T2&& t2, Args&&... args) const noexcept
 				{
 					return util::forward<T2>(t2);
 				}
@@ -108,15 +91,10 @@ namespace ccdk
 					typename T3, 
 					typename... Args
 				>
-					CCDK_FORCEINLINE constexpr
-				    decltype(auto)
-					operator()(
-						T0&& t0,
-						T1&& t1,
-						T2&& t2,
-						T3&& t3,
-						Args&&... args
-					) const noexcept
+				CCDK_FORCEINLINE constexpr
+				decltype(auto)
+				operator()( T0&& t0, T1&& t1, T2&& t2, T3&& t3,
+					Args&&... args ) const noexcept
 				{
 					return util::forward<T3>(t3);
 				}
@@ -133,16 +111,10 @@ namespace ccdk
 					typename T4,
 					typename... Args
 				>
-					CCDK_FORCEINLINE constexpr
-					decltype(auto)
-					operator()(
-						T0&& t0,
-						T1&& t1,
-						T2&& t2,
-						T3&& t3,
-						T4&& t4, 
-						Args&&... args
-					) const noexcept
+				CCDK_FORCEINLINE constexpr
+				decltype(auto)
+				operator()( T0&& t0, T1&& t1, T2&& t2, T3&& t3,
+					T4&& t4,  Args&&... args) const noexcept
 				{
 					return util::forward<T4>(t4);
 				}
@@ -161,15 +133,8 @@ namespace ccdk
 					typename... Args>
 					CCDK_FORCEINLINE constexpr
 					decltype(auto)
-					operator()(
-						T0&& t0,
-						T1&& t1,
-						T2&& t2,
-						T3&& t3,
-						T4&& t4,
-						T5&& t5, 
-						Args&&... args
-						) const noexcept
+					operator()( T0&& t0, T1&& t1, T2&& t2, T3&& t3, T4&& t4,
+						T5&& t5,  Args&&... args ) const noexcept
 				{
 					return util::forward<T5>(t5);
 				}
@@ -178,10 +143,7 @@ namespace ccdk
 
 		namespace fn
 		{
-			template<uint32 n>
-			constexpr fn_detail::arg_t<n> arg{};
+			template<uint32 n> constexpr fn_impl::arg_t<n> arg{};
 		}
-		
-		
 	}
 }

@@ -1,0 +1,991 @@
+In file included from test_mpl_function.cpp:16:0:
+../ccdk/mpl/function/function.h: In constructor ‘ccdk::mpl::fn::function<Ret(Args ...)>::function(Fn&&, ccdk::mpl::false_, ccdk::mpl::false_, ccdk::mpl::true_)’:
+../ccdk/mpl/function/function.h:190:7: error: ‘mfn_class_t’ was not declared in this scope
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+       ^~~~~~~~~~~
+../ccdk/mpl/function/function.h:190:21: error: wrong number of template arguments (1, should be at least 3)
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+                     ^
+../ccdk/mpl/function/function.h:104:11: note: provided for ‘template<class T, class P, class Ret, class ... Args> struct ccdk::mpl::fn_impl::member_function_invoker’
+    struct member_function_invoker 
+           ^~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/function/function.h:190:25: error: expected primary-expression before ‘,’ token
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+                         ^
+../ccdk/mpl/function/function.h:190:29: error: expected primary-expression before ‘,’ token
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+                             ^
+../ccdk/mpl/function/function.h:190:34: error: expected primary-expression before ‘...’ token
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+                                  ^~~
+../ccdk/mpl/function/function.h:190:37: error: expected ‘}’ before ‘>’ token
+       mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+                                     ^
+../ccdk/mpl/function/function.h:190:37: error: expected ‘{’ before ‘>’ token
+In file included from test_mpl_function.cpp:17:0:
+../ccdk/mpl/function/bind_mfn.h: At global scope:
+../ccdk/mpl/function/bind_mfn.h:60:24: error: ‘args_of’ does not name a type
+      typename FnArgs = args_of<Fn>,
+                        ^~~~~~~
+../ccdk/mpl/function/bind_mfn.h:60:31: error: expected ‘>’ before ‘<’ token
+      typename FnArgs = args_of<Fn>,
+                               ^
+../ccdk/mpl/function/bind_mfn.h:65:24: error: ‘Class’ has not been declared
+     operator()( Fn fn, Class& clz )const noexcept
+                        ^~~~~
+../ccdk/mpl/function/bind_mfn.h:78:24: error: ‘args_of’ does not name a type
+      typename FnArgs = args_of<Fn>,
+                        ^~~~~~~
+../ccdk/mpl/function/bind_mfn.h:78:31: error: expected ‘>’ before ‘<’ token
+      typename FnArgs = args_of<Fn>,
+                               ^
+../ccdk/mpl/function/bind_mfn.h:83:24: error: ‘Class’ has not been declared
+     operator()( Fn fn, Class* clz ) const noexcept
+                        ^~~~~
+../ccdk/mpl/function/bind_mfn.h: In member function ‘auto ccdk::mpl::fn_impl::bind_mfn_t::operator()(Fn, int&) const’:
+../ccdk/mpl/function/bind_mfn.h:67:29: error: ‘Class’ was not declared in this scope
+      typedef remove_const_t<Class> NonConstClass;
+                             ^~~~~
+../ccdk/mpl/function/bind_mfn.h:67:34: error: template argument 1 is invalid
+      typedef remove_const_t<Class> NonConstClass;
+                                  ^
+../ccdk/mpl/function/bind_mfn.h:68:48: error: ‘result_of_t’ was not declared in this scope
+      return __bind_mfn_impl<Fn, NonConstClass, result_of_t<Fn> >(
+                                                ^~~~~~~~~~~
+../ccdk/mpl/function/bind_mfn.h:68:48: note: suggested alternative:
+In file included from /usr/include/c++/6/bits/move.h:57:0,
+                 from /usr/include/c++/6/bits/stl_pair.h:59,
+                 from /usr/include/c++/6/utility:70,
+                 from test_mpl_function.cpp:2:
+/usr/include/c++/6/type_traits:2539:54: note:   ‘std::result_of_t’
+     using result_of_t = typename result_of<_Tp>::type;
+                                                      ^
+In file included from test_mpl_function.cpp:17:0:
+../ccdk/mpl/function/bind_mfn.h:68:13: error: parse error in template argument list
+      return __bind_mfn_impl<Fn, NonConstClass, result_of_t<Fn> >(
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/function/bind_mfn.h: In member function ‘auto ccdk::mpl::fn_impl::bind_mfn_t::operator()(Fn, int*) const’:
+../ccdk/mpl/function/bind_mfn.h:85:29: error: ‘Class’ was not declared in this scope
+      typedef remove_const_t<Class> NoConstClass;
+                             ^~~~~
+../ccdk/mpl/function/bind_mfn.h:85:34: error: template argument 1 is invalid
+      typedef remove_const_t<Class> NoConstClass;
+                                  ^
+../ccdk/mpl/function/bind_mfn.h:86:47: error: ‘result_of_t’ was not declared in this scope
+      return __bind_mfn_impl<Fn, NoConstClass, result_of_t<Fn> >(
+                                               ^~~~~~~~~~~
+../ccdk/mpl/function/bind_mfn.h:86:47: note: suggested alternative:
+In file included from /usr/include/c++/6/bits/move.h:57:0,
+                 from /usr/include/c++/6/bits/stl_pair.h:59,
+                 from /usr/include/c++/6/utility:70,
+                 from test_mpl_function.cpp:2:
+/usr/include/c++/6/type_traits:2539:54: note:   ‘std::result_of_t’
+     using result_of_t = typename result_of<_Tp>::type;
+                                                      ^
+In file included from test_mpl_function.cpp:17:0:
+../ccdk/mpl/function/bind_mfn.h:86:13: error: parse error in template argument list
+      return __bind_mfn_impl<Fn, NoConstClass, result_of_t<Fn> >(
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../ccdk/mpl/function/partial.h:11:0,
+                 from test_mpl_function.cpp:18:
+../ccdk/mpl/type_traits/args_of.h: At global scope:
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:23:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:23:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:22:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:22:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:21:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:21:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:20:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:20:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:19:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:19:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:18:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:18:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:17:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:17:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:16:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:16:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:15:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:15:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:14:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:14:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:13:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, ...)  call ( CCDK_PP_AT(seq, 1), 2, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:14:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE2’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:13:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, ...)  call ( CCDK_PP_AT(seq, 1), 2, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, __VA_ARGS__)
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:14:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE2’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:32:85: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; };                                                            \
+                                                                                     ^
+../ccdk/preprocessor/seq_foreach_item.h:12:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, ...)  call ( CCDK_PP_AT(seq, 0), 1, __VA_ARGS__ )
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:13:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE1’
+ #define CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, ...)  call ( CCDK_PP_AT(seq, 1), 2, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:14:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE2’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:33:88: error: template argument 1 is invalid
+    template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; };
+                                                                                        ^
+../ccdk/preprocessor/seq_foreach_item.h:12:54: note: in expansion of macro ‘FUNCTION_ENUM’
+ #define CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, ...)  call ( CCDK_PP_AT(seq, 0), 1, __VA_ARGS__ )
+                                                      ^~~~
+../ccdk/preprocessor/seq_foreach_item.h:13:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE1’
+ #define CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, ...)  call ( CCDK_PP_AT(seq, 1), 2, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE1(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:14:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE2’
+ #define CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, ...)  call ( CCDK_PP_AT(seq, 2), 3, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE2(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:15:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE3’
+ #define CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, ...)  call ( CCDK_PP_AT(seq, 3), 4, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE3(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:16:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE4’
+ #define CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, ...)  call ( CCDK_PP_AT(seq, 4), 5, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE4(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:17:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE5’
+ #define CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, ...)  call ( CCDK_PP_AT(seq, 5), 6, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE5(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:18:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE6’
+ #define CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, ...)  call ( CCDK_PP_AT(seq, 6), 7, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE6(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:19:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE7’
+ #define CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, ...)  call ( CCDK_PP_AT(seq, 7), 8, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE7(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:20:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE8’
+ #define CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, ...)  call ( CCDK_PP_AT(seq, 8), 9, __VA_ARGS__ )  CCDK_PP_FOREACH_ITEM_VALUE8(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:21:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE9’
+ #define CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, ...) call ( CCDK_PP_AT(seq, 9), 10, __VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE9(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:22:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE10’
+ #define CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, ...) call ( CCDK_PP_AT(seq, 10), 11,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE10(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:23:99: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE11’
+ #define CCDK_PP_FOREACH_ITEM_VALUE12(seq, call, ...) call ( CCDK_PP_AT(seq, 11), 12,__VA_ARGS__ ) CCDK_PP_FOREACH_ITEM_VALUE11(seq, call, __VA_ARGS__)
+                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:10:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_VALUE12’
+ #define CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_VALUE##size (seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:9:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP3’
+ #define CCDK_PP_FOREACH_ITEM_STEP2(seq, call, size, ...) CCDK_PP_FOREACH_ITEM_STEP3(seq, call, size, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:8:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP2’
+ #define CCDK_PP_FOREACH_ITEM_STEP1(seq, call, ...)       CCDK_PP_FOREACH_ITEM_STEP2(seq, call, CCDK_PP_SIZE(seq), __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/preprocessor/seq_foreach_item.h:7:58: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM_STEP1’
+ #define CCDK_PP_FOREACH_ITEM(call, seq, ...)             CCDK_PP_FOREACH_ITEM_STEP1(seq, call, __VA_ARGS__)
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../ccdk/mpl/type_traits/args_of.h:35:4: note: in expansion of macro ‘CCDK_PP_FOREACH_ITEM’
+    CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+    ^~~~~~~~~~~~~~~~~~~~

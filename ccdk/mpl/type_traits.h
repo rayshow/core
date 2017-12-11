@@ -34,8 +34,8 @@
 
 #include<ccdk/mpl/container/tuple.h>
 
-#include<ccdk/mpl/type_traits/forward.h>
-#include<ccdk/mpl/type_traits/move.h>
+#include<ccdk/mpl/util/forward.h>
+#include<ccdk/mpl/util/move.h>
 //is_xx type traits
 #include<ccdk/mpl/type_traits/is_void.h>
 #include<ccdk/mpl/type_traits/is_same.h>

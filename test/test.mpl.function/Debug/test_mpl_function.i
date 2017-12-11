@@ -59004,7 +59004,7 @@ inline void DebugTypeAndValue(T&& v)
 
 struct test_copy_t
 {
-	test_copy_t() = default;
+	test_copy_t() { DebugValue("default ctor"); }
 	test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
 	test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
 
@@ -59025,7 +59025,13 @@ struct test_copy_t
 	}
 };
 
-int test_normal_function(const test_copy_t& t, const char* msg)
+int test_normal_copy_function(const test_copy_t& t, const char* msg)
+{
+	DebugValue(msg);
+	return 0;
+}
+
+int test_normal_move_function(test_copy_t&& t, const char* msg)
 {
 	DebugValue(msg);
 	return 0;
@@ -59426,6 +59432,8 @@ namespace ccdk
 #line 1 "d:\\git\\core\\ccdk\\mpl\\base\\val_pack.h"
 #pragma once
 
+
+
 namespace ccdk
 {
 	namespace mpl
@@ -59433,6 +59441,9 @@ namespace ccdk
 		template<typename T, T... args> struct val_pack { typedef val_pack<T, args...> type; };
 
 		template<uint32... indice> using indice_pack = val_pack<uint32, indice...>;
+
+		template<typename T> struct is_indice_pack :false_ {};
+		template<uint32... indice> struct is_indice_pack< indice_pack<indice...>> :true_ {};
 
 		template<typename T, T c, T... args> struct val_first { static constexpr T value = c; };
 	}
@@ -62412,8 +62423,6 @@ namespace ccdk
 		template<typename T> struct is_function :false_ {};
 		template<typename T> struct is_function<T*> :is_function<T> {};
 		
-		template<typename T> struct function_traits {};
-		template<typename T> struct function_traits<T*> :function_traits<T> {};
 
 		
 		
@@ -62424,24 +62433,11 @@ namespace ccdk
 
 
 
-		
 
 
 
-
-
-
-
-
-
-
-
-
-
-#line 47 "d:\\git\\core\\ccdk\\mpl\\type_traits\\is_function.h"
+#line 34 "d:\\git\\core\\ccdk\\mpl\\type_traits\\is_function.h"
 		template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) > :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) > :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) > :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) > :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) > :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const volatile &> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const volatile &&> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args...) const volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __cdecl(Args......) const volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __stdcall(Args...) const volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __fastcall(Args...) const volatile> :public true_ {}; template<typename Ret, typename... Args> struct is_function<Ret __vectorcall(Args...) const volatile> :public true_ {};
-		template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) > { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) > { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) > { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) > { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) > { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const volatile &> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const volatile &&> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args...) const volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __cdecl(Args......) const volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __stdcall(Args...) const volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __fastcall(Args...) const volatile> { typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename Ret, typename... Args> struct function_traits<Ret __vectorcall(Args...) const volatile> { typedef Ret ret; typedef arg_pack<Args...> args; };
-
 
 
 		template<typename T> constexpr bool is_function_v = is_function<T>::value;
@@ -62449,13 +62445,6 @@ namespace ccdk
 		template<typename T> struct is_function_ptr: and_< is_function<T>,is_pointer<T> > {};
 
 		template<typename T> constexpr bool is_function_ptr_v = is_function_ptr<T>::value;
-
-		template<typename T> using function_ret_t = typename function_traits<T>::ret;
-
-		template<typename T> using function_args_t = typename function_traits<T>::args;
-
-		
-
 
 		
 		template<> struct case_index<is_function> { static const uint32 value = 2; typedef indice_pack< 0, value > type;}; template<typename T> struct case_val< is_function<T>,true> :condi_derive< is_function<T>, indice_pack< 0, 2 >, indice_pack<5, 0>>{}; template<typename T> struct case_val< is_function<T>, false> :indice_pack< 0, 2 > {};;
@@ -62678,42 +62667,7 @@ namespace ccdk
 
 
 
-#line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\forward.h"
-#pragma once
 
-
-
-namespace ccdk
-{
-	namespace mpl
-	{
-		namespace util
-		{
-			
-			
-			template<typename T> inline constexpr T&& forward(remove_ref_t<T>& inT) noexcept { return static_cast<T&&>(inT); }
-			template<typename T> inline constexpr T&& forward(remove_ref_t<T>&& inT) noexcept { return static_cast<T&&>(inT); }
-
-		}
-	}
-}
-#line 7 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
-#line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\move.h"
-#pragma once
-
-
-
-namespace ccdk
-{
-	namespace mpl
-	{
-		namespace util
-		{
-			template<typename T, typename P = remove_ref_t<T> > inline constexpr P&& move(T&& inT) noexcept { return static_cast<P&&>(inT); }
-		}
-	}
-}
-#line 8 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\is_same.h"
 #pragma once
 
@@ -62732,7 +62686,7 @@ namespace ccdk
 
 	}
 }
-#line 9 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
+#line 8 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\has_inner_type.h"
 #pragma once
 
@@ -62777,6 +62731,24 @@ namespace ccdk
 	}
 }
 #line 8 "d:\\git\\core\\ccdk\\mpl\\type_traits\\impl\\has_operator_decl.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -63006,7 +62978,63 @@ namespace ccdk
 		static constexpr bool has_inner_value_v = has_inner_value<T, V>::value;
 	}
 }
+#line 9 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
+#line 1 "d:\\git\\core\\ccdk\\mpl\\util\\forward.h"
+#pragma once
+
+
+
+
+namespace ccdk
+{
+	namespace mpl
+	{
+		namespace util
+		{
+			
+			
+			template<typename T> 
+			__forceinline constexpr 
+			T&& forward(remove_ref_t<T>& inT) noexcept 
+			{ 
+				return static_cast<T&&>(inT); 
+			}
+
+			template<typename T> 
+			__forceinline constexpr 
+			T&& forward(remove_ref_t<T>&& inT) noexcept 
+			{ 
+				return static_cast<T&&>(inT); 
+			}
+		}
+	}
+}
 #line 10 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
+#line 1 "d:\\git\\core\\ccdk\\mpl\\util\\move.h"
+#pragma once
+
+
+
+
+namespace ccdk
+{
+	namespace mpl
+	{
+		namespace util
+		{
+			template<
+				typename T,
+				typename P = remove_ref_t<T> 
+			> 
+			__forceinline constexpr 
+			P&& move(T&& inT) noexcept 
+			{ 
+				return static_cast<P&&>(inT); 
+			}
+		}
+	}
+}
+#line 11 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\container\\tuple_storage.h"
 #pragma once
 
@@ -63117,8 +63145,6 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		
-
 		template<uint32 end>
 		using make_indice = typename val_pack_create<uint32, 0, end>::type;
 
@@ -63273,7 +63299,7 @@ namespace ccdk
 
 	}
 }
-#line 11 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
+#line 12 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\base\\arg_pack_split.h"
 #pragma once
 
@@ -63346,7 +63372,7 @@ namespace ccdk
 		};
 	}
 }
-#line 12 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
+#line 13 "d:\\git\\core\\ccdk\\mpl\\container\\tuple.h"
 
 
 
@@ -63365,6 +63391,8 @@ namespace ccdk
 			typedef tuple<Args...> type;
 			typedef tuple_tag tag;
 			struct erase_t {};
+
+
 			value_type storage;
 			
 			constexpr tuple() : storage{} {}
@@ -63374,21 +63402,24 @@ namespace ccdk
 				: storage( util::move(args)...) {}
 
 			
-			explicit constexpr tuple(Args const&... args) 
+			explicit constexpr 
+				tuple(Args const&... args) 
 				: storage( static_cast<const Args&>(args)...) {}
 
 			
 			constexpr tuple(tuple const& t) 
 				: storage{ t.storage }
 			{ 
-				static_assert(t.L == L, "2 tuple length need to be equal");
+				static_assert(t.L == L, 
+					"2 tuple length need to be equal");
 			}
 
 			
 			constexpr tuple(tuple && t) 
 				: storage{ util::move(t.storage) }
 			{
-				static_assert(t.L == L, "2 tuple length need to be equal");
+				static_assert(t.L == L, 
+					"2 tuple length need to be equal");
 			}
 			
 			
@@ -63404,12 +63435,18 @@ namespace ccdk
 			constexpr tuple(tuple<Args2...>&& t) 
 				: storage{ util::move(t.storage) }
 			{
-				static_assert(t.L == L, "2 tuple length need to be equal");
+				static_assert(t.L == L,
+					"2 tuple length need to be equal");
 			}
 
 	
 			
-			template<uint32... indice1, uint32... indice2, typename... Args1, typename... Args2>
+			template<
+				uint32... indice1,
+				uint32... indice2,
+				typename... Args1,
+				typename... Args2
+			>
 			constexpr tuple(
 				indice_pack<indice1...>, 
 				indice_pack<indice2...>, 
@@ -63418,34 +63455,46 @@ namespace ccdk
 				: storage{ ebo_at<indice1>(t1.storage)...,
 						   ebo_at<indice2>(t2.storage)... }
 			{
-				static_assert(t1.L + t2.L == L, "sum of T1 and T2's length need equal to merged tuple ");
+				static_assert(t1.L + t2.L == L,
+					"sum of T1 and T2's length need equal to merged tuple ");
 			}
 
 
 			
-			template<uint32... indice, typename... Args1, typename... Args2>
+			template<
+				uint32... indice,
+				typename... Args1,
+				typename... Args2
+			>
 			constexpr tuple(
 				indice_pack<indice...>,
 				tuple<Args1...>&& tp,
 				Args2&&... args)
 				: storage{ 
-					ebo_at<indice>( util::move(tp.storage))...,
-					util::move(args)... }
+					ebo_at<indice>( 
+						util::move(tp.storage))...,
+						util::move(args)... }
 			{
-				static_assert(tp.L + sizeof...(Args2) == L, "pop back tuple and new typle length need equal");
+				static_assert(tp.L + sizeof...(Args2) == L,
+					"pop back tuple and new typle length need equal");
 			}
 
 			
-			template<uint32... indice, typename... Args1, typename... Args2>
+			template<
+				uint32... indice,
+				typename... Args1,
+				typename... Args2
+			>
 			constexpr tuple( 
 				int, 
 				indice_pack<indice...>,
 				tuple<Args1...>&& tp,
 				Args2&&... args)
 				: storage{ util::move(args)...,
-				ebo_at<indice>(util::move(tp.storage))...  }
+					ebo_at<indice>(util::move(tp.storage))...  }
 			{
-				static_assert(tp.L + sizeof...(Args2) == L, "pop back tuple and new typle length need equal");
+				static_assert(tp.L + sizeof...(Args2) == L,
+					"pop back tuple and new typle length need equal");
 			}
 
 			
@@ -63455,29 +63504,39 @@ namespace ccdk
 				uint_<len>)
 				: storage{ ebo_at<indice>(util::move(tp.storage))... }
 			{
-				static_assert(tp.L - len == L, "after erase size not match");
+				static_assert(tp.L - len == L,
+					"after erase size not match");
 			}
 
 			
-			template<uint32... indice1, uint32... indice2, uint32... indice3, typename Tp, typename... Args1>
-			constexpr tuple(
+			template<
+				uint32... indice1,
+				uint32... indice2,
+				uint32... indice3,
+				typename Tp,
+				typename... Args1
+			>
+			constexpr 
+				tuple(
 				indice_pack<indice1...>,
 				indice_pack<indice2...>,
 				indice_pack<indice3...>,
 				Tp&& tp,
-				Args1&&... args)
+				Args1&&... args )
 				: storage{ 
 					indice_pack<indice1...,indice2...>{},
 					ebo_at<indice3>(util::move(tp.storage))...,
-					util::move(args)... }
+					util::move(args)...  }
 			{
-				static_assert(sizeof...(indice1)+sizeof...(indice2) == L, "replace or insert length not fit");
+				static_assert(sizeof...(indice1)+sizeof...(indice2) == L,
+					"replace or insert length not fit");
 			}
 
 			template<typename T, T v>
 			constexpr auto& operator[](integer_<T, v> index) &
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
+
 				return ebo_at<v>(storage);
 			}
 
@@ -63485,6 +63544,7 @@ namespace ccdk
 			constexpr const auto& operator[](integer_<T, v> index) const&
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
+
 				return ebo_at<v>(storage);
 			}
 
@@ -63492,16 +63552,20 @@ namespace ccdk
 			constexpr auto&& operator[](integer_<T, v> index) &&
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
+
 				return ebo_at<v>(util::move(storage));
 			}
 			
 			
-			static constexpr unsigned int length() { return L; }
+			static constexpr uint32
+				length() { return L; }
 
 			template<typename... Args1>
 			constexpr auto push_back(Args1... args)
 			{
-				return tuple<Args..., Args1...>{ 
+				return tuple<
+					Args...,
+					Args1...>{ 
 						make_indice<L>{},
 						util::move(*this),
 						util::move(args)...
@@ -63511,7 +63575,9 @@ namespace ccdk
 			template<typename... Args1>
 			constexpr auto push_front(Args1... args)
 			{
-				return tuple<Args1... , Args... >{ 
+				return tuple<
+					Args1... ,
+					Args... >{ 
 						0,
 						make_indice<L>{},
 						util::move(*this),
@@ -63521,9 +63587,12 @@ namespace ccdk
 
 			
 			template<typename... Args2>
-			constexpr auto operator|(tuple<Args2...>& tp)
+			constexpr auto 
+				operator|(tuple<Args2...>& tp)
 			{
-				return tuple<Args..., Args2...>{ 
+				return tuple<
+					Args...,
+					Args2...>{ 
 						make_indice<L>{},
 						make_indice<tp.L>{},
 						util::move(*this),
@@ -63531,8 +63600,12 @@ namespace ccdk
 				};
 			}
 
-			template<uint32 len, typename... Args2>
-			constexpr auto __pop_back_impl(arg_pack<Args2...> t)
+			template<
+				uint32 len,
+				typename... Args2
+			>
+			constexpr auto 
+				__pop_back_impl(arg_pack<Args2...> t)
 			{
 				return tuple<Args2...>{ 
 						make_indice<L-len>{}, 
@@ -63543,16 +63616,26 @@ namespace ccdk
 
 			
 			template<uint32 len=1>
-			constexpr auto pop_back()
+			constexpr auto 
+				pop_back()
 			{
 				static_assert(len >= 1 && len < L, "tuple pop out of range");
+
 				return __pop_back_impl<len>(
-					typename arg_pack_split<L - len, len, arg_pack<Args...>>::head{}
+					typename arg_pack_split<
+						L - len,
+						len, 
+						arg_pack<Args...>
+					>::head{}
 				);
 			}
 
-			template<uint32 len, typename ... Args1>
-			constexpr auto __pop_front_impl(arg_pack<Args1...>)
+			template<
+				uint32 len,
+				typename ... Args1
+			>
+			constexpr auto 
+				__pop_front_impl(arg_pack<Args1...>)
 			{
 				return tuple<Args1...>{ 
 					make_indice_from<len,L>{},
@@ -63563,16 +63646,23 @@ namespace ccdk
 
 			
 			template<uint32 len = 1>
-			constexpr auto pop_front()
+			constexpr auto 
+				pop_front()
 			{
 				static_assert(len >= 1 && len < L, "tuple pop out of range");
+
 				return __pop_front_impl<len>(
-					typename arg_pack_split<0, len, arg_pack<Args...>>::tail{}
+					typename arg_pack_split<
+						0,
+						len,
+						arg_pack<Args...>
+					>::tail{}
 				);
 			}
 
 			template<uint32 start, uint32 end, typename... Args1>
-			constexpr auto __erase_impl(arg_pack<Args1...>)
+			constexpr auto 
+				__erase_impl(arg_pack<Args1...>)
 			{
 				return tuple<Args1...>{
 					make_indice_ingore<L,start, end>{},
@@ -63582,8 +63672,12 @@ namespace ccdk
 			}
 
 			
-			template<uint32 start, uint32 end = start+1>
-			constexpr auto erase()
+			template<
+				uint32 start, 
+				uint32 end = start+1
+			>
+			constexpr auto 
+				erase()
 			{
 				static_assert(start >= 0 && end <= L, "tuple erase out of range");
 				static_assert(end > start, "erase end need greater then start");
@@ -63592,20 +63686,49 @@ namespace ccdk
 				);
 			}
 
-			template<uint32 start, uint32 end, uint32 len, typename... Args1, typename... Args3, typename... Args2>
-			constexpr auto __replace_impl(arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args)
+			template<
+				uint32 start,
+				uint32 end,
+				uint32 len,
+				typename... Args1,
+				typename... Args2,
+				typename... Args3>
+			constexpr auto 
+				__replace_impl(
+					arg_pack<Args1...>,
+					arg_pack<Args3...>,
+					Args2&&... args
+				)
 			{
-				return tuple<Args1..., Args2..., Args3...>{ 
-						make_indice_ingore<L-(end-start)+len, start, end>{},
-						make_indice_from< start, end>{},
-						util::move(*this), util::move(args)... 
+				return tuple<
+					Args1...,
+					Args2..., 
+					Args3...>
+				{ 
+					make_indice_ingore<L-(end-start)+len, start, end>{},
+					make_indice_from< start, end>{},
+					util::move(*this), util::move(args)... 
 				};
 			}
 
-			template<uint32 start, uint32 end , typename T, typename... Args1>
-			constexpr auto replace(T t,Args1... args)
+			template<
+				uint32 start,
+				uint32 end ,
+				typename T,
+				typename... Args1
+			>
+			constexpr auto 
+				replace(
+					T t,
+					Args1... args
+				)
 			{
-				typedef arg_pack_split<start, end-1, arg_pack<Args...>> pack;
+				typedef arg_pack_split<
+					start, 
+					end-1,
+					arg_pack<Args...>
+				> pack;
+
 				return __replace_impl<start, end>(
 					typename pack::head{}, 
 					typename pack::tail{}, 
@@ -63613,38 +63736,74 @@ namespace ccdk
 				);
 			}
 
-			template<uint32 start, uint32 end, typename... Args1, typename... Args3, typename... Args2>
-			constexpr auto __insert_impl(arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args)
+			template<
+				uint32 start,
+				uint32 end,
+				typename... Args1,
+				typename... Args2,
+				typename... Args3
+			>
+			constexpr auto 
+				__insert_impl(
+					arg_pack<Args1...>,
+					arg_pack<Args3...>,
+					Args2&&... args
+				)
 			{
-				return tuple<Args1..., Args2..., Args3...>{
-						make_indice_ingore<L + end-start, start, end>{},
-						make_indice_from<start, end>{},
-						make_indice<L>{},
-						util::move(*this),
-						util::move(args)...
+				return tuple<
+					Args1...,
+					Args2...,
+					Args3...>
+				{
+					make_indice_ingore<L + end-start, start, end>{},
+					make_indice_from<start, end>{},
+					make_indice<L>{},
+					util::move(*this),
+					util::move(args)...
 				};
 			}
 
-			template<uint32 start, typename... Args1>
-			constexpr auto insert(Args1... args)
+			template<
+				uint32 start,
+				typename... Args1
+			>
+			constexpr auto 
+				insert(Args1... args)
 			{
 				typedef arg_pack_split<start, 0, arg_pack<Args...>> pack;
-				return __insert_impl<start, start+ sizeof...(Args1)>(
-					typename pack::head{},
-					typename pack::tail{},
-					util::move(args)...
-				);
+				return __insert_impl<
+					start,
+					start+ sizeof...(Args1)>
+					(
+						typename pack::head{},
+						typename pack::tail{},
+						util::move(args)...
+					);
 			}
 		};
 
-		template<typename T, typename... Args>
-		constexpr auto operator+(tuple<Args...>& tp, const T& t )
+		template<
+			typename T,
+			typename... Args
+		>
+		constexpr auto
+			operator+(
+				tuple<Args...>& tp,
+				const T& t 
+			)
 		{
 			return tp.push_back(t);
 		}
 
-		template<typename T, typename... Args>
-		constexpr auto operator+(const T& t, tuple<Args...>& tp)
+		template<
+			typename T,
+			typename... Args
+		>
+		constexpr auto 
+			operator+(
+				const T& t, 
+				tuple<Args...>& tp
+			)
 		{
 			return tp.push_front(t);
 		}
@@ -64046,37 +64205,23 @@ namespace ccdk
 
 
 
-
 namespace ccdk
 {
 	namespace mpl
 	{
 		
 		template<typename T> struct is_mfn_ptr :public false_ {};
-		template<typename T> struct mfn_traits {  };
 
 
 
 
 
-
-
-
-		
-		template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) > :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) > :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) volatile &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) volatile &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) volatile &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) volatile &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) volatile> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) volatile> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const volatile &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const volatile &> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const volatile &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const volatile &&> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...) const volatile> :public true_ {}; template<typename C, typename Ret, typename... Args> struct is_mfn_ptr<Ret (C::*)(Args...,...) const volatile> :public true_ {};
-		template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) > { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) > { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) volatile &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) volatile &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) volatile &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) volatile &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) volatile> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) volatile> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const volatile &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const volatile &> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const volatile &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const volatile &&> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args...) const volatile> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; }; template<typename C, typename Ret, typename... Args> struct mfn_traits<Ret(C::*)(Args..., ...) const volatile> { typedef C clazz; typedef Ret ret; typedef arg_pack<Args...> args; };
-
+		template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) > :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) > :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) volatile &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) volatile &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) volatile &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) volatile &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) volatile> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) volatile> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const volatile &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const volatile &> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const volatile &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const volatile &&> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...) const volatile> :public true_ {}; template<typename Class, typename Ret, typename... Args> struct is_mfn_ptr<Ret (Class::*)(Args...,...) const volatile> :public true_ {};
 
 
 		template<typename T> constexpr bool is_mfn_ptr_v = is_mfn_ptr<T>::value;
 
-		template<typename T> using mfn_class_t = typename  mfn_traits<T>::clazz;
 
-		template<typename T> using mfn_args_t = typename mfn_traits<T>::args;
-
-		template<typename T> using mfn_ret_t = typename mfn_traits<T>::ret;
-
-		
 		template<> struct case_index<is_mfn_ptr> { static const uint32 value = 4; typedef indice_pack< 0, value > type;}; template<typename T> struct case_val< is_mfn_ptr<T>,true> :condi_derive< is_mfn_ptr<T>, indice_pack< 0, 4 >, indice_pack<5, 0>>{}; template<typename T> struct case_val< is_mfn_ptr<T>, false> :indice_pack< 0, 4 > {};;
 
 	}
@@ -64937,8 +65082,8 @@ namespace ccdk
 
 
 
-		namespace detail { template<typename T, typename Ret, typename... Args> struct has_new_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator new(declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_new :and_<not_<is_rref<Ret>>, bool_< detail::has_new_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_new_v = has_new<T, Ret, Args...>::value;;
-		namespace detail { template<typename T, typename Ret, typename... Args> struct has_array_new_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator new[](declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_array_new :and_<not_<is_rref<Ret>>, bool_< detail::has_array_new_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_array_new_v = has_array_new<T, Ret, Args...>::value;;
+		namespace detail { template<typename T, typename Ret, typename... Args> struct has_new_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator new(declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T, typename P, typename... Args> struct has_new_helper<T,null_,P, Args...> { template<typename U, typename = decltype( makeval<U>().operator new(declval<P>(), declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T> struct has_new_helper<T,null_> { template<typename U, typename = decltype( &U::operator new )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_new :and_<not_<is_rref<Ret>>, bool_< detail::has_new_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_new_v = has_new<T, Ret, Args...>::value;;
+		namespace detail { template<typename T, typename Ret, typename... Args> struct has_array_new_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator new[](declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T, typename P, typename... Args> struct has_array_new_helper<T,null_,P, Args...> { template<typename U, typename = decltype( makeval<U>().operator new[](declval<P>(), declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T> struct has_array_new_helper<T,null_> { template<typename U, typename = decltype( &U::operator new[] )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_array_new :and_<not_<is_rref<Ret>>, bool_< detail::has_array_new_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_array_new_v = has_array_new<T, Ret, Args...>::value;;
 
 		template<typename T> struct has_default_new:has_new<T, void*, ptr::size_t>{};
 
@@ -64971,7 +65116,7 @@ namespace ccdk
 		
 
 		
-		namespace detail { template<typename T, typename Ret, typename... Args> struct has_indexer_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator[](declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_indexer :and_<not_<is_rref<Ret>>, bool_< detail::has_indexer_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_indexer_v = has_indexer<T, Ret, Args...>::value;;
+		namespace detail { template<typename T, typename Ret, typename... Args> struct has_indexer_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator[](declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T, typename P, typename... Args> struct has_indexer_helper<T,null_,P, Args...> { template<typename U, typename = decltype( makeval<U>().operator[](declval<P>(), declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T> struct has_indexer_helper<T,null_> { template<typename U, typename = decltype( &U::operator[] )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_indexer :and_<not_<is_rref<Ret>>, bool_< detail::has_indexer_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_indexer_v = has_indexer<T, Ret, Args...>::value;;
 
 		
 		template<typename T, typename Ret, typename Index>  
@@ -64996,24 +65141,9 @@ namespace ccdk
 	{
 		
 		
-		namespace detail { template<typename T, typename Ret, typename... Args> struct has_invoker_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator ()(declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_invoker :and_<not_<is_rref<Ret>>, bool_< detail::has_invoker_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_invoker_v = has_invoker<T, Ret, Args...>::value;;
+		namespace detail { template<typename T, typename Ret, typename... Args> struct has_invoker_helper { template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().operator ()(declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T, typename P, typename... Args> struct has_invoker_helper<T,null_,P, Args...> { template<typename U, typename = decltype( makeval<U>().operator ()(declval<P>(), declval<Args>()...) )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; template<typename T> struct has_invoker_helper<T,null_> { template<typename U, typename = decltype( &U::operator () )> static constexpr bool sfinae(int){ return true;} template<typename U> static constexpr bool sfinae(...) { return false;} static constexpr bool value = sfinae<T>(0); }; } template<typename T,typename Ret = null_, typename... Args> struct has_invoker :and_<not_<is_rref<Ret>>, bool_< detail::has_invoker_helper <T, Ret, Args...>::value >> {}; template<typename T, typename Ret = null_, typename... Args> static constexpr bool has_invoker_v = has_invoker<T, Ret, Args...>::value;;
 
 		template<> struct case_index<has_invoker> { static const uint32 value = 50; typedef indice_pack< 0, value > type;}; template<typename T> struct case_val< has_invoker<T>,true> :condi_derive< has_invoker<T>, indice_pack< 0, 50 >, indice_pack<5, 0>>{}; template<typename T> struct case_val< has_invoker<T>, false> :indice_pack< 0, 50 > {};;
-
-		namespace detail
-		{
-			template<typename T>
-			struct has_invoker_helper<T, null_>
-			{
-				template<typename U, typename = decltype(&U::operator ())>
-				static constexpr bool sfinae(int) { return true; }
-				template<typename U>
-				static constexpr bool sfinae(...) { return false; }
-				static constexpr bool value = sfinae<T>(0);
-			};
-		}
-
-	
 	}
 }
 #line 114 "d:\\git\\core\\ccdk\\mpl\\type_traits.h"
@@ -65073,6 +65203,7 @@ namespace ccdk
 
 
 
+
 #line 1 "d:\\git\\core\\ccdk\\mpl\\base\\enable_if.h"
 #pragma once
 
@@ -65113,30 +65244,38 @@ namespace ccdk
 		using check_in_range2 = typename enable_if< (start >= min && end <= max && end >= start && min>=0 ), void>::type;
 	}
 }
-#line 6 "d:\\git\\core\\ccdk\\mpl\\function\\arg.h"
+#line 7 "d:\\git\\core\\ccdk\\mpl\\function\\arg.h"
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<uint32 n>
 			struct arg_t
 			{
 				template<
-					typename T0, typename T1,
-					typename T2, typename T3,
-					typename T4, typename T5,
+					typename T0, 
+					typename T1,
+					typename T2, 
+					typename T3,
+					typename T4, 
+					typename T5,
 					typename... Args,
 					typename = check<(sizeof...(Args) >= n - 5)>
 				>
-					constexpr decltype(auto) 
+					__forceinline constexpr
+					decltype(auto) 
 					operator()(
-						T0&& t0, T1&& t1,
-						T2&& t2, T3&& t3,
-						T4&& t4, T5&& t5,
-						Args&&... args) const noexcept
+						T0&& t0, 
+						T1&& t1,
+						T2&& t2,
+						T3&& t3,
+						T4&& t4,
+						T5&& t5,
+						Args&&... args
+					) const noexcept
 				{
 					return arg_t<n - 6>{}(util::forward<Args>(args)...);
 				}
@@ -65145,8 +65284,16 @@ namespace ccdk
 			template<>
 			struct arg_t<0>
 			{
-				template<typename T, typename... Args>
-				constexpr decltype(auto) operator()(T&& t, Args&&... args) const noexcept
+				template<
+					typename T,
+					typename... Args
+				>
+					__forceinline constexpr
+					decltype(auto) 
+					operator()(
+						T&& t,
+						Args&&... args
+					) const noexcept
 				{
 					return util::forward<T>(t);
 				}
@@ -65155,9 +65302,17 @@ namespace ccdk
 			template<>
 			struct arg_t<1>
 			{
-				template<typename T0, typename T1, typename... Args>
-				constexpr decltype(auto) operator()(T0&& t0, T1&& t1,
-					Args&&... args) const noexcept
+				template<
+					typename T0,
+					typename T1,
+					typename... Args
+				>
+					__forceinline constexpr
+					decltype(auto) 
+					operator()(
+						T0&& t0, 
+						T1&& t1,
+						Args&&... args) const noexcept
 				{
 					return util::forward<T1>(t1);
 				}
@@ -65166,9 +65321,19 @@ namespace ccdk
 			template<>
 			struct arg_t<2>
 			{
-				template<typename T0, typename T1, typename T2, typename... Args>
-				constexpr decltype(auto) operator()(T0&& t0, T1&& t1,
-					T2&& t2, Args&&... args) const noexcept
+				template<
+					typename T0,
+					typename T1,
+					typename T2,
+					typename... Args
+				>
+					__forceinline constexpr
+					decltype(auto) 
+					operator()(
+						T0&& t0,
+						T1&& t1,
+						T2&& t2,
+						Args&&... args) const noexcept
 				{
 					return util::forward<T2>(t2);
 				}
@@ -65177,9 +65342,22 @@ namespace ccdk
 			template<>
 			struct arg_t<3>
 			{
-				template<typename T0, typename T1, typename T2, typename T3, typename... Args>
-				constexpr decltype(auto) operator()(T0&& t0, T1&& t1,
-					T2&& t2, T3&& t3, Args&&... args) const noexcept
+				template<
+					typename T0,
+					typename T1,
+					typename T2,
+					typename T3, 
+					typename... Args
+				>
+					__forceinline constexpr
+				    decltype(auto)
+					operator()(
+						T0&& t0,
+						T1&& t1,
+						T2&& t2,
+						T3&& t3,
+						Args&&... args
+					) const noexcept
 				{
 					return util::forward<T3>(t3);
 				}
@@ -65188,10 +65366,24 @@ namespace ccdk
 			template<>
 			struct arg_t<4>
 			{
-				template<typename T0, typename T1, typename T2, typename T3,
-					typename T4, typename... Args>
-					constexpr decltype(auto) operator()(T0&& t0, T1&& t1, T2&& t2,
-						T3&& t3, T4&& t4, Args&&... args) const noexcept
+				template<
+					typename T0,
+					typename T1,
+					typename T2,
+					typename T3,
+					typename T4,
+					typename... Args
+				>
+					__forceinline constexpr
+					decltype(auto)
+					operator()(
+						T0&& t0,
+						T1&& t1,
+						T2&& t2,
+						T3&& t3,
+						T4&& t4, 
+						Args&&... args
+					) const noexcept
 				{
 					return util::forward<T4>(t4);
 				}
@@ -65200,18 +65392,35 @@ namespace ccdk
 			template<>
 			struct arg_t<5>
 			{
-				template<typename T0, typename T1, typename T2, typename T3,
-					typename T4, typename T5, typename... Args>
-					constexpr decltype(auto) operator()(T0&& t0, T1&& t1, T2&& t2,
-						T3&& t3, T4&& t4, T5&& t5, Args&&... args) const noexcept
+				template<
+					typename T0,
+					typename T1, 
+					typename T2,
+					typename T3,
+					typename T4,
+					typename T5,
+					typename... Args>
+					__forceinline constexpr
+					decltype(auto)
+					operator()(
+						T0&& t0,
+						T1&& t1,
+						T2&& t2,
+						T3&& t3,
+						T4&& t4,
+						T5&& t5, 
+						Args&&... args
+						) const noexcept
 				{
 					return util::forward<T5>(t5);
 				}
 			};
 		}
-		
-		template<uint32 n>
-		constexpr fn_detail::arg_t<n> arg{};
+
+		namespace fn
+		{
+			template<uint32 n> constexpr fn_impl::arg_t<n> arg{};
+		}
 	}
 }
 #line 16 "d:\\git\\core\\test\\test_mpl_function.cpp"
@@ -65268,27 +65477,31 @@ namespace ccdk
 
 
 
-
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_impl
 		{
-			struct bad_invoke_exception :public std::exception
+			struct bad_invoke_exception 
+				:public std::exception
 			{
 				const char* msg;
 
 				bad_invoke_exception(const char* inMsg)
 					:msg{ inMsg } {}
 
-				virtual char const* what() const noexcept  override
+				virtual char const* 
+				what() const noexcept  override
 				{
 					return msg;
 				}
 			};
 
-			template<typename Ret, typename... Args>
+			template<
+				typename Ret,
+				typename... Args
+			>
 			struct invoker
 			{
 				
@@ -65301,172 +65514,232 @@ namespace ccdk
 			};
 
 			
-			template<typename T, typename Ret, typename... Args>
+			template<
+				typename T,
+				typename Ret,
+				typename... Args
+			>
 			struct function_object_invoker
 				:public invoker<Ret, Args...>
 			{
 				T t;
-				function_object_invoker(T&& inT) :t{ util::move(inT) } {}
 
-				virtual Ret invoke(Args... args) override
+				function_object_invoker(T&& inT) 
+					:t{ util::move(inT) } 
+				{}
+
+				virtual Ret 
+				invoke(Args... args) override
 				{
 					return t(util::forward<Args>(args)...);
 				}
 			};
 
 			
-			template<typename T, typename Ret, typename... Args>
+			template<
+				typename T,
+				typename Ret,
+				typename... Args
+			>
 			struct normal_function_invoker
 				:public invoker<Ret, Args...>
 			{
 				T t;
 
 				
-				normal_function_invoker(T inT) : t(inT) {}
+				normal_function_invoker(T inT) 
+					: t(inT) {}
 
-				virtual Ret invoke(Args... args) override
+				virtual Ret 
+				invoke(Args... args) override
 				{
 					return t(util::forward<Args>(args)...);
 				}
 			};
 
 			
-			template<typename T, typename P, typename Ret, typename... Args>
-			struct member_function_invoker :public invoker<Ret, Args...>
+			template<
+				typename T,
+				typename P,
+				typename Ret,
+				typename... Args
+			>
+			struct member_function_invoker 
+				:public invoker<Ret, Args...>
 			{
 				P  p;
 				T* t;
-				member_function_invoker(P inP) : p(inP), t(nullptr) {}
+				member_function_invoker(P inP) 
+					: p(inP), 
+					t(nullptr) 
+				{}
 
-				virtual void set_private_data(void* inT) override
+				virtual void 
+				set_private_data(void* inT) override
 				{
 					t = (T*)inT;
 				}
 
 				Ret __invoke_impl(Args... arg)
 				{
-					if (!t) throw bad_invoke_exception{ "member_function_invoker::__invoke_impl t is nullptr." };
+					if (!t) throw bad_invoke_exception{ 
+						"member_function_invoker::__invoke_impl t is nullptr." };
 					return (t->*p)(util::forward<Args>(arg)...);
 				}
 
 				
-				virtual Ret invoke(Args... args) override
+				virtual Ret 
+				invoke(Args... args) override
 				{
 					return __invoke_impl(util::forward<Args>(args)...);
 				}
 			};
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		template<typename T>
-		struct function;
-
-		template<typename Ret, typename... Args>
-		struct function<Ret(Args...)>
+		namespace fn
 		{
-			typedef function<Ret(Args...)> type;
-			static constexpr uint32 L = sizeof...(Args);
-			function_detail::invoker<Ret, Args...> *fn;
-
-			function() noexcept : fn{ nullptr } {}
-
-			function(ptr::nullptr_t) noexcept : fn{ nullptr } {}
-
-			~function() { CCDK_SAFE_DELETE(fn); }
-
-			template<typename Fn>
-			function(Fn&& fn, true_, false_, false_) noexcept
-				: fn(new(ptr::nothrow) function_detail::normal_function_invoker<
-					Fn, Ret, Args...>{ fn })
-			{
-				DebugValue("function: normal ");
-			}
-
 			
-			template<typename Fn>
-			function(Fn&& fn, false_, true_, false_) noexcept
-				:fn{ new(ptr::nothrow) function_detail::function_object_invoker<
-					Fn, Ret, Args...>{ util::move(fn) } }
-			{
-				DebugValue("function: object ");
-			}
-
 			
-			template<typename Fn>
-			function(Fn&& fn, false_, false_, true_) noexcept
-				:fn{ new(ptr::nothrow) function_detail::member_function_invoker<
-					mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
-			{
-				DebugValue("function: member ");
-			}
-
 			
-			template<typename Fn>
-			function(Fn fn) noexcept
-				: function(util::move(fn),
-					typename is_function_ptr<Fn>::type{},
-					typename is_function_obj<Fn>::type{},
-					typename is_mfn_ptr<Fn>::type{})
-			{}
-
-			operator bool() noexcept
-			{
-				return !!fn;
-			}
-
+			
+			
+			
+			
+			
 			
 			template<typename T>
-			Ret __invoke_impl_arg_type(true_, T&& t, Args... args)
-			{
-				fn->set_private_data((void*)t);
-				return fn->invoke(util::forward<Args>(args)...);
-			}
+			struct function;
 
-			
-			template<typename T>
-			Ret __invoke_impl_arg_type(false_, T&& t, Args... args)
+			template<typename Ret, typename... Args>
+			struct function<Ret(Args...)>
 			{
-				fn->set_private_data((void*)(&(t)));
-				return fn->invoke(util::forward<Args>(args)...);
-			}
+				typedef function<Ret(Args...)> type;
+				static constexpr uint32 L = sizeof...(Args);
+				fn_impl::invoker<Ret, Args...> *fn;
 
-			
-			template<typename... Args1>
-			Ret __invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1)
-			{
-				typedef remove_ref_t< arg_pack_first_t<Args1...>> first_type;
-				return __invoke_impl_arg_type(
-					typename is_pointer<first_type>::type{},
-					util::forward<Args1>(args1)...);
-			}
+				function() noexcept : fn{ nullptr } {}
 
-			
-			template<typename... Args1>
-			Ret __invoke_impl_arg_len(uint_<L>, Args1&&... args1)
-			{
-				return fn->invoke(util::forward<Args1>(args1)...);
-			}
+				function(ptr::nullptr_t) noexcept : fn{ nullptr } {}
 
-			template<typename... Args1>
-			Ret operator()(Args1... args1)
-			{
+				~function() { CCDK_SAFE_DELETE(fn); }
+
+				template<typename Fn>
+				function(Fn&& fn, true_, false_, false_) noexcept
+					: fn(new(ptr::nothrow) fn_impl::normal_function_invoker<
+						Fn, Ret, Args...>{ fn })
+				{
+					DebugValue("function: normal ");
+				}
+
 				
-				return __invoke_impl_arg_len(uint_<sizeof...(Args1)>{}, util::forward<Args1>(args1)...);
-			}
-		};
+				template<typename Fn>
+				function(Fn&& fn, false_, true_, false_) noexcept
+					:fn{ new(ptr::nothrow) fn_impl::function_object_invoker<
+						Fn, Ret, Args...>{ util::move(fn) } }
+				{
+					DebugValue("function: object ");
+				}
 
+				
+				template<typename Fn>
+				__forceinline
+				function(
+					Fn&& fn,
+					false_,
+					false_,
+					true_
+				) noexcept
+					:fn{ new(ptr::nothrow) fn_impl::member_function_invoker<
+						mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+				{
+					DebugValue("function: member ");
+				}
+
+				
+				template<typename Fn>
+				__forceinline
+				function(Fn fn) noexcept
+					: function(
+						util::move(fn),
+						typename is_function_ptr<Fn>::type{},
+						typename is_function_obj<Fn>::type{},
+						typename is_mfn_ptr<Fn>::type{})
+				{}
+
+				__forceinline
+				operator bool() noexcept
+				{
+					return !!fn;
+				}
+
+				
+				template<typename T>
+				__forceinline
+				Ret __invoke_impl_arg_type(true_, T&& t, Args... args)
+				{
+					fn->set_private_data((void*)t);
+					return fn->invoke(
+						util::forward<Args>(args)...
+					);
+				}
+
+				
+				template<typename T>
+				__forceinline
+				Ret __invoke_impl_arg_type(false_, T&& t, Args... args)
+				{
+					fn->set_private_data((void*)(&(t)));
+					return fn->invoke(
+						util::forward<Args>(args)...
+					);
+				}
+
+				
+				template<typename... Args1>
+				__forceinline
+				Ret __invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1)
+				{
+					typedef remove_ref_t< arg_pack_first_t<Args1...>> first_type;
+					return __invoke_impl_arg_type(
+						typename is_pointer<first_type>::type{},
+						util::forward<Args1>(args1)...
+					);
+				}
+
+				
+				template<typename... Args1>
+				__forceinline
+				Ret __invoke_impl_arg_len(uint_<L>, Args1&&... args1)
+				{
+					return fn->invoke(
+						util::forward<Args1>(args1)...
+					);
+				}
+
+				template<typename... Args1>
+				__forceinline
+				Ret operator()(Args1... args1)
+				{
+					
+					return __invoke_impl_arg_len(
+						uint_<sizeof...(Args1)>{},
+						util::forward<Args1>(args1)...
+					);
+				}
+
+			};  
+
+		} 
 	}
 }
 #line 17 "d:\\git\\core\\test\\test_mpl_function.cpp"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\function\\bind_mfn.h"
+#pragma once
+
+
+
+
+#line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\result_of.h"
 #pragma once
 
 
@@ -65477,96 +65750,216 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace tt_impl
+		{
+			template<typename T> struct result_of_impl;
+
+			
+			template<typename T> struct result_of_impl<T*> : result_of_impl<T> {};
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 34 "d:\\git\\core\\ccdk\\mpl\\type_traits\\result_of.h"
+
+			template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) > { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) > { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) > { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) > { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) > { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) > { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) > { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) volatile &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) volatile &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) volatile &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) volatile &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) volatile> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) volatile> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const volatile &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const volatile &> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const volatile &> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const volatile &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const volatile &&> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const volatile &&> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) const volatile> { typedef Ret type; }; template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) const volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args...) const volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __cdecl(Args......) const volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __stdcall(Args...) const volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __fastcall(Args...) const volatile> { typedef Ret type; }; template<typename Ret, typename... Args> struct result_of_impl<Ret __vectorcall(Args...) const volatile> { typedef Ret type; };
+
+		}
+
+		template<typename T> struct result_of :tt_impl::result_of_impl<T> {};
+
+		template<typename T>  using result_of_t = typename result_of<T>::type;
+	}
+}
+#line 7 "d:\\git\\core\\ccdk\\mpl\\function\\bind_mfn.h"
+#line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\args_of.h"
+#pragma once
+
+
+
+
+
+
+namespace ccdk
+{
+	namespace mpl
+	{
+		namespace tt_impl
+		{
+			template<typename T> struct args_of_impl;
+
+			
+			template<typename T> struct args_of_impl<T*> : args_of_impl<T> {};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 35 "d:\\git\\core\\ccdk\\mpl\\type_traits\\args_of.h"
+			template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) &&> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) &> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) > { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) > { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) > { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) > { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) > { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) > { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) > { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const &> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const &&> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) volatile &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) volatile &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) volatile &> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) volatile &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) volatile &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) volatile &&> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) volatile> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) volatile> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) volatile> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const volatile &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const volatile &> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const volatile &> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const volatile &> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const volatile &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const volatile &&> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const volatile &&> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const volatile &&> { typedef arg_pack<Args...> type; }; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args...) const volatile> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Class, typename Ret, typename... Args> struct args_of_impl<Ret(Class::*)(Args..., ...) const volatile> { typedef arg_pack<Args...> type; typedef Class clazz;}; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args...) const volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __cdecl(Args......) const volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __stdcall(Args...) const volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __fastcall(Args...) const volatile> { typedef arg_pack<Args...> type; }; template<typename Ret, typename... Args> struct args_of_impl<Ret __vectorcall(Args...) const volatile> { typedef arg_pack<Args...> type; };
+
+		}
+
+		template<typename T> struct args_of :tt_impl::args_of_impl<T> {};
+
+		template<typename T> using  args_of_t = typename args_of<T>::type;
+
+		template<typename T> using  mfn_class_t = typename  args_of<T>::clazz;
+
+	}
+}
+#line 8 "d:\\git\\core\\ccdk\\mpl\\function\\bind_mfn.h"
+#line 1 "d:\\git\\core\\ccdk\\mpl\\util\\addressof.h"
+#pragma once
+
+
+
+namespace ccdk
+{
+	namespace mpl
+	{
+		namespace util
+		{
+
+			template<class T>
+			__forceinline constexpr 
+			T *addressof(T& t) noexcept
+			{	
+				return (__builtin_addressof(t));
+			}
+
+
+
+
+
+
+
+
+
+#line 28 "d:\\git\\core\\ccdk\\mpl\\util\\addressof.h"
+
+			template<class _Ty>
+			const _Ty *addressof(const _Ty&&) = delete;
+		}
+	}
+}
+#line 9 "d:\\git\\core\\ccdk\\mpl\\function\\bind_mfn.h"
+
+namespace ccdk
+{
+	namespace mpl
+	{
+		namespace fn_impl
 		{
 			template<
-				typename F,
-				typename C,
+				typename Fn,
+				typename Class,
 				typename Ret,
 				typename... Args
 			>
 			struct member_function_t
 			{
 				
-				F  fn;
+				Fn  fn;
 				
-				C *obj; 
+				Class *clz; 
 
 				member_function_t(const member_function_t&) = default;
 
-				member_function_t( F inFn, C* inObj) noexcept
-					:fn(inFn),
-					obj(inObj)
+				__forceinline
+				member_function_t( Fn inFn, Class* inClz) noexcept
+					:fn( inFn ),
+					clz( inClz )
 				{}
 
-				Ret operator()(
-					Args... args
-					) const noexcept
+				__forceinline
+				Ret operator()( Args... args ) const noexcept
 				{
-					return (obj->*fn)(args...);
+					return (clz->*fn)(args...);
 				}
 			};
 
 			struct bind_mfn_t
 			{
 				template<
-					typename F,
-					typename C,
+					typename Fn,
+					typename Class,
 					typename Ret,
 					typename... Args
 				>
-					auto 
-					bind_mfn_impl(
-						F f,
-						C* c,
-						arg_pack<Args...>
-					) const noexcept
+				__forceinline
+				auto 
+				__bind_mfn_impl( Fn fn, Class* clz, arg_pack<Args...> ) const noexcept
 				{
-					return member_function_t< F, C, Ret, Args...>(f, c);
+					return member_function_t< Fn, Class, Ret, Args...>(fn, clz);
 				}
 
-				template<typename F,
-					typename B = mfn_traits<F>,
-					typename C = typename B::clazz,
-					typename = check_t< is_mfn_ptr<F>>
+				template<
+					typename Fn,
+					typename = check_t< is_mfn_ptr<Fn>>,
+					typename FnArgs = args_of<Fn>,
+					typename Class = typename FnArgs::clazz
 				>
-					auto 
-					operator()(
-						F f,
-						C& c
-					)const noexcept
+				__forceinline
+				auto 
+				operator()( Fn fn, Class& clz )const noexcept
 				{
-					typedef remove_const_t<C> NC;
-					return bind_mfn_impl<F, NC, typename B::ret>(
-						f, 
-						(NC*)(&c),
-						typename B::args{}
+					typedef remove_const_t<Class> NonConstClass;
+					return __bind_mfn_impl<Fn, NonConstClass, result_of_t<Fn> >(
+						fn, 
+						(NonConstClass*)(util::addressof(clz)),
+						typename FnArgs::type{}
 					);
 				}
 
-				template<typename F,
-					typename B = mfn_traits<F>,
-					typename C = typename B::clazz,
-					typename = check_t< is_mfn_ptr<F>>
+				template<
+					typename Fn,
+					typename = check_t< is_mfn_ptr<Fn>>,
+					typename FnArgs = args_of<Fn>,
+					typename Class = typename FnArgs::clazz
 				>
-					auto 
-					operator()(
-						F f,
-						C* c
-					) const noexcept
+				__forceinline 
+				auto 
+				operator()( Fn fn, Class* clz ) const noexcept
 				{
-					typedef remove_const_t<C> NC;
-					return bind_mfn_impl<F, NC, typename B::ret>(
-						f, 
-						(NC*)(c),
-						typename B::args{}
+					typedef remove_const_t<Class> NoConstClass;
+					return __bind_mfn_impl<Fn, NoConstClass, result_of_t<Fn> >(
+						fn, (NoConstClass*)clz,
+						typename FnArgs::type{}
 					);
 				}
 			};
 		}
 
+		namespace fn
+		{
+			
+			constexpr fn_impl::bind_mfn_t bind_mfn{};
+		}
 		
-		constexpr fn_detail::bind_mfn_t bind_mfn{};
 	}
 }
 #line 18 "d:\\git\\core\\test\\test_mpl_function.cpp"
@@ -65590,15 +65983,11 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T>
-		struct is_invokable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
-
+		template<typename T> struct is_invokable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
 	}
 }
 
 #line 9 "d:\\git\\core\\ccdk\\mpl\\function\\partial.h"
-
-
 
 #line 1 "d:\\git\\core\\ccdk\\mpl\\type_traits\\select_case.h"
 #pragma once
@@ -66021,7 +66410,12 @@ namespace ccdk
 		using default_t = tt_detail::u64x2<(uint64)-1, (uint64)-1>;
 	}
 }
-#line 13 "d:\\git\\core\\ccdk\\mpl\\function\\partial.h"
+#line 11 "d:\\git\\core\\ccdk\\mpl\\function\\partial.h"
+
+
+
+
+
 
 
 
@@ -66030,26 +66424,23 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		
+		namespace fn_impl
 		{
 			template<uint32 L, typename Fn, typename Ret, typename... Args>
 			struct partial_t
 			{
 				constexpr static uint32 arg_length = sizeof...(Args);
 				constexpr static uint32 left_length = L - arg_length;
-				typedef partial_t<L, Fn, Ret, Args...> type;
+				typedef partial_t type;
 				typedef tuple_storage< arg_length, make_indice<arg_length>, decay_t<Args>...> value_type;
+
 				value_type storage;
-				Fn fn;
+				decay_t<Fn> fn;
 
-				partial_t(const Fn& inFn, const Args&... args)
-					:fn{ inFn },
-					 storage{ args... }
-				{}
-
-				partial_t(Fn&& inFn, const Args&... args)
-					:fn{ util::move(inFn) },
-					storage{ args... }
+				partial_t(Fn&& inFn, Args&&... args)
+					:fn{ util::forward<Fn>(inFn) },
+					 storage{ util::forward<Args>(args)... }
 				{}
 
 				
@@ -66059,8 +66450,13 @@ namespace ccdk
 				{}
 
 				
-				template<typename... Args1, uint32... indice>
-				Ret __invoke_impl( true_, indice_pack<indice...>, Args1&&... args1)
+				template<
+					typename... Args1,
+					uint32... indice
+				>
+				__forceinline
+				auto
+				__invoke_impl( true_,  indice_pack<indice...>, Args1&&... args1)
 				{
 					return fn(ebo_at<indice>(util::move(storage))...,
 						args1...
@@ -66068,10 +66464,16 @@ namespace ccdk
 				}
 
 				
-				template<typename... Args1,  uint32... indice>
-				auto __invoke_impl( false_, indice_pack<indice...>, Args1&&... args1)
+				template<
+					typename... Args1,
+					uint32... indice
+				>
+				__forceinline
+				auto
+				__invoke_impl( false_,  indice_pack<indice...>, Args1&&... args1)
 				{
-					static_assert(sizeof...(Args1) < left_length, "parameter length out of limit");
+					static_assert(sizeof...(Args1) < left_length,
+						"parameter length out of limit");
 
 					
 					return partial_t< L, Fn, Ret, Args..., Args1...>{
@@ -66083,8 +66485,13 @@ namespace ccdk
 				}
 
 
-				template<typename... Args1, typename = check< (sizeof...(Args1)>0) > >
-				auto operator()(Args1&&... args1)
+				template<
+					typename... Args1,
+					typename = check< (sizeof...(Args1)>0) >
+				>
+				__forceinline
+				auto
+				operator()(Args1&&... args1)
 				{
 					return __invoke_impl(
 						bool_<  sizeof...(Args1) == left_length >{},
@@ -66096,19 +66503,33 @@ namespace ccdk
 
 			struct partial_create_t
 			{
-				template<typename Ret, typename Fn, typename... Args1, typename... Args2>
-				auto partial_normal_function(arg_pack<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
+				template<
+					typename Ret,
+					typename Fn,
+					typename... Args1,
+					typename... Args2
+				>
+				__forceinline
+				auto
+				partial_normal_function( arg_pack<Args2...>, Fn&& fn,  Args1&&... args1 ) const noexcept
 				{
-					return partial_t<sizeof...(Args2), decay_t<Fn>, Ret, Args1...>{
+					return partial_t<sizeof...(Args2), Fn, Ret, Args1...>{
 							fn,
 							util::forward<Args1>(args1)...
 					};
 				}
 
-				template<typename Ret, typename Fn, typename... Args1, typename... Args2>
-				auto partial_function_obj(arg_pack<Args2...>, Fn&& fn, Args1&&... args1) const noexcept
+				template<
+					typename Ret,
+					typename Fn,
+					typename... Args1,
+					typename... Args2
+				>
+				__forceinline
+				auto  
+				partial_function_obj( arg_pack<Args2...>, Fn&& fn,  Args1&&... args1 ) const noexcept
 				{
-					return partial_t<sizeof...(Args2), decay_t<Fn>, Ret, Args1...>{
+					return partial_t<sizeof...(Args2), Fn, Ret, Args1...>{
 							util::forward<Fn>(fn),
 							util::forward<Args1>(args1)...
 					};
@@ -66116,68 +66537,92 @@ namespace ccdk
 
 
 				
-				template<typename Fn, typename... Args>
-				auto partial_create_impl(case_or< is_function>, Fn&& fn, Args&&... args) const noexcept
+				template<
+					typename Fn,
+					typename... Args
+				>
+				__forceinline
+				auto
+				partial_create_impl(case_t< is_function>, Fn&& fn, Args&&... args ) const noexcept
 				{
-					typedef function_traits<remove_ref_t<Fn>> FT;
-					return partial_normal_function<typename FT::ret>(
-						typename FT::args{},
+					typedef args_of<remove_ref_t<Fn>> FnArgs;
+					return partial_normal_function<result_of_t<remove_ref_t<Fn>> >(
+						typename FnArgs::type{},
 						fn,
 						util::forward<Args>(args)...
 					);
 				}
 
 				
-				template<typename Fn,
+				template<
+					typename Fn,
 					typename Fn1 = remove_ref_t<Fn>,
-					typename C, typename... Args>
-				auto partial_create_impl(case_t< is_mfn_ptr> , Fn&& fn, C&& c, Args&&... args) const noexcept
+					typename C, typename... Args
+				>
+				__forceinline
+				auto 
+				partial_create_impl( case_t< is_mfn_ptr> , Fn&& fn, C&& c,  Args&&... args ) const noexcept
 				{ 
-					typedef mfn_traits<Fn1> MT;
-					return partial_function_obj<typename MT::ret>(
-						typename MT::args{}, 
-						bind_mfn(fn, c),
+					typedef args_of<Fn1> FnArgs;
+					return partial_function_obj<result_of_t<Fn1>>(
+						typename FnArgs::type{},
+						fn::bind_mfn(fn, c),
 						util::forward<Args>(args)...
 					);
 				}
 
 				
-				template<typename Fn,
+				template<
+					typename Fn,
 					typename Fn1 = remove_ref_t<Fn>,
-					typename... Args>
-				auto partial_create_impl(case_t< is_function_obj>, Fn&& fn, Args&&... args) const noexcept
+					typename... Args
+				>
+				__forceinline
+				auto
+				partial_create_impl( case_t< is_function_obj>, Fn&& fn, Args&&... args) const noexcept
 				{
-					typedef mfn_traits<decltype(&Fn1::operator())> MT;
-					return partial_function_obj<typename MT::ret>(
-						typename MT::args{},
+					typedef args_of<decltype(&Fn1::operator())> FnArgs;
+					return partial_function_obj<result_of_t<Fn1>>(
+						typename FnArgs::type{},
 						util::forward<Fn>(fn),
 						util::forward<Args>(args)...
 					);
 				}
 
-				template<typename Fn,
-					typename Fn1 = remove_ref_t<Fn>,         
-					typename = check_t< is_invokable<Fn1>>,  
-					typename... Args>
-				auto operator()(Fn&& fn, Args&&... args) const noexcept
+
+				template<
+					typename Fn,
+					typename NoRefFn = remove_ref_t<Fn>,
+					typename = check_t< is_invokable<NoRefFn>>,  
+					typename... Args
+				>
+				__forceinline
+				auto
+				operator()( Fn&& fn,  Args&&... args ) const noexcept
 				{
+					DebugValue(typename is_function<NoRefFn>{});
+					DebugValue(typename is_mfn_ptr<NoRefFn>{});
+					DebugValue(typename is_function_obj<NoRefFn>{});
+					return [](...) {return 0; };
 					
 					
-					return partial_create_impl(
-						select_case<
-							is_function<Fn1>,
-							is_mfn_ptr<Fn1>,
-							is_function_obj<Fn1>>,
-						util::forward<Fn>(fn),
-						util::forward<Args>(args)...
-					);
+				
+
+
+
+
+
+
+
 				}
 			};
 		}
 
-
-		
-		constexpr function_detail::partial_create_t partial{};
+		namespace fn
+		{
+			
+			constexpr fn_impl::partial_create_t partial{};
+		}
 	}
 }
 #line 19 "d:\\git\\core\\test\\test_mpl_function.cpp"
@@ -66199,34 +66644,50 @@ namespace ccdk
 
 
 
+
+
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<template<typename...> typename T>
 			struct create
 			{
 				template<typename... Args>
-				constexpr auto operator()(Args&& ...args) const noexcept
+				__forceinline constexpr 
+				auto operator()(Args&& ...args) const noexcept
 				{
 					return T<decay_t<Args>...>{
 						util::forward<Args>(args)...
 					};
 				}
-
-
 			};
 
 			template<template<typename...> typename T>
 			struct create_raw
 			{
 				template<typename... Args>
-				constexpr auto operator()(Args&& ...args) const noexcept
+				__forceinline constexpr 
+				auto  operator()(Args&& ...args) const noexcept
 				{
-					
-					return T<Args...>{ util::forward<Args>(args)... };
+					return T<Args...>{ 
+						util::forward<Args>(args)...
+					};
+				}
+			};
+
+			template<template<typename...> typename T>
+			struct create_const_raw
+			{
+				template<typename... Args>
+				__forceinline constexpr
+				auto operator()(Args&& ...args) const noexcept
+				{
+					return T<Args const...>{ 
+						util::forward<Args>(args)...
+					};
 				}
 			};
 		}
@@ -66238,42 +66699,73 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename... Args>
 			struct capture_t
 			{
 				static constexpr uint32 L = sizeof...(Args);
 				typedef tuple_storage<L, make_indice<L>, decay_t<Args>...> value_type;
-				typedef capture_t<Args...> type;
+				typedef capture_t type;
 				value_type storage;
 
 				constexpr capture_t(Args... args)
 					:storage{ util::forward<Args>(args)... }
 				{}
 
-				template<typename Fn, uint32... indice>
-				constexpr auto __invoke_impl(Fn&& fn, indice_pack<indice...>) const noexcept
+				template<
+					typename Fn,
+					uint32... indice
+				>
+				constexpr auto 
+					__invoke_impl(
+						Fn&& fn,
+						indice_pack<indice...>
+					) const noexcept
 				{
-					return partial(util::forward<Fn>(fn), ebo_at<indice>(util::move(storage))...);
+					return partial(
+						util::forward<Fn>(fn),
+						ebo_at<indice>(util::move(storage))...
+					);
 				}
 
 				
-				template<typename Fn, typename = check_t< is_function<Fn> >>
-				constexpr auto operator()(Fn* fn) const noexcept
+				template<
+					typename Fn,
+					typename = check_t< is_function<Fn> >
+				>
+				constexpr auto 
+					operator()(Fn* fn
+					) const noexcept
 				{
-					return __invoke_impl(util::forward<Fn*>(fn), make_indice<L>{});
+					return __invoke_impl(
+						util::forward<Fn*>(fn),
+						make_indice<L>{}
+					);
 				}
 
-				template<typename Fn, typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>  >
-				constexpr auto operator()(Fn& fn) const noexcept
+				template<
+					typename Fn,
+					typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>  
+				>
+				constexpr auto 
+				operator()(
+					Fn& fn
+					) const noexcept
 				{
-					return __invoke_impl(util::forward<Fn&>(fn), make_indice<L>{});
+					return __invoke_impl(
+						util::forward<Fn&>(fn),
+						make_indice<L>{}
+					);
 				}
 			};
 		}
 
-		constexpr fn_detail::create< fn_detail::capture_t > capture{};
+		namespace fn
+		{
+			constexpr fn_impl::create< fn_impl::capture_t > capture{};
+		}
+		
 	}
 }
 #line 20 "d:\\git\\core\\test\\test_mpl_function.cpp"
@@ -66291,9 +66783,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		
-		
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename Fn, typename... Gs>
 			struct combine_t
@@ -66308,37 +66798,61 @@ namespace ccdk
 				{}
 
 				constexpr combine_t(Fn && fn, Gs && ... gs)
-					: storage{ util::move(fn), util::move(gs)... }
+					: storage{ 
+						util::move(fn), 
+						util::move(gs)... 
+					}
 				{}
 
 				template<typename... Args>
+				__forceinline
 				auto __invoke_impl(uint_<0>, Args&&... args)
 				{
 					return ebo_at<0>(util::move(storage))(args...);
 				}
 
-				template<uint32 index, typename... Args>
-				auto __invoke_impl(uint_<index>, Args&&... args)
+				template<
+					uint32 index,
+					typename... Args
+				>
+				__forceinline
+				auto __invoke_impl(
+					uint_<index>,
+					Args&&... args
+				)
 				{
 					return ebo_at<index>(util::move(storage))(
-						__invoke_impl(uint_<index - 1>{},  util::forward<Args>(args)...)
+						__invoke_impl(
+							uint_<index - 1>{},
+							util::forward<Args>(args)...
+						)
 					);
 				}
 
 				template<typename... Args>
-				constexpr auto operator()(Args&&... args)
+				__forceinline constexpr
+				auto operator()(Args&&... args)
 				{
-					return __invoke_impl(uint_<L-1>{}, util::forward<Args>(args)...);
+					return __invoke_impl(
+						uint_<L-1>{},
+						util::forward<Args>(args)...
+					);
 				}
 			};
 		}
-		constexpr fn_detail::create<fn_detail::combine_t> combine{};
+
+		namespace fn
+		{
+			constexpr fn_impl::create<fn_impl::combine_t> combine{};
+		}
+		
 	}
 }
 #line 21 "d:\\git\\core\\test\\test_mpl_function.cpp"
 
-#line 1 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder2.h"
+#line 1 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
 #pragma once
+
 
 
 
@@ -66356,7 +66870,7 @@ namespace ccdk
 	namespace mpl
 	{
 		
-		namespace container
+		namespace ct_impl
 		{
 			template<uint32 K, typename V>
 			struct ref_item_t
@@ -66418,20 +66932,22 @@ namespace ccdk
 			};
 
 			template<uint32 K, typename... Args>
-			decltype(auto) ref_tuple_at(const container::ref_tuple<Args...>& t)
+			decltype(auto) ref_tuple_at(const ref_tuple<Args...>& t)
 			{
-				return container::ref_at<K>(t.storage);
+				return ref_at<K>(t.storage);
 			}
 		}
 
-		constexpr fn_detail::create_raw<container::ref_tuple> create_ref_tuple{};
+		namespace ct
+		{
+			constexpr fn_impl::create_raw< ct_impl::ref_tuple> create_ref_tuple{};
 
-		template<typename T> struct is_ref_tuple :false_ {};
-		template<typename... Args> struct is_ref_tuple< container::ref_tuple<Args...>>:true_ {};
-
+			template<typename T> struct is_ref_tuple :false_ {};
+			template<typename... Args> struct is_ref_tuple< ct_impl::ref_tuple<Args...>> :true_ {};
+		}
 	}
 }
-#line 10 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder2.h"
+#line 11 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
 #line 1 "d:\\git\\core\\ccdk\\mpl\\function\\operator.h"
 #pragma once
 
@@ -66443,14 +66959,120 @@ namespace ccdk
 	{
 		namespace op
 		{
+			struct index_t
+			{
+				template<typename T, typename U>
+				constexpr decltype(auto)
+					operator()(
+						T&& t,
+						U&& index
+						) const
+				{
+					return t[index];
+				}
+			};
+
+			
+			struct invoke_t
+			{
+				template<typename T, typename U>
+				constexpr decltype(auto)
+					operator()(
+						T&& t,
+						U&& u
+						) const
+				{
+					return t(util::forward<U>(u));
+				}
+
+
+				template<
+					typename T,
+					typename U1,
+					typename U2,
+					typename... Args
+				>
+					decltype(auto)
+					operator()(
+						T&& t,
+						U1&& u1,
+						U2&& u2,
+						Args&&... args) const
+				{
+					return t(
+						util::forward<U1>(u1),
+						util::forward<U2>(u2),
+						util::forward<Args>(args)...
+					);
+				}
+
+			};
+
+			struct post_dec_t
+			{
+				template<typename T>
+				constexpr decltype(auto)
+					operator()(T&& t) const
+				{
+					return t--;
+				}
+			};
+
+			struct post_inc_t
+			{
+				template<typename T>
+				constexpr decltype(auto)
+					operator()(T&& t) const
+				{
+					return t++;
+				}
+			};
+
+			struct arrow_t
+			{
+				template<typename T>
+				constexpr decltype(auto)
+					__arrow_impl(false_, T&& t) const
+				{
+					return t.operator->();
+				}
+
+				template<typename T>
+				constexpr decltype(auto)
+					__arrow_impl(true_, T&& t) const
+				{
+					return t;
+				}
+
+				template<typename T>
+				constexpr decltype(auto)
+					operator()(T&& t) const
+				{
+					return __arrow_impl(
+						typename is_pointer<remove_ref_t<T>>::type{},
+						util::forward<T>(t)
+					);
+				}
+			};
+
+			
+			constexpr post_dec_t post_dec{};
+			constexpr post_inc_t post_inc{};
+			constexpr index_t    index{};
+			constexpr arrow_t    arrow{};
+			constexpr invoke_t   invoke{};
+			
 
 
 
-			struct add_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 + t2; } }; constexpr add_t add{}; struct sub_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 - t2; } }; constexpr sub_t sub{}; struct div_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 / t2; } }; constexpr div_t div{}; struct mul_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 * t2; } }; constexpr mul_t mul{}; struct mod_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 % t2; } }; constexpr mod_t mod{}; struct shl_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 << t2; } }; constexpr shl_t shl{}; struct shr_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >> t2; } }; constexpr shr_t shr{}; struct logic_and_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 && t2; } }; constexpr logic_and_t logic_and{}; struct logic_or_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 || t2; } }; constexpr logic_or_t logic_or{}; struct bit_xor_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 ^ t2; } }; constexpr bit_xor_t bit_xor{}; struct bit_and_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 & t2; } }; constexpr bit_and_t bit_and{}; struct bit_or_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 | t2; } }; constexpr bit_or_t bit_or{}; struct add_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 += t2; } }; constexpr add_assign_t add_assign{}; struct sub_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 -= t2; } }; constexpr sub_assign_t sub_assign{}; struct mul_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 *= t2; } }; constexpr mul_assign_t mul_assign{}; struct div_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 /= t2; } }; constexpr div_assign_t div_assign{}; struct mod_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 %= t2; } }; constexpr mod_assign_t mod_assign{}; struct shl_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 <<= t2; } }; constexpr shl_assign_t shl_assign{}; struct shr_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >>= t2; } }; constexpr shr_assign_t shr_assign{}; struct bit_xor_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 ^= t2; } }; constexpr bit_xor_assign_t bit_xor_assign{}; struct bit_and_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 &= t2; } }; constexpr bit_and_assign_t bit_and_assign{}; struct bit_or_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 |= t2; } }; constexpr bit_or_assign_t bit_or_assign{}; struct less_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 < t2; } }; constexpr less_t less{}; struct greater_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 > t2; } }; constexpr greater_t greater{}; struct lequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 <= t2; } }; constexpr lequal_t lequal{}; struct gequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >= t2; } }; constexpr gequal_t gequal{}; struct equal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 == t2; } }; constexpr equal_t equal{}; struct nequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 != t2; } }; constexpr nequal_t nequal{}; ;
-#line 43 "d:\\git\\core\\ccdk\\mpl\\function\\operator.h"
+
+			struct add_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 + t2; } }; constexpr add_t add{}; struct sub_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 - t2; } }; constexpr sub_t sub{}; struct div_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 / t2; } }; constexpr div_t div{}; struct mul_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 * t2; } }; constexpr mul_t mul{}; struct mod_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 % t2; } }; constexpr mod_t mod{}; struct shl_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 << t2; } }; constexpr shl_t shl{}; struct shr_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >> t2; } }; constexpr shr_t shr{}; struct logic_and_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 && t2; } }; constexpr logic_and_t logic_and{}; struct logic_or_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 || t2; } }; constexpr logic_or_t logic_or{}; struct bit_xor_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 ^ t2; } }; constexpr bit_xor_t bit_xor{}; struct bit_and_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 & t2; } }; constexpr bit_and_t bit_and{}; struct bit_or_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 | t2; } }; constexpr bit_or_t bit_or{}; struct add_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 += t2; } }; constexpr add_assign_t add_assign{}; struct sub_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 -= t2; } }; constexpr sub_assign_t sub_assign{}; struct mul_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 *= t2; } }; constexpr mul_assign_t mul_assign{}; struct div_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 /= t2; } }; constexpr div_assign_t div_assign{}; struct mod_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 %= t2; } }; constexpr mod_assign_t mod_assign{}; struct shl_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 <<= t2; } }; constexpr shl_assign_t shl_assign{}; struct shr_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >>= t2; } }; constexpr shr_assign_t shr_assign{}; struct bit_xor_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 ^= t2; } }; constexpr bit_xor_assign_t bit_xor_assign{}; struct bit_and_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 &= t2; } }; constexpr bit_and_assign_t bit_and_assign{}; struct bit_or_assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 |= t2; } }; constexpr bit_or_assign_t bit_or_assign{}; struct less_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 < t2; } }; constexpr less_t less{}; struct greater_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 > t2; } }; constexpr greater_t greater{}; struct lequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 <= t2; } }; constexpr lequal_t lequal{}; struct gequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 >= t2; } }; constexpr gequal_t gequal{}; struct equal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 == t2; } }; constexpr equal_t equal{}; struct nequal_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 != t2; } }; constexpr nequal_t nequal{}; struct assign_t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 = t2; } }; constexpr assign_t assign{}; ;
+#line 148 "d:\\git\\core\\ccdk\\mpl\\function\\operator.h"
 
 			struct inc_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return ++ t; } }; struct dec_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return -- t; } }; struct deref_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return * t; } }; struct negative_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return - t; } }; struct positive_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return + t; } }; struct logic_not_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return ! t; } }; struct bit_reverse_t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return ~ t; } }; ;
-#line 52 "d:\\git\\core\\ccdk\\mpl\\function\\operator.h"
+#line 157 "d:\\git\\core\\ccdk\\mpl\\function\\operator.h"
+
+
 
 
 
@@ -66458,7 +67080,7 @@ namespace ccdk
 		}
 	}
 }
-#line 11 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder2.h"
+#line 12 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
 
 
 namespace ccdk
@@ -66468,7 +67090,6 @@ namespace ccdk
 		namespace ph
 		{
 			
-
 			template<int8 NC, int8 LT, int8 RT,typename...>
 			struct operation_t;
 
@@ -66487,6 +67108,65 @@ namespace ccdk
 				return a < b ? b : a;
 			}
 
+			
+			template<typename Op, typename T>
+			struct operation_t<0, 0, 0, Op, T>
+			{
+				static constexpr int N = 0;
+				static constexpr int L = 0;
+				typedef operation_t type;
+
+				Op fn;
+				T t;
+
+				operation_t(const T& inT)
+					:t{ inT }
+				{}
+
+				operation_t(T&& inT)
+					:t{ util::move(inT) }
+				{}
+
+				template<
+					int S,
+					typename U,
+					typename = check_t< ct::is_ref_tuple<T> >
+				>
+					decltype(auto)
+					invoke(U& u)
+				{
+					fn(u);
+				}
+			};
+
+
+			
+			template<int8 NC, int8 LT,  typename Op, typename T>
+			struct operation_t<NC, LT, 0, Op, T>
+			{
+				static constexpr int N = NC;
+				static constexpr int L = LT;
+				typedef operation_t type;
+
+				Op fn;
+				placeholder_t<T> t;
+
+				operation_t(placeholder_t<T>&& inT)
+					:t{ util::move(inT) }
+				{}
+
+				template<
+					int S,
+					typename U,
+					typename = check_t< ct::is_ref_tuple<U> >
+				>
+					decltype(auto)
+					invoke(const U& u)
+				{
+					return fn( t.template invoke<S>(u) );
+				}
+			};
+
 
 			
 			template<typename Op, typename T1, typename T2 >
@@ -66496,7 +67176,7 @@ namespace ccdk
 				static constexpr int N = 0;
 				static constexpr int L = 0;
 				typedef operation_t<0, 0,0, Op, T1, T2> type;
-			public:
+
 				Op fn;
 				T1 t1;
 				T2 t2;
@@ -66517,7 +67197,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -66556,7 +67236,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -66596,7 +67276,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -66630,7 +67310,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 					>
 					decltype(auto) 
 					invoke( const T& t ) const
@@ -66641,6 +67321,12 @@ namespace ccdk
 					);
 				}
 			};
+
+
+			
+
+
+
 
 			template<typename T>
 			struct placeholder_t
@@ -66691,7 +67377,7 @@ namespace ccdk
 				{
 					
 					return ptr->template invoke<0>(
-						create_ref_tuple(args...)
+						ct::create_ref_tuple(args...)
 					);
 				}
 
@@ -66700,6 +67386,34 @@ namespace ccdk
 					DebugValue("destruct");
 					ptr::safe_delete(ptr);
 				}
+
+
+				
+				template<
+					typename U,
+					typename = check_t< is_indice_pack<U> >
+				>
+					decltype(auto)
+					operator()(U&& u)
+				{
+					typedef operation_t<N, L, 0, op::invoke_t, T, U> operation;
+					return placeholder_t<operation>{
+						new operation{  util::move(*this) , util::forward<U>(u) }
+					};
+				}
+
+				
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) 
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, null_, U> operation;
+					return placeholder_t<operation>{
+						new operation{ util::move(*this), const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+
+				;
 			};
 
 			template<>
@@ -66711,8 +67425,8 @@ namespace ccdk
 				template<
 					int S,
 					typename U
-				  >
-				  decltype(auto)
+				>
+					decltype(auto)
 					invoke(
 						U& t
 					) const noexcept
@@ -66720,6 +67434,33 @@ namespace ccdk
 					return t.template at<S>();
 				}
 
+				
+				template<
+					typename U,
+					typename = check_t< not_< is_placeholder<U>>>
+					>
+				decltype(auto)
+					operator()(U&& u) const
+				{
+					DebugTypeName<U>();
+					typedef operation_t<N, L, 0, op::invoke_t, null_,  U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t<null_>{}, util::forward<U>(u) }
+					};
+				}
+
+				
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) const
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, null_, U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+
+				;
 			};
 
 
@@ -66741,61 +67482,38 @@ namespace ccdk
 				{
 					return t.template at<index-1>();
 				}
+
+
+				
+				template<
+					typename U,
+					typename = check_t< not_< is_placeholder<U>>>
+				>
+					decltype(auto)
+					operator()(U&& u) const
+				{
+					typedef operation_t<N, L, 0, op::invoke_t, int_<index>, U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, util::forward<U>(u) }
+					};
+				}
+
+				
+				template<typename U>
+				decltype(auto)
+					operator()(const placeholder_t<U>& p) const
+				{
+					typedef operation_t< -max(-N, -p.N), L, p.L, op::invoke_t, int_<index> , U> operation;
+					return placeholder_t<operation>{
+						new operation{ placeholder_t{}, const_cast<placeholder_t<U>&&>(p) }
+					};
+				}
+				
+
+				;
 			};
 
 			template<> struct placeholder_t<int_<0>> { placeholder_t() = delete; };
-
-
-			 
-			template<
-				typename T,
-				typename U,
-				typename = check_t< not_<is_placeholder<U>>>
-			>
-			auto operator+(const placeholder_t<T>& p, U&& u)
-			{
-				typedef operation_t< p.N, p.L, 0 , op::add_t, T, U> operation;
-				return placeholder_t< operation >{
-					new  operation{
-						const_cast<placeholder_t<T>&&>(p),
-						util::forward<U>(u)
-					}
-				};
-			}
-
-			template<
-				typename T,
-				typename U,
-				typename = check_t< not_<is_placeholder<U>>>
-			>
-			auto operator+(U&& u, const placeholder_t<T>& p)
-			{
-				typedef operation_t< p.N, 0, p.L , op::add_t, U, T> operation;
-				return placeholder_t< operation >{ 
-					new  operation{ 
-						util::forward<U>(u),
-						const_cast<placeholder_t<T>&&>(p)
-					} 
-				};
-			}
-			
-			template<
-				typename T,
-				typename U
-			>
-			auto operator + (
-				const placeholder_t<T>& t,
-				const placeholder_t<U>& u)
-			{
-
-				typedef operation_t< -max(-u.N, -t.N),  t.L , u.L , op::add_t, T, U> operation;
-				return placeholder_t< operation >{ 
-					new  operation{ 
-						const_cast<placeholder_t<T>&&>(t),
-						const_cast<placeholder_t<U>&&>(u) 
-					} 
-				};
-			}
 
 			using anonymous_holder =  placeholder_t<null_> ;
 			template<int32 index> using number_holder =  placeholder_t<int_<index>> ;
@@ -66815,6 +67533,7 @@ namespace ccdk
 		}
 
 
+		
 		namespace ph
 		{
 
@@ -66835,17 +67554,55 @@ namespace ccdk
 
 
 
-			template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator op (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: -_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator op (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: -_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator op ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: -_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};};
+
+
+
+
+
+
+
+
+
+
+
+
+			template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator + (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: add_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator + (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: add_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator + ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: add_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator - (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: sub_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator - (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: sub_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator - ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: sub_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator / (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: div_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator / (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: div_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator / ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: div_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator * (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: mul_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator * (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: mul_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator * ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: mul_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator % (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: mod_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator % (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: mod_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator % ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: mod_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator << (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: shl_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator << (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: shl_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator << ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: shl_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >> (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: shr_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >> (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: shr_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator >> ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: shr_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator && (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: logic_and_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator && (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: logic_and_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator && ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: logic_and_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator || (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: logic_or_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator || (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: logic_or_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator || ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: logic_or_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator ^ (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_xor_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator ^ (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_xor_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator ^ ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_xor_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator & (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_and_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator & (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_and_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator & ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_and_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator | (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_or_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator | (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_or_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator | ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_or_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator += (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: add_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator += (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: add_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator += ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: add_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator -= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: sub_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator -= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: sub_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator -= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: sub_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator *= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: mul_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator *= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: mul_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator *= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: mul_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator /= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: div_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator /= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: div_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator /= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: div_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator %= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: mod_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator %= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: mod_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator %= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: mod_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator <<= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: shl_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator <<= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: shl_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator <<= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: shl_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >>= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: shr_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >>= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: shr_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator >>= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: shr_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator ^= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_xor_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator ^= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_xor_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator ^= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_xor_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator &= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_and_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator &= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_and_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator &= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_and_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator |= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: bit_or_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator |= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: bit_or_assign_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator |= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: bit_or_assign_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator < (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: less_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator < (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: less_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator < ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: less_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator > (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: greater_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator > (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: greater_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator > ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: greater_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator <= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: lequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator <= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: lequal_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator <= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: lequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >= (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: gequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator >= (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: gequal_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator >= ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: gequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator == (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: equal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator == (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: equal_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator == ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: equal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator != (const placeholder_t<T>& p, U&& u) { typedef operation_t< p.N, p.L, 0, op:: nequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(p),util::forward<U>(u)}};} template<typename T,typename U,typename = check_t< not_<is_placeholder<U>>>> auto operator != (U&& u, const placeholder_t<T>& p) { typedef operation_t< p.N, 0, p.L, op:: nequal_t, U, T> operation; return placeholder_t< operation >{ new operation{util::forward<U>(u),const_cast<placeholder_t<T>&&>(p)}};} template< typename T, typename U > auto operator != ( const placeholder_t<T>& t, const placeholder_t<U>& u) { typedef operation_t< -max(-u.N, -t.N), t.L, u.L, op:: nequal_t, T, U> operation; return placeholder_t< operation >{ new operation{const_cast<placeholder_t<T>&&>(t), const_cast<placeholder_t<U>&&>(u)}};} ;
+#line 527 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
+
+			template<typename T> decltype(auto) operator * (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: deref_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator ++ (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: inc_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator -- (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: dec_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator - (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: negative_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator + (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: positive_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator ! (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: logic_not_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator ~ (const placeholder_t<T>& t) { typedef operation_t< t.N, t.L, 0, op:: bit_reverse_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} ;
+#line 536 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
+
+			template<typename T> decltype(auto) operator ++ (const placeholder_t<T>& t, int) { typedef operation_t< t.N, t.L, 0, op:: post_inc_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} template<typename T> decltype(auto) operator -- (const placeholder_t<T>& t, int) { typedef operation_t< t.N, t.L, 0, op:: post_dec_t, T> operation; return placeholder_t< operation >{ new operation{ const_cast<placeholder_t<T>&&>(t) } };} ;
+#line 540 "d:\\git\\core\\ccdk\\mpl\\function\\placeholder.h"
 		}
 
 	}
 }
 #line 23 "d:\\git\\core\\test\\test_mpl_function.cpp"
 
+#line 1 "d:\\git\\core\\ccdk\\mpl\\base\\sfinae.h"
+#pragma once
+
+
+
+namespace ccdk
+{
+	namespace mpl
+	{
+
+		template<typename... Args> struct sfinae:true_ {};
+
+	}
+}
+#line 25 "d:\\git\\core\\test\\test_mpl_function.cpp"
+
 
 using namespace ccdk;
 using namespace ccdk::mpl;
+using namespace ccdk::mpl::fn;
+using namespace ccdk::mpl::placeholder;
 using namespace ccdk::mpl::literals;
+
 
 template<typename T, typename = void> struct test_when :test_when<T, when > {};
 template<typename T, bool condi>    struct test_when<T, match_default<condi> > { static constexpr int value = 1; };
@@ -66899,22 +67656,17 @@ void fn_impl(case_and<is_pointer, is_void >, T&& t)
 template<typename T, typename P = remove_ref_t<T>>
 void fn_select_test(T&& t)
 {
-	
-	
-	
-
-	
-
-	
-	fn_impl(select_case<
-		is_function<P>,
-		is_function_ptr<P>,
-		is_function_obj<P>,
-		is_mfn_ptr<P>,
-		or_<is_float<P>, is_integer<P>>,
-		and_< is_pointer<P>, is_void<remove_pointer_t<P>>>
-	>,
-		util::forward<T>(t));
+	::fn_impl(
+		select_case<
+			is_function<P>,
+			is_function_ptr<P>,
+			is_function_obj<P>,
+			is_mfn_ptr<P>,
+			or_<is_float<P>, is_integer<P>>,
+			and_< is_pointer<P>, is_void<remove_pointer_t<P>>>
+		>,
+		util::forward<T>(t)
+	);
 }
 
 void simple_nfn() {}
@@ -67000,20 +67752,75 @@ auto test_const(const T& t)
 }
 
 
-using namespace ccdk::mpl::placeholder;
+void test(int a) noexcept
+{
+	DebugValue(a);
+}
 
+void test(int a, int b)
+{
+	DebugValue(b);
+}
+
+
+
+template<typename T, typename... Args>
+struct is_invocable
+{
+	template<typename U, typename P = decltype( declval<U>()( declval<Args>()... ) )>
+	static constexpr bool sfinae(int) { return true; }
+
+	template<typename U>
+	static constexpr bool sfinae(...) { return false; }
+
+	static constexpr bool value = sfinae<T>(0);
+};
+
+struct TT
+{
+	auto operator()(int)
+	{
+		return 0;
+	}
+
+	auto operator()(int, int)
+	{
+		return 0;
+	}
+
+	auto invoke(int)
+	{
+		return 0;
+	}
+};
 
 
 int main()
-{
-	{
-		auto fn = _-_;
-		DebugValue(fn(1, 2));
-	}
-	op:: add_t {}(1, 2);
+{ 
+	void(*test_ptr)(int, int) = test;
+	typedef decltype(test_ptr) test_fn;
+	DebugValue(is_invocable<test_fn, int>::value);
+	DebugValue(is_invocable<int, int>::value);
+	DebugValue(is_invocable<TT, int>::value);
 
-	getchar();
-	return 0;
+	std::cout<<"\n ================ " << "test invoker" << " ================" << std::endl;;
+	DebugValue(has_invoker_v<TT, null_, int,int>);
+	DebugValue(has_invoker_v<TT, null_, int>);
+	DebugValue(has_invoker_v<TT>);
+	DebugValue(has_invoker_v<test_copy_t>);
+	&test_copy_t::operator();
+
+	int (TT::*mfn_ptr)(int,int) = &TT::operator();
+	using test_mfn = decltype(mfn_ptr);
+	DebugValue(is_invocable<TT, int, int>::value);
+	DebugValue(is_invocable<test_mfn, int>::value);
+	DebugValue(is_invocable<test_mfn, int, int>::value);
+	
+	
+
+	test_copy_t tt{};
+	const test_copy_t ctt;
+
 	std::cout<<"\n ================ " << "test when dispatch" << " ================" << std::endl;;
 	static_assert(test_when_v<int> == 3, "");;
 	static_assert(test_when_v<float> == 3, "");;
@@ -67031,34 +67838,64 @@ int main()
 	fn_select_test(1.2f);
 	fn_select_test((void*)0);
 
+	std::cout<<"\n ================ " << "bind member function" << " ================" << std::endl;;
+	auto mfn1 = bind_mfn(&test_copy_t::test_mfn, tt);
+	auto mfn2 = bind_mfn(&test_copy_t::test_mfn, ctt);
+	auto mfn3 = bind_mfn(&test_copy_t::test_mfn, &tt);
+	auto mfn4 = bind_mfn(&test_copy_t::test_mfn, &ctt);
+	mfn1(1, "bind mfn1 ");
+	mfn2(2, "bind mfn2 ");
+	mfn3(2, "bind mfn3 ");
+	mfn4(2, "bind mfn4 ");
+
 	std::cout<<"\n ================ " << "test partial" << " ================" << std::endl;;
 	std::cout<<"\n --- " << "function object" << " --- " << std::endl;;
-	test_copy_t tt{};
-	partial(tt, 1)(" hello,partial copy object");
-	partial(test_copy_t{}, 1)(" hello,partial move object");
-	std::cout<<"\n --- " << "function/function pointer" << " --- " << std::endl;;
-	partial(test_normal_function, test_copy_t{})("hello,partial function");
-	partial(&test_normal_function, test_copy_t{})("hello,partial function");
-	partial(test_normal_function, tt)("hello,partial function");
-	partial(&test_normal_function, tt)("hello,partial function");
-	std::cout<<"\n --- " << "member function pointer" << " --- " << std::endl;;
-	partial(&test_copy_t::test_mfn, tt)(2,"hello, partial member function");
-	auto part = partial(&test_copy_t::test_mfn, tt)(2);
-	int ret1 = part("hello, partial member function");
-	DebugValue(ret1);
-	DebugValueTypeName(part);
+	
+	
+	
+	getchar();
+	return 0;
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 
+	
+	
+	
+	
+	
+	getchar();
+	return 0;
 
 
-	std::cout<<"\n ================ " << "test combine" << " ================" << std::endl;;
-	auto cb1 = combine(call1, call2, call3);
-	DebugValue(cb1(3, "hello,combine"));
+	
+	
 
-	std::cout<<"\n ================ " << "test capture" << " ================" << std::endl;;
-	auto cap1 = capture(4)(call1);
-	DebugValue(cap1("hello, capture"));
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
 
 	getchar();
 	return 0;

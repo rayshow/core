@@ -57,13 +57,13 @@ namespace ccdk
 
 				template<
 					int S,
-					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename U,
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
-					invoke(T& t)
+					invoke(U& u)
 				{
-					fn(t);
+					fn(u);
 				}
 			};
 
@@ -86,7 +86,7 @@ namespace ccdk
 				template<
 					int S,
 					typename U,
-					typename = check_t< is_ref_tuple<U> >
+					typename = check_t< ct::is_ref_tuple<U> >
 				>
 					decltype(auto)
 					invoke(const U& u)
@@ -125,7 +125,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -164,7 +164,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -204,7 +204,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 				>
 					decltype(auto)
 					invoke(const T& t) const
@@ -238,7 +238,7 @@ namespace ccdk
 				template<
 					int S,
 					typename T,
-					typename = check_t< is_ref_tuple<T> >
+					typename = check_t< ct::is_ref_tuple<T> >
 					>
 					decltype(auto) 
 					invoke( const T& t ) const
@@ -305,7 +305,7 @@ namespace ccdk
 				{
 					//created tuple is right-ref
 					return ptr->template invoke<0>(
-						create_ref_tuple(args...)
+						ct::create_ref_tuple(args...)
 					);
 				}
 

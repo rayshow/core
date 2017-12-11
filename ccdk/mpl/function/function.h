@@ -18,7 +18,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace function_detail
+		namespace fn_impl
 		{
 			struct bad_invoke_exception 
 				:public std::exception
@@ -133,135 +133,139 @@ namespace ccdk
 			};
 		}
 
-		//this implements of function have some defects
-		//1. member function's owner object lost const info, so const obj can also call non-const member function
-		//2. can't valid member function 's owner type is coincide with input object
-		//3. parameter need careful valid
-		//4. return need check
-		// also some merits
-		//1. universal interface
-		//2. lighter and effecient then std::function, only 2-3 pointer, a virtual call consume
-		//3. clear then std::function
-		template<typename T>
-		struct function;
-
-		template<typename Ret, typename... Args>
-		struct function<Ret(Args...)>
+		namespace fn
 		{
-			typedef function<Ret(Args...)> type;
-			static constexpr uint32 L = sizeof...(Args);
-			function_detail::invoker<Ret, Args...> *fn;
-
-			function() noexcept : fn{ nullptr } {}
-
-			function(ptr::nullptr_t) noexcept : fn{ nullptr } {}
-
-			~function() { CCDK_SAFE_DELETE(fn); }
-
-			template<typename Fn>
-			function(Fn&& fn, true_, false_, false_) noexcept
-				: fn(new(ptr::nothrow) function_detail::normal_function_invoker<
-					Fn, Ret, Args...>{ fn })
-			{
-				DebugValue("function: normal ");
-			}
-
-			//is function obj
-			template<typename Fn>
-			function(Fn&& fn, false_, true_, false_) noexcept
-				:fn{ new(ptr::nothrow) function_detail::function_object_invoker<
-					Fn, Ret, Args...>{ util::move(fn) } }
-			{
-				DebugValue("function: object ");
-			}
-
-			//is mfn function ptr
-			template<typename Fn>
-			CCDK_FORCEINLINE
-			function(
-				Fn&& fn,
-				false_,
-				false_,
-				true_
-			) noexcept
-				:fn{ new(ptr::nothrow) function_detail::member_function_invoker<
-					mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
-			{
-				DebugValue("function: member ");
-			}
-
-			//just copy and then move it, call proxy constructor
-			template<typename Fn>
-			CCDK_FORCEINLINE
-			function(Fn fn) noexcept
-				: function(
-					util::move(fn),
-					typename is_function_ptr<Fn>::type{},
-					typename is_function_obj<Fn>::type{},
-					typename is_mfn_ptr<Fn>::type{})
-			{}
-
-			CCDK_FORCEINLINE
-			operator bool() noexcept
-			{
-				return !!fn;
-			}
-
-			//t is const pointer
+			//this implements of function have some defects
+			//1. member function's owner object lost const info, so const obj can also call non-const member function
+			//2. can't valid member function 's owner type is coincide with input object
+			//3. parameter need careful valid
+			//4. return need check
+			// also some merits
+			//1. universal interface
+			//2. lighter and effecient then std::function, only 2-3 pointer, a virtual call consume
+			//3. clear then std::function
 			template<typename T>
-			CCDK_FORCEINLINE
-			Ret __invoke_impl_arg_type(true_, T&& t, Args... args)
-			{
-				fn->set_private_data((void*)t);
-				return fn->invoke(
-					util::forward<Args>(args)...
-				);
-			}
+			struct function;
 
-			//t is object 
-			template<typename T>
-			CCDK_FORCEINLINE
-			Ret __invoke_impl_arg_type(false_, T&& t, Args... args)
+			template<typename Ret, typename... Args>
+			struct function<Ret(Args...)>
 			{
-				fn->set_private_data((void*)(&(t)));
-				return fn->invoke(
-					util::forward<Args>(args)...
-				);
-			}
+				typedef function<Ret(Args...)> type;
+				static constexpr uint32 L = sizeof...(Args);
+				fn_impl::invoker<Ret, Args...> *fn;
 
-			//member function call
-			template<typename... Args1>
-			CCDK_FORCEINLINE
-			Ret __invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1)
-			{
-				typedef remove_ref_t< arg_pack_first_t<Args1...>> first_type;
-				return __invoke_impl_arg_type(
-					typename is_pointer<first_type>::type{},
-					util::forward<Args1>(args1)...
-				);
-			}
+				function() noexcept : fn{ nullptr } {}
 
-			//normal function or  function object
-			template<typename... Args1>
-			CCDK_FORCEINLINE
-			Ret __invoke_impl_arg_len(uint_<L>, Args1&&... args1)
-			{
-				return fn->invoke(
-					util::forward<Args1>(args1)...
-				);
-			}
+				function(ptr::nullptr_t) noexcept : fn{ nullptr } {}
 
-			template<typename... Args1>
-			CCDK_FORCEINLINE
-			Ret operator()(Args1... args1)
-			{
-				//dispatch by parameter length
-				return __invoke_impl_arg_len(
-					uint_<sizeof...(Args1)>{},
-					util::forward<Args1>(args1)...
-				);
-			}
-		};
+				~function() { CCDK_SAFE_DELETE(fn); }
 
+				template<typename Fn>
+				function(Fn&& fn, true_, false_, false_) noexcept
+					: fn(new(ptr::nothrow) fn_impl::normal_function_invoker<
+						Fn, Ret, Args...>{ fn })
+				{
+					DebugValue("function: normal ");
+				}
+
+				//is function obj
+				template<typename Fn>
+				function(Fn&& fn, false_, true_, false_) noexcept
+					:fn{ new(ptr::nothrow) fn_impl::function_object_invoker<
+						Fn, Ret, Args...>{ util::move(fn) } }
+				{
+					DebugValue("function: object ");
+				}
+
+				//is mfn function ptr
+				template<typename Fn>
+				CCDK_FORCEINLINE
+				function(
+					Fn&& fn,
+					false_,
+					false_,
+					true_
+				) noexcept
+					:fn{ new(ptr::nothrow) fn_impl::member_function_invoker<
+						mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
+				{
+					DebugValue("function: member ");
+				}
+
+				//just copy and then move it, call proxy constructor
+				template<typename Fn>
+				CCDK_FORCEINLINE
+				function(Fn fn) noexcept
+					: function(
+						util::move(fn),
+						typename is_function_ptr<Fn>::type{},
+						typename is_function_obj<Fn>::type{},
+						typename is_mfn_ptr<Fn>::type{})
+				{}
+
+				CCDK_FORCEINLINE
+				operator bool() noexcept
+				{
+					return !!fn;
+				}
+
+				//t is const pointer
+				template<typename T>
+				CCDK_FORCEINLINE
+				Ret __invoke_impl_arg_type(true_, T&& t, Args... args)
+				{
+					fn->set_private_data((void*)t);
+					return fn->invoke(
+						util::forward<Args>(args)...
+					);
+				}
+
+				//t is object 
+				template<typename T>
+				CCDK_FORCEINLINE
+				Ret __invoke_impl_arg_type(false_, T&& t, Args... args)
+				{
+					fn->set_private_data((void*)(&(t)));
+					return fn->invoke(
+						util::forward<Args>(args)...
+					);
+				}
+
+				//member function call
+				template<typename... Args1>
+				CCDK_FORCEINLINE
+				Ret __invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1)
+				{
+					typedef remove_ref_t< arg_pack_first_t<Args1...>> first_type;
+					return __invoke_impl_arg_type(
+						typename is_pointer<first_type>::type{},
+						util::forward<Args1>(args1)...
+					);
+				}
+
+				//normal function or  function object
+				template<typename... Args1>
+				CCDK_FORCEINLINE
+				Ret __invoke_impl_arg_len(uint_<L>, Args1&&... args1)
+				{
+					return fn->invoke(
+						util::forward<Args1>(args1)...
+					);
+				}
+
+				template<typename... Args1>
+				CCDK_FORCEINLINE
+				Ret operator()(Args1... args1)
+				{
+					//dispatch by parameter length
+					return __invoke_impl_arg_len(
+						uint_<sizeof...(Args1)>{},
+						util::forward<Args1>(args1)...
+					);
+				}
+
+			};  //function 
+
+		} //fn
 	}
 }

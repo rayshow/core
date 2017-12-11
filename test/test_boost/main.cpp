@@ -1,24 +1,22 @@
-//#include<boost/phoenix.hpp>
-#include<boost/proto/proto.hpp>
-#include<utility>
 
 #include<ccdk/type.h>
+#include<ccdk/mpl/function/create.h>
+#include<ccdk/mpl/function/partial.h>
+#include<cstdio>
 
-using namespace boost::proto;
+#include<boost/proto/proto.hpp>
 
-terminal< int >::type _int;
 
-template<typename T>
-auto eval(T const& t)
+void test()
 {
-	default_context ctx;
-	return proto::eval(t, ctx);
+	DebugValue("hello");
 }
+
+using namespace ccdk::mpl::fn;
 
 int main()
 {
-	auto a = _int + 1;
-	DebugTypeName< decltype(a) >();
-	getchar();
+	auto p = partial(test);
+
 	return 0;
 }

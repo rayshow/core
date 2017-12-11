@@ -10,7 +10,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename T>
 			struct value_t
@@ -55,7 +55,7 @@ namespace ccdk
 
 		namespace fn
 		{
-			constexpr fn_detail::create<fn_detail::val_t> val{};
+			constexpr fn_impl::create<fn_impl::val_t> val{};
 		}
 		
 	}

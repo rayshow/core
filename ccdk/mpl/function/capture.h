@@ -14,7 +14,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename... Args>
 			struct capture_t
@@ -78,7 +78,7 @@ namespace ccdk
 
 		namespace fn
 		{
-			constexpr fn_detail::create< fn_detail::capture_t > capture{};
+			constexpr fn_impl::create< fn_impl::capture_t > capture{};
 		}
 		
 	}

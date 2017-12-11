@@ -11,7 +11,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace fn_detail
+		namespace fn_impl
 		{
 			template<typename Fn, typename... Gs>
 			struct combine_t
@@ -21,20 +21,22 @@ namespace ccdk
 				typedef tuple_storage<L, make_indice<L>, Fn, Gs...> value_type;
 				value_type storage;
 
-				constexpr combine_t(Fn const& fn, Gs const& ... gs)
+				CCDK_FORCEINLINE constexpr 
+				combine_t(Fn const& fn, Gs const& ... gs)
 					: storage{ fn, gs... }
 				{}
 
-				constexpr combine_t(Fn && fn, Gs && ... gs)
+				CCDK_FORCEINLINE constexpr 
+				combine_t(Fn && fn, Gs && ... gs)
 					: storage{ 
 						util::move(fn), 
-						util::move(gs)... 
-					}
+						util::move(gs)...  }
 				{}
 
 				template<typename... Args>
-				CCDK_FORCEINLINE
-				auto __invoke_impl(uint_<0>, Args&&... args)
+				CCDK_FORCEINLINE constexpr
+				decltype(auto)
+				__invoke_impl(uint_<0>, Args&&... args)
 				{
 					return ebo_at<0>(util::move(storage))(args...);
 				}
@@ -43,11 +45,9 @@ namespace ccdk
 					uint32 index,
 					typename... Args
 				>
-				CCDK_FORCEINLINE
-				auto __invoke_impl(
-					uint_<index>,
-					Args&&... args
-				)
+				CCDK_FORCEINLINE constexpr
+				decltype(auto)
+				__invoke_impl( uint_<index>, Args&&... args )
 				{
 					return ebo_at<index>(util::move(storage))(
 						__invoke_impl(
@@ -59,7 +59,8 @@ namespace ccdk
 
 				template<typename... Args>
 				CCDK_FORCEINLINE constexpr
-				auto operator()(Args&&... args)
+				decltype(auto)
+				operator()(Args&&... args)
 				{
 					return __invoke_impl(
 						uint_<L-1>{},
@@ -71,7 +72,7 @@ namespace ccdk
 
 		namespace fn
 		{
-			constexpr fn_detail::create<fn_detail::combine_t> combine{};
+			constexpr fn_impl::create<fn_impl::combine_t> combine{};
 		}
 		
 	}

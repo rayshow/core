@@ -162,8 +162,24 @@ struct test_copy_t
 		return a;
 	}
 };
+struct test_constexpr_t
+{
+	int test_mfn(int a, const char*msg)
+	{
+		DebugValue(msg);
+		return a;
+	}
+};
 
-int test_normal_function(const test_copy_t& t, const char* msg)
+
+
+int test_normal_copy_function(const test_copy_t& t, const char* msg)
+{
+	DebugValue(msg);
+	return 0;
+}
+
+int test_normal_move_function(test_copy_t&& t, const char* msg)
 {
 	DebugValue(msg);
 	return 0;

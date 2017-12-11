@@ -7,7 +7,7 @@ namespace ccdk
 	namespace mpl
 	{
 		//special use
-		namespace container
+		namespace ct_impl
 		{
 			template<uint32 K, typename V>
 			struct ref_item_t
@@ -69,16 +69,18 @@ namespace ccdk
 			};
 
 			template<uint32 K, typename... Args>
-			decltype(auto) ref_tuple_at(const container::ref_tuple<Args...>& t)
+			decltype(auto) ref_tuple_at(const ref_tuple<Args...>& t)
 			{
-				return container::ref_at<K>(t.storage);
+				return ref_at<K>(t.storage);
 			}
 		}
 
-		constexpr fn_detail::create_raw<container::ref_tuple> create_ref_tuple{};
+		namespace ct
+		{
+			constexpr fn_impl::create_raw< ct_impl::ref_tuple> create_ref_tuple{};
 
-		template<typename T> struct is_ref_tuple :false_ {};
-		template<typename... Args> struct is_ref_tuple< container::ref_tuple<Args...>>:true_ {};
-
+			template<typename T> struct is_ref_tuple :false_ {};
+			template<typename... Args> struct is_ref_tuple< ct_impl::ref_tuple<Args...>> :true_ {};
+		}
 	}
 }

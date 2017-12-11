@@ -6,7 +6,6 @@ namespace ccdk
 	{
 		namespace util
 		{
-			template<typename T>
 			struct noncopyable
 			{
 				noncopyable() = default;

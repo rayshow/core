@@ -9,9 +9,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T>
-		struct is_invokable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
-
+		template<typename T> struct is_invokable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
 	}
 }
 

@@ -21,10 +21,15 @@
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/container/ref_tuple.h>
+#include<ccdk/mpl/base/sfinae.h>
+
 
 using namespace ccdk;
 using namespace ccdk::mpl;
+using namespace ccdk::mpl::fn;
+using namespace ccdk::mpl::placeholder;
 using namespace ccdk::mpl::literals;
+
 
 template<typename T, typename = void> struct test_when :test_when<T, when > {};
 template<typename T, bool condi>    struct test_when<T, match_default<condi> > { static constexpr int value = 1; };
@@ -78,22 +83,17 @@ void fn_impl(case_and<is_pointer, is_void >, T&& t)
 template<typename T, typename P = remove_ref_t<T>>
 void fn_select_test(T&& t)
 {
-	//DebugTypeName< case_val_t<
-	//	and_<is_pointer<P>, is_integer<remove_pointer_t<P>> >
-	//	, true> >();
-
-	//DebugTypeName< case_and<is_pointer, is_integer> >();
-
-	//static dispatch
-	fn_impl(select_case<
-		is_function<P>,
-		is_function_ptr<P>,
-		is_function_obj<P>,
-		is_mfn_ptr<P>,
-		or_<is_float<P>, is_integer<P>>,
-		and_< is_pointer<P>, is_void<remove_pointer_t<P>>>
-	>,
-		util::forward<T>(t));
+	::fn_impl(
+		select_case<
+			is_function<P>,
+			is_function_ptr<P>,
+			is_function_obj<P>,
+			is_mfn_ptr<P>,
+			or_<is_float<P>, is_integer<P>>,
+			and_< is_pointer<P>, is_void<remove_pointer_t<P>>>
+		>,
+		util::forward<T>(t)
+	);
 }
 
 void simple_nfn() {}
@@ -179,45 +179,89 @@ auto test_const(const T& t)
 }
 
 
-using namespace ccdk::mpl::placeholder;
-
-struct test_arrow
+void test(int a) noexcept
 {
-	int value = 1;
-};
+	DebugValue(a);
 
-int print(int i)
+}
+
+void test(int a, int b)
 {
-	DebugValue(i);
-	return i;
+	DebugValue(b);
 }
 
 
 
-int main()
+template<typename T, typename... Args>
+struct is_invocable
 {
-	//auto get_element = _->value;
-	//test_arrow *ta = new test_arrow{};
+	template<typename U, typename P = decltype( declval<U>()( declval<Args>()... ) )>
+	static constexpr bool sfinae(int) { return true; }
+
+	template<typename U>
+	static constexpr bool sfinae(...) { return false; }
+
+	static constexpr bool value = sfinae<T>(0);
+};
+
+struct TT
+{
+	auto operator[](int)
+	{
+
+	}
+	auto operator()(int)
+	{
+		return 0;
+	}
+
+	auto operator()(int, int)
+	{
+		return 0;
+	}
+
+	auto invoke(int)
+	{
+		return 0;
+	}
+};
+
+int test_inc2(int a) noexcept
+{
+	return a + 1;
+}
+
+int main()
+{ 
+	void(*test_ptr)(int, int) = test;
+	typedef decltype(test_ptr) test_fn;
+	DebugValue(is_invocable<test_fn, int>::value);
+	DebugValue(is_invocable<int, int>::value);
+	DebugValue(is_invocable<TT, int>::value);
+
+	DebugNewTitle("test invoker");
+	DebugValue(has_invoker_v<TT, null_, int,int>);
+	DebugValue(has_invoker_v<TT, null_, int>);
+	DebugValue(has_invoker_v<TT>);
+	DebugValue(has_invoker_v<test_copy_t>);
+
+
+	int (TT::*mfn_ptr)(int,int) = &TT::operator();
+	using test_mfn = decltype(mfn_ptr);
+	DebugValue(is_invocable<TT, int, int>::value);
+	DebugValue(is_invocable<test_mfn, int>::value);
+	DebugValue(is_invocable<test_mfn, int, int>::value);
 	
-	//op::arrow(ta)->value;
-
-	//_->value;
-
 	
-	auto invoke = _(1)+_;
-	DebugValueTypeName(invoke);
-	invoke(print,1);
 
-	/*auto invoke2 = _(indice_pack<1>{});
-	invoke2(print, 1);*/
+	test_copy_t tt{};
+	const test_copy_t ctt;
+	constexpr test_constexpr_t cxtt;
 
-	
-	getchar();
-	return 0;
 	DebugNewTitle("test when dispatch");
 	AssertTrue(test_when_v<int> == 3);
 	AssertTrue(test_when_v<float> == 3);
-	AssertTrue(test_when_v<void> == 2); 
+	AssertTrue(test_when_v<void> == 2);
 	AssertTrue(test_when_v<const int*> == 4);
 	AssertTrue(test_when_v<nullptr_t> == 1);
 
@@ -231,34 +275,60 @@ int main()
 	fn_select_test(1.2f);
 	fn_select_test((void*)0);
 
+	DebugNewTitle("bind member function");
+	auto mfn1 = bind_mfn(&test_copy_t::test_mfn, tt);
+	auto mfn2 = bind_mfn(&test_copy_t::test_mfn, ctt);
+	auto mfn3 = bind_mfn(&test_copy_t::test_mfn, &tt);
+	auto mfn4 = bind_mfn(&test_copy_t::test_mfn, &ctt);
+	mfn1(1, "bind mfn1 ");
+	mfn2(2, "bind mfn2 ");
+	mfn3(3, "bind mfn3 ");
+	mfn4(4, "bind mfn4 ");
+
 	DebugNewTitle("test partial");
 	DebugSubTitle("function object");
-	test_copy_t tt{};
 	partial(tt, 1)(" hello,partial copy object");
-	partial(test_copy_t{}, 1)(" hello,partial move object");
+	partial(util::move(tt), 1)(" hello,partial move object");
+	
 	DebugSubTitle("function/function pointer");
-	partial(test_normal_function, test_copy_t{})("hello,partial function");
-	partial(&test_normal_function, test_copy_t{})("hello,partial function");
-	partial(test_normal_function, tt)("hello,partial function");
-	partial(&test_normal_function, tt)("hello,partial function");
+	partial(test_normal_copy_function, util::move(tt))("hello,partial function");
+	partial(test_normal_move_function, util::move(tt))("hello,partial function");
+	partial(&test_normal_copy_function, util::move(tt))("hello,partial function");
+	partial(&test_normal_move_function, util::move(tt))("hello,partial function");
+	partial(test_normal_copy_function, tt)("hello,partial function");
+	partial(test_normal_move_function, tt)("hello,partial function");
+	partial(&test_normal_copy_function, tt)("hello,partial function");
+	partial(&test_normal_move_function, tt)("hello,partial function");
 	DebugSubTitle("member function pointer");
-	partial(&test_copy_t::test_mfn, tt)(2,"hello, partial member function");
-	auto part = partial(&test_copy_t::test_mfn, tt)(2);
-	int ret1 = part("hello, partial member function");
-	DebugValue(ret1);
-	DebugValueTypeName(part);
+	partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
+	partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
+	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
-	/*DebugNewTitle("test function");
-	function<void(test_copy_t&, const char*)> nfn1{ test_normal_function };
-	nfn1(tt, "normal function invoke");*/
 
-	DebugNewTitle("test combine");
-	auto cb1 = combine(call1, call2, call3);
-	DebugValue(cb1(3, "hello,combine"));
+	DebugNewTitle("combine");
+	//1+1+2+3+4
+	struct test_combine_mfn { int operator()(int a) { return a + 3; } int inc3(int a) { return a + 4;} };
+	test_combine_mfn tcm{};
+	DebugValue( combine(op::inc, op::inc, test_inc2, test_combine_mfn{}, bind_mfn(&test_combine_mfn::inc3, tcm) )(1));
+	constexpr auto a =  combine(op::inc, op::inc);
 
-	DebugNewTitle("test capture");
-	auto cap1 = capture(4)(call1);
-	DebugValue(cap1("hello, capture"));
+	
+	getchar();
+	return 0;
+
+
+	
+	
+
+	///*DebugNewTitle("test function");
+	//function<void(test_copy_t&, const char*)> nfn1{ test_normal_function };
+	//nfn1(tt, "normal function invoke");*/
+	//DebugNewTitle("test combine");
+	//auto cb1 = combine(call1, call2, call3);
+	//DebugValue(cb1(3, "hello,combine"));
+	//DebugNewTitle("test capture");
+	//auto cap1 = capture(4)(call1);
+	//DebugValue(cap1("hello, capture"));
 
 	getchar();
 	return 0;

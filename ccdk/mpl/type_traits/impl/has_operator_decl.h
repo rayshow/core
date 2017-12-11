@@ -9,7 +9,7 @@
 
 
 //+ - * / % & | ^ && || >> << == !=  > < >= <=
-#define CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)							 \
+#define CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)					     \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename L, typename R, typename Ret>                           \
@@ -54,7 +54,7 @@
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<L,R>::value;
 
 //! ~ * - + T
-#define CCDK_TT_HAS_RET_UNARY_OP(opsign, opname)										 \
+#define CCDK_TT_HAS_RET_UNARY_OP(opsign, opname)									 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename T, typename Ret>                                       \
@@ -76,7 +76,7 @@
 
 
 //++ T, -- T
-#define CCDK_TT_HAS_PRE_UNARY_OP(opsign, opname)										 \
+#define CCDK_TT_HAS_PRE_UNARY_OP(opsign, opname)									 \
 		namespace operator_detail                                                    \
 		{                                                                            \
 			template<typename T, typename Ret>                                       \
@@ -127,6 +127,24 @@
 			struct has_ ## opname ## _helper                                                                        \
 			{                                                                                                       \
 				template<typename U, typename = decltype( makeval<Ret>() = makeval<U>().sign(declval<Args>()...) )> \
+				static constexpr bool sfinae(int){ return true;}                                                    \
+				template<typename U>                                                                                \
+				static constexpr bool sfinae(...) { return false;}                                                  \
+				static constexpr bool value = sfinae<T>(0);                                                         \
+			};                                                                                                      \
+			template<typename T, typename P, typename... Args>                                                      \
+			struct has_ ## opname ## _helper<T,null_,P, Args...>                                                    \
+			{                                                                                                       \
+				template<typename U, typename = decltype( makeval<U>().sign(declval<P>(), declval<Args>()...) )>    \
+				static constexpr bool sfinae(int){ return true;}                                                    \
+				template<typename U>                                                                                \
+				static constexpr bool sfinae(...) { return false;}                                                  \
+				static constexpr bool value = sfinae<T>(0);                                                         \
+			};                                                                                                      \
+			template<typename T>                                                                                    \
+			struct has_ ## opname ## _helper<T,null_>                                                               \
+			{                                                                                                       \
+				template<typename U, typename = decltype( &U::sign )>                                               \
 				static constexpr bool sfinae(int){ return true;}                                                    \
 				template<typename U>                                                                                \
 				static constexpr bool sfinae(...) { return false;}                                                  \
