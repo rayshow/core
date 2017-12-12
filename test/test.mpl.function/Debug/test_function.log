@@ -1,11 +1,11 @@
 ﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
 clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
-..\test_mpl_function.cpp(321,17): warning : unused variable 'a' [-Wunused-variable]
-          constexpr auto a =  combine(op::inc, op::inc);
-                         ^
-..\test_mpl_function.cpp(267,29): warning : unused variable 'cxtt' [-Wunused-variable]
+..\test_mpl_function.cpp(287,29): warning : unused variable 'cxtt' [-Wunused-variable]
           constexpr test_constexpr_t cxtt;
                                      ^
+..\test_mpl_function.cpp(341,17): warning : unused variable 'a' [-Wunused-variable]
+          constexpr auto a =  combine(op::inc, op::inc);
+                         ^
   2 warnings generated.
-  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.exe
-  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.pdb (Partial PDB)
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.exe
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.pdb (Partial PDB)

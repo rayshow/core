@@ -22,6 +22,8 @@
 #include<ccdk/mpl/function/fmap.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/placeholder.h>
+#include<ccdk/mpl/function/val.h>
+#include<ccdk/mpl/function/placeholder2.h>
 #include<ccdk/mpl/container/ref_tuple.h>
 #include<ccdk/mpl/base/sfinae.h>
 
@@ -239,8 +241,28 @@ auto test_tmp(T1&& t1, T2&& t2)
 	return t1 + t2;
 }
 
+template<uint32 acc, typename pack, typename... Args>
+struct pack_val_step
+{
+	typedef pack type;
+};
+
+template<uint32 acc, uint32... indice, typename T, typename... Args>
+struct pack_val_step< acc, indice_pack<indice...>, T, Args...>
+	: pack_val_step< acc + T::value, indice_pack<indice..., acc>, Args...> {};
+
 int main()
 { 
+	DebugNewTitle("test expr");
+	typedef ph::expr<op::add_t, fn_impl::value_t<int>, fn_impl::value_t<int>> test_expr;
+
+	test_expr te{ val(0), val(1) };
+	DebugTypeName< test_expr >();
+	DebugValue(te());
+
+	DebugTypeName< typename pack_val_step< 0, indice_pack<>, uint_<1>, uint_<2>, uint_<3>, uint_<4>, uint_<5>>::type >();
+
+
 	void(*test_ptr)(int, int) = test;
 	typedef decltype(test_ptr) test_fn;
 	DebugValue(is_invocable<test_fn, int>::value);
@@ -260,8 +282,6 @@ int main()
 	DebugValue(is_invocable<test_mfn, int>::value);
 	DebugValue(is_invocable<test_mfn, int, int>::value);
 	
-	
-
 	test_copy_t tt{};
 	const test_copy_t ctt;
 	constexpr test_constexpr_t cxtt;

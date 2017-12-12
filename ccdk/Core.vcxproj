@@ -157,7 +157,7 @@
     <ClInclude Include="mpl\container\tuple.h" />
     <ClInclude Include="mpl\container\val_sequence.h" />
     <ClInclude Include="mpl\container\varient.h" />
-    <ClInclude Include="mpl\function\placeholder2.h" />
+    <ClInclude Include="mpl\function\expr.h" />
     <ClInclude Include="mpl\function\ref.h" />
     <ClInclude Include="mpl\function\val.h" />
     <ClInclude Include="mpl\function\arg.h" />

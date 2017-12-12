@@ -1,5 +1,6 @@
 #pragma once
 
+#include<ccdk/compile.h>
 #include<ccdk/preprocessor/seq_foreach_tuple.h>
 
 namespace ccdk
@@ -11,11 +12,9 @@ namespace ccdk
 			struct index_t
 			{
 				template<typename T, typename U>
-				constexpr decltype(auto)
-					operator()(
-						T&& t,
-						U&& index
-						) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()( T&& t, U&& index ) const
 				{
 					return t[index];
 				}
@@ -24,44 +23,21 @@ namespace ccdk
 			//1 element invoker
 			struct invoke_t
 			{
-				template<typename T, typename U>
-				constexpr decltype(auto)
-					operator()(
-						T&& t,
-						U&& u
-						) const
+				template<typename T, typename...Args>
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()( T&& t, Args&&... args ) const
 				{
-					return t(util::forward<U>(u));
+					return t(util::forward<Args>(args)...);
 				}
-
-
-				template<
-					typename T,
-					typename U1,
-					typename U2,
-					typename... Args
-				>
-					decltype(auto)
-					operator()(
-						T&& t,
-						U1&& u1,
-						U2&& u2,
-						Args&&... args) const
-				{
-					return t(
-						util::forward<U1>(u1),
-						util::forward<U2>(u2),
-						util::forward<Args>(args)...
-					);
-				}
-
 			};
 
 			struct post_dec_t
 			{
 				template<typename T>
-				constexpr decltype(auto)
-					operator()(T&& t) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()(T&& t) const
 				{
 					return t--;
 				}
@@ -70,8 +46,9 @@ namespace ccdk
 			struct post_inc_t
 			{
 				template<typename T>
-				constexpr decltype(auto)
-					operator()(T&& t) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()(T&& t) const
 				{
 					return t++;
 				}
@@ -80,22 +57,25 @@ namespace ccdk
 			struct arrow_t
 			{
 				template<typename T>
-				constexpr decltype(auto)
-					__arrow_impl(false_, T&& t) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				__arrow_impl(false_, T&& t) const
 				{
 					return t.operator->();
 				}
 
 				template<typename T>
-				constexpr decltype(auto)
-					__arrow_impl(true_, T&& t) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				__arrow_impl(true_, T&& t) const
 				{
 					return t;
 				}
 
 				template<typename T>
-				constexpr decltype(auto)
-					operator()(T&& t) const
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()(T&& t) const
 				{
 					return __arrow_impl(
 						typename is_pointer<remove_ref_t<T>>::type{},
@@ -104,16 +84,50 @@ namespace ccdk
 				}
 			};
 
+			struct max_t
+			{
+				template<typename T1, typename T2>
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()(T1&& t1, T2&& t2) const
+				{
+					return t1 < t2 ? t2 : t1;
+				}
+			};
+
+			struct min_t
+			{
+				template<typename T1, typename T2>
+				CCDK_FORCEINLINE  constexpr
+				decltype(auto)
+				operator()(T1&& t1, T2&& t2) const
+				{
+					return t1 < t2 ? t1 : t2;
+				}
+			};
+
+			struct condi_t
+			{
+				template<typename T1, typename T2>
+				CCDK_FORCEINLINE constexpr 
+				decltype(auto)
+				operator()(bool condi, T1&& t1, T2&& t2)  const
+				{
+					return condi ? t1 : t2;
+				}
+			};
 			
 			constexpr post_dec_t post_dec{};
 			constexpr post_inc_t post_inc{};
 			constexpr index_t    index{};
 			constexpr arrow_t    arrow{};
 			constexpr invoke_t   invoke{};
-			
+			constexpr condi_t    condi{};
+			constexpr max_t      max{};
+			constexpr min_t      min{};
 
-#define CCDK_DEFINE_BINARY_FN_OBJECT(name, op,...) struct name ## _t { template<typename T1, typename T2> constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 op t2; } };  constexpr name ## _t name{};
-#define CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT(name, op,...) struct name ## _t { template<typename T> constexpr decltype(auto) operator()(T&& t) const noexcept { return op t; } }; constexpr name ## _t name{};
+#define CCDK_DEFINE_BINARY_FN_OBJECT(name, op,...) struct name ## _t { template<typename T1, typename T2> CCDK_FORCEINLINE constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const noexcept { return t1 op t2; } };  constexpr name ## _t name{};
+#define CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT(name, op,...) struct name ## _t { template<typename T> constexpr CCDK_FORCEINLINE decltype(auto) operator()(T&& t) const noexcept { return op t; } }; constexpr name ## _t name{};
 
 			CCDK_PP_FOREACH_TUPLE(CCDK_DEFINE_BINARY_FN_OBJECT, (
 				(add, +),
