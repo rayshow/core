@@ -11,6 +11,9 @@ namespace ccdk
 {
 	namespace mpl
 	{
+		// combine(f , g, h, ...)(args...)
+		// = f( g( h ...(args...)))
+
 		namespace fn_impl
 		{
 			template<typename Fn, typename... Gs>

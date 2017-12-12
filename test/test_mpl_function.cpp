@@ -18,6 +18,8 @@
 #include<ccdk/mpl/function/partial.h>
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
+#include<ccdk/mpl/function/dispatch.h>
+#include<ccdk/mpl/function/fmap.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/container/ref_tuple.h>
@@ -231,6 +233,12 @@ int test_inc2(int a) noexcept
 	return a + 1;
 }
 
+template<typename T1, typename T2>
+auto test_tmp(T1&& t1, T2&& t2)
+{
+	return t1 + t2;
+}
+
 int main()
 { 
 	void(*test_ptr)(int, int) = test;
@@ -312,7 +320,14 @@ int main()
 	DebugValue( combine(op::inc, op::inc, test_inc2, test_combine_mfn{}, bind_mfn(&test_combine_mfn::inc3, tcm) )(1));
 	constexpr auto a =  combine(op::inc, op::inc);
 
+	DebugNewTitle("dispatch");
+	DebugValue(dispatch(op::add, op::inc, op::inc)(1,2));
 	
+	DebugNewTitle("fmap");
+	DebugValue(fmap(op::mul, op::add, op::sub)(4, 1));
+
+
+
 	getchar();
 	return 0;
 

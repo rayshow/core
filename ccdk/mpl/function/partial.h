@@ -98,6 +98,8 @@ namespace ccdk
 				}
 			};
 
+
+			//for non-overload function create partial
 			struct partial_create_t
 			{
 				template<
@@ -133,14 +135,14 @@ namespace ccdk
 				}
 
 
-				//case is function / function pointer
+				
 				template<
 					typename Fn,
 					typename... Args
 				>
 				CCDK_FORCEINLINE
 				auto
-				partial_create_impl(case_t< is_function>, Fn&& fn, Args&&... args ) const noexcept
+				partial_create_impl(case_t< is_function >, Fn&& fn, Args&&... args ) const noexcept
 				{
 					typedef args_of<remove_ref_t<Fn>> FnArgs;
 					return partial_normal_function<result_of_t<remove_ref_t<Fn>> >(
@@ -189,21 +191,22 @@ namespace ccdk
 
 				template<
 					typename Fn,
-					typename NoRefFn = remove_ref_t<Fn>,
-					typename = check_t< is_invokable<NoRefFn>>,  //check Fn is invokable
+					typename Fn1 = decay_t<Fn>,
+					typename = check_t< is_no_overload_invocable<Fn1> >,  //Fn can't be overload
 					typename... Args
 				>
 				CCDK_FORCEINLINE
 				auto
 				operator()( Fn&& fn,  Args&&... args ) const noexcept
 				{
+
 					//static dispatch
 					//Fn can be function/function pointer/member pointer/function object
 					return partial_create_impl(
 							select_case<
-								is_function<NoRefFn>,
-								is_mfn_ptr<NoRefFn>,
-								is_function_obj<NoRefFn>>,
+								is_function<Fn1>,
+								is_mfn_ptr<Fn1>,
+								is_function_obj<Fn1>>,       //can't check function object with override/template operator()
 							util::forward<Fn>(fn),
 							util::forward<Args>(args)...
 					);

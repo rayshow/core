@@ -898,5 +898,8 @@
     <ClInclude Include="mpl\base\sfinae.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\placeholder2.h">
+      <Filter>mpl\functional</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
