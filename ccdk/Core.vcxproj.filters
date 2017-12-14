@@ -907,5 +907,8 @@
     <ClInclude Include="mpl\fusion\val_seq.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\select_overload.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

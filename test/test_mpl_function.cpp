@@ -20,6 +20,8 @@
 #include<ccdk/mpl/function/combine.h>
 #include<ccdk/mpl/function/dispatch.h>
 #include<ccdk/mpl/function/fmap.h>
+#include<ccdk/mpl/function/overload.h>
+#include<ccdk/mpl/function/select_overload.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/function/val.h>
@@ -258,8 +260,68 @@ void test_literal(const T& t)
 	DebugTypeName<decltype(t)>();
 }
 
+//
+//template<typename Child>
+//struct DeriveOp
+//{
+//	int operator+(int a)
+//	{
+//		return static_cast<Child*>(this)->value + a;
+//	}
+//};
+//
+//struct TestDeriveOp : public DeriveOp<TestDeriveOp >
+//{
+//	int value = 1;
+//	//using DeriveOp<TestDeriveOp>::operator+;
+//};
+
+
+void print(float a)
+{
+	DebugValue("normal float");
+}
+
+void print(int a)
+{
+	DebugValue("normal int");
+}
+
+struct test_overload
+{
+	void print(float a)
+	{
+		DebugValue("member float");
+	}
+
+	void print(int a)
+	{
+		DebugValue("member int");
+	}
+};
+
+using  MFn = void(test_overload::*)(int);
+
+void test_mfn(MFn fn)
+{
+	(test_overload{}.*fn)(3);
+}
+
 int main()
-{ 
+{  
+
+	DebugNewTitle("select overload");
+	auto sfn1 = select_overload<void(int)>(print);
+	test_overload * to1 = new test_overload{};
+	auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
+	sfn1(1);
+	sfn2(1);
+
+	DebugNewTitle("overload");
+	overload<void(float), void(int)> ofn1(print, print);
+	ofn1(1);
+	ofn1(1.0f);
+
 	DebugNewTitle("test reference and value");
 	test_copy_t test1{};
 	const test_copy_t test2{};
@@ -269,17 +331,26 @@ int main()
 	DebugSubTitle("test val");
 	auto val1 = val(util::move(test1));
 	auto val2 = val(test2);
+	auto val3 = val(inta);
+	auto val4 = val(intb);
+	DebugValue(val3());
+	DebugValue(val4());
 	DebugTypeName< decltype(val1)::value_type >();
 	DebugTypeName< decltype(val2)::value_type >();
+	DebugTypeName< decltype(val3)::value_type >();
+	DebugTypeName< decltype(val4)::value_type >();
 
 	DebugSubTitle("test ref");
 	auto ref1 = ref(test1);
 	auto ref2 = ref(test2);
 	auto ref3 = ref(inta);
+	ref3() = 3;
 	auto ref4 = ref(intb);
 	DebugTypeName< decltype(ref1)::value_type >();
 	DebugTypeName< decltype(ref2)::value_type >();
-	ref3() = 2;
+	DebugValue(ref3());
+	DebugValue(ref4());
+	
 	DebugValue(inta);
 	DebugSubTitle("test cref");
 	auto cref1 = cref(test1);
@@ -288,7 +359,11 @@ int main()
 	auto cref4 = cref(intb);
 	DebugTypeName< decltype(cref1)::value_type >();
 	DebugTypeName< decltype(cref2)::value_type >();
-	DebugValue(cref3);
+	DebugValue(cref3());
+
+
+
+
 	getchar();
 	return 0;
 

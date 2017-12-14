@@ -1,137 +1,157 @@
 ﻿  test_mpl_function.cpp
-d:\____git\aurora3d\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
-d:\____git\aurora3d\core\ccdk\mpl\function\operator.h(128): warning C4552: “+”: 运算符不起任何作用；应输入带副作用的运算符
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::add_t::operator ()<V&,const T&>(T1,T2) noexcept const”的引用
+d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
+d:\git\core\ccdk\mpl\function\operator.h(128): warning C4552: “+”: 运算符不起任何作用；应输入带副作用的运算符
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::add_t::operator ()<V&,const int&>(T1,T2) noexcept const”的引用
           with
           [
               V=int,
-              T=int,
               T1=int &,
               T2=const int &
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,1>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,1>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,1>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,1>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,1>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,1>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,1>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,1>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,2>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,2>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,2>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,2>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,2>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,2>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,2>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,2>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,3>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,3>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,3>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,3>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,3>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,3>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::__eval_impl<0,Ctx,0,1,0,3>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,3>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(107): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(108): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>::eval<0,Ctx>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(118): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,4>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,4>) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(119): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__eval_impl<0,Ctx,0,1,0,4>(const Ctx &,ccdk::mpl::val_pack<ccdk::uint32,0,1>,ccdk::mpl::val_pack<ccdk::uint32,0,4>) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(136): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,ccdk::mpl::fs::ref_tuple<T,T,T,T>>(const Ctx &) const”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(137): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::eval<0,ccdk::mpl::fs::ref_tuple<T,T,T,T>>(const Ctx &) const”的引用
           with
           [
               T=int,
               Ctx=ccdk::mpl::fs::ref_tuple<int,int,int,int>
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(162): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__invoke_impl_is_lazy<T,T,T,T>(ccdk::mpl::false_,T &&,T &&,T &&,T &&)”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(163): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__invoke_impl_is_lazy<T,T,T,T>(ccdk::mpl::false_,T &&,T &&,T &&,T &&)”的引用
           with
           [
               T=int
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\expr.h(179): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__invoke_impl_len<4,T,T,T,T>(ccdk::mpl::integer_<unsigned int,4>,T &&,T &&,T &&,T &&)”的引用
+  d:\git\core\ccdk\mpl\function\expr.h(180): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::__invoke_impl_len<4,T,T,T,T>(ccdk::mpl::integer_<unsigned int,4>,T &&,T &&,T &&,T &&)”的引用
           with
           [
               T=int
           ]
-  d:\____git\aurora3d\core\test\test_mpl_function.cpp(298): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::operator ()<int,int,int,int,void>(int &&,int &&,int &&,int &&)”的引用
+  d:\git\core\test\test_mpl_function.cpp(374): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::fn::add_t,ccdk::mpl::fn::expr<ccdk::mpl::null_>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>,ccdk::mpl::fn::expr<ccdk::mpl::null_>>,ccdk::mpl::fn::expr<ccdk::mpl::fn::value_t<T>>>::operator ()<int,int,int,int,void>(int &&,int &&,int &&,int &&)”的引用
           with
           [
               T=int
           ]
-d:\____git\aurora3d\core\ccdk\mpl\function\operator.h(128): warning C4552: “-”: 运算符不起任何作用；应输入带副作用的运算符
-  d:\____git\aurora3d\core\ccdk\mpl\function\fmap.h(43): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::sub_t::operator ()<T&,T&>(T1,T2) noexcept const”的引用
+  d:\git\core\ccdk\mpl\function\overload.h(11): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::fn::overload<Fn>" 的引用
+          with
+          [
+              Fn=void (float)
+          ]
+  d:\git\core\test\test_mpl_function.cpp(321): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::fn::overload<void (float),void (int)>" 的引用
+  d:\git\core\ccdk\mpl\function\select_overload.h(83): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::fn::select_overload_t<MFn>" 的引用
+          with
+          [
+              MFn=void (__thiscall test_overload::* )(int)
+          ]
+  d:\git\core\test\test_mpl_function.cpp(316): note: 参见对正在编译的函数 模板 实例化“ccdk::mpl::fn::select_overload_t<MFn> ccdk::mpl::fn::make_select_overload_t<void (int)>::operator ()<test_overload,test_overload,Ret(__thiscall test_overload::* )(int)>(Class *,MFn) const”的引用
+          with
+          [
+              MFn=void (__thiscall test_overload::* )(int),
+              Ret=void,
+              Class=test_overload
+          ]
+  d:\git\core\test\test_mpl_function.cpp(314): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::fn::make_select_overload_t<void (int)>" 的引用
+  d:\git\core\test\test_mpl_function.cpp(314): note: 查看指向正在编译的变量模板“const ccdk::mpl::fn::make_select_overload_t<void (int)> select_overload<void __cdecl(int)>”的引用
+d:\git\core\ccdk\mpl\function\operator.h(128): warning C4552: “-”: 运算符不起任何作用；应输入带副作用的运算符
+  d:\git\core\ccdk\mpl\function\fmap.h(43): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::sub_t::operator ()<T&,T&>(T1,T2) noexcept const”的引用
           with
           [
               T=int,
               T1=int &,
               T2=int &
           ]
-  d:\____git\aurora3d\core\ccdk\mpl\function\fmap.h(60): note: 参见对正在编译的函数 模板 实例化“auto ccdk::mpl::fn::fmap_t<ccdk::mpl::fn::mul_t,ccdk::mpl::fn::add_t,ccdk::mpl::fn::sub_t>::__invoke_impl<T,T,0,1>(ccdk::mpl::val_pack<ccdk::uint32,0,1>,T &&,T &&) const”的引用
+  d:\git\core\ccdk\mpl\function\fmap.h(60): note: 参见对正在编译的函数 模板 实例化“auto ccdk::mpl::fn::fmap_t<ccdk::mpl::fn::mul_t,ccdk::mpl::fn::add_t,ccdk::mpl::fn::sub_t>::__invoke_impl<T,T,0,1>(ccdk::mpl::val_pack<ccdk::uint32,0,1>,T &&,T &&) const”的引用
           with
           [
               T=int
           ]
-  d:\____git\aurora3d\core\test\test_mpl_function.cpp(379): note: 参见对正在编译的函数 模板 实例化“auto ccdk::mpl::fn::fmap_t<ccdk::mpl::fn::mul_t,ccdk::mpl::fn::add_t,ccdk::mpl::fn::sub_t>::operator ()<int,int>(T &&,int &&) const”的引用
+  d:\git\core\test\test_mpl_function.cpp(453): note: 参见对正在编译的函数 模板 实例化“auto ccdk::mpl::fn::fmap_t<ccdk::mpl::fn::mul_t,ccdk::mpl::fn::add_t,ccdk::mpl::fn::sub_t>::operator ()<int,int>(T &&,int &&) const”的引用
           with
           [
               T=int
           ]
-d:\____git\aurora3d\core\ccdk\mpl\function\operator.h(128): warning C4552: “*”: 运算符不起任何作用；应输入带副作用的运算符
-  d:\____git\aurora3d\core\ccdk\mpl\function\fmap.h(43): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::mul_t::operator ()<T,T>(T1 &&,T2 &&) noexcept const”的引用
+d:\git\core\ccdk\mpl\function\operator.h(128): warning C4552: “*”: 运算符不起任何作用；应输入带副作用的运算符
+  d:\git\core\ccdk\mpl\function\fmap.h(43): note: 参见对正在编译的函数 模板 实例化“decltype(auto) ccdk::mpl::fn::mul_t::operator ()<T,T>(T1 &&,T2 &&) noexcept const”的引用
           with
           [
               T=int,
               T1=int,
               T2=int
           ]
-  test_function.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.function.exe
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.exe
+  test_function.vcxproj -> D:\Git\core\Debug\test.mpl.function.pdb (Partial PDB)

@@ -18,25 +18,26 @@ ccdk_namespace_mpl_fn_start
 		value_type t;
 
 		CCDK_FORCEINLINE constexpr explicit
-		expr(const T& inT) 
-		:t{ inT }
+		expr(T&& inT) 
+		:t{ util::forward<T>(inT) }
 		{}
 
 		CCDK_FORCEINLINE constexpr explicit
-		expr(T&& inT) 
-		:t{ util::move(inT) }
-		{}
+		operator const value_type&() const noexcept
+		{
+			return t;
+		}
 
 		template<uint32 Start, typename... Args>
-		const T& 
+		const value_type&
 		eval(Args const& ...) const noexcept
 		{
 			return t;
 		}
 
 		template<typename... Args>
-		CCDK_FORCEINLINE constexpr
-		const T& 
+		CCDK_FORCEINLINE constexpr 
+		const value_type& 
 		operator()(Args const& ...) const noexcept
 		{
 			return t;
@@ -44,6 +45,6 @@ ccdk_namespace_mpl_fn_start
 	};
 
 	template<typename T> using val_t = expr< value_t<T> >;
-	constexpr create_t< val_t > val{};
+	constexpr create_raw_t< val_t > val{};
 
 ccdk_namespace_mpl_fn_end

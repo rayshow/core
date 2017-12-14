@@ -28,7 +28,7 @@ ccdk_namespace_mpl_fn_start
 		}
 
 
-		CCDK_FORCEINLINE constexpr
+		CCDK_FORCEINLINE constexpr explicit
 		operator value_type() const noexcept
 		{
 			return t;

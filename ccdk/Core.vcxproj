@@ -150,6 +150,7 @@
     <ClInclude Include="mpl\function\expr.h" />
     <ClInclude Include="mpl\function\invoke_interface.h" />
     <ClInclude Include="mpl\function\ref.h" />
+    <ClInclude Include="mpl\function\select_overload.h" />
     <ClInclude Include="mpl\function\val.h" />
     <ClInclude Include="mpl\function\arg.h" />
     <ClInclude Include="mpl\function\bind_mfn.h" />

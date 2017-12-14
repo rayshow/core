@@ -26,14 +26,8 @@ ccdk_namespace_mpl_fn_start
 	//1. universal interface
 	//2. lighter and effecient then std::function, only 2-3 pointer, a virtual call consume
 	//3. clear then std::function
-	template<typename T,typename... Args>
-	struct function
-			:public function<T>, public function<Args...>
-	{
-		using function<T>::operator();
-		using function<Args...>::operator();
-
-	};
+	template<typename T>
+	struct function;
 
 
 	template<typename Ret, typename... Args>
