@@ -10,7 +10,10 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T, uint32 i>
+		template<
+			typename T,
+			uint32 i
+		>
 		struct found_at
 		{
 			typedef T type;
@@ -18,15 +21,27 @@ namespace ccdk
 		};
 
 
-		template<typename T, typename Default, uint32 i, typename... Args> struct arg_pack_find_if;
+		template<
+			typename T,
+			typename Default,
+			uint32 i,
+			typename... Args
+		> 
+		struct arg_pack_find_if;
 
 		//loop
-		template<typename T, typename Default, uint32 i, typename P, typename... Args>
+		template<
+			typename T,
+			typename Default,
+			uint32 i,
+			typename P,
+			typename... Args
+		>
 		struct arg_pack_find_if< T, Default, i, P, Args...>
-			:condi_derive<
-				typename T::template apply<P>,
-				found_at<P, i>,
-				arg_pack_find_if<T, Default, i + 1, Args...>>
+				:condi_derive<
+					typename T::template apply<P>,
+					found_at<P, i>,
+					arg_pack_find_if<T, Default, i + 1, Args...>>
 		{};
 
 		//not found

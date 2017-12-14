@@ -1,33 +1,29 @@
 #pragma once
 
-#include<ccdk/compile.h>
+#include<ccdk/mpl/mpl_module.h>
 
-namespace ccdk
-{
-	namespace mpl
-	{
-		namespace util
-		{
+ccdk_namespace_mpl_util_start
+
 #if !defined(CCDK_COMPILER_GCC)
-			template<class T>
-			CCDK_FORCEINLINE constexpr 
-			T *addressof(T& t) noexcept
-			{	// return address of _Val
-				return (__builtin_addressof(t));
-			}
+	template<class T>
+	CCDK_FORCEINLINE constexpr 
+	T *
+	addressof(T& t) noexcept
+	{	// return address of _Val
+		return (__builtin_addressof(t));
+	}
 #else
 
-			template<typename T>
-			CCDK_FORCEINLINE constexpr
-			T* addressof(T& t) noexcept
-			{
-				return reinterpret_cast<T*>
-					(&const_cast<char&>(reinterpret_cast<const volatile char&>(t)));
-			}
+	template<typename T>
+	CCDK_FORCEINLINE constexpr
+	T* addressof(T& t) noexcept
+	{
+		return reinterpret_cast<T*>
+			(&const_cast<char&>(reinterpret_cast<const volatile char&>(t)));
+	}
 #endif
 
-			template<class _Ty>
-			const _Ty *addressof(const _Ty&&) = delete;
-		}
-	}
-}
+	template<class T>
+	const T *addressof(const T&&) = delete;
+
+ccdk_namespace_mpl_util_end

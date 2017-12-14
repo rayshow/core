@@ -4,7 +4,7 @@
 
 #include<ccdk/type.h>
 #include<ccdk/mpl/base/if_.h>
-#include<ccdk/mpl/base/condi_derive.h>
+#include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/base/make_indice.h>
 #include<ccdk/mpl/base/val_pack_merge.h>
 #include<ccdk/mpl/type_traits/traits_case.h>
@@ -154,7 +154,7 @@ namespace ccdk
 			//U U both is and composed, need check down grade
 			template<typename T, typename U>
 			struct u64x2_or2<T, U, true, true>
-				:bool_condi_derive< is_single_bit(T::v1 & U::v1 ),
+				:derive_if_c< is_single_bit(T::v1 & U::v1 ),
 				u64x2< 0, T::v1 & U::v1>,
 				u64x2< T::v1 & U::v1, 0>>{};
 
@@ -230,9 +230,6 @@ namespace ccdk
 				typedef indice_pack<tag, args...> type;
 			};
 
-
-
-	
 			template<uint32 tag, template<typename...> typename... Args>
 			using case_recursive_t = u64x2_create_t<
 				rank_merge_t<tag, case_index_t<Args>...> >;
@@ -251,7 +248,7 @@ namespace ccdk
 
 		//case_val< and_<...>>
 		template<typename... Args> struct case_val< and_<Args...>, true>
-			: condi_derive< and_<Args...>, case_val< and_<Args...>, false>,
+			: derive_if< and_<Args...>, case_val< and_<Args...>, false>,
 				tt_detail::default_indice_t>{};
 
 		template<typename... Args> struct case_val< and_<Args...>,false>
@@ -259,7 +256,7 @@ namespace ccdk
 
 		//case_val< or_<...>>
 		template<typename... Args> struct case_val< or_<Args...>, true>
-			: condi_derive< or_<Args...>, case_val< or_<Args...>, false>,
+			: derive_if< or_<Args...>, case_val< or_<Args...>, false>,
 				tt_detail::default_indice_t>{};
 
 		template<typename... Args> struct case_val< or_<Args...>, false>
@@ -267,7 +264,7 @@ namespace ccdk
 		
 		//case_val< not_<T>>
 		template<typename T> struct case_val< not_<T>, true>
-			: condi_derive< not_<T>, case_val< not_<T>, false>, tt_detail::default_indice_t> {};
+			: derive_if< not_<T>, case_val< not_<T>, false>, tt_detail::default_indice_t> {};
 
 		template<typename T> struct case_not_val 
 			: tt_detail::replace_tag< ccdk_tt_rank_not_val, case_val_t<T, false> > {};

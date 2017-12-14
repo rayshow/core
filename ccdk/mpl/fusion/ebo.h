@@ -4,11 +4,10 @@
 #include<ccdk/mpl/type_traits/is_empty.h>
 #include<ccdk/mpl/type_traits/is_final.h>
 #include<ccdk/mpl/util/forward.h>
+#include<ccdk/mpl/mpl_module.h>
 
-namespace ccdk
-{
-	namespace mpl
-	{
+ccdk_namespace_mpl_fs_start
+
 		//empty class optimization if V is empty
 		// V and U can be different type but U can be convert to V
 		template<typename K, typename V, bool = is_empty_v<V> && !is_final_v<V> >
@@ -60,5 +59,5 @@ namespace ccdk
 		template<uint32 index, typename V> inline constexpr V& ebo_at(ebo<uint_<index>, V, false>& inEbo) noexcept { return inEbo.v; }
 		template<uint32 index, typename V> inline constexpr V const& ebo_at(ebo<uint_<index>, V, false> const& inEbo) noexcept { return inEbo.v; }
 		template<uint32 index, typename V> inline constexpr V&& ebo_at(ebo<uint_<index>, V, false>&& inEbo) noexcept { return util::move(inEbo.v); }
-	}
-}
+
+ccdk_namespace_mpl_fs_end

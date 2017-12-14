@@ -1,81 +1,72 @@
 #pragma once
 
-#include<ccdk/type.h>
+#include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/forward.h>
-#include<ccdk/mpl/container/tuple_storage.h>
+#include<ccdk/mpl/fusion/tuple_storage.h>
 #include<ccdk/mpl/function/create.h>
 
+ccdk_namespace_mpl_fn_start
 
-namespace ccdk
-{
-	namespace mpl
+	// combine(f , g, h, ...)(args...)
+	// = f( g( h ...(args...)))
+
+	template<typename Fn, typename... Gs>
+	struct combine_t
 	{
-		// combine(f , g, h, ...)(args...)
-		// = f( g( h ...(args...)))
-		namespace fn_impl
+		static constexpr uint32 L = sizeof...(Gs)+1;
+		typedef combine_t<Fn, Gs...> type;
+		typedef fs::tuple_storage<L, make_indice<L>, Fn, Gs...> value_type;
+		value_type storage;
+
+		CCDK_FORCEINLINE constexpr 
+		combine_t(Fn const& fn, Gs const& ... gs)
+			: storage{ fn, gs... }
+		{}
+
+		CCDK_FORCEINLINE constexpr 
+		combine_t(Fn && fn, Gs && ... gs)
+			: storage{ 
+				util::move(fn), 
+				util::move(gs)...  }
+		{}
+
+		template<typename... Args>
+		CCDK_FORCEINLINE constexpr
+		decltype(auto)
+		__invoke_impl(uint_<0>, Args&&... args)
 		{
-			template<typename Fn, typename... Gs>
-			struct combine_t
-			{
-				static constexpr uint32 L = sizeof...(Gs)+1;
-				typedef combine_t<Fn, Gs...> type;
-				typedef tuple_storage<L, make_indice<L>, Fn, Gs...> value_type;
-				value_type storage;
-
-				CCDK_FORCEINLINE constexpr 
-				combine_t(Fn const& fn, Gs const& ... gs)
-					: storage{ fn, gs... }
-				{}
-
-				CCDK_FORCEINLINE constexpr 
-				combine_t(Fn && fn, Gs && ... gs)
-					: storage{ 
-						util::move(fn), 
-						util::move(gs)...  }
-				{}
-
-				template<typename... Args>
-				CCDK_FORCEINLINE constexpr
-				decltype(auto)
-				__invoke_impl(uint_<0>, Args&&... args)
-				{
-					return ebo_at<0>(util::move(storage))(args...);
-				}
-
-				template<
-					uint32 index,
-					typename... Args
-				>
-				CCDK_FORCEINLINE constexpr
-				decltype(auto)
-				__invoke_impl( uint_<index>, Args&&... args )
-				{
-					return ebo_at<index>(util::move(storage))(
-						__invoke_impl(
-							uint_<index - 1>{},
-							util::forward<Args>(args)...
-						)
-					);
-				}
-
-				template<typename... Args>
-				CCDK_FORCEINLINE constexpr
-				decltype(auto)
-				operator()(Args&&... args)
-				{
-					return __invoke_impl(
-						uint_<L-1>{},
-						util::forward<Args>(args)...
-					);
-				}
-			};
+			return fs::ebo_at<0>(util::move(storage))(args...);
 		}
 
-		namespace fn
+		template<
+			uint32 index,
+			typename... Args
+		>
+		CCDK_FORCEINLINE constexpr
+		decltype(auto)
+		__invoke_impl( uint_<index>, Args&&... args )
 		{
-			constexpr fn_impl::create<fn_impl::combine_t> combine{};
+			return fs::ebo_at<index>(util::move(storage))(
+				__invoke_impl(
+					uint_<index - 1>{},
+					util::forward<Args>(args)...
+				)
+			);
 		}
+
+		template<typename... Args>
+		CCDK_FORCEINLINE constexpr
+		decltype(auto)
+		operator()(Args&&... args)
+		{
+			return __invoke_impl(
+				uint_<L-1>{},
+				util::forward<Args>(args)...
+			);
+		}
+	};
 		
-	}
-}
+	constexpr create_t<combine_t> combine{};
+
+ccdk_namespace_mpl_fn_end

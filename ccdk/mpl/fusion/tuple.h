@@ -1,24 +1,20 @@
 #pragma once
 
-#include<ccdk/type.h>
 #include<ccdk/mpl/base/and_.h>
 #include<ccdk/mpl/base/uint_.h>
+#include<ccdk/mpl/base/arg_pack_split.h>
+#include<ccdk/mpl/base/make_indice.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/move.h>
-#include<ccdk/mpl/container/tuple_storage.h>
-#include<ccdk/mpl/base/arg_pack_split.h>
-#include<ccdk/mpl/base/make_indice.h>
+#include<ccdk/mpl/fusion/tuple_storage.h>
+#include<ccdk/mpl/mpl_module.h>
 
+ccdk_namespace_mpl_fs_start
 
-namespace ccdk
-{
-	namespace mpl
-	{
 		struct tuple_tag {};
-
 
 		template<typename... Args>
 		struct tuple 
@@ -29,22 +25,25 @@ namespace ccdk
 			typedef tuple_tag tag;
 			struct erase_t {};
 
-
 			value_type storage;
 			
-			constexpr tuple() : storage{} {}
+			CCDK_FORCEINLINE constexpr 
+			tuple() 
+				: storage{} {}
 
 			//move from args
-			explicit constexpr tuple(Args &&... args) 
+			CCDK_FORCEINLINE explicit constexpr 
+			tuple(Args &&... args)
 				: storage( util::move(args)...) {}
 
 			//copy from args
-			explicit constexpr 
-				tuple(Args const&... args) 
+			CCDK_FORCEINLINE explicit constexpr
+			tuple(Args const&... args) 
 				: storage( static_cast<const Args&>(args)...) {}
 
 			//copy from same tuple
-			constexpr tuple(tuple const& t) 
+			CCDK_FORCEINLINE constexpr 
+			tuple(tuple const& t)
 				: storage{ t.storage }
 			{ 
 				static_assert(t.L == L, 
@@ -52,7 +51,8 @@ namespace ccdk
 			}
 
 			//move from same tuple
-			constexpr tuple(tuple && t) 
+			CCDK_FORCEINLINE constexpr 
+			tuple(tuple && t)
 				: storage{ util::move(t.storage) }
 			{
 				static_assert(t.L == L, 
@@ -61,7 +61,8 @@ namespace ccdk
 			
 			//copy from not same but compatable tuple
 			template<typename... Args2>
-			constexpr tuple(const tuple<Args2...>& t)
+			CCDK_FORCEINLINE constexpr
+			tuple(const tuple<Args2...>& t)
 				: storage{ util::move(t.storage) }
 			{ 
 				static_assert(t.L == L, "2 tuple length need to be equal");
@@ -69,7 +70,8 @@ namespace ccdk
 
 			//move from not same but compatable tuple
 			template<typename... Args2>
-			constexpr tuple(tuple<Args2...>&& t) 
+			CCDK_FORCEINLINE constexpr 
+			tuple(tuple<Args2...>&& t) 
 				: storage{ util::move(t.storage) }
 			{
 				static_assert(t.L == L,
@@ -84,7 +86,8 @@ namespace ccdk
 				typename... Args1,
 				typename... Args2
 			>
-			constexpr tuple(
+			CCDK_FORCEINLINE constexpr 
+			tuple(
 				indice_pack<indice1...>, 
 				indice_pack<indice2...>, 
 				tuple<Args1...>&& t1,
@@ -103,7 +106,9 @@ namespace ccdk
 				typename... Args1,
 				typename... Args2
 			>
-			constexpr tuple(
+			CCDK_FORCEINLINE
+			constexpr 
+			tuple(
 				indice_pack<indice...>,
 				tuple<Args1...>&& tp,
 				Args2&&... args)
@@ -122,7 +127,9 @@ namespace ccdk
 				typename... Args1,
 				typename... Args2
 			>
-			constexpr tuple( 
+			CCDK_FORCEINLINE
+			constexpr 
+			tuple( 
 				int, 
 				indice_pack<indice...>,
 				tuple<Args1...>&& tp,
@@ -135,8 +142,14 @@ namespace ccdk
 			}
 
 			//use to erase or pop front / pop back
-			template<uint32... indice, typename... Args2, uint32 len>
-			constexpr tuple(indice_pack<indice...>,
+			template<
+				uint32... indice,
+				typename... Args2,
+				uint32 len
+			>
+			CCDK_FORCEINLINE constexpr 
+			tuple(
+				indice_pack<indice...>,
 				tuple<Args2...>&& tp, 
 				uint_<len>)
 				: storage{ ebo_at<indice>(util::move(tp.storage))... }
@@ -155,11 +168,11 @@ namespace ccdk
 			>
 			constexpr 
 				tuple(
-				indice_pack<indice1...>,
-				indice_pack<indice2...>,
-				indice_pack<indice3...>,
-				Tp&& tp,
-				Args1&&... args )
+					indice_pack<indice1...>,
+					indice_pack<indice2...>,
+					indice_pack<indice3...>,
+					Tp&& tp,
+					Args1&&... args )
 				: storage{ 
 					indice_pack<indice1...,indice2...>{},
 					ebo_at<indice3>(util::move(tp.storage))...,
@@ -170,7 +183,9 @@ namespace ccdk
 			}
 
 			template<typename T, T v>
-			constexpr auto& operator[](integer_<T, v> index) &
+			CCDK_FORCEINLINE
+			constexpr auto& 
+			operator[](integer_<T, v> index) &
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
 
@@ -178,7 +193,9 @@ namespace ccdk
 			}
 
 			template<typename T, T v>
-			constexpr const auto& operator[](integer_<T, v> index) const&
+			CCDK_FORCEINLINE
+			constexpr const auto& 
+			operator[](integer_<T, v> index) const&
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
 
@@ -186,7 +203,9 @@ namespace ccdk
 			}
 
 			template<typename T, T v>
-			constexpr auto&& operator[](integer_<T, v> index) &&
+			CCDK_FORCEINLINE
+			constexpr auto&& 
+			operator[](integer_<T, v> index) &&
 			{
 				static_assert(v >= 0 && v < L, "index out of range");
 
@@ -194,11 +213,12 @@ namespace ccdk
 			}
 			
 			//length of tuple, compiler constant
-			static constexpr uint32
-				length() { return L; }
+			CCDK_FORCEINLINE static constexpr uint32 length() { return L; }
 
 			template<typename... Args1>
-			constexpr auto push_back(Args1... args)
+			CCDK_FORCEINLINE
+			constexpr auto 
+			push_back(Args1... args)
 			{
 				return tuple<
 					Args...,
@@ -210,11 +230,11 @@ namespace ccdk
 			}
 
 			template<typename... Args1>
-			constexpr auto push_front(Args1... args)
+			CCDK_FORCEINLINE
+			constexpr auto 
+			push_front(Args1... args)
 			{
-				return tuple<
-					Args1... ,
-					Args... >{ 
+				return tuple< Args1..., Args... >{ 
 						0,
 						make_indice<L>{},
 						util::move(*this),
@@ -224,12 +244,11 @@ namespace ccdk
 
 			//merge two tuple and create concat tuple , note both tuple will be moved for effcient and useless
 			template<typename... Args2>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				operator|(tuple<Args2...>& tp)
+			operator|(tuple<Args2...>& tp)
 			{
-				return tuple<
-					Args...,
-					Args2...>{ 
+				return tuple< Args..., Args2...>{ 
 						make_indice<L>{},
 						make_indice<tp.L>{},
 						util::move(*this),
@@ -241,8 +260,9 @@ namespace ccdk
 				uint32 len,
 				typename... Args2
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				__pop_back_impl(arg_pack<Args2...> t)
+			__pop_back_impl(arg_pack<Args2...> t)
 			{
 				return tuple<Args2...>{ 
 						make_indice<L-len>{}, 
@@ -253,17 +273,14 @@ namespace ccdk
 
 			//dispatch to remove last len elements
 			template<uint32 len=1>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				pop_back()
+			pop_back()
 			{
 				static_assert(len >= 1 && len < L, "tuple pop out of range");
 
 				return __pop_back_impl<len>(
-					typename arg_pack_split<
-						L - len,
-						len, 
-						arg_pack<Args...>
-					>::head{}
+					typename arg_pack_split< L - len, len,  arg_pack<Args...> >::head{}
 				);
 			}
 
@@ -271,8 +288,9 @@ namespace ccdk
 				uint32 len,
 				typename ... Args1
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				__pop_front_impl(arg_pack<Args1...>)
+			__pop_front_impl(arg_pack<Args1...>)
 			{
 				return tuple<Args1...>{ 
 					make_indice_from<len,L>{},
@@ -283,8 +301,9 @@ namespace ccdk
 
 			//dispatch to remove last type
 			template<uint32 len = 1>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				pop_front()
+			pop_front()
 			{
 				static_assert(len >= 1 && len < L, "tuple pop out of range");
 
@@ -297,9 +316,14 @@ namespace ccdk
 				);
 			}
 
-			template<uint32 start, uint32 end, typename... Args1>
+			template<
+				uint32 start,
+				uint32 end,
+				typename... Args1
+			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				__erase_impl(arg_pack<Args1...>)
+			__erase_impl(arg_pack<Args1...>)
 			{
 				return tuple<Args1...>{
 					make_indice_ingore<L,start, end>{},
@@ -313,8 +337,9 @@ namespace ccdk
 				uint32 start, 
 				uint32 end = start+1
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				erase()
+			erase()
 			{
 				static_assert(start >= 0 && end <= L, "tuple erase out of range");
 				static_assert(end > start, "erase end need greater then start");
@@ -329,19 +354,13 @@ namespace ccdk
 				uint32 len,
 				typename... Args1,
 				typename... Args2,
-				typename... Args3>
+				typename... Args3
+			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				__replace_impl(
-					arg_pack<Args1...>,
-					arg_pack<Args3...>,
-					Args2&&... args
-				)
+			__replace_impl( arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args)
 			{
-				return tuple<
-					Args1...,
-					Args2..., 
-					Args3...>
-				{ 
+				return tuple< Args1..., Args2...,  Args3...> { 
 					make_indice_ingore<L-(end-start)+len, start, end>{},
 					make_indice_from< start, end>{},
 					util::move(*this), util::move(args)... 
@@ -354,17 +373,11 @@ namespace ccdk
 				typename T,
 				typename... Args1
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				replace(
-					T t,
-					Args1... args
-				)
+			replace(T t, Args1... args )
 			{
-				typedef arg_pack_split<
-					start, 
-					end-1,
-					arg_pack<Args...>
-				> pack;
+				typedef arg_pack_split< start,  end-1, arg_pack<Args...> > pack;
 
 				return __replace_impl<start, end>(
 					typename pack::head{}, 
@@ -380,18 +393,11 @@ namespace ccdk
 				typename... Args2,
 				typename... Args3
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				__insert_impl(
-					arg_pack<Args1...>,
-					arg_pack<Args3...>,
-					Args2&&... args
-				)
+			__insert_impl( arg_pack<Args1...>, arg_pack<Args3...>, Args2&&... args )
 			{
-				return tuple<
-					Args1...,
-					Args2...,
-					Args3...>
-				{
+				return tuple< Args1..., Args2..., Args3...> {
 					make_indice_ingore<L + end-start, start, end>{},
 					make_indice_from<start, end>{},
 					make_indice<L>{},
@@ -404,18 +410,16 @@ namespace ccdk
 				uint32 start,
 				typename... Args1
 			>
+			CCDK_FORCEINLINE
 			constexpr auto 
-				insert(Args1... args)
+			insert(Args1... args)
 			{
 				typedef arg_pack_split<start, 0, arg_pack<Args...>> pack;
-				return __insert_impl<
-					start,
-					start+ sizeof...(Args1)>
-					(
+				return __insert_impl< start, start+ sizeof...(Args1)>(
 						typename pack::head{},
 						typename pack::tail{},
 						util::move(args)...
-					);
+				);
 			}
 		};
 
@@ -423,11 +427,9 @@ namespace ccdk
 			typename T,
 			typename... Args
 		>
+		CCDK_FORCEINLINE
 		constexpr auto
-			operator+(
-				tuple<Args...>& tp,
-				const T& t 
-			)
+		operator+( tuple<Args...>& tp, const T& t  )
 		{
 			return tp.push_back(t);
 		}
@@ -436,13 +438,10 @@ namespace ccdk
 			typename T,
 			typename... Args
 		>
+		CCDK_FORCEINLINE
 		constexpr auto 
-			operator+(
-				const T& t, 
-				tuple<Args...>& tp
-			)
+		operator+( const T& t,  tuple<Args...>& tp )
 		{
 			return tp.push_front(t);
 		}
-	}
-}
+ccdk_namespace_mpl_fs_end

@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/base/uint_.h>
 #include<ccdk/mpl/base/val_pack.h>
-#include<ccdk/mpl/base/condi_derive.h>
+#include<ccdk/mpl/base/derive_if.h>
 
 
 namespace ccdk
@@ -49,7 +49,7 @@ namespace ccdk
 		{   static const uint32 value = ccdk_tt_rank_ ## name;            \
 			typedef indice_pack< ccdk_tt_rank_single_val, value > type;}; \
 		template<typename T> struct case_val< name<T>,true>               \
-		:condi_derive< name<T>, indice_pack< ccdk_tt_rank_single_val,     \
+		:derive_if< name<T>, indice_pack< ccdk_tt_rank_single_val,        \
 			ccdk_tt_rank_ ## name >,                                      \
 			indice_pack<ccdk_tt_rank_default_val, 0>>{};                  \
 		template<typename T> struct case_val< name<T>, false>             \
@@ -58,7 +58,7 @@ namespace ccdk
 #define CCDK_TT_COMPOSE_RANK( t, name, ...) \
 		template<> struct case_index<name>: rank_pack<t, void,__VA_ARGS__>{};   \
 		template<typename T> struct case_val< name<T>, true>                    \
-		:condi_derive< name<T>, rank_pack<t, T,__VA_ARGS__>,                    \
+		:derive_if< name<T>, rank_pack<t, T,__VA_ARGS__>,                       \
 			indice_pack<ccdk_tt_rank_default_val, 0>>{};                        \
 		template<typename T> struct case_val< name<T>, false>                   \
 			:rank_pack<t, T, __VA_ARGS__>{};

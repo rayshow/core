@@ -23,17 +23,17 @@
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/function/val.h>
-#include<ccdk/mpl/function/placeholder2.h>
-#include<ccdk/mpl/container/ref_tuple.h>
+#include<ccdk/mpl/function/expr.h>
+#include<ccdk/mpl/function/ref.h>
+#include<ccdk/mpl/fusion/ref_tuple.h>
 #include<ccdk/mpl/base/sfinae.h>
 
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::mpl::fn;
-using namespace ccdk::mpl::placeholder;
 using namespace ccdk::mpl::literals;
-
+using namespace ccdk::mpl::fn::ph;
 
 template<typename T, typename = void> struct test_when :test_when<T, when > {};
 template<typename T, bool condi>    struct test_when<T, match_default<condi> > { static constexpr int value = 1; };
@@ -251,24 +251,54 @@ template<uint32 acc, uint32... indice, typename T, typename... Args>
 struct pack_val_step< acc, indice_pack<indice...>, T, Args...>
 	: pack_val_step< acc + T::value, indice_pack<indice..., acc>, Args...> {};
 
+
+template<typename T>
+void test_literal(const T& t)
+{
+	DebugTypeName<decltype(t)>();
+}
+
 int main()
 { 
+	DebugNewTitle("test reference and value");
+	test_copy_t test1{};
+	const test_copy_t test2{};
+	int   inta = 1;
+	const int intb = 1;
+
+	DebugSubTitle("test val");
+	auto val1 = val(util::move(test1));
+	auto val2 = val(test2);
+	DebugTypeName< decltype(val1)::value_type >();
+	DebugTypeName< decltype(val2)::value_type >();
+
+	DebugSubTitle("test ref");
+	auto ref1 = ref(test1);
+	auto ref2 = ref(test2);
+	auto ref3 = ref(inta);
+	auto ref4 = ref(intb);
+	DebugTypeName< decltype(ref1)::value_type >();
+	DebugTypeName< decltype(ref2)::value_type >();
+	ref3() = 2;
+	DebugValue(inta);
+	DebugSubTitle("test cref");
+	auto cref1 = cref(test1);
+	auto cref2 = cref(test2);
+	auto cref3 = cref(inta);
+	auto cref4 = cref(intb);
+	DebugTypeName< decltype(cref1)::value_type >();
+	DebugTypeName< decltype(cref2)::value_type >();
+	DebugValue(cref3);
+	getchar();
+	return 0;
+
 	DebugNewTitle("test expr");
-	typedef ph::expr<op::add_t, fn_impl::value_t<int>, fn_impl::value_t<int>> test_expr;
+	auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8;
+	auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;
+	DebugValue(ph1(1,3,5,7));
+	DebugValue(ph2(2,3,4,5));
 
-	test_expr te{ val(0), val(1) };
-	DebugTypeName< test_expr >();
-	DebugValue(te());
-
-	DebugTypeName< typename pack_val_step< 0, indice_pack<>, uint_<1>, uint_<2>, uint_<3>, uint_<4>, uint_<5>>::type >();
-
-
-	void(*test_ptr)(int, int) = test;
-	typedef decltype(test_ptr) test_fn;
-	DebugValue(is_invocable<test_fn, int>::value);
-	DebugValue(is_invocable<int, int>::value);
-	DebugValue(is_invocable<TT, int>::value);
-
+	
 	DebugNewTitle("test invoker");
 	DebugValue(has_invoker_v<TT, null_, int,int>);
 	DebugValue(has_invoker_v<TT, null_, int>);
@@ -337,14 +367,14 @@ int main()
 	//1+1+2+3+4
 	struct test_combine_mfn { int operator()(int a) { return a + 3; } int inc3(int a) { return a + 4;} };
 	test_combine_mfn tcm{};
-	DebugValue( combine(op::inc, op::inc, test_inc2, test_combine_mfn{}, bind_mfn(&test_combine_mfn::inc3, tcm) )(1));
-	constexpr auto a =  combine(op::inc, op::inc);
+	DebugValue( combine( inc, inc, test_inc2, test_combine_mfn{}, bind_mfn(&test_combine_mfn::inc3, tcm) )(1));
+	constexpr auto a =  combine( inc, inc);
 
 	DebugNewTitle("dispatch");
-	DebugValue(dispatch(op::add, op::inc, op::inc)(1,2));
+	DebugValue(dispatch(add, inc, inc)(1,2));
 	
 	DebugNewTitle("fmap");
-	DebugValue(fmap(op::mul, op::add, op::sub)(4, 1));
+	DebugValue(fmap(mul, add, sub)(4, 1));
 
 
 

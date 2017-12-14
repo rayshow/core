@@ -31,20 +31,20 @@
     <Filter Include="mpl\type_trait\impl">
       <UniqueIdentifier>{74b6b3cd-90c6-4cee-9395-db23514e5200}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mpl\container">
-      <UniqueIdentifier>{5c9414c8-2d0f-48b8-87ba-5b6ef3b7f54f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mpl\functional">
-      <UniqueIdentifier>{435ec450-2e2f-4bf5-8557-18f19ce3872f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mpl\units">
-      <UniqueIdentifier>{d2be537e-e5f8-434c-aee5-13fdbb1ed1d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mpl\smart_ptr">
       <UniqueIdentifier>{5d6b5634-5177-412f-ae32-617d3e997e36}</UniqueIdentifier>
     </Filter>
     <Filter Include="mpl\util">
       <UniqueIdentifier>{8e19dafe-fdcf-4be2-95a5-3dc6e5791c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\unit">
+      <UniqueIdentifier>{d2be537e-e5f8-434c-aee5-13fdbb1ed1d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\function">
+      <UniqueIdentifier>{435ec450-2e2f-4bf5-8557-18f19ce3872f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\fusion">
+      <UniqueIdentifier>{5c9414c8-2d0f-48b8-87ba-5b6ef3b7f54f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -612,9 +612,6 @@
     <ClInclude Include="mpl\base\and_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\condi_derive.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\or_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -705,41 +702,26 @@
     <ClInclude Include="mpl\type_traits.h">
       <Filter>mpl</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\tuple.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\ebo.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\forward.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\maybe.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\function.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\overload.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\partial.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\string_literial.h">
-      <Filter>mpl\container</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\placeholder.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\tuple_storage.h">
-      <Filter>mpl\container</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\integer_.h">
       <Filter>mpl\base</Filter>
@@ -766,31 +748,28 @@
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\arg.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\capture.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\const_range.h">
-      <Filter>mpl\container</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\create.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\bind_mfn.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\identity.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\combine.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\fmap.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\dispatch.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_invokable.h">
       <Filter>mpl\type_trait</Filter>
@@ -825,9 +804,6 @@
     <ClInclude Include="mpl\base\make_indice.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\container\val_sequence.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\traits_case.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -836,12 +812,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\select_case.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\any.h">
-      <Filter>mpl\container</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\varient.h">
-      <Filter>mpl\container</Filter>
     </ClInclude>
     <ClInclude Include="mpl\smart_ptr\weak_ptr.h">
       <Filter>mpl\smart_ptr</Filter>
@@ -859,20 +829,14 @@
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
     <ClInclude Include="debug_type.hpp" />
-    <ClInclude Include="mpl\smart_ptr\proxy_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\function\operator.h">
-      <Filter>mpl\functional</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\container\ref_tuple.h">
-      <Filter>mpl\container</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\val.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\ref.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\util\swap.h">
       <Filter>mpl\util</Filter>
@@ -899,7 +863,49 @@
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\expr.h">
-      <Filter>mpl\functional</Filter>
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\mpl_module.h">
+      <Filter>mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\invoke_interface.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\derive_if.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\any.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\const_range.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\ebo.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\lazy.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\maybe.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\ref_tuple.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\string_literial.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\tuple.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\tuple_storage.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\varient.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\val_seq.h">
+      <Filter>mpl\fusion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

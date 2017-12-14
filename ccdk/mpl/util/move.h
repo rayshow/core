@@ -1,14 +1,10 @@
 #pragma once
 
-#include<ccdk/compile.h>
+#include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/type_traits/remove_ref.h>
 
-namespace ccdk
-{
-	namespace mpl
-	{
-		namespace util
-		{
+ccdk_namespace_mpl_util_start
+
 			template<
 				typename T,
 				typename P = remove_ref_t<T> 
@@ -18,6 +14,5 @@ namespace ccdk
 			{ 
 				return static_cast<P&&>(inT); 
 			}
-		}
-	}
-}
+
+ccdk_namespace_mpl_util_end

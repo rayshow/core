@@ -1,6 +1,6 @@
 #pragma once
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/condi_derive.h>
+#include<ccdk/mpl/base/derive_if.h>
 
 namespace ccdk
 {
@@ -12,7 +12,7 @@ namespace ccdk
 		//have least one element
 		template<typename T, typename... Args> 
 		struct or_<T, Args...> 
-			: public condi_derive<T, true_, or_<Args...>>{};
+			: public derive_if<T, true_, or_<Args...>>{};
 
 		template<typename... Args> using or_t = typename or_<Args...>::type;
 		template<typename... Args> constexpr bool or_v = or_<Args...>::value;

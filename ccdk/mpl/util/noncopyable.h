@@ -1,19 +1,16 @@
 #pragma once
 
-namespace ccdk
-{
-	namespace mpl
+#include<ccdk/mpl/mpl_module.h>
+
+ccdk_namespace_mpl_util_start
+
+	struct noncopyable
 	{
-		namespace util
-		{
-			struct noncopyable
-			{
-				noncopyable() = default;
+		noncopyable() = default;
 
-				noncopyable(const noncopyable&) = delete;
+		noncopyable(const noncopyable&) = delete;
 
-				noncopyable& operator=(const noncopyable&) = delete;
-			};
-		}
-	}	
-}
+		noncopyable& operator=(const noncopyable&) = delete;
+	};
+
+ccdk_namespace_mpl_util_end
