@@ -300,16 +300,15 @@ struct test_overload
 	}
 };
 
-using  MFn = void(test_overload::*)(int);
 
-void test_mfn(MFn fn)
+struct test_fn
 {
-	(test_overload{}.*fn)(3);
-}
+	 constexpr static auto sfn = 1;
+
+};
 
 int main()
-{  
-
+{
 	DebugNewTitle("select overload");
 	auto sfn1 = select_overload<void(int)>(print);
 	test_overload * to1 = new test_overload{};

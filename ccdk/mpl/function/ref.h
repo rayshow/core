@@ -24,7 +24,8 @@ ccdk_namespace_mpl_fn_start
 			expr(T&& inT)
 			:t(inT)
 		{
-			static_assert(!is_rref_v< decltype(inT) >, "reference expr can't be temporary object");
+			static_assert(!is_rref_v< decltype(inT) >,
+				"reference expr can't be temporary object");
 		}
 
 
@@ -35,6 +36,7 @@ ccdk_namespace_mpl_fn_start
 		}
 
 		template<uint32 Start, typename... Args>
+		CCDK_FORCEINLINE
 		const T&
 		eval(Args&&...) const noexcept
 		{
