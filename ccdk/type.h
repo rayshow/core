@@ -1,6 +1,5 @@
 #pragma once
 
-#include<ccdk/debug_type.hpp>
 #include<ccdk/compile.h>
 #include<new>
 
@@ -56,5 +55,7 @@ namespace ccdk
 	static_assert(sizeof(uint64) == 8, "uint64 is not 8 byte.");
 	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 }
+
+#include<ccdk/debug_type.hpp>
 
 

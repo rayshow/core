@@ -7,6 +7,9 @@ namespace ccdk
 {
 	namespace mpl
 	{
+		//1. from derive to base
+		//2. has implicit converter
+		//3. has type constructor
 		template<typename F, typename T>
 		struct is_convertible_helper
 		{

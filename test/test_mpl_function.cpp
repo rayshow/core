@@ -307,8 +307,21 @@ struct test_fn
 
 };
 
+struct base_t
+{
+	virtual void print() {}
+};
+
+template<typename T>
+struct derive_t
+	:public base_t
+{
+	virtual void print() override {}
+};
+
 int main()
 {
+	typeid(test_copy_t);
 	DebugNewTitle("select overload");
 	auto sfn1 = select_overload<void(int)>(print);
 	test_overload * to1 = new test_overload{};

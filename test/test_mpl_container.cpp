@@ -7,31 +7,80 @@
 #include<type_traits>
 #include<assert.h>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/container/string_literial.h>
-#include<ccdk/mpl/container/string_view.h>
-#include<ccdk/mpl/container/ref_tuple.h>
+#include<ccdk/mpl/fusion/string_literial.h>
+#include<ccdk/mpl/fusion/ref_tuple.h>
+#include<ccdk/mpl/fusion/any.h>
+#include<ccdk/mpl/fusion/limit_any.h>
+#include<ccdk/mpl/fusion/auto_any.h>
+#include<ccdk/mpl/base/arg_pack_find_index.h>
 #include<ccdk/type.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::mpl::literals;
+using namespace ccdk::mpl::fs;
+
 
 int main()
 {
+	DebugNewTitle("any");
+
+	any ai1 = 3;
+	int ri = 4;
+	const int cri = 5;
+	any ai2 = ri;
+	any ai3 = cri;
+	const any ai4 = 1;
+
+	DebugValueTypeName(ai1.to<int>());
+	DebugValueTypeName(ai4.to<int>());
+	DebugValueTypeName(util::move(ai1).to<int>());
+
+	DebugValueTypeName(ai4.to_pointer<int>());
+	DebugValueTypeName(ai1.to_pointer<int>());
+
+	try
+	{
+		DebugValueTypeName(ai1.to<char>());
+	}
+	catch (const std::exception& ex)
+	{
+		DebugValue(ex.what());
+	}
+
+	DebugNewTitle("limit any")
+	test_destruct tda("hello,world");
+	test_destruct tdb("c++");
+	DebugValue("limit_any");
+	limit_any_impl<make_indice<4>, double, int, char, test_destruct > la{ 1.0 };
+	DebugValue(sizeof(la));
+	DebugValue(la.to<double>());
+	la = tda;
+	DebugValue(la.to<test_destruct>().val);
+	la = tdb;
+	DebugValue(la.to<test_destruct>().val);
+	la = 1.0;
+	DebugValue(la.to<double>());
+
+	getchar();
+	return 0;
+
 	DebugNewTitle("ref tuple");
 	const char* str = "abc";
 	const char* const instr = "fdsa";
 	auto ref_tuple = create_ref_tuple(1, "fdas", str, instr);
-
 	DebugTypeName<decltype(ref_tuple.at<1>())>();
 	DebugValue(ref_tuple.at<0>());
 	DebugValue(ref_tuple.at<1>());
 	DebugValue(ref_tuple.at<2>());
 	DebugValue(ref_tuple.at<3>());
 
+	
 
-	getchar();
-	return 0;
+ 	//DebugValue(ai.to<int>());
+
+
+	
 
 	DebugNewTitle("string literial");
 	DebugValueTypeName(_literal("hello,world"));

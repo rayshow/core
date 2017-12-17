@@ -877,13 +877,7 @@
     <ClInclude Include="mpl\fusion\any.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\const_range.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\ebo.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\lazy.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\maybe.h">
@@ -901,14 +895,26 @@
     <ClInclude Include="mpl\fusion\tuple_storage.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\varient.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\val_seq.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\select_overload.h">
       <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\range.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\limit_any.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arg_pack_find_index.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\bad_any_cast.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\auto_any.h">
+      <Filter>mpl\fusion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
