@@ -1,6 +1,0 @@
-﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
-clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
-..\test_mpl_container.cpp(14,9): fatal error : 'ccdk/mpl/fusion/auto_any.h' file not found
-  #include<ccdk/mpl/fusion/auto_any.h>
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  1 error generated.

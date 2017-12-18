@@ -123,11 +123,13 @@
     <ClInclude Include="mpl\base\derive_if.h" />
     <ClInclude Include="mpl\base\enable_if.h" />
     <ClInclude Include="mpl\base\make_indice.h" />
+    <ClInclude Include="mpl\base\op.h" />
     <ClInclude Include="mpl\base\sfinae.h" />
     <ClInclude Include="mpl\base\val_pack.h" />
     <ClInclude Include="mpl\base\val_pack_at.h" />
     <ClInclude Include="mpl\base\val_pack_create.h" />
     <ClInclude Include="mpl\base\val_pack_find.h" />
+    <ClInclude Include="mpl\base\val_pack_max.h" />
     <ClInclude Include="mpl\base\val_pack_merge.h" />
     <ClInclude Include="mpl\base\val_pack_split.h" />
     <ClInclude Include="mpl\base\when_match.h" />
@@ -172,7 +174,7 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\tuple_storage.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
-    <ClInclude Include="mpl\fusion\limit_any.h" />
+    <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\mpl_module.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
@@ -189,7 +191,7 @@
     <ClInclude Include="mpl\type_traits\add_top_const.h" />
     <ClInclude Include="mpl\type_traits\add_unsigned.h" />
     <ClInclude Include="mpl\type_traits\add_volatile.h" />
-    <ClInclude Include="mpl\type_traits\aligned_max.h" />
+    <ClInclude Include="mpl\type_traits\max_align_t.h" />
     <ClInclude Include="mpl\type_traits\aligned_storage.h" />
     <ClInclude Include="mpl\type_traits\align_of.h" />
     <ClInclude Include="mpl\type_traits\args_of.h" />

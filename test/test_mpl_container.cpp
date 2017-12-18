@@ -10,9 +10,10 @@
 #include<ccdk/mpl/fusion/string_literial.h>
 #include<ccdk/mpl/fusion/ref_tuple.h>
 #include<ccdk/mpl/fusion/any.h>
-#include<ccdk/mpl/fusion/limit_any.h>
-#include<ccdk/mpl/fusion/auto_any.h>
+#include<ccdk/mpl/fusion/varient.h>
 #include<ccdk/mpl/base/arg_pack_find_index.h>
+#include<ccdk/mpl/base/val_pack_max.h>
+#include<ccdk/mpl/type_traits/max_align_t.h>
 #include<ccdk/type.h>
 
 using namespace ccdk;
@@ -23,11 +24,7 @@ using namespace ccdk::mpl::fs;
 
 int main()
 {
-	
-
 	DebugNewTitle("any");
-	
-
 	any ai1 = 3;
 	int ri = 4;
 	const int cri = 5;
@@ -51,11 +48,11 @@ int main()
 		DebugValue(ex.what());
 	}
 
-	DebugNewTitle("limit any")
+	DebugNewTitle("varient")
 	test_destruct tda("hello,world");
 	test_destruct tdb("c++");
-	DebugValue("limit_any");
-	limit_any_impl<make_indice<4>, double, int, char, test_destruct > la{ 1.0 };
+	varient<double, int, char, test_destruct > la{ 1.0 };
+
 	DebugValue(sizeof(la));
 	DebugValue(la.to<double>());
 	la = tda;

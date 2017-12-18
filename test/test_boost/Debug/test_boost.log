@@ -1,5 +1,0 @@
-﻿  main.cpp
-d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
-  Unknown compiler version - please run the configure tests and report the results
-  test_boost.vcxproj -> D:\Git\core\Debug\test_boost.exe
-  test_boost.vcxproj -> D:\Git\core\Debug\test_boost.pdb (Partial PDB)
