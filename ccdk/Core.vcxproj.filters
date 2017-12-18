@@ -372,9 +372,6 @@
     <ClInclude Include="mpl\type_traits\align_of.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\aligned_max.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\aligned_storage.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -904,17 +901,23 @@
     <ClInclude Include="mpl\fusion\range.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\limit_any.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\arg_pack_find_index.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\bad_any_cast.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\auto_any.h">
+    <ClInclude Include="mpl\fusion\varient.h">
       <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\op.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\val_pack_max.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\max_align_t.h">
+      <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
