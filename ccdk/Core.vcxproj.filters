@@ -31,9 +31,6 @@
     <Filter Include="mpl\type_trait\impl">
       <UniqueIdentifier>{74b6b3cd-90c6-4cee-9395-db23514e5200}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mpl\smart_ptr">
-      <UniqueIdentifier>{5d6b5634-5177-412f-ae32-617d3e997e36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mpl\util">
       <UniqueIdentifier>{8e19dafe-fdcf-4be2-95a5-3dc6e5791c95}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,9 @@
     </Filter>
     <Filter Include="mpl\fusion">
       <UniqueIdentifier>{5c9414c8-2d0f-48b8-87ba-5b6ef3b7f54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpl\smart_ptr">
+      <UniqueIdentifier>{5d6b5634-5177-412f-ae32-617d3e997e36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -149,15 +149,6 @@
     </ClInclude>
     <ClInclude Include="math\vector_runtime_support.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="memory\aligned_allocator.h">
-      <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="memory\heap_allocator.h">
-      <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="memory\place_new.h">
-      <Filter>memory</Filter>
     </ClInclude>
     <ClInclude Include="math\vector4x2.h">
       <Filter>math</Filter>
@@ -911,9 +902,6 @@
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\bad_any_cast.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\auto_any.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
   </ItemGroup>

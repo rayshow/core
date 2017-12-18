@@ -23,7 +23,10 @@ using namespace ccdk::mpl::fs;
 
 int main()
 {
+	
+
 	DebugNewTitle("any");
+	
 
 	any ai1 = 3;
 	int ri = 4;

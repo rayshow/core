@@ -123,6 +123,12 @@ struct traits {
 
 int main()
 {
+	
+	std::shared_ptr<int> sh;
+	std::unique_ptr<int> us;
+
+	std::pair(1, 2);
+
 	fn_dispatch_test(0);
 	fn_dispatch_test(simple_nfn);
 	fn_dispatch_test(&simple_nfn);

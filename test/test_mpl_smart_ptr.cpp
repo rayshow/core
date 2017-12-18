@@ -21,8 +21,10 @@
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/smart_ptr/scope_ptr.h>
-using namespace ccdk::mpl;
+
 using namespace ccdk;
+using namespace ccdk::mpl;
+using namespace ccdk::mpl::sp;
 
 struct base
 {

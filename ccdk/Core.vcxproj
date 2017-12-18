@@ -111,9 +111,6 @@
     <ClInclude Include="math\vector4.h" />
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
-    <ClInclude Include="memory\aligned_allocator.h" />
-    <ClInclude Include="memory\heap_allocator.h" />
-    <ClInclude Include="memory\place_new.h" />
     <ClInclude Include="mpl\base\add_.h" />
     <ClInclude Include="mpl\base\arg_pack.h" />
     <ClInclude Include="mpl\base\arg_pack_find_if.h" />
@@ -176,7 +173,6 @@
     <ClInclude Include="mpl\fusion\tuple_storage.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\limit_any.h" />
-    <ClInclude Include="mpl\fusion\auto_any.h" />
     <ClInclude Include="mpl\mpl_module.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />

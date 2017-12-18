@@ -1,8 +1,6 @@
 ﻿clang-cl.exe : warning : argument unused during compilation: '/ZI' [-Wunused-command-line-argument]
 clang-cl.exe : warning : argument unused during compilation: '/Gm' [-Wunused-command-line-argument]
-..\test_mpl_container.cpp(148,7): warning : unused variable 'tuple10' [-Wunused-variable]
-          auto tuple10 = tuple8 | tuple9;
-               ^
-  1 warning generated.
-  test_container.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.container.exe
-  test_container.vcxproj -> D:\____git\Aurora3D\core\Debug\test.mpl.container.pdb (Partial PDB)
+..\test_mpl_container.cpp(14,9): fatal error : 'ccdk/mpl/fusion/auto_any.h' file not found
+  #include<ccdk/mpl/fusion/auto_any.h>
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  1 error generated.
