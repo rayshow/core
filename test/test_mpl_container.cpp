@@ -75,13 +75,9 @@ int main()
 	DebugValue(ref_tuple.at<2>());
 	DebugValue(ref_tuple.at<3>());
 
-	
+
 
  	//DebugValue(ai.to<int>());
-
-
-	
-
 	DebugNewTitle("string literial");
 	DebugValueTypeName(_literal("hello,world"));
 	constexpr auto sl = _literal("hello,world");

@@ -111,9 +111,6 @@
     <ClInclude Include="math\vector4.h" />
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
-    <ClInclude Include="memory\aligned_allocator.h" />
-    <ClInclude Include="memory\heap_allocator.h" />
-    <ClInclude Include="memory\place_new.h" />
     <ClInclude Include="mpl\base\add_.h" />
     <ClInclude Include="mpl\base\arg_pack.h" />
     <ClInclude Include="mpl\base\arg_pack_find_if.h" />

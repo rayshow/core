@@ -21,8 +21,11 @@
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/smart_ptr/scope_ptr.h>
-using namespace ccdk::mpl;
+#include<ccdk/mpl/smart_ptr/share_ptr.h>
+
 using namespace ccdk;
+using namespace ccdk::mpl;
+using namespace ccdk::mpl::sp;
 
 struct base
 {
@@ -52,6 +55,9 @@ struct derive :public base
 using namespace ccdk::mpl;
 int main()
 {
+	share_ptr<int> sp{ new int[5] };
+	std::shared_ptr<int> sp2;
+
 	{
 		int *p = new int;
 		int *a = new int[2];

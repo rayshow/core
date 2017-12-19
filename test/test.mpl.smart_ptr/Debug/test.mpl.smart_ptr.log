@@ -1,6 +1,0 @@
-﻿  test_mpl_smart_ptr.cpp
-d:\git\core\ccdk\debug_type.hpp(164): warning C4522: “test_copy_t”: 指定了多个赋值运算符
-d:\git\core\ccdk\mpl\function\operator.h(44): warning C4002: “CCDK_DEFINE_BINARY_FN_OBJECT”宏的实参太多
-d:\git\core\ccdk\mpl\function\operator.h(53): warning C4002: “CCDK_DEFINE_UNIARY_FRONT_FN_OBJECT”宏的实参太多
-  test.mpl.smart_ptr.vcxproj -> D:\Git\core\Debug\test.mpl.smart_ptr.exe
-  test.mpl.smart_ptr.vcxproj -> D:\Git\core\Debug\test.mpl.smart_ptr.pdb (Partial PDB)

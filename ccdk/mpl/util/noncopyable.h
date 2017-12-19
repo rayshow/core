@@ -7,9 +7,7 @@ ccdk_namespace_mpl_util_start
 	struct noncopyable
 	{
 		noncopyable() = default;
-
 		noncopyable(const noncopyable&) = delete;
-
 		noncopyable& operator=(const noncopyable&) = delete;
 	};
 
