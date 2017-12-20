@@ -6,13 +6,17 @@
 
 #include<boost/proto/proto.hpp>
 #include<boost/any.hpp>
+#include<boost/lockfree/queue.hpp>
+
+using namespace ccdk::mpl::fn;
+using namespace ccdk;
 
 void test()
 {
 	DebugValue("hello");
 }
 
-using namespace ccdk::mpl::fn;
+
 
 int main()
 {

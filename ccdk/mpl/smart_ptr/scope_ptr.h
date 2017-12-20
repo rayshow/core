@@ -25,10 +25,7 @@ ccdk_namespace_mpl_sp_start
 			typename P,
 			typename = check_t< is_convertible<P*, T*>>
 		>
-		CCDK_FORCEINLINE  explicit
-		scope_ptr( P* inPtr) noexcept
-			: ptr(inPtr)
-		{}
+		CCDK_FORCEINLINE  explicit scope_ptr( P* inPtr) noexcept : ptr(inPtr) {}
 
 		//non-copy
 		template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
@@ -44,11 +41,7 @@ ccdk_namespace_mpl_sp_start
 		CCDK_FORCEINLINE T&& operator*() &&  { return const_cast<T&&>(__deref_impl()); }
 
 		//delete
-		CCDK_FORCEINLINE
-		~scope_ptr() 
-		{
-			ptr::safe_delete(ptr);
-		}
+		CCDK_FORCEINLINE ~scope_ptr()  { ptr::safe_delete(ptr); }
 
 	private:
 		CCDK_FORCEINLINE  
@@ -75,10 +68,7 @@ ccdk_namespace_mpl_sp_start
 			typename P,
 			typename = check_t< is_convertible<P*, T*>>
 		>
-		CCDK_FORCEINLINE explicit
-		scope_ptr(P* inPtr) noexcept
-			: ptr(inPtr)
-		{}
+		CCDK_FORCEINLINE explicit scope_ptr(P* inPtr) noexcept : ptr(inPtr) {}
 
 		//non-copy
 		template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
@@ -89,25 +79,10 @@ ccdk_namespace_mpl_sp_start
 		CCDK_FORCEINLINE const T& operator[](uint32 index) const & noexcept  { return ptr[index]; }
 		CCDK_FORCEINLINE T&& operator[](uint32 index) && noexcept { return ptr[index]; }
 
-		CCDK_FORCEINLINE explicit
-			operator value_type()
-		{
-			return ptr;
-		}
-
-		CCDK_FORCEINLINE
-			value_type value()
-		{
-			return ptr;
-		}
-
+		CCDK_FORCEINLINE value_type value() { return ptr; }
 
 		//delete
-		CCDK_FORCEINLINE
-		~scope_ptr() 
-		{
-			ptr::safe_delete_array(ptr);
-		}
+		CCDK_FORCEINLINE ~scope_ptr()  { ptr::safe_delete_array(ptr); }
 	};
 
 	//void * is special, can't dereference / ref member / index
@@ -126,34 +101,15 @@ ccdk_namespace_mpl_sp_start
 			typename T,
 			typename = check_t< is_pod<T> >
 		>
-		CCDK_FORCEINLINE
-		scope_ptr(T* inPtr) noexcept
-			: ptr(inPtr)
-		{}
+		CCDK_FORCEINLINE scope_ptr(T* inPtr) noexcept : ptr(inPtr) {}
 
 		//non-copy
 		template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
 		template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
 
-		CCDK_FORCEINLINE explicit
-		operator value_type()
-		{
-			return ptr;
-		}
+		CCDK_FORCEINLINE  value_type value() { return ptr; }
 
-		CCDK_FORCEINLINE 
-			value_type value()
-		{
-			return ptr;
-		}
-
-		CCDK_FORCEINLINE
-		~scope_ptr()
-		{
-			delete ptr;
-			ptr = nullptr;
-		}
-
+		CCDK_FORCEINLINE ~scope_ptr() { delete ptr; ptr = nullptr; }
 	};
 
 ccdk_namespace_mpl_sp_end
