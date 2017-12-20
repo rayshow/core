@@ -32,7 +32,7 @@ public:
 
 	template<typename Deleter, typename Class>
 	CCDK_FORCEINLINE
-	void decrease_share_count(const Deleter& del, Class*& ptr)
+	void dec_share_count(const Deleter& del, Class*& ptr)
 	{
 		if (--shared_count == 0)
 		{
@@ -41,7 +41,7 @@ public:
 	}
 
 	CCDK_FORCEINLINE
-	void increase_share_count()
+	void inc_share_count()
 	{
 		++shared_count;
 	}
@@ -63,7 +63,7 @@ public:
 	}
 };
 
-
+//for non-void / non-array / non-thread-safe implements
 template<
 	typename Class,
 	typename Deleter = normal_deleter,     //array need normal_array_deleter
@@ -71,39 +71,98 @@ template<
 >
 class share_ptr
 {
+	typedef Class* value_type;
 private:
 	RefCount* ref_count;
 	Class*    content;
 public:
+
+	//default constructor
 	CCDK_FORCEINLINE
 		share_ptr() noexcept
 		:ref_count{ nullptr }, content{ nullptr }
 	{}
 
+	//nullptr constructor
 	CCDK_FORCEINLINE
 		share_ptr(ptr::nullptr_t) noexcept
-		: ref_count{ nullptr }, content{ nullptr }
+		: ref_count{ nullptr }, 
+			content{ nullptr }
 	{}
 
+	//ptr constructor
 	//derived class can also transfered use ptr
 	//RefCount need a noexcept constructor
 	CCDK_FORCEINLINE explicit
-		share_ptr( Class* ptr) noexcept
-		: ref_count{ new RefCount{1,1} }, content{ ptr }
+		share_ptr(value_type ptr) noexcept
+		: ref_count{ new RefCount{1,1} },
+			content{ ptr }
 	{}
 
+	//copy constructor
 	//Class1 must be base of Class2
 	template<
 		typename Class2,
 		typename = check_t< is_convertible<Class*,Class2*> >
 	>
 	CCDK_FORCEINLINE
-		share_ptr(const share_ptr<Class2> & other) noexcept
+	share_ptr(const share_ptr<Class2> & other) noexcept
 		: ref_count{ other.ref_count },
-		content{ other.content }
-	{}
+			content{ other.content }
+	{
+		ref_count->inc_share_count();
+	}
 
-	template<typename Class2>
+	//move constructor
+	template<
+		typename Class2,
+		typename = check_t< is_convertible<Class*, Class2*> >
+	>
+	CCDK_FORCEINLINE
+	share_ptr(share_ptr<Class2>&& other) noexcept
+	{
+		other.swap(*this);          //move to this
+		share_ptr{}.swap(other);    //release other
+	}
+
+	//assign
+	CCDK_FORCEINLINE
+	share_ptr& operator=(value_type ptr)
+	{
+		share_ptr{ ptr }.swap(*this);
+		return *this;
+	}
+
+	//copy assign
+	template<
+		typename Class2,
+		typename = check_t< is_convertible<Class*, Class2*> >
+	>
+	CCDK_FORCEINLINE
+	share_ptr& operator=(const share_ptr<Class2>& other)
+	{
+		share_ptr{ other }.swap(*this);
+		return *this;
+	}
+
+	//copy assign
+	template<
+		typename Class2,
+		typename = check_t< is_convertible<Class*, Class2*> >
+	>
+		CCDK_FORCEINLINE
+		share_ptr& operator=(share_ptr<Class2>&& other)
+	{
+		other.swap(*this);
+		share_ptr{}.swap(other);
+		return *this;
+	}
+
+	//swap operation
+	template<
+		typename Class2,
+		typename = check_t< is_convertible<Class*, Class2*> >
+	>
 	CCDK_FORCEINLINE
 	void swap(share_ptr<Class2>& other) noexcept
 	{
@@ -114,8 +173,24 @@ public:
 	CCDK_FORCEINLINE
 		~share_ptr()
 	{
+		//not store Deleter
 		ref_count->decrease_share_count(Deleter{}, content);
 	}
 };
+
+//for non-void / non-array / non-thread-safe implements
+template<
+	typename Class,
+	typename Deleter = normal_array_deleter, //array delete
+	typename RefCount = default_ref_count    //multi-thread need atomic ref_count, need nothrow constructor
+>
+class share_ptr<Class[]>
+{
+
+};
+
+
+
+
 
 ccdk_namespace_mpl_sp_end

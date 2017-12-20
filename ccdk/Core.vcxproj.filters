@@ -916,5 +916,11 @@
     <ClInclude Include="mpl\smart_ptr\out_of_range_exception.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\util\size.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\value.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
