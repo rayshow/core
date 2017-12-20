@@ -9,11 +9,6 @@
 
 ccdk_namespace_mpl_sp_start
 
-struct ref_count_base
-{
-
-};
-
 //non-thread safe ref_count
 class default_ref_count
 {

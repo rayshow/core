@@ -55,11 +55,23 @@ struct derive :public base
 using namespace ccdk::mpl;
 int main()
 {
-	share_ptr<int> sp{ new int[5] };
+
+	DebugNewTitle("test copy");
+
+	test_copy_assign_t<int> t1 = 1;
+	test_copy_assign_t<int> t2 = t1;
+
+	DebugNewTitle("share_ptr")
 	std::shared_ptr<int> sp2;
+
+	DebugNewTitle("scope ptr");
+	share_ptr<int> sp{ new int[5] };
 
 	{
 		int *p = new int;
+		scope_ptr<void> vp{ new int };
+
+
 		int *a = new int[2];
 		DebugValue((int)p);
 		DebugValue((int)&a[0]);
@@ -67,10 +79,10 @@ int main()
 		base *ba = new base();
 		base *bb = new derive();
 		{
-			scope_ptr<int> ptr = p;
-			scope_ptr<int[]> arr_ptr = a;
-			scope_ptr<base> bp1 = ba;
-			scope_ptr<base> bp2 = bb;
+			scope_ptr<int> ptr{ p };
+			scope_ptr<int[]> arr_ptr{ a };
+			scope_ptr<base> bp1{ ba };
+			scope_ptr<base> bp2{ bb };
 			bp1->test_size();
 			bp2->test_size();
 		}

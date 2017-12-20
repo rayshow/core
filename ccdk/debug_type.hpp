@@ -252,6 +252,8 @@ namespace ccdk {
 	{
 		test_copy_assign_t() { DebugValue("default ctor"); }
 
+		test_copy_assign_t(int t) { DebugValue("int ctor"); }
+
 		test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
 
 		test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }

@@ -7,7 +7,7 @@
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/swap.h>
-#include<ccdk/mpl/fusion/bad_any_cast.h>
+#include<ccdk/mpl/fusion/bad_cast_exception.h>
 
 ccdk_namespace_mpl_fs_start
 
@@ -215,7 +215,7 @@ private:
 		{
 			return static_cast< any_holder<P>*>(holder)->get();
 		}
-		throw bad_any_cast{ "bad any cast at ccdk::mpl::fusion::any::__to_ref_impl<T>()" };
+		throw bad_cast_exception{ "bad any cast at ccdk::mpl::fusion::any::__to_ref_impl<T>()" };
 	}
 
 	template<typename T, typename P = decay_t<T>>
@@ -227,7 +227,7 @@ private:
 		{
 			return static_cast< any_holder<P>*>(holder)->get_pointer();
 		}
-		throw bad_any_cast{ "bad any cast at ccdk::mpl::fusion::any::__to_pointer_impl<T>()" };
+		throw bad_cast_exception{ "bad any cast at ccdk::mpl::fusion::any::__to_pointer_impl<T>()" };
 	}
 };
 

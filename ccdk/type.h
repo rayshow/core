@@ -34,7 +34,7 @@ namespace ccdk
 		template<typename T>
 		void safe_delete(T*& t)
 		{
-			//rise error if T is imcomplete
+			//rise error if T is imcomplete like void*
 			sizeof(*t); if (t) { delete t; t = nullptr; }
 		}
 

@@ -3,14 +3,15 @@
 #include<exception>
 #include<ccdk/mpl/mpl_module.h>
 
-ccdk_namespace_mpl_fs_start
+ccdk_namespace_mpl_sp_start
 
-struct bad_any_cast
+
+struct deref_nullptr_exception
 	:std::exception
 {
 	const char* msg;
 
-	bad_any_cast(const char* inMsg)
+	deref_nullptr_exception(const char* inMsg)
 		:msg{ inMsg } {}
 
 	virtual char const*
@@ -20,4 +21,5 @@ struct bad_any_cast
 	}
 };
 
-ccdk_namespace_mpl_fs_end
+
+ccdk_namespace_mpl_sp_end
