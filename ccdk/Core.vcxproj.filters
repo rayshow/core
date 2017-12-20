@@ -922,5 +922,11 @@
     <ClInclude Include="mpl\util\value.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

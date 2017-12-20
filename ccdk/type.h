@@ -2,6 +2,7 @@
 
 #include<ccdk/compile.h>
 #include<new>
+#include<assert.h>
 
 namespace ccdk
 {
@@ -19,6 +20,12 @@ namespace ccdk
 	typedef char                     achar;  //ansi char
 	typedef char16_t                 char16;
 	typedef char32_t                 char32;
+
+#if defined(_DEBUG )|| defined(DEBUG)
+#define ccdk_assert( expr )  assert( expr )
+#elif
+#define ccdk_assert( expr ) 
+#endif
 
 	namespace ptr
 	{

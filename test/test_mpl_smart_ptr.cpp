@@ -55,6 +55,13 @@ struct derive :public base
 using namespace ccdk::mpl;
 int main()
 {
+	DebugNewTitle("test share_ptr");
+
+	{
+		std::shared_ptr<void> sptr{ new derive{} };
+	}
+	
+
 
 	DebugNewTitle("test copy");
 
@@ -66,7 +73,6 @@ int main()
 
 	DebugNewTitle("scope ptr");
 	share_ptr<int> sp{ new int[5] };
-
 	{
 		int *p = new int;
 		scope_ptr<void> vp{ new int };
