@@ -10,6 +10,9 @@
 #define ccdk_namespace_mpl_start     namespace ccdk{ namespace mpl{
 #define ccdk_namespace_mpl_end       ccdk_namespace_end_of_2
 
+#define ccdk_namespace_typetraits_impl_start namespace ccdk{ namespace mpl { namespace impl{
+#define ccdk_namespace_typetraits_impl_end ccdk_namespace_end_of_3
+
 //module function
 #define ccdk_namespace_mpl_fn_start  namespace ccdk{ namespace mpl{ namespace fn{
 #define ccdk_namespace_mpl_fn_end    ccdk_namespace_end_of_3

@@ -176,13 +176,12 @@
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\mpl_module.h" />
-    <ClInclude Include="mpl\smart_ptr\deref_nullptr_exception.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
-    <ClInclude Include="mpl\smart_ptr\out_of_range_exception.h" />
     <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\share_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\share_ptr_fwd.h" />
     <ClInclude Include="mpl\smart_ptr\unique_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\weak_ptr.h" />
     <ClInclude Include="mpl\type_traits.h" />
@@ -298,6 +297,8 @@
     <ClInclude Include="mpl\type_traits\traits_case.h" />
     <ClInclude Include="mpl\util\addressof.h" />
     <ClInclude Include="mpl\util\forward.h" />
+    <ClInclude Include="mpl\util\compatible_cmp.h" />
+    <ClInclude Include="mpl\util\hash.h" />
     <ClInclude Include="mpl\util\move.h" />
     <ClInclude Include="mpl\util\noncopyable.h" />
     <ClInclude Include="mpl\util\size.h" />

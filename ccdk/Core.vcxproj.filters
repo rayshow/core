@@ -907,14 +907,8 @@
     <ClInclude Include="mpl\type_traits\max_align_t.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\deref_nullptr_exception.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\bad_cast_exception.h">
       <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\out_of_range_exception.h">
-      <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
     <ClInclude Include="mpl\util\size.h">
       <Filter>mpl\util</Filter>
@@ -927,6 +921,15 @@
     </ClInclude>
     <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h">
       <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\share_ptr_fwd.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\compatible_cmp.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\hash.h">
+      <Filter>mpl\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -73,18 +73,37 @@
 #endif
 
 
+//function like macro
+#ifndef ccdk_likely
+#if defined(CCDK_COMPILER_GCC) ||  defined(CCDK_COMPILER_CLANG) //linux or  clang
+#define ccdk_likely(x)    __builtin_expect(!!(x), 1)
+#define ccdk_unlikely(x)  __builtin_expect(!!(x), 0)
+#else
+#define ccdk_likely(x)   (x)
+#define ccdk_unlikely(x) (x)
+#endif
+#endif
+
+//function like macro
+#if defined( CCDK_DEBUG )
+#include<assert.h>
+#define ccdk_assert( expr )  assert( expr )
+#elif
+#define ccdk_assert( expr ) 
+#endif
+
+
+
 #if  defined(CCDK_COMPILER_MSVC)  
 #	define CCDK_MS_ALIGN(n)     __declspec(align(n))
 #	define CCDK_GCC_ALIGN(n) 
 #	define CCDK_DLLEXPORT       __declspec(dllexport)    //building as a library
-#	define CCDK_DLLIMPORT	   __declspec(dllimport)    //building with this library
+#	define CCDK_DLLIMPORT	   __declspec(dllimport)     //building with this library
 #	define CCDK_DEPRECATED(version, msg) __declspec(deprecated(msg "please update your code"))
-#	define CCDK_LIKELY(state)   (state)
-#	define CCDK_UNLIKELY(state) (state)
-#	define CCDK_CDECL	       __cdecl			
+#	define CCDK_CDECL	        __cdecl			
 #   define CCDK_FASTCALL        __fastcall
 #   define CCDK_VECTORCALL      __vectorcall
-#	define CCDK_STDCALL	       __stdcall										
+#	define CCDK_STDCALL	        __stdcall										
 #	define CCDK_FORCEINLINE     __forceinline						
 #	define CCDK_FORCENOINLINE   __declspec(noinline)
 #elif defined(CCDK_COMPILER_GCC) ||  defined(CCDK_COMPILER_CLANG) //linux or  clang
@@ -93,8 +112,6 @@
 #	define CCDK_DLLEXPORT	__attribute__((visibility("default")))
 #	define CCDK_DLLIMPORT	__attribute__((visibility("default")))
 #	define CCDK_DEPRECATED(version, msg) __attribute__((deprecated(msg "please update your code")))
-#	define CCDK_LIKELY(state)   __builtin_expect(!!(x),1)
-#	define CCDK_UNLIKELY(state) __builtin_expect(!!(x),0)
 #	define CCDK_CDECL	  		
 #	define CCDK_VARARGS    
 #	define CCDK_STDCALL	  
@@ -106,8 +123,6 @@
 #	define CCDK_DLLEXPORT	
 #	define CCDK_DLLIMPORT	
 #	define CCDK_DEPRECATED(version, msg) __attribute__((deprecated(MESSAGE "please update your code")))
-#	define CCDK_LIKELY(state)   
-#	define CCDK_UNLIKELY(state) 
 #	define CCDK_CDECL	  		
 #	define CCDK_VARARGS    
 #	define CCDK_STDCALL	  

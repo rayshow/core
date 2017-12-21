@@ -7,17 +7,14 @@ ccdk_namespace_mpl_util_start
 
 //general implements
 template<typename T>
-struct get_value_t
+struct hash_t
 {
-	decltype(auto) operator()(const T& t) const
+	ptr::size_t operator()(const T& t) const
 	{
-		return t.value;
+		return 0;
 	}
 };
 
-template<typename T> constexpr get_value_t<T> value{};
-
-
-
+template<typename T> constexpr hash_t<T> hash{};
 
 ccdk_namespace_mpl_util_end

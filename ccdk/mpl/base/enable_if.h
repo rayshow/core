@@ -25,8 +25,6 @@ namespace ccdk
 		template<typename T>
 		using check_t = check< T::value >;
 
-
-
 		template<uint32 start, uint32 end>
 		using check_range = typename enable_if< (end>start && start>=0), void > ::type;
 

@@ -1,5 +1,6 @@
 #pragma once
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/type_traits/is_same.h>
 
 ccdk_namespace_mpl_sp_start
 
@@ -21,6 +22,7 @@ ccdk_namespace_mpl_sp_start
 		}
 	};
 
+	//void* pointer to pod memory
 	template<>
 	struct normal_deleter<void>
 	{
@@ -32,3 +34,12 @@ ccdk_namespace_mpl_sp_start
 	};
 
 ccdk_namespace_mpl_sp_end
+
+ccdk_namespace_typetraits_impl_start
+
+//special partialization
+template<typename T1, typename T2> 
+struct is_same_impl< ccdk::mpl::sp::normal_deleter<T1>, ccdk::mpl::sp::normal_deleter<T2>> :true_ {};
+
+ccdk_namespace_typetraits_impl_end
+
