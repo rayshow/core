@@ -22,6 +22,7 @@
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/smart_ptr/scope_ptr.h>
 #include<ccdk/mpl/smart_ptr/share_ptr.h>
+#include<ccdk/mpl/smart_ptr/weak_ptr.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -56,6 +57,7 @@ using namespace ccdk::mpl;
 int main()
 {
 	std::shared_ptr<int> a{};
+	std::unique_ptr<int> a2{};
 	DebugNewTitle("share_ptr")
 	{
 		{

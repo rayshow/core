@@ -9,7 +9,7 @@
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/swap.h>
-#include<ccdk/mpl/fusion/bad_any_cast.h>
+#include<ccdk/mpl/fusion/bad_cast_exception.h>
 
 ccdk_namespace_mpl_fs_start
 
@@ -88,7 +88,7 @@ public:
 			return *reinterpret_cast<P*>((char*)memory);
 		}
 		
-		throw bad_any_cast{ "bad any cast from P to T at ccdk::mpl::fusion::limit_any::to<T>()" };
+		throw bad_cast_exception{ "bad any cast from P to T at ccdk::mpl::fusion::limit_any::to<T>()" };
 	}
 
 	template<

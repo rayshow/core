@@ -46,6 +46,13 @@ namespace ccdk
 			//rise error if T is imcomplete
 			sizeof(*t); if (t) { delete[] t; t = nullptr; }
 		}
+
+		//like void* / declare Type*
+		template<typename T>
+		void imcomp_delete(T*& t)
+		{
+			if (t) { delete t; t = nullptr; }
+		}
 	}
 
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");

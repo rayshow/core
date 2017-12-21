@@ -177,8 +177,8 @@
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\mpl_module.h" />
     <ClInclude Include="mpl\smart_ptr\normal_deleter.h" />
-    <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h" />
-    <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\polymorph_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\polymorph_wptr.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\share_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\share_ptr_fwd.h" />

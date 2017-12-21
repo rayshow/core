@@ -132,8 +132,6 @@ public:
 	template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
 	template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
 
-		
-
 	CCDK_FORCEINLINE value_type value() { return ptr; }
 
 	//delete

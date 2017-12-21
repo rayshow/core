@@ -94,12 +94,13 @@ template<
 class share_ptr
 {
 public:
-	typedef T*		          value_type;
-	typedef Deleter           delete_type;
-	typedef RefCount          ref_count_type;
-	typedef share_ptr         this_type;
-
-	template<typename T, typename D, typename R> friend class share_ptr;
+	typedef T*		                   value_type;
+	typedef Deleter                    delete_type;
+	typedef RefCount                   ref_count_type;
+	typedef share_ptr				   type;
+	typedef weak_ptr<T,RefCount>       weak_type;
+	template<typename, typename, typename> friend class share_ptr;
+	template<typename, typename> friend class weak_ptr;
 private:
 	ref_count_type* ref_count;
 	value_type      content;
@@ -111,27 +112,29 @@ public:
 	CCDK_FORCEINLINE share_ptr(ptr::nullptr_t) noexcept : ref_count{ nullptr },  content{ nullptr } {}
 	//construct from T pointer
 	CCDK_FORCEINLINE explicit share_ptr(value_type ptr) noexcept : ref_count{ new RefCount{1,1} }, content{ ptr } {}
+	//construct from weak_ptr
+	CCDK_FORCEINLINE explicit share_ptr(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { if (ref_count) ref_count->inc_share_count(); }
 
 	//copy constructor
 	template<
-		typename T2,
-		typename = check_t< is_convertible< share_ptr<T2>, this_type >>
+		typename T2, typename D2, typename R2,
+		typename = check_t< is_convertible< share_ptr<T2,D2,R2>, type >>
 	>
 	CCDK_FORCEINLINE
-	share_ptr(const share_ptr<T2> & other) noexcept
+	share_ptr(const share_ptr<T2,D2,R2> & other) noexcept
 		: ref_count{ other.ref_count },
 			content{ other.content }
 	{
-		ref_count->inc_share_count();
+		if(ref_count) ref_count->inc_share_count();
 	}
 
 	//move constructor
 	template<
-		typename T2,
-		typename = check_t< is_convertible< share_ptr<T2>, this_type >>
+		typename T2, typename D2, typename R2,
+		typename = check_t< is_convertible< share_ptr<T2, D2, R2>, type >>
 	>
 	CCDK_FORCEINLINE
-	share_ptr(share_ptr<T2>&& other) noexcept
+	share_ptr(share_ptr<T2, D2, R2>&& other) noexcept
 	{
 		other.swap(*this);          
 		share_ptr{}.swap(other);    
@@ -142,11 +145,11 @@ public:
 
 	//copy assign
 	template<
-		typename T2,
-		typename = check_t< is_convertible< share_ptr<T2>, this_type >>
+		typename T2, typename D2, typename R2,
+		typename = check_t< is_convertible< share_ptr<T2, D2, R2>, type >>
 	>
 	CCDK_FORCEINLINE
-	share_ptr& operator=(const share_ptr<T2>& other) noexcept
+	share_ptr& operator=(const share_ptr<T2, D2, R2>& other) noexcept
 	{
 		share_ptr{ other }.swap(*this);
 		return *this;
@@ -154,11 +157,11 @@ public:
 
 	//move assign
 	template<
-		typename T2,
-		typename = check_t< is_convertible< share_ptr<T2>, this_type >>
+		typename T2, typename D2, typename R2,
+		typename = check_t< is_convertible< share_ptr<T2, D2, R2>, type >>
 	>
 	CCDK_FORCEINLINE
-	share_ptr& operator=(share_ptr<T2>&& other) noexcept
+	share_ptr& operator=(share_ptr<T2, D2, R2>&& other) noexcept
 	{
 		other.swap(*this);
 		share_ptr{}.swap(other);
@@ -167,11 +170,11 @@ public:
 
 	//swap operation
 	template<
-		typename T2,
-		typename = check_t< is_convertible< share_ptr<T2>, this_type >>
+		typename T2, typename D2, typename R2,
+		typename = check_t< is_convertible< share_ptr<T2, D2, R2>, type >>
 	>
 	CCDK_FORCEINLINE
-	void swap(share_ptr<T2>& other) noexcept
+	void swap(share_ptr<T2, D2, R2>& other) noexcept
 	{
 		util::swap(ref_count, other.ref_count);
 		util::swap(content, other.content);
@@ -221,7 +224,7 @@ public:
 	CCDK_FORCEINLINE uint32 share_count() noexcept { return ref_count->share_count; }
 
 	//destructor
-	CCDK_FORCEINLINE ~share_ptr() { ref_count->dec_share_count(Deleter{}, content); /*not store Deleter*/ }
+	CCDK_FORCEINLINE ~share_ptr() { if(ref_count) ref_count->dec_share_count(Deleter{}, content); /*not store Deleter*/ }
 };
 
 
@@ -238,9 +241,12 @@ template<
 class share_ptr<T[], Deleter, RefCount>
 {
 public:
-	typedef T*       value_type;
-	typedef Deleter  delete_type;
-	typedef RefCount ref_count_type;
+	typedef share_ptr                  type;
+	typedef T*                         value_type;
+	typedef Deleter                    delete_type;
+	typedef RefCount                   ref_count_type;
+	typedef weak_ptr<T,RefCount>       weak_type;
+	template<typename,typename > friend class  weak_ptr;
 private:
 	ref_count_type* ref_count;
 	value_type      content;
@@ -252,12 +258,15 @@ public:
 	//nullptr constructor
 	CCDK_FORCEINLINE share_ptr(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
+	//construct from weak_ptr
+	CCDK_FORCEINLINE explicit share_ptr(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { if (ref_count) ref_count->inc_share_count(); }
+
 	//construct from T pointer, use T[] pointer to differenet P[] is not a good idea(even T is base of P), see more effective c++ item 3
 	template<typename P, typename = check_t< is_same<T,P>>  >
 	CCDK_FORCEINLINE explicit share_ptr(P* ptr) noexcept : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
 
 	//only support copy from same style share_ptr, reason see explicit pointer constructor
-	CCDK_FORCEINLINE share_ptr(const share_ptr& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { ref_count->inc_share_count(); }
+	CCDK_FORCEINLINE share_ptr(const share_ptr& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if(ref_count) ref_count->inc_share_count(); }
 
 	//only support move from same style share_ptr, reason see explicit pointer constructor
 	CCDK_FORCEINLINE share_ptr(share_ptr&& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { other.content = nullptr; other.ref_count = nullptr; }
@@ -285,7 +294,7 @@ public:
 	//share count
 	CCDK_FORCEINLINE uint32 share_count() noexcept { return ref_count->share_count; }
 
-	CCDK_FORCEINLINE ~share_ptr() { ref_count->dec_share_count(Deleter{}, content);  /*not store Deleter */ }
+	CCDK_FORCEINLINE ~share_ptr() { if(ref_count) ref_count->dec_share_count(Deleter{}, content);  /*not store Deleter */ }
 };
 
 
@@ -302,11 +311,12 @@ template<
 class share_ptr<void, Deleter, RefCount>
 {
 public:
-	typedef void*	 value_type;
-	typedef Deleter  delete_type;
-	typedef RefCount ref_count_type;
-	template<typename T, typename D, typename R> friend class share_ptr;
-
+	typedef void*	                   value_type;
+	typedef Deleter                    delete_type;
+	typedef RefCount                   ref_count_type;
+	typedef weak_ptr<void,RefCount>       weak_type;
+	template<typename, typename> friend class  weak_ptr;
+	template<typename, typename, typename> friend class share_ptr;
 private:
 	ref_count_type* ref_count;
 	value_type      content;
@@ -318,13 +328,16 @@ public:
 	//nullptr constructor
 	CCDK_FORCEINLINE share_ptr(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
+	//construct from weak_ptr
+	CCDK_FORCEINLINE explicit share_ptr(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { if (ref_count) ref_count->inc_share_count(); }
+
 	//construct from P pointer, P need be pod
 	template<typename P, typename = check_t< is_pod<P>> >
 	CCDK_FORCEINLINE explicit share_ptr(P* ptr) noexcept : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
 
 	//only support copy from pod type share_ptr
 	template<typename P, typename = check_t< is_pod<P>> >
-	CCDK_FORCEINLINE share_ptr(const share_ptr<P>& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { ref_count->inc_share_count(); }
+	CCDK_FORCEINLINE share_ptr(const share_ptr<P>& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if(ref_count) ref_count->inc_share_count(); }
 
 	//only support move from pod type share_ptr
 	template<typename P, typename = check_t< is_pod<P>> >
@@ -349,9 +362,9 @@ public:
 	CCDK_FORCEINLINE const RefCount* ref_count_addr() noexcept { return ref_count; }
 
 	//share count
-	CCDK_FORCEINLINE uint32 share_count() noexcept { return ref_count->share_count; }
+	CCDK_FORCEINLINE uint32 share_count() noexcept { if (ref_count) return ref_count->share_count; return 0; }
 
-	CCDK_FORCEINLINE ~share_ptr() { ref_count->dec_share_count(Deleter{}, content);  /*not store Deleter */ }
+	CCDK_FORCEINLINE ~share_ptr() { if(ref_count) ref_count->dec_share_count(Deleter{}, content);  /*not store Deleter */ }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -522,7 +535,6 @@ struct get_value_t< ccdk::mpl::sp::share_ptr<T,D,R> >
 
 
 //partial implments of hash
-//general implements
 template<typename T, typename D, typename R>
 struct hash_t< ccdk::mpl::sp::share_ptr<T, D, R> >
 {

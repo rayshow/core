@@ -916,12 +916,6 @@
     <ClInclude Include="mpl\util\value.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\smart_ptr\share_ptr_fwd.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
@@ -930,6 +924,12 @@
     </ClInclude>
     <ClInclude Include="mpl\util\hash.h">
       <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\polymorph_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\polymorph_wptr.h">
+      <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
