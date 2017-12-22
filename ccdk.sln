@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccdk", "ccdk\Core.vcxproj", "{9CF25D83-D719-4757-B9E5-D21517BD5A7C}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.type_traits", "test\test.mpl.type_traits\test_type_trait.vcxproj", "{E92536B9-BC3D-49D0-89A5-11E25AD1E10B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_boost", "test\test_boost\test_boost.vcxproj", "{53C82A33-71B5-4EED-8E45-89055E227DDD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.core", "test\test.mpl.core\test.mpl.core.vcxproj", "{721DD590-7687-4042-8B22-531EFA435606}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,14 @@ Global
 		{53C82A33-71B5-4EED-8E45-89055E227DDD}.Release|Win32.Build.0 = Release|Win32
 		{53C82A33-71B5-4EED-8E45-89055E227DDD}.Release|x64.ActiveCfg = Release|x64
 		{53C82A33-71B5-4EED-8E45-89055E227DDD}.Release|x64.Build.0 = Release|x64
+		{721DD590-7687-4042-8B22-531EFA435606}.Debug|Win32.ActiveCfg = Debug|Win32
+		{721DD590-7687-4042-8B22-531EFA435606}.Debug|Win32.Build.0 = Debug|Win32
+		{721DD590-7687-4042-8B22-531EFA435606}.Debug|x64.ActiveCfg = Debug|x64
+		{721DD590-7687-4042-8B22-531EFA435606}.Debug|x64.Build.0 = Debug|x64
+		{721DD590-7687-4042-8B22-531EFA435606}.Release|Win32.ActiveCfg = Release|Win32
+		{721DD590-7687-4042-8B22-531EFA435606}.Release|Win32.Build.0 = Release|Win32
+		{721DD590-7687-4042-8B22-531EFA435606}.Release|x64.ActiveCfg = Release|x64
+		{721DD590-7687-4042-8B22-531EFA435606}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +113,7 @@ Global
 		{235ECE1D-1BED-41C9-975F-26DC0E27920C} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
 		{E92536B9-BC3D-49D0-89A5-11E25AD1E10B} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
 		{53C82A33-71B5-4EED-8E45-89055E227DDD} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
+		{721DD590-7687-4042-8B22-531EFA435606} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42D0876B-9FC6-41C9-8F37-E95B46CD3046}

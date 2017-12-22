@@ -70,6 +70,7 @@ public:
 
 
 //for array
+// have index
 template<typename T>
 struct unique_ptr<T[]> : public util::noncopyable
 {
@@ -111,7 +112,9 @@ public:
 };
 
 
-//for array
+//for void
+// no dereference
+// only access pod type
 template<>
 struct unique_ptr<void> : public util::noncopyable
 {

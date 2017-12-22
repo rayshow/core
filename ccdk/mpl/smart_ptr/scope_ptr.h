@@ -1,168 +1,94 @@
 #pragma once
 
-#include<exception>
-
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/type_traits/is_base_of.h>
+
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/util/noncopyable.h>
-#include<ccdk/mpl/smart_ptr/normal_deleter.h>
+#include<ccdk/mpl/type_traits/is_convertible.h>
+#include<ccdk/mpl/type_traits/add_lref.h>
+#include<ccdk/mpl/type_traits/add_const_lref.h>
+#include<ccdk/mpl/util/swap.h>
+#include<ccdk/mpl/util/addressof.h>
+#include<ccdk/mpl/smart_ptr/resource_base.h>
 
 ccdk_namespace_mpl_sp_start
 
-//resource smart ptr
 
-template<typename T, typename Deleter = normal_deleter<T> >
-struct scope_ptr :public util::noncopyable
+//resource smart pointer
+// non-copy, only move
+// construct specific resource recycle method
+// destruct  recycle resource
+// 
+template<typename Type>
+class scope_ptr: public util::noncopyable
 {
+public:
 	typedef scope_ptr type;
-	typedef T*        value_type;
-	typedef Deleter   delete_type;
 private:
-	value_type ptr; 
+
+	resource_base * content;
+
+	// when new may throw, safe release and rethrow
+	CCDK_FORCEINLINE void set_pointer(Type* ptr) { ccdk_safe_release_if_exception(content, new default_resource_base<Type>{ ptr }); }
+
+	template<typename Deleter>
+	CCDK_FORCEINLINE void set_pointer(Type* ptr, Deleter dl) { ccdk_safe_release_if_exception(content, new deleter_resource_base<Type, Deleter>{ ptr, dl }); }
 
 public:
-	//P* is convertible to T
-	template<
-		typename P,
-		typename = check_t< or_< is_convertible<P*, T*>, //P* can convert to T* 
-				and_< is_void<T>, not_< is_pod<T> >>>>  // if T is void, P only valid for pod type			 
-	>
-	CCDK_FORCEINLINE  explicit scope_ptr( P* inPtr) noexcept : ptr(inPtr) {}
 
-	//non-copy
-	template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
-	template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
+	//default constructor
+	CCDK_FORCEINLINE scope_ptr() noexcept : content{ nullptr } {}
 
-	//refer member, only for class and union, assert not nullptr
-	template<typename = check_t< or_<is_class<T>, is_union<T>> > >
-	CCDK_FORCEINLINE 
-	value_type operator->() noexcept
-	{ 
-		ccdk_assert(ptr != nullptr);
-		return ptr; 
-	}
+	//nullptr constructor
+	CCDK_FORCEINLINE scope_ptr(ptr::nullptr_t) noexcept : content{ nullptr } {}
 
-	//refer member, only for class and union, assert not nullptr
-	template<typename = check_t< or_<is_class<T>, is_union<T>> > >
-	CCDK_FORCEINLINE 
-	const value_type operator->() const noexcept
-	{
-		ccdk_assert(ptr != nullptr);
-		return ptr; 
-	}
+	//pointer constructor,  safe process exception
+	CCDK_FORCEINLINE scope_ptr(Type* ptr) { set_pointer(ptr); }
 
-	//index, only for array, assert not nullptr 
-	template<typename = check_t< is_array<T> > >
-	CCDK_FORCEINLINE 
-	T& operator[](uint32 index)& noexcept 
-	{ 
-		ccdk_assert(ptr != nullptr);
-		return ptr[index]; 
-	}
+	//pointer and deleter constructor, safe process exception
+	template<typename Deleter>
+	CCDK_FORCEINLINE scope_ptr(Type* ptr, const Deleter& dl) { set_pointer(ptr, dl); }
 
-	//index, only for array, assert not nullptr 
-	template<typename = check_t< is_array<T> > >
-	CCDK_FORCEINLINE 
-	const T& operator[](uint32 index) const & noexcept 
-	{ 
-		ccdk_assert(ptr != nullptr);
-		return ptr[index];
-	}
+	//move constructor, need check Type2* is convertible to Type*
+	template<typename Type2, typename = check_t< is_convertible< Type2*, Type*> >  >
+	CCDK_FORCEINLINE scope_ptr(scope_ptr<Type2>&& other) : content{ other.content } { other.content = nullptr; }
 
-	//index, only for array, assert not nullptr 
-	template<typename = check_t< is_array<T> > >
-	CCDK_FORCEINLINE 
-	T operator[](uint32 index) && noexcept 
-	{ 
-		ccdk_assert(ptr != nullptr);
-		return ptr[index]; 
-	}
+	//no copy
+	template<typename Type2> scope_ptr(const scope_ptr<Type2>&) = delete;
 
+	//no assign copy 
+	template<typename Type2> scope_ptr& operator=(const scope_ptr<Type2>&) = delete;
 
-	//dereference, not for void, assert not nullptr
-	template<typename = check_t< not_< is_void<T>> > >
-	CCDK_FORCEINLINE 
-	T& operator*() & noexcept
-	{ 
-		ccdk_assert(ptr != nullptr);  
-		return *ptr; 
-	}
+	//swap 
+	template<typename Type2, typename = check_t< is_convertible< Type2*, Type*> >  >
+	CCDK_FORCEINLINE void swap(scope_ptr<Type2>& other) noexcept { util::swap(content, other.content); }
 
-	//dereference, not for void, assert not nullptr
-	template<typename = check_t< not_< is_void<T>> > >
-	CCDK_FORCEINLINE const T& operator*() const & noexcept  
-	{
-		ccdk_assert(ptr != nullptr);  
-		return *ptr; 
-	}
+	//same type move assign, need check is same 
+	CCDK_FORCEINLINE scope_ptr& operator=(scope_ptr&& other) { if (util::addressof(other) != this) { other.swap(*this); scope_ptr{}.swap(other); } }
 
-	//dereference, not for void, assert not nullptr
-	template<typename = check_t< not_< is_void<T>> > >
-	CCDK_FORCEINLINE 
-	T operator*() && noexcept 
-	{ 
-		ccdk_assert(ptr != nullptr);  
-		return util::move(*ptr); 
-	}
+	//diff type move assign, need check is convertible 
+	template<typename Type2, typename = check_t< is_convertible< Type2*, Type*> >  >
+	CCDK_FORCEINLINE scope_ptr& operator=(scope_ptr&& other) { other.swap(*this); scope_ptr{}.swap(other); }
 
-	//delete
-	CCDK_FORCEINLINE ~scope_ptr() { Deleter{}(ptr); }
-};
+	//destructor
+	CCDK_FORCEINLINE ~scope_ptr() { ptr::safe_delete(content); }
 
+	//get pointer
+	CCDK_FORCEINLINE Type* pointer() noexcept  { (Type*)content->pointer(); }
+	CCDK_FORCEINLINE const Type* pointer() const noexcept  { (Type*)content->pointer(); }
 
-//for array
-template<typename T> 
-struct scope_ptr<T[]> : public util::noncopyable
-{
-	typedef scope_ptr<T[]> type;
-	typedef T* value_type;
-private:
-	value_type ptr;
-public:
+	//release resource
+	CCDK_FORCEINLINE void release() { ptr::safe_delete(content); }
 
-	//P* is convertible to T*
-	template<
-		typename P,
-		typename = check_t< is_convertible<P*, T*>>
-	>
-	CCDK_FORCEINLINE explicit scope_ptr(P* inPtr) noexcept : ptr(inPtr) {}
+	//exists
+	CCDK_FORCEINLINE explicit operator bool() noexcept { nullptr == content->pointer(); }
 
-	//non-copy
-	template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
-	template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
+	//dereference
+	CCDK_FORCEINLINE add_lref_t<Type>       operator*() noexcept { return *pointer(); }
+	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const noexcept { return *pointer(); }
 
-	CCDK_FORCEINLINE value_type value() { return ptr; }
-
-	//delete
-	CCDK_FORCEINLINE ~scope_ptr()  { ptr::safe_delete_array(ptr); }
-};
-
-//void * is special, can't dereference / ref member / index
-//because void* is incomplete, can't use safe_delete
-template<>
-struct scope_ptr<void>: public util::noncopyable
-{
-	typedef void* value_type;
-private:
-	value_type ptr;
-public:
-	//keep reference
-
-	//T need be pod when destructed is safe
-	template<
-		typename T,
-		typename = check_t< is_pod<T> >
-	>
-	CCDK_FORCEINLINE scope_ptr(T* inPtr) noexcept : ptr(inPtr) {}
-
-	//non-copy
-	template<typename P> scope_ptr(const scope_ptr<P>&) = delete;
-	template<typename P> scope_ptr& operator=(const scope_ptr<P>&) = delete;
-
-	CCDK_FORCEINLINE  value_type value() { return ptr; }
-
-	CCDK_FORCEINLINE ~scope_ptr() { delete ptr; ptr = nullptr; }
+	//index
+	CCDK_FORCEINLINE add_lref_t<Type>         operator[](uint32 index) noexcept { return pointer()[index]; }
+	CCDK_FORCEINLINE add_const_lref_t<Type>   operator[](uint32 index) const noexcept { return pointer()[index]; }
 };
 
 ccdk_namespace_mpl_sp_end

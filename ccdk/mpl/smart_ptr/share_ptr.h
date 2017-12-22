@@ -88,7 +88,7 @@ struct default_ref_count
 // support convertible type share 
 template<
 	typename T,
-	typename Deleter =  normal_deleter<T>,          //normal deleter for different type
+	typename Deleter =  default_deleter<T>,          //normal deleter for different type
 	typename RefCount = default_ref_count<uint32>  // multi-thread need atomic ref_count, need nothrow constructor
 >
 class share_ptr
@@ -142,6 +142,7 @@ public:
 
 	//assign
 	CCDK_FORCEINLINE share_ptr& operator=(value_type ptr) { share_ptr{ ptr }.swap(*this); return *this; }
+
 
 	//copy assign
 	template<

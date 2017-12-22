@@ -30,8 +30,12 @@
 
 
 //compiler
-#if defined(_MSC_VER) && _MSC_VER>=1800
-#define CCDK_COMPILER_MSVC
+#if defined(_MSC_VER) && _MSC_VER >=1800
+#	if defined(__clang__)
+#		define CCDK_COMPILER_CLANG   //clang with msvc
+#	else
+#		define CCDK_COMPILER_MSVC
+#	endif
 #elif defined(__clang__) && __cplusplus >=201103L
 #define CCDK_COMPILER_CLANG
 #elif defined(__GNUC__) && !defined(__ibmxl__) && __cplusplus >=201103L
@@ -88,7 +92,7 @@
 #if defined( CCDK_DEBUG )
 #include<assert.h>
 #define ccdk_assert( expr )  assert( expr )
-#elif
+#else
 #define ccdk_assert( expr ) 
 #endif
 

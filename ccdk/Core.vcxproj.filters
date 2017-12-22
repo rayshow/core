@@ -813,9 +813,6 @@
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\normal_deleter.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
     <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="mpl\function\operator.h">
       <Filter>mpl\function</Filter>
@@ -929,6 +926,15 @@
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
     <ClInclude Include="mpl\smart_ptr\polymorph_wptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\default_deleter.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\compress_pair.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\resource_base.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
   </ItemGroup>
