@@ -53,11 +53,20 @@ struct derive :public base
 	}
 };
 
+
+void normal_deleter()
+{
+
+}
+
 using namespace ccdk::mpl;
 int main()
 {
 	std::shared_ptr<int> a{};
 	std::unique_ptr<int> a2{};
+
+	std::shared_ptr<int> a3{ new int, normal_deleter };
+	
 	DebugNewTitle("share_ptr")
 	{
 		{

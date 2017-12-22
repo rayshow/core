@@ -1,4 +1,5 @@
 #pragma once
+
 #include<iostream>
 #include<string>
 #include<cassert>
@@ -152,9 +153,12 @@ namespace ccdk {
 
 
 
+
 	// if T& version constructor not exists, will call const T& version
 	struct test_copy_t
 	{
+	
+
 		test_copy_t() { DebugValue("default ctor"); }
 		test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
 		test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
@@ -162,6 +166,8 @@ namespace ccdk {
 		void operator=(test_copy_t& t) { DebugValue("copy assign"); }
 		void operator=(test_copy_t&& t) { DebugValue("move assign"); }
 		void operator=(const test_copy_t& t) { DebugValue("const copy assign"); }
+
+		~test_copy_t() { DebugValue("destroy"); }
 
 		int operator()(int a, const char* msg)
 		{

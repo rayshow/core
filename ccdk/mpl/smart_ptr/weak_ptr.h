@@ -11,7 +11,7 @@ class weak_ptr
 public:
 	typedef weak_ptr type;
 	typedef RefCount ref_count_type;
-	typedef share_ptr<T, normal_deleter<T>, ref_count_type> share_type;
+	typedef share_ptr<T, default_deleter<T>, ref_count_type> share_type;
 	typedef typename share_type::value_type value_type;
 private:
 	value_type ptr;

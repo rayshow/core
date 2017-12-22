@@ -20,9 +20,11 @@ namespace ccdk
 				template<typename U, typename = decltype(makeval<P>() = declval<U>())>
 				static constexpr bool sfinae(int) { return true; }
 				template<typename U> static constexpr bool sfinae(...) { return false; }
-				static constexpr bool value = sfinae<T>(0);
+				static constexpr bool value =  sfinae<T>(0);
 			};
 		}
+
+		
 
 		//although lvalue assign like std::string() = "xx"; is valid, but still forbidden here for useless of this style
 		template<typename T, typename F> struct has_assigner : and_< not_<is_rref<T>>, detail::has_assigner_helper<F, T>> {};

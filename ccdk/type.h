@@ -1,7 +1,8 @@
 #pragma once
 
 #include<ccdk/compile.h>
-#include<new>
+#include<new>       // nullptr_t and nothrow_t
+#include<typeinfo>  // std::typeinfo
 
 namespace ccdk
 {
@@ -21,7 +22,17 @@ namespace ccdk
 	typedef char32_t                 char32;
 
 
+	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");
+	static_assert(sizeof(int8) == 1, "int8 is not 1 byte.");
+	static_assert(sizeof(uint16) == 2, "uint16 is not 2 byte.");
+	static_assert(sizeof(int16) == 2, "int16 is not 2 byte.");
+	static_assert(sizeof(uint32) == 4, "uint32 is not 4 byte.");
+	static_assert(sizeof(int32) == 4, "int32 is not 4 byte.");
+	static_assert(sizeof(uint64) == 8, "uint64 is not 8 byte.");
+	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 
+
+	//memory releative type / short function
 	namespace ptr
 	{
 		template<int32 size> struct ptr_traits { static_assert(size != 4 || size != 8, "unkown ptr size."); };
@@ -53,16 +64,14 @@ namespace ccdk
 		{
 			if (t) { delete t; t = nullptr; }
 		}
+
+
+#define ccdk_safe_release_if_exception( content , expr )                       \
+			try { (content) = (expr); }                                        \
+			catch (...) { ptr::safe_delete((content)); throw;  /* rethrow */ } 
+
 	}
 
-	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");
-	static_assert(sizeof(int8) == 1, "int8 is not 1 byte.");
-	static_assert(sizeof(uint16) == 2, "uint16 is not 2 byte.");
-	static_assert(sizeof(int16) == 2, "int16 is not 2 byte.");
-	static_assert(sizeof(uint32) == 4, "uint32 is not 4 byte.");
-	static_assert(sizeof(int32) == 4, "int32 is not 4 byte.");
-	static_assert(sizeof(uint64) == 8, "uint64 is not 8 byte.");
-	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 }
 
 #include<ccdk/debug_type.hpp>

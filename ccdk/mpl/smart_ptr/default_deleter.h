@@ -5,7 +5,7 @@
 ccdk_namespace_mpl_sp_start
 
 	template<typename T>
-	struct normal_deleter
+	struct default_deleter
 	{
 		constexpr void operator()(T*& t) const
 		{
@@ -14,7 +14,7 @@ ccdk_namespace_mpl_sp_start
 	};
 
 	template<typename T>
-	struct normal_deleter<T[]>
+	struct default_deleter<T[]>
 	{
 		constexpr void operator()(T*& t) const
 		{
@@ -24,7 +24,7 @@ ccdk_namespace_mpl_sp_start
 
 	//void* pointer to pod memory
 	template<>
-	struct normal_deleter<void>
+	struct default_deleter<void>
 	{
 		constexpr void operator()(void *& t) const
 		{
@@ -39,7 +39,7 @@ ccdk_namespace_typetraits_impl_start
 
 //special partialization
 template<typename T1, typename T2> 
-struct is_same_impl< ccdk::mpl::sp::normal_deleter<T1>, ccdk::mpl::sp::normal_deleter<T2>> :true_ {};
+struct is_same_impl< ccdk::mpl::sp::default_deleter<T1>, ccdk::mpl::sp::default_deleter<T2>> :true_ {};
 
 ccdk_namespace_typetraits_impl_end
 
