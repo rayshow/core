@@ -2,7 +2,6 @@
 
 #include<typeinfo>
 #include<exception>
-
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/forward.h>

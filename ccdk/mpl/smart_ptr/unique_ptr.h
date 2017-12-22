@@ -12,7 +12,7 @@
 ccdk_namespace_mpl_sp_start
 
 template<typename T>
-struct unique_ptr :util::noncopyable
+struct unique_ptr :public util::noncopyable
 {
 	typedef unique_ptr type;
 	typedef T* value_type;
