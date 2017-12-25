@@ -17,7 +17,4 @@ struct get_value_t
 
 template<typename T> constexpr get_value_t<T> value{};
 
-
-
-
 ccdk_namespace_mpl_util_end

@@ -74,7 +74,6 @@ ccdk_namespace_mpl_util_start
 	//suitable compound type with nothrow move constructor and move assigner class
 	template<typename T,
 		typename = check_t< is_class<T>>,
-		typename = void,
 		typename = check_t< has_nothrow_move_assigner<T> >,
 		typename = check_t< has_nothrow_move_constructor<T> >
 	>

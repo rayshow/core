@@ -67,28 +67,42 @@ public:
 
 	//diff type move assign, need check is convertible 
 	template<typename Type2, typename = check_t< is_convertible< Type2*, Type*> >  >
-	CCDK_FORCEINLINE scope_ptr& operator=(scope_ptr&& other) { other.swap(*this); scope_ptr{}.swap(other); }
+	CCDK_FORCEINLINE scope_ptr& operator=(scope_ptr<Type2>&& other) { other.swap(*this); scope_ptr{}.swap(other); }
 
 	//destructor
 	CCDK_FORCEINLINE ~scope_ptr() { ptr::safe_delete(content); }
 
 	//get pointer
-	CCDK_FORCEINLINE Type* pointer() noexcept  { (Type*)content->pointer(); }
-	CCDK_FORCEINLINE const Type* pointer() const noexcept  { (Type*)content->pointer(); }
+	CCDK_FORCEINLINE Type* pointer() noexcept { if (content) { return (Type*)content->pointer(); } return nullptr; }
+	CCDK_FORCEINLINE const Type* pointer() const noexcept { if (content) { return (Type*)content->pointer(); } return nullptr; }
 
 	//release resource
 	CCDK_FORCEINLINE void release() { ptr::safe_delete(content); }
 
 	//exists
-	CCDK_FORCEINLINE explicit operator bool() noexcept { nullptr == content->pointer(); }
+	CCDK_FORCEINLINE explicit operator bool() noexcept { (nullptr != content) && (nullptr != content->pointer()); }
 
 	//dereference
-	CCDK_FORCEINLINE add_lref_t<Type>       operator*() noexcept { return *pointer(); }
-	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const noexcept { return *pointer(); }
+	CCDK_FORCEINLINE add_lref_t<Type>       operator*() noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
+	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
 
 	//index
-	CCDK_FORCEINLINE add_lref_t<Type>         operator[](uint32 index) noexcept { return pointer()[index]; }
-	CCDK_FORCEINLINE add_const_lref_t<Type>   operator[](uint32 index) const noexcept { return pointer()[index]; }
+	CCDK_FORCEINLINE add_lref_t<Type>         operator[](uint32 index) noexcept { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
+	CCDK_FORCEINLINE add_const_lref_t<Type>   operator[](uint32 index) const noexcept { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
 };
+
+
+	template<typename Type1, typename Type2,
+			typename check_t< is_compatible<Type1*,Type2*> > >
+	void swap(scope_ptr<Type1>& lh, scope_ptr<Type2>& rh)
+	{
+		lh.swap(rh);
+	}
+
+	template<typename Type>
+	decltype(auto) value(const scope_ptr<Type>& sp)
+	{
+		return sp.pointer();
+	}
 
 ccdk_namespace_mpl_sp_end

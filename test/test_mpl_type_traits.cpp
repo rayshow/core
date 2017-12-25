@@ -114,8 +114,11 @@
 using namespace ccdk;
 using namespace ccdk::mpl;
 
+#if !defined(AssertFalse)
 #define AssertFalse(v) static_assert(!v, "")
 #define AssertTrue(v) static_assert( v, "")
+#endif
+
 typedef int int2[2];
 
 void varg_fn(...) {}
@@ -410,7 +413,7 @@ int main()
 	//is function
 	AssertTrue(is_function_v<decltype(normal_fn)>);
 	AssertTrue(is_function_v<decltype(varg_fn)>);
-#if !defined(CCDK_COMPILER_GCC)   //gcc no function prefix like __cdcall 
+#if defined(CCDK_COMPILER_MSVC)    //gcc no function prefix like __cdcall 
 	void(*normal_p)() = normal_cd_fn;
 	void(*const normal_const)() = normal_cd_fn;
 	void(*volatile normal_volatile)() = normal_cd_fn;
@@ -955,11 +958,11 @@ int main()
 	//has new / has delete
 	struct TestHasDelete2
 	{
-		void* operator new(std::size_t size)  {}
-		void* operator new(std::size_t size, std::nothrow_t) {};
-		void* operator new(std::size_t size, void* ptr) {}
-		void* operator new(std::size_t size, int) {}
-		void* operator new[](std::size_t size) {}
+		void* operator new(std::size_t size) { return nullptr; }
+		void* operator new(std::size_t size, std::nothrow_t) { return nullptr; };
+		void* operator new(std::size_t size, void* ptr) { return nullptr; }
+		void* operator new(std::size_t size, int) { return nullptr; }
+		void* operator new[](std::size_t size) {return nullptr; }
 		void operator delete(void * ptr) {}
 		void operator delete(void* ptr, ptr::size_t size) {}
 		void operator delete[](void* ptr) {}

@@ -18,7 +18,7 @@
 #include<ccdk/mpl/util/value.h>
 #include<ccdk/mpl/util/hash.h>
 #include<ccdk/mpl/util/compatible_cmp.h>
-#include<ccdk/mpl/smart_ptr/normal_deleter.h>
+#include<ccdk/mpl/smart_ptr/default_deleter.h>
 #include<ccdk/mpl/smart_ptr/share_ptr_fwd.h>
 
 

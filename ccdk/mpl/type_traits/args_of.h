@@ -32,13 +32,13 @@ namespace ccdk
 			template<typename Ret, typename... Args> struct args_of_impl< Ret(Args...) Prefix> { typedef arg_pack<Args...> type; typedef void clazz; };                                                            \
 			template<typename Ret, typename... Args> struct args_of_impl< Ret(Args......) Prefix> { typedef arg_pack<Args...> type; typedef void clazz; };
 #endif
-			CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
+			CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&));
 #undef FUNCTION_ENUM
 		}
 
 		template<typename T> struct args_of :tt_impl::args_of_impl<T> {};
 
-		template<typename T> using  args_of_t = typename args_of<T>::args;
+		template<typename T> using  args_of_t = typename args_of<T>::type;
 
 		template<typename T> using  mfn_class_t = typename  args_of<T>::clazz;
 
