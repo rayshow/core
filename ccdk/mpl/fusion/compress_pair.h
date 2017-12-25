@@ -11,7 +11,7 @@ ccdk_namespace_mpl_fs_start
 
 
 //empty class, only for construct and destruct semantics
-template<typename First, typename Second, bool = is_empty_v<V> && !is_final_v<V> >
+template<typename First, typename Second, bool = is_empty_v<First> && !is_final_v<First> >
 struct compress_pair final : public First
 {
 	typedef First           first_type;
@@ -23,6 +23,8 @@ private:
 public:
 	compress_pair() : First(), second{} {}
 
+	compress_pair(const Second& second) : First(), second{ second } {}
+
 	compress_pair(const first_type& inFirst, const second_type& inSecond)
 		: First{ inFirst }, second{ inSecond } {}
 
@@ -31,14 +33,14 @@ public:
 	First get_first() && { return util::move(*this); }
 
 	second_type& get_second() & { return second; }
-	const second& get_second() const& { return second; }
+	const second_type& get_second() const& { return second; }
 	second_type get_second() && { return util::move(second); }
 
 };
 
 
 template<typename First, typename Second>
-struct compress_pair<First, Second>
+struct compress_pair<First, Second, false>
 {
 	typedef decay_t<First>  first_type;
 	typedef decay_t<Second> second_type;
@@ -51,6 +53,8 @@ public:
 
 	compress_pair() : first{}, second{} {}
 
+	compress_pair(Second&& second) : first(), second{ util::forward<Second>(second) } {}
+
 	compress_pair(const first_type& inFirst, const second_type& inSecond)
 		: first{ inFirst }, second{ inSecond } {}
 
@@ -59,7 +63,7 @@ public:
 	First get_first() && { return util::move(second); }
 
 	second_type& get_second() & { return second; }
-	const second& get_second() const& { return second; }
+	const second_type& get_second() const& { return second; }
 	second_type get_second() && { return util::move(second); }
 };
 

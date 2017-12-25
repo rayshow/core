@@ -4,21 +4,25 @@
 #include<ccdk/mpl/base/and_.h>
 #include<ccdk/mpl/base/or_.h>
 #include<ccdk/mpl/type_traits/is_convertible.h>
+#include<ccdk/mpl/type_traits/is_compatible.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/is_array.h>
 #include<ccdk/mpl/type_traits/remove_dim.h>
 
 ccdk_namespace_mpl_sp_start
 
-template<
-	typename T,
-	typename Deleter,
-	typename RefCount
->
+template< typename T,typename D, typename R>
 class share_ptr;
 
-template<typename T, typename RefCount>
+template<typename T, typename R>
 class weak_ptr;
+
+template< typename T, typename R>
+class poly_share_ptr;
+
+template<typename T, typename R>
+class poly_weak_ptr;
+
 
 // trait T is share_ptr type
 template<typename T> struct is_share_ptr :false_ {};
@@ -27,10 +31,12 @@ template<typename T, typename D, typename R> struct is_share_ptr< share_ptr<T, D
 ccdk_namespace_mpl_sp_end
 
 
-ccdk_namespace_typetraits_impl_start
+ccdk_namespace_mpl_start
 
 #define ccdk_sp_t ccdk::mpl::sp::share_ptr
 #define ccdk_wp_t ccdk::mpl::sp::weak_ptr
+#define ccdk_psp_t ccdk::mpl::sp::poly_share_ptr
+#define ccdk_pwp_t ccdk::mpl::sp::poly_weak_ptr
 
 // share_ptr S1 convertible to S2 when
 //   0. both is share_ptr
@@ -47,16 +53,21 @@ struct is_convertible< ccdk_sp_t< T1, D1, R1>, ccdk_sp_t< T2, D2, R2>>
 			is_same<R1, R2>
 	      > {};
 
-// share_ptr S1 convertible to S2 when
 
-template<typename T1, typename T2, typename D1, typename R1, typename R2>
-struct is_convertible< ccdk_sp_t< T1, D1, R1>, ccdk_wp_t< T2, R2> >
-	: is_convertible< ccdk_sp_t<T1, D1, R1>, typename ccdk_wp_t<T2, R2>::share_type >
-{};
-
+//poly sp to poly sp
+//  1. T1* is comvertible to T2* or T1 T2 is same type array
+//  2. same ref_count type    
 template<typename T1, typename T2, typename R1, typename R2>
-struct is_convertible< ccdk_wp_t<T1, R1>, ccdk_wp_t<T2, R2>>
-	: is_convertible< typename ccdk_wp_t<T1, R1>::share_type, typename ccdk_wp_t<T2, R2>::share_type >
-{};
+struct is_convertible< ccdk_psp_t<T1,R1>, ccdk_psp_t<T2,R2> > : and_< is_convertible<T1*, T2*>, is_same<R1, R2>>  {};
 
-ccdk_namespace_typetraits_impl_end
+//poly share pointer compatible
+template<typename T1, typename T2, typename R1, typename R2>
+struct is_compatible< ccdk_psp_t<T1, R1>, ccdk_psp_t<T2, R2> > : and_< is_compatible<T1*, T2*>, is_same<R1, R2>> {};
+
+
+#undef ccdk_sp_t
+#undef ccdk_wp_t
+#undef ccdk_psp_t
+#undef ccdk_pwp_t
+
+ccdk_namespace_mpl_end

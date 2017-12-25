@@ -35,6 +35,8 @@ public:
 	//move
 	CCDK_FORCEINLINE default_resource_base(default_resource_base&& other) : pair{ util::move(other.pair) } {}
 
+	CCDK_FORCEINLINE default_resource_base(Type* ptr) : pair{ ptr } {}
+
 	//get managed pointer
 	virtual void* pointer() { return (void*)pair.get_second(); }
 
@@ -42,7 +44,7 @@ public:
 	virtual resource_base* clone() { return new default_resource_base{ *this }; }
 
 	//destroy managed object
-	virtual ~default_resource_base() { pair.get_first(pair.get_second()); }
+	virtual ~default_resource_base() { pair.get_first()(pair.get_second()); }
 };
 
 //special deleter
@@ -62,6 +64,9 @@ public:
 	//move
 	CCDK_FORCEINLINE deleter_resource_base(deleter_resource_base&& other) : pair{ util::move(other.pair) } {}
 
+	//
+	CCDK_FORCEINLINE deleter_resource_base(Type* ptr, const Deleter& dl) : pair{ dl, ptr } {}
+
 
 	virtual void* pointer() { return (void*)pair.get_second(); }
 
@@ -69,8 +74,10 @@ public:
 	virtual resource_base* clone() { return new deleter_resource_base{ *this }; }
 
 	//delete resource
-	virtual ~deleter_resource_base() { pair.get_first(pair.get_second()); }
+	virtual ~deleter_resource_base() { pair.get_first()(pair.get_second()); }
 };
+
+
 
 
 

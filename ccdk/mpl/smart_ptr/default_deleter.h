@@ -7,7 +7,7 @@ ccdk_namespace_mpl_sp_start
 	template<typename T>
 	struct default_deleter
 	{
-		constexpr void operator()(T*& t) const
+		void operator()(T*& t) const
 		{
 			ptr::safe_delete(t);
 		}
@@ -16,20 +16,9 @@ ccdk_namespace_mpl_sp_start
 	template<typename T>
 	struct default_deleter<T[]>
 	{
-		constexpr void operator()(T*& t) const
+		void operator()(T*& t) const
 		{
 			ptr::safe_delete_array(t);
-		}
-	};
-
-	//void* pointer to pod memory
-	template<>
-	struct default_deleter<void>
-	{
-		constexpr void operator()(void *& t) const
-		{
-			delete t;
-			t = nullptr;
 		}
 	};
 

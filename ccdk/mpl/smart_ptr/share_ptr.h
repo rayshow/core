@@ -18,68 +18,14 @@
 #include<ccdk/mpl/util/value.h>
 #include<ccdk/mpl/util/hash.h>
 #include<ccdk/mpl/util/compatible_cmp.h>
+#include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>
-#include<ccdk/mpl/smart_ptr/share_ptr_fwd.h>
+#include<ccdk/mpl/smart_ptr/default_ref_count.h>
 
 
 ccdk_namespace_mpl_sp_start
 
 //static small and simple share_ptr implements, no virtual, Deleter / RefCount / Allocator ensure at compile time
-
-
-//non-thread safe ref_count
-template<typename RefType>
-struct default_ref_count
-{
-	//resource memory only shared between share_ptr, last share_ptr release will delete resource memory
-	RefType share_count;
-	//this will be shared between share_ptr and weak_ptr, unless last share_ptr or weak_ptr is release, this will not release
-	RefType ref_count;
-
-	CCDK_FORCEINLINE
-	default_ref_count() noexcept
-		:share_count{ 0 }, ref_count{ 0 }
-	{}
-
-	CCDK_FORCEINLINE
-	default_ref_count(RefType inShareCount, RefType inRefCount) noexcept
-		: share_count{inShareCount},
-			ref_count{inRefCount}
-	{}
-
-	template<typename Deleter, typename Class>
-	CCDK_FORCEINLINE
-	void dec_share_count(const Deleter& del, Class*& ptr)
-	{
-		if (--share_count == 0)
-		{
-			del(ptr);
-		}
-	}
-
-	CCDK_FORCEINLINE
-	void inc_share_count()
-	{
-		++share_count;
-	}
-
-	CCDK_FORCEINLINE
-	void dec_ref_count()
-	{
-		if (--ref_count == 0)
-		{
-			//destroy RefCount
-			delete this; 
-		}
-	}
-
-	CCDK_FORCEINLINE
-	void inc_ref_count()
-	{
-		++ref_count;
-	}
-};
-
 
 //for non-array, non-void, non-thread-safe implements
 // have member operation

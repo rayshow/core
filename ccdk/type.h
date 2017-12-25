@@ -58,7 +58,7 @@ namespace ccdk
 			sizeof(*t); if (t) { delete[] t; t = nullptr; }
 		}
 
-		//like void* / declare Type*
+		//like void* / declare Type*, not check type
 		template<typename T>
 		void imcomp_delete(T*& t)
 		{
@@ -66,9 +66,13 @@ namespace ccdk
 		}
 
 
-#define ccdk_safe_release_if_exception( content , expr )                       \
+#define ccdk_safe_delete_if_exception( content , expr )                        \
 			try { (content) = (expr); }                                        \
 			catch (...) { ptr::safe_delete((content)); throw;  /* rethrow */ } 
+
+#define ccdk_safe_cleanup_if_exception( statement, cleanup )       \
+			try { (statement); }                                   \
+			catch (...) { (cleanup); throw; }                    
 
 	}
 

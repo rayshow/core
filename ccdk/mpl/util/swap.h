@@ -15,12 +15,19 @@
 
 ccdk_namespace_mpl_util_start
 	
+//template< typename T1, typename T2>
+//CCDK_FORCEINLINE void swap(T1& t1, T2& t2)
+//{
+//	DebugFunctionName();
+//}
 
 #if defined( CCDK_COMPILER_MSVC ) 
 
 	//no suitable implements found, for msvc-17+ to  to get detail line and file error place
 	template< typename T1, typename T2,  typename = check_t<false_> >
 	CCDK_FORCEINLINE void swap(T1& t1, T2& t2) {}
+
+
 
 #elif defined( CCDK_COMPILER_GCC )
 	
@@ -42,17 +49,19 @@ ccdk_namespace_mpl_util_start
 	template<typename T>
 	CCDK_FORCEINLINE void swap(T*& t1, T*& t2) noexcept
 	{
-		DebugFunctionName();
+		DebugValue("same pointer swap");
 		T* tmp = t1;
 		t1 = t2;
 		t2 = tmp;
 	}
 
+	
+
 	//for different type pointer, must be compatible
 	template<typename T1, typename T2, typename = check_t< is_compatible<T1*, T2*> >  >
 	CCDK_FORCEINLINE void swap(T1*& t1, T2*& t2) noexcept
 	{
-		DebugFunctionName();
+		DebugValue("different pointer swap");
 		T1* tmp = t1;
 		t1 = (T1*)t2;
 		t2 = (T2*)tmp;
@@ -62,7 +71,7 @@ ccdk_namespace_mpl_util_start
 	template< typename T, ptr::size_t N >
 	CCDK_FORCEINLINE void swap(T(&t1)[N], T(&t2)[N])
 	{
-		DebugFunctionName();
+		DebugValue("array swap");
 		for (int i = 0; i < N; ++i)
 		{
 			//adl select
@@ -79,7 +88,7 @@ ccdk_namespace_mpl_util_start
 	>
 	CCDK_FORCEINLINE void swap(T& t1, T& t2)
 	{
-		DebugFunctionName();
+		DebugValue("class move swap");
 		T tmp{ util::move(t1) };
 		t1 = util::move(t2);
 		t2 = util::move(tmp);
@@ -90,7 +99,7 @@ ccdk_namespace_mpl_util_start
 	template<typename T, typename = check_t< is_fundamental<T> >>
 	CCDK_FORCEINLINE void swap(T& t1, T& t2)
 	{
-		DebugFunctionName();
+		DebugValue("fundamental swap");
 		T tmp = t1;
 		t1 = t2;
 		t2 = tmp;

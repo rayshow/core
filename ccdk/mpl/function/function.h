@@ -7,6 +7,7 @@
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
+#include<ccdk/mpl/type_traits/args_of.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/is_const.h>
 #include<ccdk/mpl/util/forward.h>

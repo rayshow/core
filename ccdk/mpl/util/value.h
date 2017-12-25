@@ -12,7 +12,7 @@ struct get_value_t
 	decltype(auto) operator()(const T& t) const
 	{
 		return t.value;
-	}
+	} 
 };
 
 template<typename T> constexpr get_value_t<T> value{};

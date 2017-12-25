@@ -2,22 +2,14 @@
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/type_traits/result_of.h>
 #include<ccdk/mpl/type_traits/args_of.h>
+#include<ccdk/mpl/smart_ptr/scope_ptr.h>
 #include<stdio.h>
-
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 
-
-void func(int,char)
-{
-
-}
-
-
 int main()
 {
-	DebugTypeName<args_of_t<decltype(func)>>();
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
 	using util::swap;
@@ -62,6 +54,15 @@ int main()
 	DebugSubTitle("no suitable overload found");
 	//swap(p1, p4);
 
+	DebugNewTitle("debug test copy_t");
+	test_copy_assign_t<int> tint;
+	const test_copy_assign_t<int> ctint;
+	DebugValue(1);
+	test_copy_assign_t<int> tint2{ tint };
+	DebugValue(2);
+	test_copy_assign_t<int> tint3{ ctint };
+	DebugValue(3);
+	test_copy_assign_t<short> tint4{ tint };
 
 	getchar();
 	return 0;
