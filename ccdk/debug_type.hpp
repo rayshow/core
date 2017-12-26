@@ -258,24 +258,24 @@ namespace ccdk {
 	{
 		test_copy_assign_t() { DebugValue("default ctor"); }
 
-		test_copy_assign_t(int t) { DebugValue("int ctor"); }
+		//test_copy_assign_t(int t) { DebugValue("int ctor"); }
 
-	/*	test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
+		//test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
 
-		test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }*/
+		//test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }
 
-		//test_copy_assign_t(const test_copy_assign_t& t) { DebugValue("const copy ctor"); }
-
-		/*template<typename U>
-		test_copy_assign_t(test_copy_assign_t<U>& t) { DebugValue("tmpl copy ctor"); }*/
+		test_copy_assign_t(const test_copy_assign_t& t) { DebugValue("const copy ctor"); }
 
 		template<typename U>
-		test_copy_assign_t(test_copy_assign_t<U>&& t) { DebugValue("tmpl move ctor"); }
+		test_copy_assign_t(test_copy_assign_t<U>& t) { DebugValue("tmpl copy ctor"); }
 
+	/*	template<typename U>
+		test_copy_assign_t(test_copy_assign_t<U>&& t) { DebugValue("tmpl move ctor"); }*/
+/*
 		template<typename U>
-		test_copy_assign_t(const test_copy_assign_t<U>& t) { DebugValue("2 tmpl const copy ctor"); }
+		test_copy_assign_t(const test_copy_assign_t<U>& t) { DebugValue(" tmpl const copy ctor"); }*/
 
-		void operator=(test_copy_assign_t& t) { DebugValue("copy assign"); }
+		//void operator=(test_copy_assign_t& t) { DebugValue("copy assign"); }
 
 		//void operator=(test_copy_assign_t&& t) { DebugValue("move assign"); }
 

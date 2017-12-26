@@ -19,6 +19,7 @@ class scope_ptr: public util::noncopyable
 {
 public:
 	typedef scope_ptr type;
+	typedef Type*     value_type;
 	template<typename> friend class scope_ptr;
 private:
 
@@ -72,15 +73,18 @@ public:
 	CCDK_FORCEINLINE void release() { ptr::safe_delete(content); }
 
 	//get pointer
-	CCDK_FORCEINLINE Type* pointer() const noexcept { ccdk_assert(content != nullptr); return (Type*)content->pointer(); }
-	CCDK_FORCEINLINE Type* operator->() const noexcept { return pointer(); }
+	CCDK_FORCEINLINE value_type pointer() const noexcept { ccdk_assert(content != nullptr); return (Type*)content->pointer(); }
+	
+	//dereference and member
+	CCDK_FORCEINLINE add_lref_t<Type> operator*() const noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
+
+	//member op
+	CCDK_FORCEINLINE value_type operator->() const noexcept { return pointer(); }
 
 	//exists
 	CCDK_FORCEINLINE explicit operator bool() noexcept { return (nullptr != content) && (nullptr != content->pointer()); }
 
-	//dereference and member
-	CCDK_FORCEINLINE add_lref_t<Type> operator*() const noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
-	
+
 
 	//index
 	CCDK_FORCEINLINE add_lref_t<Type>         operator[](uint32 index) noexcept { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }

@@ -11,10 +11,13 @@
 
 ccdk_namespace_mpl_sp_start
 
+template< typename T, typename D, typename R>
+class share_ptr_base;
+
 template< typename T,typename D, typename R>
 class share_ptr;
 
-template<typename T, typename R>
+template<typename T, typename D, typename R>
 class weak_ptr;
 
 template< typename T, typename R>
@@ -33,10 +36,8 @@ ccdk_namespace_mpl_sp_end
 
 ccdk_namespace_mpl_start
 
-#define ccdk_sp_t ccdk::mpl::sp::share_ptr
-#define ccdk_wp_t ccdk::mpl::sp::weak_ptr
+#define ccdk_sp_t ccdk::mpl::sp::share_ptr_base
 #define ccdk_psp_t ccdk::mpl::sp::poly_share_ptr
-#define ccdk_pwp_t ccdk::mpl::sp::poly_weak_ptr
 
 // share_ptr S1 convertible to S2 when
 //   0. both is share_ptr

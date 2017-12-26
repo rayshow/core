@@ -62,7 +62,21 @@ int main()
 	DebugValue(2);
 	test_copy_assign_t<int> tint3{ ctint };
 	DebugValue(3);
-	test_copy_assign_t<short> tint4{ tint };
+	test_copy_assign_t<int> tint4{ util::move(ctint) };
+	
+
+	//test_copy_assign_t<int> tint6{};
+	//const test_copy_assign_t<int> tint7{};
+
+	//DebugValue(4);
+	//tint6 = tint;
+	//DebugValue(5);
+	//tint6 = ctint;
+	//DebugValue(6);
+	//tint6 = util::move(tint);
+
+
+
 
 	getchar();
 	return 0;

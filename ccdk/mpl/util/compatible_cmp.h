@@ -13,11 +13,15 @@ struct compatible_less
 {
 	typedef compatible_type_t<T1, T2> comp_t;
 
-	bool operator()(const comp_t& v1, const comp_t& v2)
+	constexpr bool operator()(const comp_t& v1, const comp_t& v2) const
 	{
 		return v1 < v2;
 	}
 };
+
+
+template<typename T1, typename T2>
+constexpr compatible_less<T1, T2> comp_less{};
 
 
 ccdk_namespace_mpl_util_end

@@ -24,6 +24,8 @@
 #include<ccdk/mpl/smart_ptr/scope_ptr.h>
 #include<ccdk/mpl/smart_ptr/poly_share_ptr.h>
 #include<ccdk/mpl/smart_ptr/poly_weak_ptr.h>
+#include<ccdk/mpl/smart_ptr/share_ptr.h>
+#include<ccdk/mpl/smart_ptr/weak_ptr.h>
 
 #pragma warning(disable: 4996)
 
@@ -62,24 +64,24 @@ struct MyFileCloser
 	{
 		DebugValue("enter close file");
 		if (t)
-		{
-			
-		}
+		{}
 	}
 };
 
-class test_const
-{
-	int a = 0;
-public:
-	void const_call() const {}
-	void non_const_call() {}
-};
 
 using namespace ccdk::mpl;
 int main()
 {
+	{
+		share_ptr<derive> spb{ new derive{} };
+		share_ptr<base> spb2;
+		spb2 = spb;
+		share_ptr<derive[]> spb3 { new derive[2] };
+		share_ptr<derive[]> spb4{ spb3 };
+	}
 	
+	
+
 	DebugNewTitle("scope ptr");
 	{
 		DebugSubTitle("test normal ptr");
@@ -214,6 +216,7 @@ int main()
 		}
 		DebugValue("out of weak");
 	}
+
 
 
 

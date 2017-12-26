@@ -41,7 +41,7 @@ public:
 	template<typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, share_type>> >
 	CCDK_FORCEINLINE poly_weak_ptr(const poly_weak_ptr<Type2, RefCount2>& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if (ccdk_likely(ref_count)) { DebugValue("inc"); ref_count->inc_ref_count(); }; }
 
-
+	//swap
 	template<typename Type2, typename RefCount2, typename = check_t< is_compatible<poly_share_ptr<Type2, RefCount2>, share_type>> >
 	CCDK_FORCEINLINE void swap(poly_weak_ptr<Type2, RefCount2>& other) noexcept {  util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
 

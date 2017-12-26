@@ -26,7 +26,6 @@ struct default_resource_base : public resource_base
 	typedef Type* value_type;
 private:
 	fs::compress_pair<deleter_type, value_type> pair;
-
 public:
 
 	//copy
@@ -76,9 +75,6 @@ public:
 	//delete resource
 	virtual ~deleter_resource_base() { pair.get_first()(pair.get_second()); }
 };
-
-
-
 
 
 ccdk_namespace_mpl_sp_end
