@@ -49,46 +49,50 @@ protected:
 	ref_count_type*     ref_count;
 	pointer_type        content;
 
+	void inc_share_count(){ if (ref_count) ref_count->inc_share_count(); }
+
 public:
 
-	//default constructor
+	/* default and nullptr constructor */
 	CCDK_FORCEINLINE share_ptr_base() noexcept :ref_count{ nullptr }, content{ nullptr } {}
-	//nullptr constructor
 	CCDK_FORCEINLINE share_ptr_base(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
-	//construct from T pointer, new may throw( bad_alloc) but no need process just spread out
+	/* pointer constructor, new may throw( bad_alloc) but no need process */
 	CCDK_FORCEINLINE explicit share_ptr_base(pointer_type ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
-	//construct from weak_ptr
-	CCDK_FORCEINLINE explicit share_ptr_base(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { if (ref_count) ref_count->inc_share_count(); }
-
-	//copy constructor
-	CCDK_FORCEINLINE share_ptr_base(const share_ptr_base& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if (ref_count) ref_count->inc_share_count(); }
+	
+	/* copy constructor */
+	CCDK_FORCEINLINE explicit share_ptr_base(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { inc_share_count(); }
+	CCDK_FORCEINLINE share_ptr_base(const share_ptr_base& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { inc_share_count(); }
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr_base<T2, D2, R2>, this_type >> >
-	CCDK_FORCEINLINE share_ptr_base(const share_ptr_base<T2, D2, R2> & other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if (ref_count) ref_count->inc_share_count(); }
+	CCDK_FORCEINLINE share_ptr_base(const share_ptr_base<T2, D2, R2> & other) noexcept : ref_count{ other.ref_count }, content{ other.content } { inc_share_count(); }
 
-	//move constructor
+	/* move constructor */
+	CCDK_FORCEINLINE share_ptr_base(share_ptr_base&& other) noexcept : ref_count{ other.ref_count }, content{ other.content } {}
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE share_ptr_base(share_ptr_base<T2, D2, R2>&& other) noexcept : ref_count{ other.ref_count }, content{ other.content } {}
 
-	//value assign, may throw
+	/* value assign, may throw */
 	CCDK_FORCEINLINE share_ptr_base& operator=(pointer_type ptr) { share_ptr_base{ ptr }.swap(*this); return *this; }
 
-	//copy assign, protect from self assign, may throw when front content destruct 
-	CCDK_FORCEINLINE share_ptr_base& operator=(const share_ptr_base& other) { if (ccdk_likely(util::addressof(other) != this)) { share_ptr_base{ other }.swap(*this); } return *this; }
+	/* copy assign, prove from self assign, may throw when front content destruct  */
+	CCDK_FORCEINLINE share_ptr_base& operator=(const share_ptr_base& other) { ccdk_if_not_this(other) { share_ptr_base{ other }.swap(*this); } return *this; }
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr_base<T2, D2, R2>, this_type >> >
-	CCDK_FORCEINLINE share_ptr_base& operator=(const share_ptr_base<T2, D2, R2>& other) {   share_ptr_base{ other }.swap(*this); return *this; }
+	CCDK_FORCEINLINE share_ptr_base& operator=(const share_ptr_base<T2, D2, R2>& other) { share_ptr_base{ other }.swap(*this); return *this; }
 
-	//move assign, protect from self assign, may throw when front content destruct 
-	CCDK_FORCEINLINE share_ptr_base& operator=(share_ptr_base&& other) { if (ccdk_likely(util::addressof(other) != this)) { share_ptr_base{ util::move(other) }.swap(*this); } return *this; }
+	/* move assign, prove from self assign, may throw  */
+	CCDK_FORCEINLINE share_ptr_base& operator=(share_ptr_base&& other) { ccdk_if_not_this(other) { share_ptr_base{ util::move(other) }.swap(*this); } return *this; }
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr_base<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE share_ptr_base& operator=(share_ptr_base<T2, D2, R2>&& other) { share_ptr_base{ util::move(other) }.swap(*this); return *this; }
 
 	//swap operation
-	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr_base<T2, D2, R2>, this_type >> >
+	template< typename T2, typename D2, typename R2, typename = check_t< is_compatible< share_ptr_base<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE void swap(share_ptr_base<T2, D2, R2>& other) noexcept { util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
 
 	//get pointer
 	CCDK_FORCEINLINE pointer_type pointer() const noexcept { return content; }
+
+	//bool
+	CCDK_FORCEINLINE explicit operator bool() { return content != nullptr; }
 
 	//share count
 	CCDK_FORCEINLINE uint32 share_count() const noexcept { return ref_count->share_count; }

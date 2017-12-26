@@ -157,8 +157,6 @@ namespace ccdk {
 	// if T& version constructor not exists, will call const T& version
 	struct test_copy_t
 	{
-	
-
 		test_copy_t() { DebugValue("default ctor"); }
 		test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
 		test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
@@ -258,37 +256,37 @@ namespace ccdk {
 	{
 		test_copy_assign_t() { DebugValue("default ctor"); }
 
-		//test_copy_assign_t(int t) { DebugValue("int ctor"); }
+		test_copy_assign_t(int t) { DebugValue("int ctor"); }
 
-		//test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
+		test_copy_assign_t(test_copy_assign_t& t) { DebugValue("copy ctor"); }
 
-		//test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }
+		test_copy_assign_t(test_copy_assign_t&& t) { DebugValue("move ctor"); }
 
 		test_copy_assign_t(const test_copy_assign_t& t) { DebugValue("const copy ctor"); }
 
 		template<typename U>
 		test_copy_assign_t(test_copy_assign_t<U>& t) { DebugValue("tmpl copy ctor"); }
 
-	/*	template<typename U>
-		test_copy_assign_t(test_copy_assign_t<U>&& t) { DebugValue("tmpl move ctor"); }*/
-/*
 		template<typename U>
-		test_copy_assign_t(const test_copy_assign_t<U>& t) { DebugValue(" tmpl const copy ctor"); }*/
+		test_copy_assign_t(test_copy_assign_t<U>&& t) { DebugValue("tmpl move ctor"); }
 
-		//void operator=(test_copy_assign_t& t) { DebugValue("copy assign"); }
+		template<typename U>
+		test_copy_assign_t(const test_copy_assign_t<U>& t) { DebugValue(" tmpl const copy ctor"); }
 
-		//void operator=(test_copy_assign_t&& t) { DebugValue("move assign"); }
+		void operator=(test_copy_assign_t& t) { DebugValue("copy assign"); }
 
-		//void operator=(const test_copy_assign_t& t) { DebugValue("const copy assign"); }
+		void operator=(test_copy_assign_t&& t) { DebugValue("move assign"); }
 
-		//template<typename U>
-		//void operator=(test_copy_assign_t<U>& t) { DebugValue("tmpl copy assign"); }
+		void operator=(const test_copy_assign_t& t) { DebugValue("const copy assign"); }
 
-		//template<typename U>
-		//void operator=(test_copy_assign_t<U>&& t) { DebugValue("tmpl move assign"); }
+		template<typename U>
+		void operator=(test_copy_assign_t<U>& t) { DebugValue("tmpl copy assign"); }
 
-		//template<typename U>
-		//void operator=(const test_copy_assign_t<U>& t) { DebugValue("tmpl const copy assign"); }
+		template<typename U>
+		void operator=(test_copy_assign_t<U>&& t) { DebugValue("tmpl move assign"); }
+
+		template<typename U>
+		void operator=(const test_copy_assign_t<U>& t) { DebugValue("tmpl const copy assign"); }
 	};
 
 }

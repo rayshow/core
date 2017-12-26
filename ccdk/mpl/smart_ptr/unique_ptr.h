@@ -9,122 +9,101 @@
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/util/addressof.h>
+#include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>
 
 ccdk_namespace_mpl_sp_start
 
-
-//static resource smart pointer
-template<typename Type, typename Deleter = default_deleter >
-struct unique_ptr :public util::noncopyable
+template<
+	typename Type,
+	typename Deleter
+>
+struct unique_ptr_base  :public util::noncopyable
 {
-	typedef unique_ptr type;
-	typedef Type*      value_type;
-	typedef Deleter    deleter_type;
+	typedef unique_ptr_base this_type;
+	typedef Type		    value_type;
+	typedef Type*           pointer_type;
+	typedef Deleter         deleter_type;
+
 private:
-	value_type content;
+	pointer_type content;
 
 public:
-	CCDK_FORCEINLINE unique_ptr() noexcept : content{ nullptr } {}
+	/* default and nullptr constructor */
+	CCDK_FORCEINLINE unique_ptr_base() noexcept : content{ nullptr } {}
+	CCDK_FORCEINLINE unique_ptr_base(ptr::nullptr_t) noexcept : content{ nullptr } {}
 
-	CCDK_FORCEINLINE unique_ptr(ptr::nullptr_t) noexcept : content{ nullptr } {}
+	/* pointer constructor */
+	CCDK_FORCEINLINE unique_ptr_base(pointer_type ptr) noexcept : content(ptr) {}
 
-	//from value pointer
-	CCDK_FORCEINLINE unique_ptr(value_type ptr) noexcept : content(ptr) {}
+	/* move from compatible unique_ptr_base<T2,D2> */
+	template<typename T2, typename D2, typename = check_t< is_convertible<unique_ptr_base<T2, D2>,this_type> > >
+	CCDK_FORCEINLINE unique_ptr_base(unique_ptr_base<T2,D2>&& other) noexcept : content{ other.content } { other.content = nullptr; }
 
-	//move from compatible unique_ptr<Type2>
-	template<typename Type2, typename = check_t< is_convertible<Type2*,Type*> > >
-	CCDK_FORCEINLINE unique_ptr(unique_ptr<Type2>&& other) : content{ other.content } { other.content = nullptr; }
+	/* swap compatible unique_ptr_base<T2,D2> */
+	template<typename T2, typename D2, typename = check_t< is_compatible<unique_ptr_base<T2, D2>, this_type> > >
+	CCDK_FORCEINLINE void swap(unique_ptr_base<T2,D2>& other) noexcept { util::swap(content, other.content); }
 
+	/* pointer assign, release ahead pointer may throw */
+	CCDK_FORCEINLINE unique_ptr_base& operator=(pointer_type ptr)  { unique_ptr_base{ ptr }.swap(*this); return *this; }
 
-	template<typename Type2, typename = check_t< is_compatible<Type2*, Type*> > >
-	CCDK_FORCEINLINE void swap(unique_ptr<Type2>& other)
-	{
-		util::swap(content, other.content);
-	}
-
-	//move assign
-	CCDK_FORCEINLINE unique_ptr& operator=(value_type&& ptr) noexcept { unique_ptr{ ptr }.swap(*this); }
-
-	//prevent self move
-	CCDK_FORCEINLINE unique_ptr& operator=(unique_ptr&& other) { if (util::addressof(other) != this) { other.swap(*this); other.content = nullptr; } }
-
-	//move from compatible unique_ptr<T2>
+	/* move assign , prevent self move */
+	CCDK_FORCEINLINE unique_ptr_base& operator=(unique_ptr_base&& other) { ccdk_if_not_this(other) { unique_ptr_base{ util::move(other) }.swap(*this); } return *this; }
 	template<typename T2, typename = check_t< is_convertible<T2*, T*> > >
-	CCDK_FORCEINLINE unique_ptr& operator=(unique_ptr<T2>&& other)  { other.swap(*this); other.content = nullptr; }
+	CCDK_FORCEINLINE unique_ptr_base& operator=(unique_ptr_base<T2>&& other) { unique_ptr_base{ util::move(other) }.swap(*this); return *this; }
 
 	//non-copy
-	template<typename P> unique_ptr(const unique_ptr<P>&) = delete;
-	template<typename P> unique_ptr& operator=(const unique_ptr<P>&) = delete;
+	template<typename T2> unique_ptr_base(const unique_ptr_base<T2>&) = delete;
+	template<typename T2> unique_ptr_base& operator=(const unique_ptr_base<T2>&) = delete;
 
-	//refer member
-	CCDK_FORCEINLINE value_type operator->() noexcept { return content; }
-	CCDK_FORCEINLINE const value_type operator->() const noexcept { return content; }
-
-	//dereference, for efficient reason, assert not nullptr
-	CCDK_FORCEINLINE add_lref_t<Type> operator*() & noexcept { ccdk_assert(content != nullptr);  return *content; }
-	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const & noexcept { ccdk_assert(content != nullptr);  return *content; }
-	CCDK_FORCEINLINE Type operator*() && noexcept{ ccdk_assert(content != nullptr);  return util::move(*content); }
-
-	//pointer*
-	CCDK_FORCEINLINE value_type pointer() noexcept { return content; }
-	CCDK_FORCEINLINE const value_type pointer() const noexcept { return content; }
+	//get pointer
+	CCDK_FORCEINLINE pointer_type pointer() const noexcept { return content; }
 
 	//release
-	CCDK_FORCEINLINE void release() noexcept { ptr::safe_delete(content); }
+	CCDK_FORCEINLINE void release() { if(ccdk_likely(content)) Deleter{}(content); }
 
 	//delete
-	CCDK_FORCEINLINE ~unique_ptr() { ptr::safe_delete(content); }
+	CCDK_FORCEINLINE ~unique_ptr_base() { release(); }
 };
 
+
+template<
+	typename Type,
+	typename Deleter =  default_deleter<Type>
+>
+class unique_ptr : public unique_ptr_base<Type, Deleter>
+{
+public:
+	typedef unique_ptr_base<Type, Deleter>   base_type;
+	typedef typename base_type::pointer_type pointer_type;
+
+	//refer member
+	CCDK_FORCEINLINE pointer_type operator->() const noexcept { return pointer(); }
+
+	//dereference, for efficient reason, assert not nullptr
+	CCDK_FORCEINLINE add_lref_t<Type>       operator*()  noexcept       { ccdk_assert(pointer() != nullptr);  return *pointer(); }
+	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const  noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
+	
+};
 
 //for array
 // have index
 template<typename Type, typename Deleter>
-struct unique_ptr<Type[], Deleter> : public util::noncopyable
+struct unique_ptr<Type[], Deleter> : public unique_ptr_base<Type[], Deleter>
 {
-	typedef unique_ptr type;
-	typedef Type*      value_type;
-	typedef Deleter    deleter_type;
-private:
-	value_type content;
 public:
-
-	//default
-	CCDK_FORCEINLINE unique_ptr() noexcept : content{ nullptr } {}
-	CCDK_FORCEINLINE unique_ptr(ptr::nullptr_t) noexcept : content{ nullptr } {}
-	//value 
-	CCDK_FORCEINLINE unique_ptr(value_type ptr) noexcept : content(ptr) {}
-	//move
-	CCDK_FORCEINLINE unique_ptr(unique_ptr&& other) noexcept : content{ other.content } { other.content = nullptr; }
-
-	CCDK_FORCEINLINE void swap(unique_ptr& other) noexcept { util::swap(content, other.content); }
-
-	//assign move
-	CCDK_FORCEINLINE unique_ptr& operator=(value_type ptr) { unique_ptr{ ptr }.swap(*this); }
-	CCDK_FORCEINLINE unique_ptr& operator=(unique_ptr&& other) noexcept
-	{
-		if (util::addressof(other) != this) { content = other.content; other.content = nullptr; }
-	}
-
-	//no compatible move assign and copy / copy assign
-	template<typename Type2, typename Deleter2> unique_ptr(const unique_ptr<Type2, Deleter2>&) = delete;
-	template<typename Type2, typename Deleter2> unique_ptr& operator=(unique_ptr<Type2, Deleter2>&&) = delete;
-	template<typename Type2, typename Deleter2> unique_ptr& operator=(const unique_ptr<Type2, Deleter2>&) = delete;
+	typedef nique_ptr_base<Type[], Deleter> base_type;
 	
-
+	using base_type::base_type;
+	using base_type::operator=;
+	using base_type::swap;
+	using base_type::pointer;
+	using base_type::release;
+	
 	//index
-	CCDK_FORCEINLINE add_lref_t<type> operator[](int index)& { return content[index]; }
-	CCDK_FORCEINLINE add_const_lref_t<type> operator[](int index) const & { return content[index]; }
-	CCDK_FORCEINLINE Type operator[](int index) && { return util::move(content[index]); }
+	CCDK_FORCEINLINE add_lref_t<Type>       operator[](int index) noexcept       { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
+	CCDK_FORCEINLINE add_const_lref_t<Type> operator[](int index) const noexcept { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
 
-	//pointer*
-	CCDK_FORCEINLINE value_type pointer() noexcept { return content; }
-	CCDK_FORCEINLINE const value_type pointer() const noexcept { return content; }
-
-	//release
-	CCDK_FORCEINLINE void release() noexcept { ptr::safe_delete_array(content); }
-	CCDK_FORCEINLINE ~unique_ptr() { ptr::safe_delete_array(content); }
 };
 
 //forbidden void content

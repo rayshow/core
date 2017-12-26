@@ -72,7 +72,9 @@ namespace ccdk
 
 #define ccdk_safe_cleanup_if_exception( statement, cleanup )       \
 			try { (statement); }                                   \
-			catch (...) { (cleanup); throw; }                    
+			catch (...) { (cleanup); throw; }               
+
+#define ccdk_if_not_this(val)  if(ccdk_likely( ::mpl::util::addressof(val)!=this ))
 
 	}
 

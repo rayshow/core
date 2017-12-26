@@ -8,6 +8,11 @@
 using namespace ccdk;
 using namespace ccdk::mpl;
 
+void aa(int& a)
+{
+
+}
+
 int main()
 {
 	DebugNewTitle("test swap");
@@ -57,23 +62,30 @@ int main()
 	DebugNewTitle("debug test copy_t");
 	test_copy_assign_t<int> tint;
 	const test_copy_assign_t<int> ctint;
+	test_copy_assign_t<int> tint2{};
+	test_copy_assign_t<short> tint3{};
 	DebugValue(1);
-	test_copy_assign_t<int> tint2{ tint };
+	test_copy_assign_t<int>   tint4{ tint };
+	test_copy_assign_t<short> tint5{ tint };
 	DebugValue(2);
-	test_copy_assign_t<int> tint3{ ctint };
+	test_copy_assign_t<int> tint6{ ctint };
+	test_copy_assign_t<short> tint7{ ctint };
 	DebugValue(3);
-	test_copy_assign_t<int> tint4{ util::move(ctint) };
+	test_copy_assign_t<int> tint8{ util::move(tint) };
+	test_copy_assign_t<short> tint9{ util::move(tint) };
+	DebugValue(4);
+	tint2 = tint;
+	tint3 = tint;
+	DebugValue(5);
+	tint2 = ctint;
+	tint3 = ctint;
+	DebugValue(6);
+	tint2 = util::move(tint);
+	tint3 = util::move(tint);
+
+	int *a = nullptr;
+	ptr::safe_delete(a);
 	
-
-	//test_copy_assign_t<int> tint6{};
-	//const test_copy_assign_t<int> tint7{};
-
-	//DebugValue(4);
-	//tint6 = tint;
-	//DebugValue(5);
-	//tint6 = ctint;
-	//DebugValue(6);
-	//tint6 = util::move(tint);
 
 
 

@@ -17,13 +17,18 @@ ccdk_namespace_mpl_sp_start
 
 //shared   resource smart pointer
 //  same as std::share_ptr
-template<typename Type, typename RefCount = default_ref_count<> >
+template<
+	typename Type,
+	typename RefCount = default_ref_count<> 
+>
 class poly_share_ptr
 {
 public:
-	typedef poly_share_ptr type;
-	typedef RefCount       ref_count_type;
-	typedef Type*          value_type;
+	typedef poly_share_ptr				  this_type;
+	typedef poly_weak_ptr<Type, RefCount> weak_type;
+	typedef RefCount					  ref_count_type;
+	typedef Type						  value_type;
+	typedef Type*					      pointer_type;
 	template<typename, typename> friend class poly_share_ptr;
 	template<typename, typename> friend class poly_weak_ptr;
 private:
@@ -33,80 +38,81 @@ private:
 	//clean resource after new exception
 	CCDK_FORCEINLINE void clean_up() {  ptr::safe_delete(ref_count); ptr::safe_delete(content); }
 
-	// when new may throw, safe clean up and rethrow
-	template<typename Type2, typename = check_t< is_convertible<Type2*, Type*> > >
-	void set_pointer(Type2* ptr)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new default_resource_base<Type2>{ ptr }), clean_up() ); }
+	// when new may throw std::bad_alloc, safe clean up and rethrow
+	template<typename T2, typename = check_t< is_convertible<T2*, pointer_type> > >
+	void set_pointer(T2* ptr)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new default_resource_base<T2>{ ptr }), clean_up() ); }
 
-	template< typename Type2, typename Deleter>
-	void set_pointer(Type2* ptr, Deleter dl)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new deleter_resource_base<Type2, Deleter>{ ptr, dl }), clean_up() ); }
+	template< typename T2, typename D, typename = check_t< is_convertible<T2*, pointer_type> > >
+	void set_pointer(T2* ptr, const D& dl)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new deleter_resource_base<T2, D>{ ptr, dl }), clean_up() ); }
+
+	/* if initalized, increase share count */
+	void inc_share_count() { if (ccdk_likely(ref_count)) ref_count->inc_share_count(); }
+
 
 public:
-	//default
+	/* default and nullptr constructor */
 	CCDK_FORCEINLINE poly_share_ptr() noexcept : ref_count { nullptr }, content{ nullptr }  {}
-	//nullptr
 	CCDK_FORCEINLINE explicit poly_share_ptr(ptr::nullptr_t) noexcept : ref_count{nullptr}, content{ nullptr } {}
+	
+	/*pointer constructor, may throw std::bad_alloc*/
+	template<typename T2, typename = check_t< is_convertible<T2*,pointer_type>>>
+	explicit poly_share_ptr(T2* ptr) { set_pointer(ptr); }
+	template<typename T2, typename D, typename = check_t< is_convertible<T2*, pointer_type>>>
+	poly_share_ptr(T2* ptr, const D& dl) { set_pointer(ptr,dl); }
 
-	//value constructor may throw
-	template<typename Type2, typename = check_t< is_convertible<Type2*,Type*>>>
-	explicit poly_share_ptr(Type2* ptr) { set_pointer(ptr); }
+	/*copy constructor, just copy pointer and increase ref count */
+	CCDK_FORCEINLINE explicit poly_share_ptr(const weak_type& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { inc_share_count(); }
+	CCDK_FORCEINLINE poly_share_ptr(const poly_share_ptr& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { inc_share_count(); }
+	template< typename T2, typename R2, typename = check_t< is_convertible<poly_share_ptr<T2, R2>, this_type >>   >
+	CCDK_FORCEINLINE poly_share_ptr(const poly_share_ptr<T2, R2>& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { inc_share_count(); }
+	
+	/*move constructor, copy pointer then reset other's pointer */
+	CCDK_FORCEINLINE poly_share_ptr(poly_share_ptr&& other)noexcept : ref_count{ other.ref_count }, content{ other.content } { other.content = nullptr; other.ref_count = nullptr; }
+	template< typename T2, typename R2, typename = check_t< is_convertible<poly_share_ptr<T2, R2>, this_type>> >
+	CCDK_FORCEINLINE poly_share_ptr(poly_share_ptr<T2, R2>&& other) noexcept  : ref_count{ other.ref_count }, content{ other.content } { other.content = nullptr; other.ref_count = nullptr; }
 
-	template<typename Type2, typename Deleter, typename = check_t< is_convertible<Type2*, Type*>>>
-	poly_share_ptr(Type2* ptr, const Deleter& dl) { set_pointer(ptr,dl); }
+	/* swap when 2 sp is compatible */
+	template< typename T2, typename R2, typename = check_t< is_compatible<poly_share_ptr<T2, R2>, this_type>> >
+	CCDK_FORCEINLINE void swap(poly_share_ptr<T2, R2>& other) noexcept {  util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
 
-	//copy constructor
-	CCDK_FORCEINLINE poly_share_ptr(const poly_share_ptr& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if (ccdk_likely(ref_count)) ref_count->inc_share_count(); }
-	template< typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, type>>   >
-	CCDK_FORCEINLINE poly_share_ptr(const poly_share_ptr<Type2, RefCount2>& other) noexcept : ref_count{other.ref_count}, content{ other.content } { if ( ccdk_likely(ref_count)) ref_count->inc_share_count(); }
-	template< typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, type>>   >
-	CCDK_FORCEINLINE poly_share_ptr(const poly_weak_ptr<Type2, RefCount2>& other) noexcept : ref_count{ other.ref_count }, content{ other.content } { if (ccdk_likely(ref_count)) ref_count->inc_share_count(); }
-
-	//move constructor
-	template< typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, type>> >
-	CCDK_FORCEINLINE poly_share_ptr(poly_share_ptr<Type2, RefCount2>&& other) noexcept  : ref_count{ other.ref_count }, content{ other.content } { other.content = nullptr; other.ref_count = nullptr; }
-
-	//swap when 2 sp is compatible
-	template< typename Type2, typename RefCount2, typename = check_t< is_compatible<poly_share_ptr<Type2, RefCount2>, type>> >
-	CCDK_FORCEINLINE void swap(poly_share_ptr<Type2, RefCount2>& other) noexcept {  util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
-
-	//nullptr assign
+	/* nullptr assign */
 	CCDK_FORCEINLINE poly_share_ptr& operator=(ptr::nullptr_t) noexcept { poly_share_ptr{}.swap(*this); return *this; }
-	//pointer assign, may throw
-	CCDK_FORCEINLINE poly_share_ptr& operator=(value_type ptr)  { poly_share_ptr{ ptr }.swap(*this); return *this; }
-	//copy self assign, forbidden self assign
-	CCDK_FORCEINLINE poly_share_ptr& operator=(const poly_share_ptr& other) noexcept { if ( ccdk_likely( util::addressof(other) != this)) { poly_share_ptr{ other }.swap(*this); } return *this; }
-	//move self assign, forbindden self assign
-	CCDK_FORCEINLINE poly_share_ptr& operator=(poly_share_ptr&& other) noexcept { if (ccdk_likely( util::addressof(other) != this)) { poly_share_ptr{ util::move(other) }.swap(*this); } return *this; }
+	
+	/* pointer assign, may throw std::bad_alloc */
+	CCDK_FORCEINLINE poly_share_ptr& operator=(pointer_type ptr)  { poly_share_ptr{ ptr }.swap(*this); return *this; }
+	
 
-	//copy assign comptible sp
-	template< typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, type>> >
-	CCDK_FORCEINLINE poly_share_ptr& operator=(const poly_share_ptr<Type2, RefCount2>& other) { poly_share_ptr{ other }.swap(*this); return *this; }
-	//move assign comptible sp
-	template< typename Type2, typename RefCount2, typename = check_t< is_convertible<poly_share_ptr<Type2, RefCount2>, type>> >
-	CCDK_FORCEINLINE poly_share_ptr& operator=(poly_share_ptr<Type2, RefCount2>&& other) { poly_share_ptr{ util::move(other) }.swap(*this); return *this; }
+	/* copy assign comptible sp, may throw if pointer destruct */
+	CCDK_FORCEINLINE poly_share_ptr& operator=(const poly_share_ptr& other) { ccdk_if_not_this(other) { poly_share_ptr{ other }.swap(*this); } return *this; }
+	template< typename T2, typename R2, typename = check_t< is_convertible<poly_share_ptr<T2, R2>, this_type>> >
+	CCDK_FORCEINLINE poly_share_ptr& operator=(const poly_share_ptr<T2, R2>& other) { poly_share_ptr{ other }.swap(*this); return *this; }
+	
 
-	//reset, may throw
+	/* move assign comptible sp, may throw if pointer destruct */
+	CCDK_FORCEINLINE poly_share_ptr& operator=(poly_share_ptr&& other) { ccdk_if_not_this(other) { poly_share_ptr{ util::move(other) }.swap(*this); } return *this; }
+	template< typename T2, typename R2, typename = check_t< is_convertible<poly_share_ptr<T2, R2>, type>> >
+	CCDK_FORCEINLINE poly_share_ptr& operator=(poly_share_ptr<T2, R2>&& other) { poly_share_ptr{ util::move(other) }.swap(*this); return *this; }
+
+
+	/* reset, may throw if old pointer destruct  */
 	CCDK_FORCEINLINE void reset() { poly_share_ptr{}.swap(*this); }
-
 	CCDK_FORCEINLINE void reset(ptr::nullptr_t) { poly_share_ptr{}.swap(*this); }
-
-	template<typename Type2, typename = check_t< is_convertible<Type2*, Type*>>>
-	CCDK_FORCEINLINE void reset(Type2* ptr) { poly_share_ptr{ ptr }.swap(*this); }
-
-	template<typename Type2, typename Deleter, typename = check_t< is_convertible<Type2*, Type*>>>
-	CCDK_FORCEINLINE void reset(Type2* ptr, const Deleter& dl) { poly_share_ptr{ ptr, dl }.swap(*this); }
-
+	template<typename T2, typename = check_t< is_convertible<T2*, pointer_type >>>
+	CCDK_FORCEINLINE void reset(T2* ptr) { poly_share_ptr{ ptr }.swap(*this); }
+	template<typename T2, typename D, typename = check_t< is_convertible<T2*, pointer_type>>>
+	CCDK_FORCEINLINE void reset(T2* ptr, const D& dl) { poly_share_ptr{ ptr, dl }.swap(*this); }
 
 	//get pointer
-	CCDK_FORCEINLINE value_type pointer() const noexcept  { return content ? (value_type)content->pointer() : nullptr; }
+	CCDK_FORCEINLINE pointer_type pointer() const noexcept  { return content ? (pointer_type)content->pointer() : nullptr; }
 
 	//member access
-	CCDK_FORCEINLINE value_type operator->() const noexcept { return pointer(); }
+	CCDK_FORCEINLINE pointer_type operator->() const noexcept { return pointer(); }
 
 	//dereference 
-	CCDK_FORCEINLINE add_lref_t<Type> operator*() const noexcept { ccdk_assert(content != nullptr); return *(value_type)content->pointer(); }
+	CCDK_FORCEINLINE add_lref_t<value_type> operator*() const noexcept { ccdk_assert(pointer() != nullptr); return *pointer(); }
 
 	//bool
-	CCDK_FORCEINLINE explicit operator bool() const noexcept { return ref_count && ref_count->share_count > 0; }
+	CCDK_FORCEINLINE explicit operator bool() const noexcept { return pointer()!=nullptr; }
 
 	//share count
 	CCDK_FORCEINLINE uint32 share_count() const noexcept { return ref_count ? ref_count->share_count : 0; }
@@ -115,8 +121,7 @@ public:
 	CCDK_FORCEINLINE ~poly_share_ptr() { if (ccdk_likely(ref_count)) { ref_count->dec_share_count(default_deleter<resource_base>{}, content); } }
 };
 
-
-	//general fn
+	//help fn
 	template<typename T1, typename T2, typename R1, typename R2> void swap(poly_share_ptr<T1,R1>& lh, poly_share_ptr<T2,R2>& rh) { lh.swap(rh); }
 	template<typename T> decltype(auto) value(const poly_share_ptr<T>& sp) { return sp.pointer(); }
 

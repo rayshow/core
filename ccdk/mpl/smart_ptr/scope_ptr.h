@@ -41,7 +41,6 @@ public:
 	CCDK_FORCEINLINE scope_ptr(ptr::nullptr_t) noexcept : content{ nullptr } {}
 
 	//pointer constructor,  safe process exception
-
 	template<typename Type2, typename = check_t< is_convertible<Type2*,Type*> > >
 	CCDK_FORCEINLINE scope_ptr(Type2* ptr) { set_pointer(ptr); }
 
@@ -83,7 +82,6 @@ public:
 
 	//exists
 	CCDK_FORCEINLINE explicit operator bool() noexcept { return (nullptr != content) && (nullptr != content->pointer()); }
-
 
 
 	//index
