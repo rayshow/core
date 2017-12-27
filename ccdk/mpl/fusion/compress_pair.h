@@ -17,10 +17,8 @@ struct compress_pair final : public First
 	typedef First           first_type;
 	typedef decay_t<Second> second_type;
 
-private:
 	second_type second;
 
-public:
 	compress_pair() : First(), second{} {}
 
 	compress_pair(const Second& second) : First(), second{ second } {}
@@ -28,13 +26,8 @@ public:
 	compress_pair(const first_type& inFirst, const second_type& inSecond)
 		: First{ inFirst }, second{ inSecond } {}
 
-	First& get_first() & { return *this; }
-	const First& get_first() const& { return *this; }
-	First get_first() && { return util::move(*this); }
-
-	second_type& get_second() & { return second; }
-	const second_type& get_second() const& { return second; }
-	second_type get_second() && { return util::move(second); }
+	First&       get_first() noexcept       { return *this; }
+	const First& get_first() const noexcept { return *this; }
 
 };
 
@@ -45,11 +38,8 @@ struct compress_pair<First, Second, false>
 	typedef decay_t<First>  first_type;
 	typedef decay_t<Second> second_type;
 
-private:
 	first_type  first;
 	second_type second;
-
-public:
 
 	compress_pair() : first{}, second{} {}
 
@@ -58,13 +48,8 @@ public:
 	compress_pair(const first_type& inFirst, const second_type& inSecond)
 		: first{ inFirst }, second{ inSecond } {}
 
-	First& get_first() & { return first; }
-	const First& get_first() const& { return second; }
-	First get_first() && { return util::move(second); }
-
-	second_type& get_second() & { return second; }
-	const second_type& get_second() const& { return second; }
-	second_type get_second() && { return util::move(second); }
+	First&	     get_first() noexcept       { return first; }
+	const First& get_first() const noexcept { return second; }
 };
 
 

@@ -38,7 +38,7 @@ namespace ccdk
 			typename... Args
 		>
 		struct arg_pack_find_if< T, Default, i, P, Args...>
-				:condi_derive<
+				:derive_if<
 					typename T::template apply<P>,
 					found_at<P, i>,
 					arg_pack_find_if<T, Default, i + 1, Args...>>
@@ -57,7 +57,5 @@ namespace ccdk
 
 		template<typename T, typename Default, typename... Args>
 		static constexpr uint32 arg_pack_find_if_v = arg_pack_find_if<T, Default, 0, Args...>::value;
-
-
 	}
 }

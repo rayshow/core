@@ -74,7 +74,7 @@ namespace ccdk
 			try { (statement); }                                   \
 			catch (...) { (cleanup); throw; }               
 
-#define ccdk_if_not_this(val)  if(ccdk_likely( ::mpl::util::addressof(val)!=this ))
+#define ccdk_if_not_this(val)  if(ccdk_likely( ccdk::mpl::util::addressof(val)!=this ))
 
 	}
 

@@ -184,6 +184,7 @@
     <ClInclude Include="mpl\smart_ptr\resource_base.h" />
     <ClInclude Include="mpl\smart_ptr\scope_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\share_ptr.h" />
+    <ClInclude Include="mpl\smart_ptr\smart_pointer_cast.h" />
     <ClInclude Include="mpl\smart_ptr\smart_ptr_fwd.h" />
     <ClInclude Include="mpl\smart_ptr\unique_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\weak_ptr.h" />

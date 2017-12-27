@@ -30,6 +30,11 @@ template< typename T, typename D>
 class unique_ptr_base;
 
 
+
+template< typename T>
+class scope_ptr;
+
+
 ccdk_namespace_mpl_sp_end
 
 
@@ -66,16 +71,15 @@ struct is_compatible< ccdk_sp_t< T1, D1, R1>, ccdk_sp_t< T2, D2, R2>>
 template<typename T1, typename T2, typename R1, typename R2>
 struct is_convertible< ccdk_psp_t<T1,R1>, ccdk_psp_t<T2,R2> > : and_< is_convertible<T1*, T2*>, is_same<R1, R2>>  {};
 
-//poly share pointer compatible
+//poly_share_ptr compatible
 template<typename T1, typename T2, typename R1, typename R2>
 struct is_compatible< ccdk_psp_t<T1, R1>, ccdk_psp_t<T2, R2> > : and_< is_compatible<T1*, T2*>, is_same<R1, R2>> {};
 
-
-//unique_ptr 
+//unique_ptr convertible
 template<typename T1, typename T2, typename R1, typename R2>
 struct is_convertible< ccdk_up_t<T1, R1>, ccdk_up_t<T2, R2> > : and_< is_convertible<T1*, T2*>, is_same<R1, R2>> {};
 
-//poly share pointer compatible
+//unique_ptr compatible
 template<typename T1, typename T2, typename R1, typename R2>
 struct is_compatible< ccdk_up_t<T1, R1>, ccdk_up_t<T2, R2> > : and_< is_compatible<T1*, T2*>, is_same<R1, R2>> {};
 

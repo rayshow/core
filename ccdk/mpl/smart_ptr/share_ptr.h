@@ -28,11 +28,10 @@ ccdk_namespace_mpl_sp_start
 
 //static small and simple share_ptr implements, Deleter / RefCount / Allocator ensure at compile time
 
-
 template<
 	typename T,
-	typename Deleter,   //normal deleter for different type
-	typename RefCount  // multi-thread need atomic ref_count
+	typename Deleter,   /* normal deleter for different type */
+	typename RefCount   /* multi-thread need atomic ref_count */
 >
 class share_ptr_base
 {
@@ -84,20 +83,20 @@ public:
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr_base<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE share_ptr_base& operator=(share_ptr_base<T2, D2, R2>&& other) { share_ptr_base{ util::move(other) }.swap(*this); return *this; }
 
-	//swap operation
+	/* swap operation */
 	template< typename T2, typename D2, typename R2, typename = check_t< is_compatible< share_ptr_base<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE void swap(share_ptr_base<T2, D2, R2>& other) noexcept { util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
 
-	//get pointer
+	/* get pointer */
 	CCDK_FORCEINLINE pointer_type pointer() const noexcept { return content; }
 
-	//bool
+	/* bool */
 	CCDK_FORCEINLINE explicit operator bool() { return content != nullptr; }
 
-	//share count
+	/* share count */
 	CCDK_FORCEINLINE uint32 share_count() const noexcept { return ref_count->share_count; }
 
-	//destructor
+	/* destructor */
 	CCDK_FORCEINLINE ~share_ptr_base() { if (ref_count) ref_count->dec_share_count(Deleter{}, content); /*not store Deleter*/ }
 };
 
@@ -117,17 +116,17 @@ public:
 	typedef  share_ptr_base<T, Deleter, RefCount> base_type;
 	typedef typename base_type::value_type        value_type;
 
-	//base constructor
+	/* base constructor */
 	using base_type::base_type;
 	using base_type::operator=;
 	using base_type::swap;
 	using base_type::share_count;
 	using base_type::pointer;
 
-	//refer-member, valid for class and union
+	/* refer-member, valid for class and union */
 	CCDK_FORCEINLINE  value_type operator->() const noexcept  { static_assert(or_v<is_class<T>, is_union<T>>, "T need class and union"); return pointer();  }
 
-	//deref, type can't be void, assert not nullptr 
+	/* dereference, type can't be void, assert not nullptr  */
 	CCDK_FORCEINLINE add_lref_t<T> operator*() const noexcept { ccdk_assert(pointer() != nullptr); return *pointer(); }
 };
 
@@ -148,30 +147,28 @@ public:
 	typedef  share_ptr_base<T[], Deleter, RefCount> base_type;
 	typedef typename base_type::value_type        value_type;
 
-	//base constructor
+	/* base constructor and fn */
 	using base_type::base_type;
 	using base_type::operator=;
 	using base_type::swap;
 	using base_type::share_count;
 	using base_type::pointer;
 
-	//index, valid only for array
-	CCDK_FORCEINLINE add_lref_t<T> operator[](uint32 index) & noexcept { return pointer()[index]; }
-	CCDK_FORCEINLINE add_const_lref_t<T> operator[](uint32 index) const& noexcept { return pointer()[index]; }
+	/* index */
+	CCDK_FORCEINLINE add_lref_t<T> operator[](uint32 index) const noexcept { return pointer()[index]; }
 };
 
 //forbidden void 
 template< typename Deleter, typename RefCount > class share_ptr<void, Deleter, RefCount> {};
 
-
-//help fn
+/* help fn */
 template<typename T,typename D,typename R, typename T2, typename D2, typename R2>
 CCDK_FORCEINLINE void swap(share_ptr<T, D, R>& lh, share_ptr<T2, D2, R2>& rh) noexcept { lh.swap(rh); }
 template<typename T, typename D, typename R>
 CCDK_FORCEINLINE decltype(auto) value(const share_ptr<T, D, R>& sp) { return sp.pointer(); }
 
 
-// share_ptr == share_ptr / nullptr == share_ptr /  share_ptr == nullptr
+/* equal */
 template<typename T1, typename D1,  typename R1, typename T2, typename D2, typename R2>
 CCDK_FORCEINLINE bool operator==(const share_ptr<T1, D1, R1>& lh, const share_ptr<T2, D2, R2>& rh) { return lh.pointer() == rh.pointer(); }
 template<typename T1, typename D1, typename R1>
@@ -179,7 +176,7 @@ CCDK_FORCEINLINE bool operator==(const share_ptr<T1, D1, R1>& lh, ptr::nullptr_t
 template<typename T1, typename D1, typename R1>
 CCDK_FORCEINLINE bool operator==(ptr::nullptr_t, const share_ptr<T1, D1, R1>& rh) { return rh.pointer() == nullptr; }
 
-// share_ptr < share_ptr / share_ptr < nullptr_t /  share_ptr < nullptr_t
+/* less */
 template<typename T1, typename D1, typename R1, typename T2, typename D2, typename R2>
 CCDK_FORCEINLINE bool operator<(const share_ptr<T1, D1, R1>& lh, const share_ptr<T2, D2, R2>& rh) { return util::comp_less< typename share_ptr<T1, D1, R1>::value_type, typename share_ptr<T2, D2, R2>::value_type >(lh.pointer(), rh.pointer()); }
 template<typename T1, typename D1, typename R1>

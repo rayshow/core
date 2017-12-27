@@ -4,6 +4,9 @@
 #include<ccdk/mpl/type_traits/is_convertible.h>
 #include<ccdk/mpl/type_traits/is_pod.h>
 #include<ccdk/mpl/type_traits/is_compatible.h>
+#include<ccdk/mpl/type_traits/is_class.h>
+#include<ccdk/mpl/type_traits/is_union.h>
+#include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/util/noncopyable.h>
 #include<ccdk/mpl/util/move.h>
@@ -15,15 +18,17 @@
 ccdk_namespace_mpl_sp_start
 
 template<
-	typename Type,
-	typename Deleter
+	typename Type,      
+	typename Deleter 
 >
 struct unique_ptr_base  :public util::noncopyable
 {
-	typedef unique_ptr_base this_type;
-	typedef Type		    value_type;
-	typedef Type*           pointer_type;
-	typedef Deleter         deleter_type;
+	typedef unique_ptr_base			this_type;
+	typedef remove_dim_t<Type>	    value_type;
+	typedef value_type*		        pointer_type;
+	typedef Deleter					deleter_type;
+
+	template<typename, typename> friend class unique_ptr_base;
 
 private:
 	pointer_type content;
@@ -49,24 +54,34 @@ public:
 
 	/* move assign , prevent self move */
 	CCDK_FORCEINLINE unique_ptr_base& operator=(unique_ptr_base&& other) { ccdk_if_not_this(other) { unique_ptr_base{ util::move(other) }.swap(*this); } return *this; }
-	template<typename T2, typename = check_t< is_convertible<T2*, T*> > >
-	CCDK_FORCEINLINE unique_ptr_base& operator=(unique_ptr_base<T2>&& other) { unique_ptr_base{ util::move(other) }.swap(*this); return *this; }
+	template<typename T2, typename D2, typename = check_t< is_convertible<T2*, pointer_type> > >
+	CCDK_FORCEINLINE unique_ptr_base& operator=(unique_ptr_base<T2,D2>&& other) { unique_ptr_base{ util::move(other) }.swap(*this); return *this; }
 
-	//non-copy
-	template<typename T2> unique_ptr_base(const unique_ptr_base<T2>&) = delete;
-	template<typename T2> unique_ptr_base& operator=(const unique_ptr_base<T2>&) = delete;
+	/* non-copy */
+	template<typename T2, typename D2> unique_ptr_base(const unique_ptr_base<T2,D2>&) = delete;
+	template<typename T2, typename D2> unique_ptr_base& operator=(const unique_ptr_base<T2,D2>&) = delete;
 
-	//get pointer
+	/* reset  */
+	CCDK_FORCEINLINE void reset(){ if (ccdk_likely(content)) Deleter{}(content); }
+	CCDK_FORCEINLINE void reset(ptr::nullptr_t) { reset(); }
+	CCDK_FORCEINLINE void reset(pointer_type ptr) { unique_ptr_base{ ptr }.swap(*this); }
+
+	/* get pointer */
 	CCDK_FORCEINLINE pointer_type pointer() const noexcept { return content; }
 
-	//release
-	CCDK_FORCEINLINE void release() { if(ccdk_likely(content)) Deleter{}(content); }
+	/* bool */
+	CCDK_FORCEINLINE explicit operator bool() { return content != nullptr; }
 
-	//delete
-	CCDK_FORCEINLINE ~unique_ptr_base() { release(); }
+	/* release hold and return pointer */
+	CCDK_FORCEINLINE pointer_type release() { pointer_type ret = content; content = nullptr; return ret; }
+
+	/* delete */
+	CCDK_FORCEINLINE ~unique_ptr_base() { reset(); }
 };
 
 
+//for normal type
+//  has dereference and member operation
 template<
 	typename Type,
 	typename Deleter =  default_deleter<Type>
@@ -77,12 +92,19 @@ public:
 	typedef unique_ptr_base<Type, Deleter>   base_type;
 	typedef typename base_type::pointer_type pointer_type;
 
-	//refer member
-	CCDK_FORCEINLINE pointer_type operator->() const noexcept { return pointer(); }
+	using base_type::base_type;
+	using base_type::operator=;
+	using base_type::operator bool;
+	using base_type::swap;
+	using base_type::pointer;
+	using base_type::release;
+	using base_type::reset;
 
-	//dereference, for efficient reason, assert not nullptr
-	CCDK_FORCEINLINE add_lref_t<Type>       operator*()  noexcept       { ccdk_assert(pointer() != nullptr);  return *pointer(); }
-	CCDK_FORCEINLINE add_const_lref_t<Type> operator*() const  noexcept { ccdk_assert(pointer() != nullptr);  return *pointer(); }
+	/* refer member, only class / struct and union have member operator */
+	CCDK_FORCEINLINE pointer_type operator->() const noexcept { static_assert(or_v< is_class<Type>, is_union<Type> >, "need be class or uinon");  return pointer(); }
+
+	/* dereference, for efficient reason, assert pointer not nullptr */
+	CCDK_FORCEINLINE add_lref_t<Type>  operator*()  const noexcept   { ccdk_assert(pointer() != nullptr);  return *pointer(); }
 	
 };
 
@@ -92,38 +114,39 @@ template<typename Type, typename Deleter>
 struct unique_ptr<Type[], Deleter> : public unique_ptr_base<Type[], Deleter>
 {
 public:
-	typedef nique_ptr_base<Type[], Deleter> base_type;
+	typedef unique_ptr_base<Type[], Deleter> base_type;
 	
 	using base_type::base_type;
 	using base_type::operator=;
+	using base_type::operator bool;
 	using base_type::swap;
 	using base_type::pointer;
 	using base_type::release;
+	using base_type::reset;
 	
-	//index
-	CCDK_FORCEINLINE add_lref_t<Type>       operator[](int index) noexcept       { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
-	CCDK_FORCEINLINE add_const_lref_t<Type> operator[](int index) const noexcept { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
-
+	/* only array has index */
+	CCDK_FORCEINLINE add_lref_t<Type>       operator[](int index) const noexcept       { ccdk_assert(pointer() != nullptr);  return pointer()[index]; }
 };
 
-//forbidden void content
-template<> struct unique_ptr<void> : public util::noncopyable { public: unique_ptr() = delete; };
+/* forbidden void content */
+template<> struct unique_ptr<void> { public: unique_ptr() = delete; };
 
-//halp fn
-template<typename Type1, typename Type2, typename Deleter1, typename Deleter2> 
-void swap(unique_ptr<Type1,Deleter1>& lh, unique_ptr<Type2, Deleter2>& rh) { lh.swap(rh); }
-template<typename Type, typename Deleter> decltype(auto) value(const unique_ptr<Type, Deleter>& sp) { return sp.pointer(); }
+/* halp fn */
+template<typename T1, typename T2, typename D1, typename D2,
+	typename = check_t< is_compatible<unique_ptr_base<T1, D1>, unique_ptr_base<T2, D2>> >>
+void swap(unique_ptr<T1,D1>& lh, unique_ptr<T2, D2>& rh) { lh.swap(rh); }
+template<typename T, typename D> decltype(auto) value(const unique_ptr<T, D>& sp) { return sp.pointer(); }
 
-//equal
-template<typename Type, typename Deleter> CCDK_FORCEINLINE bool operator==(const unique_ptr<Type, Deleter>& sp, ptr::nullptr_t) { return sp.pointer() == nullptr; }
-template<typename Type, typename Deleter> CCDK_FORCEINLINE bool operator==(ptr::nullptr_t, const unique_ptr<Type, Deleter>& sp) { return sp.pointer() == nullptr; }
-template<typename Type1, typename Type2, typename Deleter1, typename Deleter2>
-CCDK_FORCEINLINE  bool operator==(const unique_ptr<Type1, Deleter1>& lh, const unique_ptr<Type2, Deleter2>& rh) { return lh.pointer() == rh.pointer(); }
+/* equal */
+template<typename T, typename D> CCDK_FORCEINLINE bool operator==(const unique_ptr<T, D>& sp, ptr::nullptr_t) { return sp.pointer() == nullptr; }
+template<typename T, typename D> CCDK_FORCEINLINE bool operator==(ptr::nullptr_t, const unique_ptr<T, D>& sp) { return sp.pointer() == nullptr; }
+template<typename T1, typename T2, typename D1, typename D2>
+CCDK_FORCEINLINE  bool operator==(const unique_ptr<T1, D1>& lh, const unique_ptr<T2, D2>& rh) { return lh.pointer() == rh.pointer(); }
 
-//less
-template<typename Type, typename Deleter> CCDK_FORCEINLINE  bool operator<(ptr::nullptr_t, const unique_ptr<Type, Deleter>& sp) { return nullptr < sp.pointer(); }
-template<typename Type, typename Deleter> CCDK_FORCEINLINE  bool operator<(const unique_ptr<Type, Deleter>& sp, ptr::nullptr_t) { return sp.pointer() < nullptr; }
-template<typename Type1, typename Type2, typename Deleter1, typename Deleter2>
-CCDK_FORCEINLINE  bool operator<(const unique_ptr<Type1, Deleter1>& lh, const unique_ptr<Type2, Deleter2>& rh) { return lh.pointer() < rh.pointer(); }
+/* less */
+template<typename T, typename D> CCDK_FORCEINLINE  bool operator<(ptr::nullptr_t, const unique_ptr<T, D>& sp) { return nullptr < sp.pointer(); }
+template<typename T, typename D> CCDK_FORCEINLINE  bool operator<(const unique_ptr<T, D>& sp, ptr::nullptr_t) { return sp.pointer() < nullptr; }
+template<typename T1, typename T2, typename D1, typename D2>
+CCDK_FORCEINLINE  bool operator<(const unique_ptr<T1, D1>& lh, const unique_ptr<T1, D1>& rh) { return lh.pointer() < rh.pointer(); }
 
 ccdk_namespace_mpl_sp_end
