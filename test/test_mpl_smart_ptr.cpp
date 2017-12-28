@@ -102,14 +102,8 @@ public:
 using namespace ccdk::mpl;
 int main()
 {
-	{
-		share_test st1{};
-		share_test2 st2{};
-
-		//st1.shared();
-		//st2.shared();
-		DebugValue("in scope");
-	}
+	
+	DebugValue(is_enable_share<share_test>{});
 	
 
 	//std::shared_ptr<int> a{};
@@ -446,9 +440,6 @@ int main()
 	//	DebugValue("out of weak");
 	//}
 
-	using std::enable_shared_from_this;
-	std::shared_ptr<int> s;
-	std::weak_ptr<int> s;
 	getchar();
 	return 0;
 }

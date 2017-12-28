@@ -177,6 +177,7 @@
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\mpl_module.h" />
+    <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\default_deleter.h" />
     <ClInclude Include="mpl\smart_ptr\enable_share_from_this.h" />
     <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h" />

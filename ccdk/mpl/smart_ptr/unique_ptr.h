@@ -14,14 +14,14 @@
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>
-
+ 
 ccdk_namespace_mpl_sp_start
 
 template<
 	typename Type,      
 	typename Deleter 
 >
-struct unique_ptr_base  :public util::noncopyable
+struct unique_ptr_base :public util::noncopyable
 {
 	typedef unique_ptr_base			this_type;
 	typedef remove_dim_t<Type>	    value_type;
@@ -92,6 +92,7 @@ public:
 	typedef unique_ptr_base<Type, Deleter>   base_type;
 	typedef typename base_type::pointer_type pointer_type;
 
+	/* gcc depends on this */
 	using base_type::base_type;
 	using base_type::operator=;
 	using base_type::operator bool;

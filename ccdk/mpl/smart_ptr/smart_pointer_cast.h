@@ -29,10 +29,5 @@ CCDK_FORCEINLINE void static_pointer_cast(From& f)
 
 #endif
 
-template< typename To, typename From>
-CCDK_FORCEINLINE scope_ptr<To> static_pointer_cast(scope_ptr<From>&& t)
-{
-	return util::move( scope_ptr{ static_cast<To>(t.release()) } );
-}
 
 ccdk_namespace_mpl_sp_end

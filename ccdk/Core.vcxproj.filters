@@ -946,5 +946,8 @@
     <ClInclude Include="mpl\smart_ptr\enable_share_from_this.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

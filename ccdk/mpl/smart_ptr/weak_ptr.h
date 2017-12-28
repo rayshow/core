@@ -8,6 +8,7 @@
 #include<ccdk/mpl/smart_ptr/default_ref_count.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
+#include<ccdk/mpl/smart_ptr/bad_weak_ptr.h>
 
 ccdk_namespace_mpl_sp_start
 
@@ -24,7 +25,7 @@ public:
 	typedef share_ptr<T, Deleter, RefCount>   share_type;
 	typedef typename share_type::pointer_type pointer_type;
 	template<typename, typename, typename > friend class share_ptr_base;
-private:           
+private:
 	pointer_type      ptr;
 	RefCount*         ref_count;
 
@@ -71,9 +72,9 @@ public:
 
 	/* expired */
 	CCDK_FORCEINLINE bool expired() const noexcept { return share_count() == 0; }
-
+	  
 	/* lock  */
-	CCDK_FORCEINLINE share_type lock() const noexcept { return share_type{ *this }; }
+	CCDK_FORCEINLINE share_type lock() const noexcept { if (ptr) { return share_type{ *this }; } ccdk_throw(bad_weak_ptr{}); }
 
 	/* decrease ref count */
 	CCDK_FORCEINLINE ~weak_ptr() { if (ref_count) ref_count->dec_ref_count(); }

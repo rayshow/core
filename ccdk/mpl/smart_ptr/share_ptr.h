@@ -57,7 +57,14 @@ public:
 	CCDK_FORCEINLINE share_ptr_base(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
 	/* pointer constructor, new may throw( std::bad_alloc) but no need process */
-	CCDK_FORCEINLINE explicit share_ptr_base(pointer_type ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
+
+
+	//CCDK_FORCEINLINE explicit share_ptr_base(pointer_type ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
+
+	template<typename T2, typename = check_t< is_convertible< T2*, pointer_type> >>
+	CCDK_FORCEINLINE explicit share_ptr_base(T2* ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {   }
+
+
 	
 	/* copy constructor */
 	CCDK_FORCEINLINE explicit share_ptr_base(const weak_type& wp) noexcept : ref_count{ wp.ref_count }, content{ wp.ptr } { inc_share_count(); }
