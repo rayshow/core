@@ -23,6 +23,7 @@ public:
 	typedef RefCount                          ref_count_type;
 	typedef share_ptr<T, Deleter, RefCount>   share_type;
 	typedef typename share_type::pointer_type pointer_type;
+	template<typename, typename, typename > friend class share_ptr_base;
 private:           
 	pointer_type      ptr;
 	RefCount*         ref_count;
@@ -66,7 +67,7 @@ public:
 	CCDK_FORCEINLINE uint32 share_count() const noexcept  { return ref_count ? ref_count->share_count : 0; }
 
 	/* weak count */
-	CCDK_FORCEINLINE uint32 weak_count() const noexcept { return ref_count ? ref_count->ref_count : 0; }
+	CCDK_FORCEINLINE uint32 weak_count() const noexcept { return ref_count ? ref_count->ref_count-1 : 0; }
 
 	/* expired */
 	CCDK_FORCEINLINE bool expired() const noexcept { return share_count() == 0; }

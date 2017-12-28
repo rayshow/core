@@ -56,7 +56,7 @@ public:
 	CCDK_FORCEINLINE share_ptr_base() noexcept :ref_count{ nullptr }, content{ nullptr } {}
 	CCDK_FORCEINLINE share_ptr_base(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
-	/* pointer constructor, new may throw( bad_alloc) but no need process */
+	/* pointer constructor, new may throw( std::bad_alloc) but no need process */
 	CCDK_FORCEINLINE explicit share_ptr_base(pointer_type ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
 	
 	/* copy constructor */
@@ -71,6 +71,7 @@ public:
 	CCDK_FORCEINLINE share_ptr_base(share_ptr_base<T2, D2, R2>&& other) noexcept : ref_count{ other.ref_count }, content{ other.content } {}
 
 	/* value assign, may throw */
+	CCDK_FORCEINLINE share_ptr_base& operator=(ptr::nullptr_t) { share_ptr_base{}.swap(*this); return *this; }
 	CCDK_FORCEINLINE share_ptr_base& operator=(pointer_type ptr) { share_ptr_base{ ptr }.swap(*this); return *this; }
 
 	/* copy assign, prove from self assign, may throw when front content destruct  */
@@ -87,6 +88,11 @@ public:
 	template< typename T2, typename D2, typename R2, typename = check_t< is_compatible< share_ptr_base<T2, D2, R2>, this_type >> >
 	CCDK_FORCEINLINE void swap(share_ptr_base<T2, D2, R2>& other) noexcept { util::swap(ref_count, other.ref_count); util::swap(content, other.content); }
 
+	/* reset pointer */
+	CCDK_FORCEINLINE void reset() { share_ptr_base{}.swap(*this); }
+	CCDK_FORCEINLINE void reset(ptr::nullptr_t) { reset(); }
+	CCDK_FORCEINLINE void reset(pointer_type ptr) { share_ptr_base{ ptr }.swap(*this); }
+
 	/* get pointer */
 	CCDK_FORCEINLINE pointer_type pointer() const noexcept { return content; }
 
@@ -94,10 +100,10 @@ public:
 	CCDK_FORCEINLINE explicit operator bool() { return content != nullptr; }
 
 	/* share count */
-	CCDK_FORCEINLINE uint32 share_count() const noexcept { return ref_count->share_count; }
+	CCDK_FORCEINLINE uint32 share_count() const noexcept { if (ccdk_likely(ref_count)) { return ref_count->share_count; } return 0; }
 
 	/* destructor */
-	CCDK_FORCEINLINE ~share_ptr_base() { if (ref_count) ref_count->dec_share_count(Deleter{}, content); /*not store Deleter*/ }
+	CCDK_FORCEINLINE ~share_ptr_base() { if (ref_count) ref_count->dec_share_count(Deleter{}, content); }
 };
 
 
@@ -159,7 +165,7 @@ public:
 };
 
 //forbidden void 
-template< typename Deleter, typename RefCount > class share_ptr<void, Deleter, RefCount> {};
+template< typename Deleter, typename RefCount > class share_ptr<void, Deleter, RefCount> : public util::noncopyable { share_ptr() = delete; };
 
 /* help fn */
 template<typename T,typename D,typename R, typename T2, typename D2, typename R2>

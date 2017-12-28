@@ -129,13 +129,13 @@ public:
 };
 
 /* forbidden void content */
-template<> struct unique_ptr<void> { public: unique_ptr() = delete; };
+template<> struct unique_ptr<void> : public util::noncopyable { private: unique_ptr() = delete; };
 
 /* halp fn */
 template<typename T1, typename T2, typename D1, typename D2,
 	typename = check_t< is_compatible<unique_ptr_base<T1, D1>, unique_ptr_base<T2, D2>> >>
-void swap(unique_ptr<T1,D1>& lh, unique_ptr<T2, D2>& rh) { lh.swap(rh); }
-template<typename T, typename D> decltype(auto) value(const unique_ptr<T, D>& sp) { return sp.pointer(); }
+	CCDK_FORCEINLINE void swap(unique_ptr<T1,D1>& lh, unique_ptr<T2, D2>& rh) { lh.swap(rh); }
+template<typename T, typename D> CCDK_FORCEINLINE decltype(auto) value(const unique_ptr<T, D>& sp) { return sp.pointer(); }
 
 /* equal */
 template<typename T, typename D> CCDK_FORCEINLINE bool operator==(const unique_ptr<T, D>& sp, ptr::nullptr_t) { return sp.pointer() == nullptr; }

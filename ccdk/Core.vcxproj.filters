@@ -943,5 +943,8 @@
     <ClInclude Include="mpl\smart_ptr\smart_pointer_cast.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\enable_share_from_this.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
