@@ -39,6 +39,9 @@ public:
 	/* copy from share_ptr/weak_ptr <T2,D2,R2>, inc ref count */
 	template<typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
 	CCDK_FORCEINLINE weak_ptr(const share_ptr<T2, D2, R2>& sp) noexcept : ptr{ sp.content }, ref_count{ sp.ref_count } { inc_ref_count(); }
+	template<typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
+	CCDK_FORCEINLINE weak_ptr(const share_ptr_base<T2, D2, R2>& sp) noexcept : ptr{ sp.content }, ref_count{ sp.ref_count } { inc_ref_count(); }
+
 	CCDK_FORCEINLINE weak_ptr(const weak_ptr& other) noexcept : ptr{ other.ptr }, ref_count{ other.ref_count } { inc_ref_count(); }
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
 	CCDK_FORCEINLINE weak_ptr(const weak_ptr<T2, D2, R2>& other) noexcept :ptr{ other.ptr }, ref_count{ other.ref_count } { inc_ref_count(); }
@@ -55,6 +58,8 @@ public:
 	/* copy assign, avoid self assign, assign from share_ptr/weak_ptr <T2,D2,R2> */
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
 	CCDK_FORCEINLINE weak_ptr& operator=(const share_ptr<T2, D2, R2>& sp)  noexcept { weak_ptr{ sp }.swap(*this); return *this; }
+	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
+	CCDK_FORCEINLINE weak_ptr& operator=(const share_ptr_base<T2, D2, R2>& sp)  noexcept {  weak_ptr{ sp }.swap(*this); return *this; }
 	CCDK_FORCEINLINE weak_ptr& operator=(const weak_ptr& other) noexcept { ccdk_if_not_this(other) { weak_ptr{ other }.swap(*this); } return *this; }
 	template< typename T2, typename D2, typename R2, typename = check_t< is_convertible< share_ptr<T2, D2, R2>, share_type > > >
 	CCDK_FORCEINLINE weak_ptr& operator=(const weak_ptr<T2, D2, R2 >& other) noexcept { weak_ptr{ other }.swap(*this); return *this; }

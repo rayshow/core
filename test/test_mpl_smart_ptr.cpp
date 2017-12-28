@@ -71,7 +71,7 @@ struct MyFileCloser
 	}
 };
 
-class share_test : enable_share< share_test>
+class share_test : public enable_share< share_test>
 {
 public:
 	void shared()
@@ -104,6 +104,16 @@ int main()
 {
 	
 	DebugValue(is_enable_share<share_test>{});
+	DebugValue(is_enable_share<share_test2>{});
+	
+	share_ptr< share_test > sp{ new share_test{} };
+	
+	DebugValue(sp.share_count());
+	auto sp3{ sp->share_from_this() };
+	DebugValue(sp.share_count());
+
+	share_ptr< share_test2 > sp2{ new share_test2{} };
+
 	
 
 	//std::shared_ptr<int> a{};

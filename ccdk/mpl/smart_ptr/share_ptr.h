@@ -50,19 +50,22 @@ protected:
 
 	void inc_share_count(){ if (ref_count) ref_count->inc_share_count(); }
 
+	/* ptr is not derive from enable_share  */
+	template<typename T2>
+	CCDK_FORCEINLINE explicit share_ptr_base(T2* ptr, false_) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } { DebugValue("not enable share");  }
+
+	/* ptr is derive from enable_share  */
+	template<typename T2>
+	CCDK_FORCEINLINE explicit share_ptr_base(T2* ptr, true_) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } { DebugValue(" enable share");  ptr->weak_ref = *this; }
 public:
 
 	/* default and nullptr constructor */
 	CCDK_FORCEINLINE share_ptr_base() noexcept :ref_count{ nullptr }, content{ nullptr } {}
 	CCDK_FORCEINLINE share_ptr_base(ptr::nullptr_t) noexcept : ref_count{ nullptr }, content{ nullptr } {}
 
-	/* pointer constructor, new may throw( std::bad_alloc) but no need process */
-
-
-	//CCDK_FORCEINLINE explicit share_ptr_base(pointer_type ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {}
-
+	/* pointer constructor, dispatch to real constructor, new may throw( std::bad_alloc) but no need process*/
 	template<typename T2, typename = check_t< is_convertible< T2*, pointer_type> >>
-	CCDK_FORCEINLINE explicit share_ptr_base(T2* ptr) : ref_count{ new RefCount{ 1,1 } }, content{ ptr } {   }
+	CCDK_FORCEINLINE explicit share_ptr_base(T2* ptr) : share_ptr_base(ptr, typename is_enable_share<T2>::type{}) {}
 
 
 	
@@ -127,7 +130,7 @@ class share_ptr: public share_ptr_base<T,Deleter, RefCount>
 { 
 public:
 	typedef  share_ptr_base<T, Deleter, RefCount> base_type;
-	typedef typename base_type::value_type        value_type;
+	typedef typename base_type::pointer_type      pointer_type;
 
 	/* base constructor */
 	using base_type::base_type;
@@ -137,7 +140,7 @@ public:
 	using base_type::pointer;
 
 	/* refer-member, valid for class and union */
-	CCDK_FORCEINLINE  value_type operator->() const noexcept  { static_assert(or_v<is_class<T>, is_union<T>>, "T need class and union"); return pointer();  }
+	CCDK_FORCEINLINE  pointer_type operator->() const noexcept  { static_assert(or_v<is_class<T>, is_union<T>>, "T need class and union"); return pointer();  }
 
 	/* dereference, type can't be void, assert not nullptr  */
 	CCDK_FORCEINLINE add_lref_t<T> operator*() const noexcept { ccdk_assert(pointer() != nullptr); return *pointer(); }

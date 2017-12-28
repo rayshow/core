@@ -11,11 +11,11 @@ ccdk_namespace_mpl_sp_start
 template<typename T>
 struct has_inner_enable_share
 {
-	template<typename U, typename =decltype(U::share_this)>
+	template<typename U , bool = U::share_this>
 	constexpr static  bool sfinae(int) { return true; };
-	template<typename U, typename P>
+	template<typename U  >
 	constexpr static  bool  sfinae(...) { return false; };
-	static constexpr bool value = sfinae<T, bool>(0);
+	static constexpr bool value = sfinae<T>(0);
 };
 
 template<typename T>
@@ -31,9 +31,10 @@ class enable_share
 public:
 	typedef weak_ptr<T, D, R> weak_type;
 	constexpr static  bool share_this = true;
-private:
+	template<typename, typename, typename> friend class share_ptr_base;
+public:
 	 /* if new to share_ptr will keep a ref of this, otherwise keep null */
-	  weak_type ref_this; 
+	  weak_type weak_ref; 
 public: 
 
 	enable_share()
@@ -43,7 +44,7 @@ public:
 	/* if ref_this is null will throw bad_weak_ptr */
 	share_ptr<T, D, R> share_from_this() const 
 	{
-		return ref_this.lock();
+		return weak_ref.lock();
 	}
 };
 
