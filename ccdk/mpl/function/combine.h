@@ -8,9 +8,7 @@
 
 ccdk_namespace_mpl_fn_start
 
-	// combine(f , g, h, ...)(args...)
-	// = f( g( h ...(args...)))
-
+	/*  combine(f , g, h, ...)(args...)  => ...h( g( f(args...))) */
 	template<typename Fn, typename... Gs>
 	struct combine_t
 	{
@@ -20,50 +18,29 @@ ccdk_namespace_mpl_fn_start
 		value_type storage;
 
 		CCDK_FORCEINLINE constexpr 
-		combine_t(Fn const& fn, Gs const& ... gs)
-			: storage{ fn, gs... }
-		{}
+		combine_t(Fn const& fn, Gs const& ... gs) : storage{ fn, gs... } {}
 
 		CCDK_FORCEINLINE constexpr 
-		combine_t(Fn && fn, Gs && ... gs)
-			: storage{ 
-				util::move(fn), 
-				util::move(gs)...  }
-		{}
+		combine_t(Fn && fn, Gs && ... gs) : storage{  util::move(fn),  util::move(gs)...  } {}
 
-		template<typename... Args>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__invoke_impl(uint_<0>, Args&&... args)
+		template<typename... Args> 
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl(uint_<0>, Args&&... args)
 		{
 			return fs::ebo_at<0>(util::move(storage))(args...);
 		}
 
-		template<
-			uint32 index,
-			typename... Args
-		>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__invoke_impl( uint_<index>, Args&&... args )
+		template< uint32 index, typename... Args >
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl( uint_<index>, Args&&... args )
 		{
 			return fs::ebo_at<index>(util::move(storage))(
-				__invoke_impl(
-					uint_<index - 1>{},
-					util::forward<Args>(args)...
-				)
+					_invoke_impl( uint_<index - 1>{}, util::forward<Args>(args)... )
 			);
 		}
 
 		template<typename... Args>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		operator()(Args&&... args)
+		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args&&... args)
 		{
-			return __invoke_impl(
-				uint_<L-1>{},
-				util::forward<Args>(args)...
-			);
+			return _invoke_impl( uint_<L-1>{}, util::forward<Args>(args)... );
 		}
 	};
 		

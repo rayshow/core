@@ -8,8 +8,7 @@
 
 ccdk_namespace_mpl_fn_start
 
-	// fmap(f)( gs...)(args...)
-	// = f( gs(args...)...)
+	/* fmap(f)( gs...)(args...)  => f( gs(args...)...) */
 	template<typename Fn, typename... Fs>
 	struct fmap_t
 	{

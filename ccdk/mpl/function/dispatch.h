@@ -8,8 +8,7 @@
 
 ccdk_namespace_mpl_fn_start
 
-	// dispatch(f , gs...)(args...)
-	// = f( gs(args)...)
+	/* dispatch(f , gs...)(args...) => f( gs(args)...) */
 	template<typename Fn, typename... Fs>
 	struct dispatch_t
 	{

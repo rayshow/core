@@ -7,18 +7,12 @@ ccdk_namespace_mpl_fn_start
 
 
 template<typename Fn, typename... Fs>
-struct overload
-	:public overload<Fn>, public overload<Fs...>
+struct overload :public overload<Fn>, public overload<Fs...>
 {
 	using overload<Fn>::operator();
 	using overload<Fs...>::operator();
 
-
-	CCDK_FORCEINLINE constexpr
-	overload(Fn* fn, Fs*... fs)
-		:overload<Fn>(fn),
-		overload<Fs...>(fs...)
-	{}
+	CCDK_FORCEINLINE constexpr overload(Fn* fn, Fs*... fs) :overload<Fn>(fn), overload<Fs...>(fs...) {}
 };
 
 
@@ -29,17 +23,9 @@ struct overload<Ret(Args...)>
 	
 	value_type ptr;
 
-	CCDK_FORCEINLINE constexpr
-	overload(value_type inPtr)
-		:ptr{ inPtr }
-	{}
+	CCDK_FORCEINLINE constexpr overload(value_type inPtr) :ptr{ inPtr } {}
 
-	CCDK_FORCEINLINE constexpr
-	decltype(auto) 
-	operator()(Args... args)
-	{
-		return ptr(args...);
-	}
+	CCDK_FORCEINLINE constexpr decltype(auto)  operator()(Args... args) { return ptr(args...); }
 };
 
 

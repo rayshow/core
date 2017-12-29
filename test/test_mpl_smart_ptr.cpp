@@ -85,12 +85,12 @@ public:
 	}
 };
 
-class share_test2
+class share_test2 : public enable_poly_share< share_test2>
 {
 public:
 	void shared()
 	{
-		share_ptr<share_test2> sp{ this };
+		poly_share_ptr<share_test2> sp = share_from_this();
 	}
 
 	~share_test2()
@@ -99,20 +99,25 @@ public:
 	}
 };
 
+class share_test3
+{
+public:
+	void shared()
+	{
+		share_ptr<share_test3> sp{ this };
+	}
+
+	~share_test3()
+	{
+		DebugValue("destroy3");
+	}
+};
+
 using namespace ccdk::mpl;
 int main()
 {
 	
-	DebugValue(is_enable_share<share_test>{});
-	DebugValue(is_enable_share<share_test2>{});
 	
-	share_ptr< share_test > sp{ new share_test{} };
-	
-	DebugValue(sp.share_count());
-	auto sp3{ sp->share_from_this() };
-	DebugValue(sp.share_count());
-
-	share_ptr< share_test2 > sp2{ new share_test2{} };
 
 	
 
@@ -252,203 +257,218 @@ int main()
 	//	base_array_ptr[1].test_size();
 	//}
 
-	//DebugNewTitle("poly_share_ptr");
-	//{
-	//	DebugSubTitle("test normal ptr");
-	//	poly_share_ptr<base> base_ptr1{};
-	//	poly_share_ptr<base> base_ptr2{nullptr};
-	//	poly_share_ptr<base> base_ptr3{ new base{} };
-	//	poly_share_ptr<base> base_ptr4;
-	//	DebugValue(base_ptr4.share_count());
-	//	base_ptr4 = base_ptr3;
-	//	DebugValue(base_ptr4.share_count());
-	//	base_ptr4 = nullptr;
-	//	DebugValue(base_ptr4.share_count());
-	//}
-	//{
-	//	DebugSubTitle("test derived ptr");
-	//	poly_share_ptr<base> base_ptr1{ new derive{} };
-	//	poly_share_ptr<derive> derive_ptr{ new derive{} };
-	//	poly_share_ptr<base> base_ptr2;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = derive_ptr;
-	//	derive_ptr = nullptr;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = base_ptr1;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = nullptr;
-	//	DebugValue(base_ptr2.share_count());
+	DebugNewTitle("poly_share_ptr");
+	{
+		DebugSubTitle("test normal ptr");
+		poly_share_ptr<base> base_ptr1{};
+		poly_share_ptr<base> base_ptr2{nullptr};
+		poly_share_ptr<base> base_ptr3{ new base{} };
+		poly_share_ptr<base> base_ptr4;
+		DebugValue(base_ptr4.share_count());
+		base_ptr4 = base_ptr3;
+		DebugValue(base_ptr4.share_count());
+		base_ptr4 = nullptr;
+		DebugValue(base_ptr4.share_count());
+	}
+	{
+		DebugSubTitle("test derived ptr");
+		poly_share_ptr<base> base_ptr1{ new derive{} };
+		poly_share_ptr<derive> derive_ptr{ new derive{} };
+		poly_share_ptr<base> base_ptr2;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = derive_ptr;
+		derive_ptr = nullptr;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = base_ptr1;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = nullptr;
+		DebugValue(base_ptr2.share_count());
 
-	//}
-	//{
-	//	DebugSubTitle("test void ptr");
-	//	poly_share_ptr<void> void_ptr;
-	//	poly_share_ptr<base> base_ptr{ new base{} };
-	//	poly_share_ptr<derive> derive_ptr{ new derive{} };
-	//	DebugValue(void_ptr.share_count());
-	//	void_ptr = util::move(base_ptr);
-	//	DebugValue(void_ptr.share_count());
-	//	void_ptr = derive_ptr;
-	//	DebugValue(void_ptr == derive_ptr);
-	//	DebugValue(void_ptr.share_count());
-	//	void_ptr = nullptr;
-	//	DebugValue(void_ptr.share_count());
-	//}
-	//{
-	//	DebugSubTitle("test share ptr");
-	//	poly_share_ptr<derive> sp1;
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//	{
-	//		poly_share_ptr<derive> sp2{ new derive{} };
-	//		DebugValue(sp2.share_count());
-	//		DebugValue((bool)sp2);
-	//		sp1 = sp2;
-	//		DebugValue(sp1.share_count());
-	//		DebugValue((bool)sp1);
-	//	}
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//	sp1.reset();
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//}
-	//{
-	//	DebugSubTitle("test copy constructor");
-	//	poly_share_ptr<base> base1{ new base{} };
-	//	DebugValue(base1.share_count());
-	//	poly_share_ptr<base> base2{ base1 };
-	//	DebugValue(base1.share_count());
-	//	poly_share_ptr<base> base3;
-	//	base3 = base1;
-	//	DebugValue(base1.share_count());
-	//}
-	//
-	//{
-	//	{
-	//		DebugSubTitle("test weak ref");
-	//		poly_weak_ptr<base> wp;
-	//		DebugValue(wp.expired());
-	//		DebugValue(wp.share_count());
-	//		DebugValue(wp.weak_count());
-	//		{
-	//			poly_share_ptr<base> sp{ new base{} };
-	//			wp = sp;
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
-	//			auto sp2 = wp.lock();
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
+	}
+	{
+		DebugSubTitle("test void ptr");
+		poly_share_ptr<void> void_ptr;
+		poly_share_ptr<base> base_ptr{ new base{} };
+		poly_share_ptr<derive> derive_ptr{ new derive{} };
+		DebugValue(void_ptr.share_count());
+		void_ptr = util::move(base_ptr);
+		DebugValue(void_ptr.share_count());
+		void_ptr = derive_ptr;
+		DebugValue(void_ptr == derive_ptr);
+		DebugValue(void_ptr.share_count());
+		void_ptr = nullptr;
+		DebugValue(void_ptr.share_count());
+	}
+	{
+		DebugSubTitle("test share ptr");
+		poly_share_ptr<derive> sp1;
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+		{
+			poly_share_ptr<derive> sp2{ new derive{} };
+			DebugValue(sp2.share_count());
+			DebugValue((bool)sp2);
+			sp1 = sp2;
+			DebugValue(sp1.share_count());
+			DebugValue((bool)sp1);
+		}
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+		sp1.reset();
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+	}
+	{
+		DebugSubTitle("test copy constructor");
+		poly_share_ptr<base> base1{ new base{} };
+		DebugValue(base1.share_count());
+		poly_share_ptr<base> base2{ base1 };
+		DebugValue(base1.share_count());
+		poly_share_ptr<base> base3;
+		base3 = base1;
+		DebugValue(base1.share_count());
+	}
+	
+	{
+		{
+			DebugSubTitle("test weak ref");
+			poly_weak_ptr<base> wp;
+			DebugValue(wp.expired());
+			DebugValue(wp.share_count());
+			DebugValue(wp.weak_count());
+			{
+				poly_share_ptr<base> sp{ new base{} };
+				wp = sp;
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
+				auto sp2 = wp.lock();
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
 
-	//			auto wp2{ wp };
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
-	//		}
-	//		DebugValue("out of share");
-	//		DebugValue(wp.expired());
-	//		DebugValue(wp.share_count());
-	//		DebugValue(wp.weak_count());
-	//	}
-	//	DebugValue("out of weak");
-	//}
+				auto wp2{ wp };
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
+			}
+			DebugValue("out of share");
+			DebugValue(wp.expired());
+			DebugValue(wp.share_count());
+			DebugValue(wp.weak_count());
+		}
+		DebugValue("out of weak");
+	}
+	{
+		DebugSubTitle("test share_from_this")
+			poly_share_ptr< share_test2 > sp{ new share_test2{} };
+		DebugValue(sp.share_count());
+		auto sp3{ sp->share_from_this() };
+		DebugValue(sp.share_count());
+	}
 
 
 
-	//DebugNewTitle("share_ptr");
-	//{
-	//	DebugSubTitle("test normal ptr");
-	//	share_ptr<base> base_ptr1{};
-	//	share_ptr<base> base_ptr2{ nullptr };
-	//	share_ptr<base> base_ptr3{ new base{} };
-	//	share_ptr<base> base_ptr4;
-	//	DebugValue(base_ptr4.share_count());
-	//	base_ptr4 = base_ptr3;
-	//	DebugValue(base_ptr4.share_count());
-	//	base_ptr4 = nullptr;
-	//	DebugValue(base_ptr4.share_count());
-	//}
-	//{
-	//	DebugSubTitle("test derived ptr");
-	//	share_ptr<base> base_ptr1{ new derive{} };
-	//	share_ptr<derive> derive_ptr{ new derive{} };
-	//	share_ptr<base> base_ptr2;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = derive_ptr;
-	//	derive_ptr = nullptr;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = base_ptr1;
-	//	DebugValue(base_ptr2.share_count());
-	//	base_ptr2 = nullptr;
-	//	DebugValue(base_ptr2.share_count());
 
-	//}
-	//{
-	//	DebugSubTitle("test void ptr");
-	//	//share_ptr<void> void_ptr{};    //error
-	//}
-	//{
-	//	DebugSubTitle("test share ptr");
-	//	share_ptr<derive> sp1;
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//	{
-	//		share_ptr<derive> sp2{ new derive{} };
-	//		DebugValue(sp2.share_count());
-	//		DebugValue((bool)sp2);
-	//		sp1 = sp2;
-	//		DebugValue(sp1.share_count());
-	//		DebugValue((bool)sp1);
-	//	}
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//	sp1.reset();
-	//	DebugValue(sp1.share_count());
-	//	DebugValue((bool)sp1);
-	//}
-	//{
-	//	DebugSubTitle("test copy constructor");
-	//	share_ptr<base> base1{ new base{} };
-	//	DebugValue(base1.share_count());
-	//	share_ptr<base> base2{ base1 };
-	//	DebugValue(base1.share_count());
-	//	share_ptr<base> base3;
-	//	base3 = base1;
-	//	DebugValue(base1.share_count());
-	//}
+	DebugNewTitle("share_ptr");
+	{
+		DebugSubTitle("test normal ptr");
+		share_ptr<base> base_ptr1{};
+		share_ptr<base> base_ptr2{ nullptr };
+		share_ptr<base> base_ptr3{ new base{} };
+		share_ptr<base> base_ptr4;
+		DebugValue(base_ptr4.share_count());
+		base_ptr4 = base_ptr3;
+		DebugValue(base_ptr4.share_count());
+		base_ptr4 = nullptr;
+		DebugValue(base_ptr4.share_count());
+	}
+	{
+		DebugSubTitle("test derived ptr");
+		share_ptr<base> base_ptr1{ new derive{} };
+		share_ptr<derive> derive_ptr{ new derive{} };
+		share_ptr<base> base_ptr2;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = derive_ptr;
+		derive_ptr = nullptr;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = base_ptr1;
+		DebugValue(base_ptr2.share_count());
+		base_ptr2 = nullptr;
+		DebugValue(base_ptr2.share_count());
 
-	//{
-	//	{
-	//		DebugSubTitle("test weak ref");
-	//		weak_ptr<base> wp;
-	//		DebugValue(wp.expired());
-	//		DebugValue(wp.share_count());
-	//		DebugValue(wp.weak_count());
-	//		{
-	//			share_ptr<base> sp{ new base{} };
-	//			wp = sp;
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
-	//			auto sp2 = wp.lock();
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
+	}
+	{
+		DebugSubTitle("test void ptr");
+		//share_ptr<void> void_ptr{};    //error
+	}
+	{
+		DebugSubTitle("test share ptr");
+		share_ptr<derive> sp1;
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+		{
+			share_ptr<derive> sp2{ new derive{} };
+			DebugValue(sp2.share_count());
+			DebugValue((bool)sp2);
+			sp1 = sp2;
+			DebugValue(sp1.share_count());
+			DebugValue((bool)sp1);
+		}
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+		sp1.reset();
+		DebugValue(sp1.share_count());
+		DebugValue((bool)sp1);
+	}
+	{
+		DebugSubTitle("test copy constructor");
+		share_ptr<base> base1{ new base{} };
+		DebugValue(base1.share_count());
+		share_ptr<base> base2{ base1 };
+		DebugValue(base1.share_count());
+		share_ptr<base> base3;
+		base3 = base1;
+		DebugValue(base1.share_count());
+	}
 
-	//			auto wp2{ wp };
-	//			DebugValue(wp.expired());
-	//			DebugValue(wp.share_count());
-	//			DebugValue(wp.weak_count());
-	//		}
-	//		DebugValue("out of share");
-	//		DebugValue(wp.expired());
-	//		DebugValue(wp.share_count());
-	//		DebugValue(wp.weak_count());
-	//	}
-	//	DebugValue("out of weak");
-	//}
+	{
+		{
+			DebugSubTitle("test weak ref");
+			weak_ptr<base> wp;
+			DebugValue(wp.expired());
+			DebugValue(wp.share_count());
+			DebugValue(wp.weak_count());
+			{
+				share_ptr<base> sp{ new base{} };
+				wp = sp;
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
+				auto sp2 = wp.lock();
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
+
+				auto wp2{ wp };
+				DebugValue(wp.expired());
+				DebugValue(wp.share_count());
+				DebugValue(wp.weak_count());
+			}
+			DebugValue("out of share");
+			DebugValue(wp.expired());
+			DebugValue(wp.share_count());
+			DebugValue(wp.weak_count());
+		}
+		DebugValue("out of weak");
+	}
+	{
+		DebugSubTitle("test share_from_this")
+		share_ptr< share_test > sp{ new share_test{} };
+		DebugValue(sp.share_count());
+		auto sp3{ sp->share_from_this() };
+		DebugValue(sp.share_count());
+	}
 
 	getchar();
 	return 0;

@@ -8,9 +8,7 @@ ccdk_namespace_mpl_fn_start
 	struct index_t
 	{
 		template<typename T, typename U>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()( T&& t, U&& index ) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()( T&& t, U&& index ) const
 		{
 			return t[index];
 		}
@@ -20,9 +18,7 @@ ccdk_namespace_mpl_fn_start
 	struct invoke_t
 	{
 		template<typename T, typename...Args>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()( T&& t, Args&&... args ) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()( T&& t, Args&&... args ) const
 		{
 			return t(util::forward<Args>(args)...);
 		}
@@ -31,9 +27,7 @@ ccdk_namespace_mpl_fn_start
 	struct post_dec_t
 	{
 		template<typename T>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()(T&& t) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()(T&& t) const
 		{
 			return t--;
 		}
@@ -42,9 +36,7 @@ ccdk_namespace_mpl_fn_start
 	struct post_inc_t
 	{
 		template<typename T>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()(T&& t) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()(T&& t) const
 		{
 			return t++;
 		}
@@ -53,39 +45,28 @@ ccdk_namespace_mpl_fn_start
 	struct arrow_t
 	{
 		template<typename T>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		__arrow_impl(false_, T&& t) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) _arrow_impl(false_, T&& t) const
 		{
 			return t.operator->();
 		}
 
 		template<typename T>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		__arrow_impl(true_, T&& t) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) _arrow_impl(true_, T&& t) const
 		{
 			return t;
 		}
 
 		template<typename T>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()(T&& t) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()(T&& t) const
 		{
-			return __arrow_impl(
-				typename is_pointer<remove_ref_t<T>>::type{},
-				util::forward<T>(t)
-			);
+			return _arrow_impl( typename is_pointer<remove_ref_t<T>>::type{}, util::forward<T>(t) );
 		}
 	};
 
 	struct max_t
 	{
 		template<typename T1, typename T2>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()(T1&& t1, T2&& t2) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const
 		{
 			return t1 < t2 ? t2 : t1;
 		}
@@ -94,9 +75,7 @@ ccdk_namespace_mpl_fn_start
 	struct min_t
 	{
 		template<typename T1, typename T2>
-		CCDK_FORCEINLINE  constexpr
-		decltype(auto)
-		operator()(T1&& t1, T2&& t2) const
+		CCDK_FORCEINLINE  constexpr decltype(auto) operator()(T1&& t1, T2&& t2) const
 		{
 			return t1 < t2 ? t1 : t2;
 		}
@@ -105,9 +84,7 @@ ccdk_namespace_mpl_fn_start
 	struct condi_t
 	{
 		template<typename T1, typename T2>
-		CCDK_FORCEINLINE constexpr 
-		decltype(auto)
-		operator()(bool condi, T1&& t1, T2&& t2)  const
+		CCDK_FORCEINLINE constexpr  decltype(auto) operator()(bool condi, T1&& t1, T2&& t2)  const
 		{
 			return condi ? t1 : t2;
 		}

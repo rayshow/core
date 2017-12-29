@@ -11,6 +11,7 @@
 #include<ccdk/mpl/smart_ptr/resource_base.h>
 #include<ccdk/mpl/smart_ptr/default_ref_count.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
+#include<ccdk/mpl/smart_ptr/enable_share_from_this.h>
 
 ccdk_namespace_mpl_sp_start
 
@@ -40,10 +41,18 @@ private:
 
 	/* internal call, when new may throw, safe release and rethrow */
 	template<typename T2>
-	void set_pointer(T2* ptr)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new default_resource_base<T2>{ ptr }), clean_up() ); }
+	void set_pointer(T2* ptr, false_)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new default_resource_base<T2>{ ptr }), clean_up() ); }
 
 	template< typename T2, typename D>
-	void set_pointer(T2* ptr, const D& dl)  {  ccdk_safe_cleanup_if_exception( (ref_count = new RefCount{ 1,1 }, content = new deleter_resource_base<T2, D>{ ptr, dl }), clean_up() ); }
+	void set_pointer(T2* ptr, const D& dl, false_) { ccdk_safe_cleanup_if_exception((ref_count = new RefCount{ 1,1 }, content = new deleter_resource_base<T2, D>{ ptr, dl }), clean_up()); }
+
+
+	/* T2 derive from enable_poly_share */
+	template<typename T2>
+	void set_pointer(T2* ptr, true_) { ccdk_safe_cleanup_if_exception((ref_count = new RefCount{ 1,1 }, content = new default_resource_base<T2>{ ptr }), clean_up()); ptr->weak_ref = *this; }
+
+	template< typename T2, typename D>
+	void set_pointer(T2* ptr, const D& dl, true_) { ccdk_safe_cleanup_if_exception((ref_count = new RefCount{ 1,1 }, content = new deleter_resource_base<T2, D>{ ptr, dl }), clean_up());  ptr->weak_ref = *this; }
 
 	/* if initalized, increase share count */
 	void inc_share_count() { if (ccdk_likely(ref_count)) ref_count->inc_share_count(); }
@@ -53,11 +62,11 @@ public:
 	CCDK_FORCEINLINE poly_share_ptr() noexcept : ref_count { nullptr }, content{ nullptr }  {}
 	CCDK_FORCEINLINE explicit poly_share_ptr(ptr::nullptr_t) noexcept : ref_count{nullptr}, content{ nullptr } {}
 	
-	/*pointer constructor, may throw std::bad_alloc*/
+	/*pointer constructor, dispatch by T2,  may throw std::bad_alloc*/
 	template<typename T2, typename = check_t< is_convertible<T2*,pointer_type>>>
-	explicit poly_share_ptr(T2* ptr) { set_pointer(ptr); }
+	explicit poly_share_ptr(T2* ptr) { set_pointer(ptr, typename is_enable_share<T2>::type{} ); }
 	template<typename T2, typename D, typename = check_t< is_convertible<T2*, pointer_type>>>
-	poly_share_ptr(T2* ptr, const D& dl) { set_pointer(ptr,dl); }
+	poly_share_ptr(T2* ptr, const D& dl) { set_pointer(ptr,dl, typename is_enable_share<T2>::type{}); }
 
 
 	/*copy constructor, just copy pointer and increase ref count */

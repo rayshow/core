@@ -6,8 +6,6 @@
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/util/addressof.h>
 
-
-
 ccdk_namespace_mpl_fn_start
 
 
@@ -22,16 +20,9 @@ struct select_overload_t<Ret(Args...)>
 
 	value_type fn;
 
-	select_overload_t(value_type inFn)
-		:fn(inFn)
-	{}
+	CCDK_FORCEINLINE select_overload_t(value_type inFn) :fn(inFn) {}
 
-	CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		operator()(Args... args) const
-	{
-		return fn(args...);
-	}
+	CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args... args) const { return fn(args...); }
 };
 
 
@@ -43,17 +34,9 @@ struct select_overload_t<Ret(Class::*)(Args...)>
 	value_type fn;
 	Class*     clazz;
 
-	select_overload_t(Class* inClass, value_type inFn)
-		:clazz{ inClass },
-		fn{ inFn }
-	{}
+	CCDK_FORCEINLINE select_overload_t(Class* inClass, value_type inFn) :clazz{ inClass }, fn{ inFn } {}
 
-	CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		operator()(Args... args) const
-	{
-		return (clazz->*fn)(args...);
-	}
+	CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args... args) const { return (clazz->*fn)(args...); }
 };
 
 template<typename T>
@@ -64,24 +47,12 @@ struct make_select_overload_t<Ret(Args...)>
 {
 	using Fn = Ret(Args...);
 
-	CCDK_FORCEINLINE constexpr
-	auto
-	operator()(Fn* fn) const
-	{
-		return select_overload_t<Fn>{ fn };
-	}
+	/* select normal function overload */
+	CCDK_FORCEINLINE constexpr auto operator()(Fn* fn) const { return select_overload_t<Fn>{ fn }; }
 
-	template<
-		typename Class,
-		typename Class1 = decay_t<Class>,
-		typename MFn = Ret(Class1::*)(Args...)
-	>
-	CCDK_FORCEINLINE constexpr
-	auto
-	operator()(Class* clazz, MFn fn) const
-	{
-		return select_overload_t<MFn>{ clazz, fn };
-	}
+	/* select member function overload */
+	template< typename Class, typename Class1 = decay_t<Class>, typename MFn = Ret(Class1::*)(Args...) >
+	CCDK_FORCEINLINE constexpr auto operator()(Class* clazz, MFn fn) const { return select_overload_t<MFn>{ clazz, fn }; }
 };
 
 

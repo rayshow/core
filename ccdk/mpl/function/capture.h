@@ -12,6 +12,7 @@
 
 ccdk_namespace_mpl_fn_start
 
+	/* capture( args...)(fn) => fn( args...)  */
 	template<typename... Args>
 	struct capture_t
 	{
@@ -20,54 +21,27 @@ ccdk_namespace_mpl_fn_start
 		typedef capture_t type;
 		value_type storage;
 
-		constexpr capture_t(Args... args)
-			:storage{ util::forward<Args>(args)... }
-		{}
+		CCDK_FORCEINLINE constexpr capture_t(Args... args) :storage{ util::forward<Args>(args)... } {}
 
-		template<
-			typename Fn,
-			uint32... indice
-		>
-		constexpr auto 
-			__invoke_impl(
-				Fn&& fn,
-				indice_pack<indice...>
-			) const noexcept
+		/* bind part Args... with Fn */
+		template< typename Fn, uint32... indice >
+		CCDK_FORCEINLINE constexpr auto _invoke_impl( Fn&& fn, indice_pack<indice...> ) const noexcept
 		{
-			return partial(
-				util::forward<Fn>(fn),
-				fs::ebo_at<indice>(util::move(storage))...
-			);
+			return partial( util::forward<Fn>(fn), fs::ebo_at<indice>(util::move(storage))... );
 		}
 
-		//function ptr
-		template<
-			typename Fn,
-			typename = check_t< is_function<Fn> >
-		>
-		constexpr auto 
-			operator()(Fn* fn
-			) const noexcept
+		/* function ptr */
+		template< typename Fn, typename = check_t< is_function<Fn> > >
+		CCDK_FORCEINLINE constexpr auto operator()(Fn* fn ) const noexcept
 		{
-			return __invoke_impl(
-				util::forward<Fn*>(fn),
-				make_indice<L>{}
-			);
+			return _invoke_impl( util::forward<Fn*>(fn), make_indice<L>{} );
 		}
 
-		template<
-			typename Fn,
-			typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>  
-		>
-		constexpr auto 
-		operator()(
-			Fn& fn
-			) const noexcept
+		/* function object or normal function */
+		template< typename Fn, typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>   >
+		CCDK_FORCEINLINE constexpr auto operator()( Fn& fn ) const noexcept
 		{
-			return __invoke_impl(
-				util::forward<Fn&>(fn),
-				make_indice<L>{}
-			);
+			return _invoke_impl( util::forward<Fn&>(fn), make_indice<L>{} );
 		}
 	};
 		

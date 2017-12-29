@@ -11,6 +11,7 @@
 #include<ccdk/mpl/smart_ptr/resource_base.h>
 #include<ccdk/mpl/smart_ptr/default_ref_count.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
+#include<ccdk/mpl/smart_ptr/bad_weak_ptr.h>
 
 ccdk_namespace_mpl_sp_start
 
@@ -60,6 +61,7 @@ public:
 	/* copy assign  */
 	template<typename T2, typename R2, typename = check_t< is_compatible<poly_share_ptr<T2, R2>, share_type>> >
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_share_ptr<T2, R2>& sp) { poly_weak_ptr{ sp }.swap(*this); return *this; }
+
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_weak_ptr& other) { ccdk_if_not_this(other){ poly_weak_ptr{ other }.swap(*this); } return *this; }
 	template<typename T2, typename R2, typename = check_t< is_compatible<poly_share_ptr<T2, R2>, share_type>> >
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_weak_ptr<T2, R2>& other)  { poly_weak_ptr{ other }.swap(*this); return *this; }
@@ -70,7 +72,7 @@ public:
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(poly_weak_ptr<T2, R2>&& other) { poly_weak_ptr{ util::move(other) }.swap(*this); return *this; }
 
 	/* lock */
-	CCDK_FORCEINLINE share_type lock() const { return share_type{ *this }; }
+	CCDK_FORCEINLINE share_type lock() const { if (content) { return share_type{ *this }; }  ccdk_throw(bad_weak_ptr{}); }
 
 	/* shared count */
 	CCDK_FORCEINLINE uint32 share_count() const { return ref_count ? ref_count->share_count : 0; }

@@ -6,8 +6,6 @@
 
 ccdk_namespace_mpl_util_start
 
-//T&& forward string literial will become char array ref
-//  int literial will become int&
 template<typename T1, typename T2>
 struct compatible_less
 {
