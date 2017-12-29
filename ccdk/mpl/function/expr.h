@@ -80,7 +80,7 @@ ccdk_namespace_mpl_fn_start
 		typedef make_indice<L>	  indice;
 		typedef fs::tuple_storage<L, indice, decay_t<Args>...> value_type;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
-		static constexpr typename indice args_indice{};
+		static constexpr indice args_indice{};
 
 		decay_t<Fn>  fn;
 		value_type storage;

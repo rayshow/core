@@ -148,7 +148,8 @@
     <ClInclude Include="mpl\base\uint16.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
     <ClInclude Include="mpl\function\expr.h" />
-    <ClInclude Include="mpl\function\invoke_interface.h" />
+    <ClInclude Include="mpl\function\function_fwd.h" />
+    <ClInclude Include="mpl\function\invoke_base.h" />
     <ClInclude Include="mpl\function\ref.h" />
     <ClInclude Include="mpl\function\select_overload.h" />
     <ClInclude Include="mpl\function\val.h" />
@@ -268,7 +269,7 @@
     <ClInclude Include="mpl\type_traits\is_fundamental.h" />
     <ClInclude Include="mpl\type_traits\is_instance_of.h" />
     <ClInclude Include="mpl\type_traits\is_integer.h" />
-    <ClInclude Include="mpl\type_traits\is_invokable.h" />
+    <ClInclude Include="mpl\type_traits\is_invocable.h" />
     <ClInclude Include="mpl\type_traits\is_lref.h" />
     <ClInclude Include="mpl\type_traits\is_mfn_ptr.h" />
     <ClInclude Include="mpl\type_traits\is_mobj_ptr.h" />

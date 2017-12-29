@@ -4,7 +4,7 @@
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
-#include<ccdk/mpl/type_traits/is_invokable.h>
+#include<ccdk/mpl/type_traits/is_invocable.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/type_traits/args_of.h>
@@ -109,7 +109,7 @@ ccdk_namespace_mpl_fn_start
 		}
 
 
-		template< typename Fn, typename Fn1 = decay_t<Fn>, typename = check_t< is_no_overload_invocable<Fn1> >, typename... Args >
+		template< typename Fn, typename Fn1 = decay_t<Fn>, typename = check_t< is_invocable<Fn1> >, typename... Args >
 		CCDK_FORCEINLINE auto operator()( Fn&& fn,  Args&&... args ) const noexcept
 		{
 			/* static dispatch by Fn  function/function pointer/member pointer/function object */

@@ -254,21 +254,6 @@ void test_literal(const T& t)
 	DebugTypeName<decltype(t)>();
 }
 
-//
-//template<typename Child>
-//struct DeriveOp
-//{
-//	int operator+(int a)
-//	{
-//		return static_cast<Child*>(this)->value + a;
-//	}
-//};
-//
-//struct TestDeriveOp : public DeriveOp<TestDeriveOp >
-//{
-//	int value = 1;
-//	//using DeriveOp<TestDeriveOp>::operator+;
-//};
 
 
 void print(float a)
@@ -333,109 +318,109 @@ int main()
 	auto mfn2 = bind_mfn(&test_copy_t::test_mfn, ctt);
 	auto mfn3 = bind_mfn(&test_copy_t::test_mfn, &tt);
 	auto mfn4 = bind_mfn(&test_copy_t::test_mfn, &ctt);
-	mfn1(1, "bind mfn1 ");
-	mfn2(2, "bind mfn2 ");
-	mfn3(3, "bind mfn3 ");
-	mfn4(4, "bind mfn4 ");
+	//mfn1(1, "bind mfn1 ");
+	//mfn2(2, "bind mfn2 ");
+	//mfn3(3, "bind mfn3 ");
+	//mfn4(4, "bind mfn4 ");
 
-	DebugNewTitle("test capture");
-	auto cap1 = capture(4)(call1);
-	DebugValue(cap1("hello, capture"));
+	//DebugNewTitle("test capture");
+	//auto cap1 = capture(4)(call1);
+	//DebugValue(cap1("hello, capture"));
 
-	DebugNewTitle("test combine");
-	/* call3( call2( call1( 3, "hello") ) )  */
-	auto cb1 = combine(call1, call2, call3);
-	DebugValue(cb1(3, "hello,combine"));
-
-
-	DebugNewTitle("dispatch");
-	/* (--1) + (--2) == 1 */
-	DebugValue(dispatch(add, inc, inc)(1, 2));
-
-	DebugNewTitle("fmap");
-	/* (4+1) * (4-1) == 15 */
-	DebugValue(fmap(mul, add, sub)(4, 1));
-
-	DebugNewTitle("overload");
-	overload<void(float), void(int)> ofn1(print, print);
-	ofn1(1);
-	ofn1(1.0f);
+	//DebugNewTitle("test combine");
+	///* call3( call2( call1( 3, "hello") ) )  */
+	//auto cb1 = combine(call1, call2, call3);
+	//DebugValue(cb1(3, "hello,combine"));
 
 
-	DebugNewTitle("select overload");
-	auto sfn1 = select_overload<void(int)>(print);
-	sfn1(1); /* select int ones */
-	test_overload * to1 = new test_overload{};
-	auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
-	sfn2(1); /* select int ones */
+	//DebugNewTitle("dispatch");
+	///* (--1) + (--2) == 1 */
+	//DebugValue(dispatch(add, inc, inc)(1, 2));
+
+	//DebugNewTitle("fmap");
+	///* (4+1) * (4-1) == 15 */
+	//DebugValue(fmap(mul, add, sub)(4, 1));
+
+	//DebugNewTitle("overload");
+	//overload<void(float), void(int)> ofn1(print, print);
+	//ofn1(1);
+	//ofn1(1.0f);
 
 
-	DebugNewTitle("test partial");
-	DebugSubTitle("function object");
-	partial(tt, 1)(" hello,partial copy object");
-	partial(util::move(tt), 1)(" hello,partial move object");
-
-	DebugSubTitle("function/function pointer");
-	partial(test_normal_copy_function, util::move(tt))("hello,partial function");
-	partial(test_normal_move_function, util::move(tt))("hello,partial function");
-	partial(&test_normal_copy_function, util::move(tt))("hello,partial function");
-	partial(&test_normal_move_function, util::move(tt))("hello,partial function");
-	partial(test_normal_copy_function, tt)("hello,partial function");
-	partial(test_normal_move_function, tt)("hello,partial function");
-	partial(&test_normal_copy_function, tt)("hello,partial function");
-	partial(&test_normal_move_function, tt)("hello,partial function");
-	DebugSubTitle("member function pointer");
-	partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
-	partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
-	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
+	//DebugNewTitle("select overload");
+	//auto sfn1 = select_overload<void(int)>(print);
+	//sfn1(1); /* select int ones */
+	//test_overload * to1 = new test_overload{};
+	//auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
+	//sfn2(1); /* select int ones */
 
 
+	//DebugNewTitle("test partial");
+	//DebugSubTitle("function object");
+	//partial(tt, 1)(" hello,partial copy object");
+	//partial(util::move(tt), 1)(" hello,partial move object");
 
-	DebugNewTitle("test reference and value");
-	test_copy_t test1{};
-	const test_copy_t test2{};
-	int   inta = 1;
-	const int intb = 1;
+	//DebugSubTitle("function/function pointer");
+	//partial(test_normal_copy_function, util::move(tt))("hello,partial function");
+	//partial(test_normal_move_function, util::move(tt))("hello,partial function");
+	//partial(&test_normal_copy_function, util::move(tt))("hello,partial function");
+	//partial(&test_normal_move_function, util::move(tt))("hello,partial function");
+	//partial(test_normal_copy_function, tt)("hello,partial function");
+	//partial(test_normal_move_function, tt)("hello,partial function");
+	//partial(&test_normal_copy_function, tt)("hello,partial function");
+	//partial(&test_normal_move_function, tt)("hello,partial function");
+	//DebugSubTitle("member function pointer");
+	//partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
+	//partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
+	//partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
 
-	DebugSubTitle("test val");
-	auto val1 = val(util::move(test1));
-	auto val2 = val(test2);
-	auto val3 = val(inta);
-	auto val4 = val(intb);
-	DebugValue(val3());
-	DebugValue(val4());
-	DebugTypeName< decltype(val1)::value_type >();
-	DebugTypeName< decltype(val2)::value_type >();
-	DebugTypeName< decltype(val3)::value_type >();
-	DebugTypeName< decltype(val4)::value_type >();
 
-	DebugSubTitle("test ref");
-	auto ref1 = ref(test1);
-	auto ref2 = ref(test2);
-	auto ref3 = ref(inta);
-	ref3() = 3;
-	auto ref4 = ref(intb);
-	DebugTypeName< decltype(ref1)::value_type >();
-	DebugTypeName< decltype(ref2)::value_type >();
-	DebugValue(ref3());
-	DebugValue(ref4());
-	
-	DebugValue(inta);
-	DebugSubTitle("test cref");
-	auto cref1 = cref(test1);
-	auto cref2 = cref(test2);
-	auto cref3 = cref(inta);
-	auto cref4 = cref(intb);
-	DebugTypeName< decltype(cref1)::value_type >();
-	DebugTypeName< decltype(cref2)::value_type >();
-	DebugValue(cref3());
+	//DebugNewTitle("test reference and value");
+	//test_copy_t test1{};
+	//const test_copy_t test2{};
+	//int   inta = 1;
+	//const int intb = 1;
 
-	DebugNewTitle("test expr");
-	auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8;
-	auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;
-	DebugValue(ph1(1, 3, 5, 7));
-	DebugValue(ph2(2, 3, 4, 5));
+
+	//DebugSubTitle("test val");
+	//auto val1 = val(util::move(test1));
+	//auto val2 = val(test2);
+	//auto val3 = val(inta);
+	//auto val4 = val(intb);
+	//DebugValue(val3());
+	//DebugValue(val4());
+	//DebugTypeName< decltype(val1)::value_type >();
+	//DebugTypeName< decltype(val2)::value_type >();
+	//DebugTypeName< decltype(val3)::value_type >();
+	//DebugTypeName< decltype(val4)::value_type >();
+
+	//DebugSubTitle("test ref");
+	//auto ref1 = ref(test1);
+	//auto ref2 = ref(test2);
+	//auto ref3 = ref(inta);
+	//ref3() = 3;
+	//auto ref4 = ref(intb);
+	//DebugTypeName< decltype(ref1)::value_type >();
+	//DebugTypeName< decltype(ref2)::value_type >();
+	//DebugValue(ref3());
+	//DebugValue(ref4());
+	//
+	//DebugValue(inta);
+	//DebugSubTitle("test cref");
+	//auto cref1 = cref(test1);
+	//auto cref2 = cref(test2);
+	//auto cref3 = cref(inta);
+	//auto cref4 = cref(intb);
+	//DebugTypeName< decltype(cref1)::value_type >();
+	//DebugTypeName< decltype(cref2)::value_type >();
+	//DebugValue(cref3());
+
+	//DebugNewTitle("test expr");
+	//auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8;
+	//auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;
+	//DebugValue(ph1(1, 3, 5, 7));
+	//DebugValue(ph2(2, 3, 4, 5));
 
 	getchar();
 	return 0;

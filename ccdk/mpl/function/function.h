@@ -1,20 +1,20 @@
 #pragma once
 
-#include<exception>
-
-#include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/arg_pack_first.h>
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
-#include<ccdk/mpl/type_traits/args_of.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
-#include<ccdk/mpl/type_traits/is_const.h>
+#include<ccdk/mpl/type_traits/is_invocable.h>
+#include<ccdk/mpl/type_traits/args_of.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/move.h>
-#include<ccdk/mpl/fusion/tuple_storage.h>
-#include<ccdk/mpl/fusion/tuple.h>
-#include<ccdk/mpl/function/invoke_interface.h>
+#include<ccdk/mpl/util/swap.h>
+#include<ccdk/mpl/util/addressof.h>
+#include<ccdk/mpl/function/invoke_base.h>
+
+#include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -27,123 +27,96 @@ ccdk_namespace_mpl_fn_start
 	//1. universal interface
 	//2. lighter and effecient then std::function, only 2-3 pointer, a virtual call consume
 	//3. clear then std::function
-	template<typename T>
-	struct function;
-
-
 	template<typename Ret, typename... Args>
-	struct function<Ret(Args...)>
+	class function<Ret(Args...)>
 	{
-		typedef function type;
+	public:
+		typedef function this_type;
+		typedef invoker_base<Ret, Args...> invoke_type;
 		static constexpr uint32 L = sizeof...(Args);
+		template<typename> friend class function;
+	private:
+		invoker_base<Ret, Args...> *base_ptr;    /* derive constructor is noexcept */
 
-		invoker_base<Ret, Args...> *fn;
-
-		CCDK_FORCEINLINE
-		function() noexcept 
-			: fn{ nullptr }
-		{}
-
-		CCDK_FORCEINLINE
-		function(ptr::nullptr_t) noexcept 
-			: fn{ nullptr } 
-		{}
-
-		CCDK_FORCEINLINE
-		~function() { ptr::safe_delete(fn); }
-
-		//is normal function / function pointer
+		/* proxy constructor for normal function / function pointer */
 		template<typename Fn>
-		CCDK_FORCEINLINE
-		function(Fn&& fn, true_, false_, false_) noexcept
-			: fn( new(ptr::nothrow) normal_function_invoker<Fn, Ret, Args...>{ fn } )
-		{
-			DebugValue("function: normal initalized");
-		}
+		CCDK_FORCEINLINE function(Fn&& fn, true_, false_, false_) noexcept : base_ptr{ new(ptr::nothrow) normal_function_invoker<Fn, Ret, Args...>{ fn } } { ccdk_assert(base_ptr != nullptr);  DebugValue("function: normal initalized");}
 
-		//is function obj
+		/* proxy constructor for  function object, new may throw */
 		template<typename Fn>
-		function(Fn&& fn, false_, true_, false_) noexcept
-			:fn{ new(ptr::nothrow) function_object_invoker<Fn, Ret, Args...>{ util::move(fn) } }
-		{
-			DebugValue("function: function object  initalized");
-		}
+		CCDK_FORCEINLINE function(Fn&& fn, false_, true_, false_) noexcept : base_ptr{ new(ptr::nothrow) function_object_invoker<Fn, Ret, Args...>{ util::move(fn) } } { ccdk_assert(base_ptr != nullptr);  DebugValue("function: function object initalized"); }
 
-		//is mfn function ptr
-		template<typename Fn>
-		CCDK_FORCEINLINE
-		function( Fn&& fn, false_, false_, true_ ) noexcept
-			:fn{ new(ptr::nothrow) member_function_invoker< mfn_class_t<Fn>,Fn,Ret,Args...>{ fn } }
-		{
-			DebugValue("function: member function initalized ");
-		}
+		/* proxy constructor for member function pointer, new may throw */
+		template<typename Fn> 
+		CCDK_FORCEINLINE function(Fn&& fn, false_, false_, true_) noexcept : base_ptr{ new(ptr::nothrow) member_function_invoker<Fn, mfn_class_t<Fn>, Ret, Args...>{ fn } } { ccdk_assert(base_ptr != nullptr);  DebugValue("function: member function initalized ");}
 
-		//call proxy constructor and static dispatch
-		template<typename Fn>
-		CCDK_FORCEINLINE
-		function(Fn fn) noexcept
-			: function(
-				util::move(fn),
-				typename is_function_ptr<Fn>::type{},
-				typename is_function_obj<Fn>::type{},
-				typename is_mfn_ptr<Fn>::type{})
-		{}
-
-
-		CCDK_FORCEINLINE
-		operator bool() noexcept
-		{
-			return !!fn;
-		}
-
-		//t is const pointer
+		/* First is class pointer, called function may throw */
 		template<typename T>
-		CCDK_FORCEINLINE
-		Ret __invoke_impl_arg_type(true_, T&& t, Args... args)
-		{
-			fn->set_private_data((void*)t);
-			return fn->invoke( util::forward<Args>(args)... );
-		}
+		CCDK_FORCEINLINE Ret _invoke_impl_arg_type(true_, T&& t, Args... args) { base_ptr->set_private_data((void*)t); return base_ptr->invoke(util::forward<Args>(args)...); }
 
-		//t is object 
+		/* First is class object, transform to class pointer , called function may throw*/
 		template<typename T>
-		CCDK_FORCEINLINE
-		Ret __invoke_impl_arg_type(false_, T&& t, Args... args)
-		{
-			fn->set_private_data((void*)(&(t)));
-			return fn->invoke( util::forward<Args>(args)... );
-		}
+		CCDK_FORCEINLINE Ret _invoke_impl_arg_type(false_, T&& t, Args... args) { base_ptr->set_private_data((void*)(&(t))); return base_ptr->invoke(util::forward<Args>(args)...); }
 
-		//member function call
+		/* length(args1) == L, means normal function or function object, directly call , called function may throw*/
 		template<typename... Args1>
-		CCDK_FORCEINLINE
-		Ret __invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1)
-		{
-			typedef remove_ref_t< arg_pack_first_t<Args1...>> first_type;
-			return __invoke_impl_arg_type(
-				typename is_pointer<first_type>::type{},
-				util::forward<Args1>(args1)...
-			);
-		}
+		CCDK_FORCEINLINE Ret _invoke_impl_arg_len(uint_<L>, Args1&&... args1) { return base_ptr->invoke(util::forward<Args1>(args1)...); }
 
-		//normal function or function object
-		template<typename... Args1>
-		CCDK_FORCEINLINE
-		Ret __invoke_impl_arg_len(uint_<L>, Args1&&... args1)
-		{
-			return fn->invoke( util::forward<Args1>(args1)... );
-		}
+		/* length(args1) == L + 1, assert is member function call, then static dispatch by First arg type */
+		template<typename... Args1, typename First = remove_ref_t< arg_pack_first_t<Args1...>> >
+		CCDK_FORCEINLINE Ret _invoke_impl_arg_len(uint_<L + 1>, Args1&&... args1) { return _invoke_impl_arg_type(typename is_pointer<First>::type{}, util::forward<Args1>(args1)...); }
 
+		/* clone content */
+		CCDK_FORCEINLINE invoke_type* clone_pointer() noexcept { base_ptr ? base_ptr->clone() : nullptr; }
+	public:
+		/* default and nullptr constructor */
+		CCDK_FORCEINLINE function() noexcept : base_ptr{ nullptr } {}
+		CCDK_FORCEINLINE function(ptr::nullptr_t) noexcept  : base_ptr{ nullptr }  {}
+
+		/* value constructor, call proxy constructor and static dispatch */
+		template<typename Fn, typename = check_t< is_invocable<Fn>> >
+		CCDK_FORCEINLINE function(Fn fn) noexcept : function(util::move(fn), typename is_function_ptr<Fn>::type{}, typename is_function_obj<Fn>::type{}, typename is_mfn_ptr<Fn>::type{}) {}
+
+		/* copy and move  */
+		CCDK_FORCEINLINE function(const function& other) noexcept : base_ptr{ other.clone_pointer() } {}
+		CCDK_FORCEINLINE function(function& other) noexcept : base_ptr{ other.base_ptr } { other.base_ptr = nullptr;  }
+
+		/*template copy and move */
+		template<typename T, typename = check_t< is_convertible< function<T>, this_type>>> 
+		CCDK_FORCEINLINE function(const function<T>& other) noexcept : base_ptr{ other.clone_pointer() }{}
+		template<typename T, typename = check_t< is_convertible< function<T>, this_type>>>
+		CCDK_FORCEINLINE function(function<T>& other) noexcept : base_ptr{ other.base_ptr }{}
+		 
+		/* swap compatible function */
+		template<typename Fn, typename = check_t< is_compatible< function<Fn>, this_type>> > 
+		CCDK_FORCEINLINE void swap(function<Fn>& other) noexcept { util::swap(base_ptr, other.base_ptr); }
+
+		/* nullptr assign */
+		CCDK_FORCEINLINE function& operator=(ptr::nullptr_t) noexcept { function{}.swap(*this); return *this; }
+
+		/* value assign */
+		template<typename Fn, typename = check_t< is_invocable<Fn>> >
+		CCDK_FORCEINLINE function& operator=(Fn&& fn) noexcept { function{ util::forward<Fn>(fn) }.swap(*this); return *this; }
+
+		/* copy/move assign, avoid self assign*/
+		CCDK_FORCEINLINE function& operator=(const function& other) { ccdk_if_not_this(other) { function{ other }.swap(*this); } return *this; }
+		CCDK_FORCEINLINE function& operator=(function&& other) { ccdk_if_not_this(other) { function{ util::move(other) }.swap(*this); } return *this; }
+
+		/* template copy/move assign, for comvertible function */
+		template<typename T, typename = check_t< is_convertible< function<T>, this_type>>>
+		CCDK_FORCEINLINE function& operator=(const function<T>& other) { function{ other }.swap(*this);  return *this; }
+		template<typename T, typename = check_t< is_convertible< function<T>, this_type>>>
+		CCDK_FORCEINLINE function& operator=(function<T>&& other) { function{ util::move(other) }.swap(*this);  return *this; }
+
+		/* destructor */
+		CCDK_FORCEINLINE ~function() noexcept { ptr::safe_delete(base_ptr); }
+
+		/* test invoker exists */
+		CCDK_FORCEINLINE operator bool() noexcept { return !!base_ptr; }
+
+		/* static dispatch by parameter length, assert L is normal/object function call, L + 1 is member function call  */
 		template<typename... Args1>
-		CCDK_FORCEINLINE
-		Ret operator()(Args1... args1)
-		{
-			//dispatch by parameter length
-			return __invoke_impl_arg_len(
-				uint_<sizeof...(Args1)>{},
-				util::forward<Args1>(args1)...
-			);
-		}
-	};  //function 
+		CCDK_FORCEINLINE Ret operator()(Args1... args1) { return _invoke_impl_arg_len( uint_<sizeof...(Args1)>{}, util::forward<Args1>(args1)... );  }
+	}; 
 
 ccdk_namespace_mpl_fn_end

@@ -9,8 +9,8 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		//
-		template<typename T> struct is_no_overload_invocable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
+		// for non-overload callable type
+		template<typename T> struct is_invocable :or_< is_function<T>, is_mfn_ptr<T>, is_function_obj<T> > {};
 	}
 }
 

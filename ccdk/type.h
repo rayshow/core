@@ -1,12 +1,12 @@
 #pragma once
 
 #include<ccdk/compile.h>
-#include<new>       // nullptr_t and nothrow_t
-#include<typeinfo>  // std::typeinfo
+#include<new>       /* nullptr_t and nothrow_t */
+#include<typeinfo>  /* std::typeinfo */
 
 namespace ccdk
 {
-	//for short and clear
+	/* for short and uniform */
 	typedef unsigned char            uint8;
 	typedef unsigned short int       uint16;
 	typedef unsigned int             uint32;
@@ -16,8 +16,8 @@ namespace ccdk
 	typedef signed int               int32;
 	typedef signed long long         int64;
 	typedef long double              hfloat; 
-	typedef wchar_t                  wchar;  //wide char
-	typedef char                     achar;  //ansi char
+	typedef wchar_t                  wchar;  /* wide char */
+	typedef char                     achar;  /* ansi char */
 	typedef char16_t                 char16;
 	typedef char32_t                 char32;
 
@@ -32,7 +32,7 @@ namespace ccdk
 	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 
 
-	//memory releative type / short function
+	/* memory releative type / halpful function */
 	namespace ptr
 	{
 		template<int32 size> struct ptr_traits { static_assert(size != 4 || size != 8, "unkown ptr size."); };
@@ -65,16 +65,15 @@ namespace ccdk
 			if (t) { delete t; t = nullptr; }
 		}
 
-
 #define ccdk_safe_delete_if_exception( content , expr )                        \
 			try { (content) = (expr); }                                        \
 			catch (...) { ptr::safe_delete((content)); throw;  /* rethrow */ } 
 
 #define ccdk_safe_cleanup_if_exception( statement, cleanup )       \
 			try { (statement); }                                   \
-			catch (...) { (cleanup); throw; }               
+			catch (...) { (cleanup); throw; /* rethrow */ }               
 
-#define ccdk_if_not_this(val)  if(ccdk_likely( ccdk::mpl::util::addressof(val)!=this ))
+#define ccdk_if_not_this(val)  if(ccdk_likely( ::ccdk::mpl::util::addressof(val)!=this ))
 
 	}
 

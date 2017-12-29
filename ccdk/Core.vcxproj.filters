@@ -759,9 +759,6 @@
     <ClInclude Include="mpl\function\dispatch.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\is_invokable.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\arg_pack.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -852,9 +849,6 @@
     </ClInclude>
     <ClInclude Include="mpl\mpl_module.h">
       <Filter>mpl</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\invoke_interface.h">
-      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\derive_if.h">
       <Filter>mpl\base</Filter>
@@ -948,6 +942,15 @@
     </ClInclude>
     <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h">
       <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\invoke_base.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\function_fwd.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_invocable.h">
+      <Filter>mpl\type_trait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

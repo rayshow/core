@@ -2,16 +2,41 @@
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/type_traits/result_of.h>
 #include<ccdk/mpl/type_traits/args_of.h>
-#include<ccdk/mpl/smart_ptr/scope_ptr.h>
+#include<ccdk/mpl/function/function.h>
+#include<ccdk/mpl/function/arg.h>
+#include<ccdk/mpl/function/bind_mfn.h>
+#include<ccdk/mpl/function/capture.h>
+#include<ccdk/mpl/function/combine.h>
+#include<ccdk/mpl/function/create.h>
+#include<ccdk/mpl/function/dispatch.h>
+#include<ccdk/mpl/function/fmap.h>
+#include<ccdk/mpl/function/overload.h>
+#include<ccdk/mpl/function/partial.h>
+#include<ccdk/mpl/function/ref.h>
+#include<ccdk/mpl/function/val.h>
+#include<ccdk/mpl/function/expr.h>
+#include<ccdk/mpl/function/select_overload.h>
+#include<ccdk/mpl/function/operator.h>
 #include<stdio.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 
-void aa(int& a)
-{
 
-}
+class destructor_nothrow
+{
+public:
+	destructor_nothrow() noexcept{}
+	~destructor_nothrow() noexcept {}
+};
+
+class destructor_maythrow
+{
+public:
+	destructor_maythrow() { throw int{}; }
+
+	~destructor_maythrow() throw(int) { throw int{}; }
+};
 
 int main()
 {
@@ -86,9 +111,32 @@ int main()
 	int *a = nullptr;
 	ptr::safe_delete(a);
 	
+	DebugNewTitle("debug nothrow destructor");
+	DebugValue(has_nothrow_destructor_v<destructor_nothrow>);
+	DebugValue(has_nothrow_destructor_v<destructor_maythrow>);
+	DebugValue(has_nothrow_constructor_v<destructor_nothrow>);
+	DebugValue(has_nothrow_constructor_v<destructor_maythrow>);
 
-
-
+	destructor_maythrow *ptr1 = nullptr;
+	destructor_maythrow *ptr2 = nullptr;
+	try
+	{
+		ptr1 = new destructor_maythrow{};
+		DebugValue("maythrow 1");
+	}
+	catch(...){
+		DebugValue(ptr1);
+		DebugValue("throw 1");
+	}
+	try
+	{
+		ptr2 = new(std::nothrow_t{}) destructor_maythrow[10000000000000000ULL];
+		DebugValue("maythrow 2");
+	}
+	catch (...) {
+		DebugValue(ptr2);
+		DebugValue("throw 2");
+	}
 
 	getchar();
 	return 0;

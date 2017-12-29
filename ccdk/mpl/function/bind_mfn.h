@@ -41,6 +41,7 @@ ccdk_namespace_mpl_fn_start
 		>
 		CCDK_FORCEINLINE constexpr auto _bind_mfn_impl(Fn fn, Class* clz, arg_pack<Args...>) const noexcept
 		{
+			DebugFunctionName();
 			return member_function_t< Fn, Class, Ret, Args...>(fn, clz);
 		}
 
@@ -56,22 +57,22 @@ ccdk_namespace_mpl_fn_start
 			return _bind_mfn_impl<Fn, NonConstClass, result_of_t<Fn> >(
 				fn,
 				(NonConstClass*)(util::addressof(clz)),
-				typename FnArgs::args{}
+				typename FnArgs::type{}
 			);
 		}
 
 		template<
 			typename Fn,
-			typename = check_t< is_mfn_ptr<Fn>>,
 			typename FnArgs = args_of<Fn>,
-			typename Class = typename FnArgs::clazz
+			typename Class = typename FnArgs::clazz,
+			typename = check_t< is_mfn_ptr<Fn>>
 		>
 		CCDK_FORCEINLINE constexpr auto operator()(Fn fn, Class* clz) const noexcept
 		{
 			typedef remove_const_t<Class> NoConstClass;
 			return _bind_mfn_impl<Fn, NoConstClass, result_of_t<Fn> >(
 				fn, (NoConstClass*)clz,
-				typename FnArgs::args{}
+				typename FnArgs::type{}
 			);
 		}
 	};
