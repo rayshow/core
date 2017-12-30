@@ -318,10 +318,10 @@ int main()
 	auto mfn2 = bind_mfn(&test_copy_t::test_mfn, ctt);
 	auto mfn3 = bind_mfn(&test_copy_t::test_mfn, &tt);
 	auto mfn4 = bind_mfn(&test_copy_t::test_mfn, &ctt);
-	//mfn1(1, "bind mfn1 ");
-	//mfn2(2, "bind mfn2 ");
-	//mfn3(3, "bind mfn3 ");
-	//mfn4(4, "bind mfn4 ");
+	mfn1(1, "bind mfn1 ");
+	mfn2(2, "bind mfn2 ");
+	mfn3(3, "bind mfn3 ");
+	mfn4(4, "bind mfn4 ");
 
 	//DebugNewTitle("test capture");
 	//auto cap1 = capture(4)(call1);

@@ -12,7 +12,9 @@ ccdk_namespace_mpl_fn_start
 	
 	/* bind_mfn( class::*fn, class/class* )( args...) => class*->*fn( args... ) */
 	template<
-		typename Fn, typename Class, typename Ret,
+		typename Fn, 
+		typename Class, 
+		typename Ret,
 		typename... Args
 	>
 	struct member_function_t
@@ -41,14 +43,13 @@ ccdk_namespace_mpl_fn_start
 		>
 		CCDK_FORCEINLINE constexpr auto _bind_mfn_impl(Fn fn, Class* clz, arg_pack<Args...>) const noexcept
 		{
-			DebugFunctionName();
 			return member_function_t< Fn, Class, Ret, Args...>(fn, clz);
 		}
 
 		template<
 			typename Fn,
 			typename FnArgs = args_of<Fn>,
-			typename Class = typename FnArgs::clazz,
+			typename Class =  typename FnArgs::clazz,
 			typename = check_t< is_mfn_ptr<Fn>>
 		>
 		CCDK_FORCEINLINE constexpr auto operator()(Fn fn, Class& clz)const noexcept

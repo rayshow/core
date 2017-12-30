@@ -25,28 +25,18 @@ using namespace ccdk::mpl::fs;
 int main()
 {
 	DebugNewTitle("any");
-	any ai1 = 3;
+	any ai1{ 3 };
 	int ri = 4;
 	const int cri = 5;
-	any ai2 = ri;
-	any ai3 = cri;
-	const any ai4 = 1;
-
+	any ai2{ ri };
+	any ai3{ cri };
+	const any ai4{ 1 };
 	DebugValueTypeName(ai1.to<int>());
 	DebugValueTypeName(ai4.to<int>());
-	DebugValueTypeName(util::move(ai1).to<int>());
-
+	DebugValueTypeName(util::move(ai1.to<int>()));
 	DebugValueTypeName(ai4.to_pointer<int>());
 	DebugValueTypeName(ai1.to_pointer<int>());
 
-	try
-	{
-		DebugValueTypeName(ai1.to<char>());
-	}
-	catch (const std::exception& ex)
-	{
-		DebugValue(ex.what());
-	}
 
 	DebugNewTitle("varient")
 	test_destruct tda("hello,world");
@@ -62,9 +52,6 @@ int main()
 	la = 1.0;
 	DebugValue(la.to<double>());
 
-	getchar();
-	return 0;
-
 	DebugNewTitle("ref tuple");
 	const char* str = "abc";
 	const char* const instr = "fdsa";
@@ -77,72 +64,72 @@ int main()
 
 
 
- 	//DebugValue(ai.to<int>());
-	DebugNewTitle("string literial");
-	DebugValueTypeName(_literal("hello,world"));
-	constexpr auto sl = _literal("hello,world");
-	DebugValue(sl);
-	DebugValue(sl[3_th]);
-	
-	DebugValue(sl.find_first('l'));
-	DebugValue(sl.find_last('l'));
-	DebugValue(sl.substr<0, 3>());
-	AssertTrue((sl.substr<2, 5>()) == _literal("llo"));
-	DebugValue(sl.replace<sl.find_first('w')>('F'));
+ //	//DebugValue(ai.to<int>());
+	//DebugNewTitle("string literial");
+	//DebugValueTypeName(_literal("hello,world"));
+	//constexpr auto sl = _literal("hello,world");
+	//DebugValue(sl);
+	//DebugValue(sl[3_th]);
+	//
+	//DebugValue(sl.find_first('l'));
+	//DebugValue(sl.find_last('l'));
+	//DebugValue(sl.substr<0, 3>());
+	//AssertTrue((sl.substr<2, 5>()) == _literal("llo"));
+	//DebugValue(sl.replace<sl.find_first('w')>('F'));
 
-	//test parse literal integer
-	DebugNewTitle("test literals");
-	AssertTrue(11_ci == 11);
-	AssertTrue(-11_ci == -11);
-	AssertTrue(0xff_ci == 255);
-	AssertTrue(-0xff_ci == -255);
-	AssertTrue(010_ci == 8);
-	AssertTrue(-010_ci == -8);
-	AssertTrue(-0b00000111_ci == -7);
-	
-	//test tuple 
-	DebugNewTitle("test tuple operation")
-	//constexpr tuple<int, char, double, float> tuple1(1, 'a', 2.0, 1.0f);
-	const char* aa = "hello";
-	const tuple<int, char, std::string, float> tuple2( 2 ,'a', "hello", 1.0f);
-	tuple<int, char, std::string, float> tuple3(3, 'a', aa, 1.0f);
-	auto tuple4{ tuple3 };
-	tuple<float, int, std::string, double> tuple5{ tuple3 };
-	DebugSubTitle("test get elements");
-	DebugValue(tuple3[0_th]);
-	DebugValue(tuple3[1_th]);
-	DebugValue(tuple3[2_th]);
-	DebugValue(tuple3[3_th]);
-	RuntimeAssertTrue(tuple2[int_<0>{}] == 2);
-	RuntimeAssertTrue(tuple3[int_<0>{}] == 3);
-	tuple3[int_<0>{}] = -1;
-	RuntimeAssertTrue(tuple3[int_<0>{}] == -1);
-	DebugValue(tuple3[int_<0>{}]);
-	DebugValue(tuple3[int_<1>{}]);
-	DebugValue(tuple3[int_<2>{}]);
-	DebugValue(tuple3[int_<3>{}]);
+	////test parse literal integer
+	//DebugNewTitle("test literals");
+	//AssertTrue(11_ci == 11);
+	//AssertTrue(-11_ci == -11);
+	//AssertTrue(0xff_ci == 255);
+	//AssertTrue(-0xff_ci == -255);
+	//AssertTrue(010_ci == 8);
+	//AssertTrue(-010_ci == -8);
+	//AssertTrue(-0b00000111_ci == -7);
+	//
+	////test tuple 
+	//DebugNewTitle("test tuple operation")
+	////constexpr tuple<int, char, double, float> tuple1(1, 'a', 2.0, 1.0f);
+	//const char* aa = "hello";
+	//const tuple<int, char, std::string, float> tuple2( 2 ,'a', "hello", 1.0f);
+	//tuple<int, char, std::string, float> tuple3(3, 'a', aa, 1.0f);
+	//auto tuple4{ tuple3 };
+	//tuple<float, int, std::string, double> tuple5{ tuple3 };
+	//DebugSubTitle("test get elements");
+	//DebugValue(tuple3[0_th]);
+	//DebugValue(tuple3[1_th]);
+	//DebugValue(tuple3[2_th]);
+	//DebugValue(tuple3[3_th]);
+	//RuntimeAssertTrue(tuple2[int_<0>{}] == 2);
+	//RuntimeAssertTrue(tuple3[int_<0>{}] == 3);
+	//tuple3[int_<0>{}] = -1;
+	//RuntimeAssertTrue(tuple3[int_<0>{}] == -1);
+	//DebugValue(tuple3[int_<0>{}]);
+	//DebugValue(tuple3[int_<1>{}]);
+	//DebugValue(tuple3[int_<2>{}]);
+	//DebugValue(tuple3[int_<3>{}]);
 
-	DebugSubTitle("debug type");
-	//DebugValueTypeName(tuple1[1_th]);
-	DebugValueTypeName(tuple2[1_th]);
-	DebugValueTypeName(tuple3[1_th]);
-	DebugValueTypeName(util::move(tuple3)[1_th]);
+	//DebugSubTitle("debug type");
+	////DebugValueTypeName(tuple1[1_th]);
+	//DebugValueTypeName(tuple2[1_th]);
+	//DebugValueTypeName(tuple3[1_th]);
+	//DebugValueTypeName(util::move(tuple3)[1_th]);
 
-	DebugSubTitle("debug assign element");
-	DebugValue(tuple3[2_th]);
-	tuple3[2_th] = "hello, world";
-	DebugValue(tuple3[2_th]);
-	std::string move_from = util::move(tuple3)[2_th];
-	DebugValue(tuple3[2_th]);
-	DebugValue(move_from);
+	//DebugSubTitle("debug assign element");
+	//DebugValue(tuple3[2_th]);
+	//tuple3[2_th] = "hello, world";
+	//DebugValue(tuple3[2_th]);
+	//std::string move_from = util::move(tuple3)[2_th];
+	//DebugValue(tuple3[2_th]);
+	//DebugValue(move_from);
 
-	DebugSubTitle("debug tuple concat");
-	char acc = 'a';
-	tuple<char, char, std::string, float> tuple6{ acc, 'b', "hello", 1.0f};
-	tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
-	tuple<char,int> tuple8{ acc,1}; 
-	tuple<float> tuple9{ 2.23f };
-	auto tuple10 = tuple8 | tuple9;
+	//DebugSubTitle("debug tuple concat");
+	//char acc = 'a';
+	//tuple<char, char, std::string, float> tuple6{ acc, 'b', "hello", 1.0f};
+	//tuple<char, int, float, std::string >  tuple7{ 'c', 2, 2.5f, "world" };
+	//tuple<char,int> tuple8{ acc,1}; 
+	//tuple<float> tuple9{ 2.23f };
+	//auto tuple10 = tuple8 | tuple9;
 	//DebugValueTypeAndValue(tuple10[0_th]);
 	//DebugValueTypeAndValue(tuple10[1_th]);
 	//DebugValueTypeAndValue(tuple10[2_th]);

@@ -16,27 +16,14 @@ ccdk_namespace_mpl_fs_start
 template<uint32 index, typename T>
 struct varient_base
 {
-	CCDK_FORCEINLINE
-	constexpr varient_base() noexcept {}
+	/* default */
+	CCDK_FORCEINLINE constexpr varient_base() noexcept {}
 
-	//construct T
-	CCDK_FORCEINLINE constexpr 
-	varient_base( char* memory, const T& t, int inIndex)
-	{
-		new((void*)memory) T{ t };
-	}
+	/* placement T constructor */
+	CCDK_FORCEINLINE constexpr varient_base( void* memory, const T& t, int inIndex) { new( memory) T{ t }; }
 
-	CCDK_FORCEINLINE constexpr 
-	const varient_base&  
-	destruct(int inIndex,  char* memory ) const
-	{
-		if (inIndex == index)
-		{
-			//DebugValue("deconstruct of :", typeid(T).name() );
-			reinterpret_cast<T*>(memory)->~T();
-		}	
-		return *this;
-	}
+	/* placement T destructor */
+	CCDK_FORCEINLINE constexpr int destruct(int inIndex, char* memory) const noexcept { if (inIndex == index) { reinterpret_cast<T*>(memory)->~T(); } return 0; }
 };
 
 template<uint32 index, typename T>
@@ -59,43 +46,28 @@ private:
 	char   memory[Size];
 	uint8  index;
 
-	void destruct_old()
-	{
-		arg_dummy_fn(get_base<indice>(*this).destruct(index, memory)...);
-	}
+	CCDK_FORCEINLINE void destruct_old() noexcept { arg_dummy_fn(get_base<indice>(*this).destruct(index, memory)...); }
 
 public:
-	template<
-		typename P,
-		uint32 PIndex = arg_pack_find_index_v<P, Args...>
-	>
-	varient_impl(const P& p)
-		:varient_base<PIndex, P>{ memory, p, 1 },
-		index(PIndex)
+	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	CCDK_FORCEINLINE varient_impl(const P& p) :varient_base<PIndex, P>{ memory, p, 1 }, index(PIndex)
 	{ 
 		static_assert(PIndex <= 255 , "type not found in bound Types");
 	}
 
-	template<
-		typename P,
-		uint32 PIndex = arg_pack_find_index_v<P, Args...>
-	>
-	P& to()
+	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	CCDK_FORCEINLINE P& to()
 	{
 		static_assert(PIndex <= 255, "type not found in bound Types");
 		if (PIndex == index)
 		{
 			return *reinterpret_cast<P*>((char*)memory);
 		}
-		
-		throw bad_cast_exception{ "bad any cast from P to T at ccdk::mpl::fusion::limit_any::to<T>()" };
+		ccdk_throw( bad_verient_cast{} );
 	}
 
-	template<
-		typename P,
-		uint32 PIndex = arg_pack_find_index_v<P, Args...>
-	>
-	varient_impl& operator=(const P& p)
+	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	CCDK_FORCEINLINE varient_impl& operator=(const P& p)
 	{
 		static_assert(PIndex <= 255, "type not found in bound Types");
 		destruct_old();

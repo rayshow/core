@@ -19,15 +19,15 @@ struct compress_pair final : public First
 
 	second_type second;
 
-	compress_pair() : First(), second{} {}
+	CCDK_FORCEINLINE compress_pair() : First(), second{} {}
 
-	compress_pair(const Second& second) : First(), second{ second } {}
+	CCDK_FORCEINLINE compress_pair(const Second& second) : First(), second{ second } {}
 
-	compress_pair(const first_type& inFirst, const second_type& inSecond)
-		: First{ inFirst }, second{ inSecond } {}
+	CCDK_FORCEINLINE compress_pair(const first_type& inFirst, const second_type& inSecond) : First{ inFirst }, second{ inSecond } {}
 
-	First&       get_first() noexcept       { return *this; }
-	const First& get_first() const noexcept { return *this; }
+	/* first */
+	CCDK_FORCEINLINE First&       get_first() noexcept       { return *this; }
+	CCDK_FORCEINLINE const First& get_first() const noexcept { return *this; }
 
 };
 
@@ -41,15 +41,14 @@ struct compress_pair<First, Second, false>
 	first_type  first;
 	second_type second;
 
-	compress_pair() : first{}, second{} {}
+	CCDK_FORCEINLINE compress_pair() : first{}, second{} {}
 
-	compress_pair(Second&& second) : first(), second{ util::forward<Second>(second) } {}
+	CCDK_FORCEINLINE compress_pair(Second&& second) : first(), second{ util::forward<Second>(second) } {}
 
-	compress_pair(const first_type& inFirst, const second_type& inSecond)
-		: first{ inFirst }, second{ inSecond } {}
+	CCDK_FORCEINLINE compress_pair(const first_type& inFirst, const second_type& inSecond) : first{ inFirst }, second{ inSecond } {}
 
-	First&	     get_first() noexcept       { return first; }
-	const First& get_first() const noexcept { return second; }
+	CCDK_FORCEINLINE First&	      get_first() noexcept       { return first; }
+	CCDK_FORCEINLINE const First& get_first() const noexcept { return second; }
 };
 
 

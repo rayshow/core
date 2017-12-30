@@ -5,18 +5,23 @@
 
 ccdk_namespace_mpl_fs_start
 
-struct bad_cast_exception
-	:std::exception
+struct bad_any_cast :public std::exception
 {
-	const char* msg;
+	bad_any_cast() {}
 
-	bad_cast_exception(const char* inMsg)
-		:msg{ inMsg } {}
-
-	virtual char const*
-		what() const noexcept  override
+	virtual char const* what() const noexcept  override
 	{
-		return msg;
+		return "bad any cast";
+	}
+};
+
+struct bad_verient_cast :public std::exception
+{
+	bad_verient_cast() {}
+
+	virtual char const* what() const noexcept  override
+	{
+		return "bad verient cast";
 	}
 };
 

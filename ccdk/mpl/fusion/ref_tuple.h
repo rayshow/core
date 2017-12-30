@@ -11,16 +11,10 @@ ccdk_namespace_mpl_fs_start
 	struct ref_item_t
 	{
 		V& v;
-		ref_item_t(V&& inV)
-			:v{ inV }
-		{}
+		CCDK_FORCEINLINE ref_item_t(V&& inV) :v{ inV } {}
 	};
 
-	template<uint32 K, typename V>
-	V& ref_at(const ref_item_t<K, V>& r)
-	{
-		return r.v;
-	}
+	template<uint32 K, typename V> V& ref_at(const ref_item_t<K, V>& r) { return r.v; }
 
 	template<
 		typename I,
