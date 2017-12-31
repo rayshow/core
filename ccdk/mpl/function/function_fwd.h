@@ -11,11 +11,17 @@
 
 ccdk_namespace_mpl_fn_start
 
-
 /* function declare */
 template<typename T>
 struct function;
 
+/* lazy expr declare */
+template<typename... Args>
+struct expr;
+
+/* justify is lazy expr */
+template<typename T> struct is_expr :false_ {};
+template<typename... Args> struct is_expr< expr<Args...> > :true_ {};
 
 ccdk_namespace_mpl_fn_end
 

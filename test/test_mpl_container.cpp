@@ -8,18 +8,42 @@
 #include<assert.h>
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/fusion/string_literial.h>
-#include<ccdk/mpl/fusion/ref_tuple.h>
 #include<ccdk/mpl/fusion/any.h>
 #include<ccdk/mpl/fusion/varient.h>
 #include<ccdk/mpl/base/arg_pack_find_index.h>
 #include<ccdk/mpl/base/val_pack_max.h>
 #include<ccdk/mpl/type_traits/max_align_t.h>
 #include<ccdk/type.h>
+#include<ccdk/mpl/fusion/imap.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::mpl::literals;
 using namespace ccdk::mpl::fs;
+
+template<typename... Args>
+void test_ref(Args&&... args)
+{
+	reference_tuple<Args...> a{util::forward<Args>(args)...};
+	DebugValue(a.template at<1>());
+
+
+	DebugValue("\n");
+	const reference_tuple<Args...> ca{ util::forward<Args>(args)... };
+	DebugValue(ca.template at<1>());
+
+
+
+	DebugValue("\n");
+	value_tuple<Args...> b{ util::forward<Args>(args)... };
+	DebugValue(b.template at<1>());
+
+
+	DebugValue("\n");
+	const value_tuple<Args...> cb{ util::forward<Args>(args)... };
+	DebugValue(cb.template at<1>());
+
+}
 
 
 int main()
@@ -39,7 +63,7 @@ int main()
 
 
 	DebugNewTitle("varient")
-	test_destruct tda("hello,world");
+		test_destruct tda("hello,world");
 	test_destruct tdb("c++");
 	varient<double, int, char, test_destruct > la{ 1.0 };
 
@@ -55,13 +79,20 @@ int main()
 	DebugNewTitle("ref tuple");
 	const char* str = "abc";
 	const char* const instr = "fdsa";
-	auto ref_tuple = create_ref_tuple(1, "fdas", str, instr);
-	DebugTypeName<decltype(ref_tuple.at<1>())>();
-	DebugValue(ref_tuple.at<0>());
-	DebugValue(ref_tuple.at<1>());
-	DebugValue(ref_tuple.at<2>());
-	DebugValue(ref_tuple.at<3>());
+	auto args = create_reference_args(1, "fdas", str, instr);
+	DebugTypeName<decltype(args.at<1>())>();
+	DebugValue(args.at<0>());
+	DebugValue(args.at<1>());
+	DebugValue(args.at<2>());
+	DebugValue(args.at<3>());
 
+	DebugValue("ref_tuple");
+	int a = 0;
+	const int ca = 1;
+	class test_t {};
+	//test_ref(0, "fdas", a, ca, test_copy_t{} );
+	test_copy_t tt{};
+	closure_args<7, int, int, const char *, int, int, test_copy_t, test_copy_t> vt{ 1.0, a, "fdas", a, ca, test_copy_t{},tt };
 
 
  //	//DebugValue(ai.to<int>());

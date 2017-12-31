@@ -45,6 +45,6 @@ ccdk_namespace_mpl_fn_start
 	};
 
 	template<typename T> using val_t = expr< value_t<T> >;
-	constexpr create_raw_t< val_t > val{};
+	constexpr util::create_t< val_t > val{};
 
 ccdk_namespace_mpl_fn_end

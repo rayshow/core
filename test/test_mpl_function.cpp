@@ -23,11 +23,9 @@
 #include<ccdk/mpl/function/overload.h>
 #include<ccdk/mpl/function/select_overload.h>
 #include<ccdk/mpl/type_traits/select_case.h>
-#include<ccdk/mpl/function/placeholder.h>
 #include<ccdk/mpl/function/val.h>
 #include<ccdk/mpl/function/expr.h>
 #include<ccdk/mpl/function/ref.h>
-#include<ccdk/mpl/fusion/ref_tuple.h>
 #include<ccdk/mpl/base/sfinae.h>
 
 
@@ -120,7 +118,7 @@ void test_tmp(T&& t)
 	DebugTypeName<decltype(tt)>();
 }
 
-int call1(int a, const char*msg)
+int call1(const test_copy_t& tt, int a, const char*msg)
 {
 	DebugValue(msg);
 	return a;
@@ -323,64 +321,57 @@ int main()
 	mfn3(3, "bind mfn3 ");
 	mfn4(4, "bind mfn4 ");
 
-	//DebugNewTitle("test capture");
-	//auto cap1 = capture(4)(call1);
-	//DebugValue(cap1("hello, capture"));
+	DebugNewTitle("test partial");
+	auto pat1 = partial(call1,test_copy_t{}, 4);
 
-	//DebugNewTitle("test combine");
-	///* call3( call2( call1( 3, "hello") ) )  */
-	//auto cb1 = combine(call1, call2, call3);
-	//DebugValue(cb1(3, "hello,combine"));
+	DebugNewTitle("test capture");
+	auto cap1 = capture(test_copy_t{}, 4)(call1);
+	DebugValue(cap1("hello, capture"));
 
-
-	//DebugNewTitle("dispatch");
-	///* (--1) + (--2) == 1 */
-	//DebugValue(dispatch(add, inc, inc)(1, 2));
-
-	//DebugNewTitle("fmap");
-	///* (4+1) * (4-1) == 15 */
-	//DebugValue(fmap(mul, add, sub)(4, 1));
-
-	//DebugNewTitle("overload");
-	//overload<void(float), void(int)> ofn1(print, print);
-	//ofn1(1);
-	//ofn1(1.0f);
+	DebugNewTitle("test combine");
+	/* call3( call2( call1( 3, "hello") ) )  */
+	auto cb1 = combine(call1, call2, call3);
+	DebugValue(cb1(test_copy_t{}, 3, "hello,combine"));
 
 
-	//DebugNewTitle("select overload");
-	//auto sfn1 = select_overload<void(int)>(print);
-	//sfn1(1); /* select int ones */
-	//test_overload * to1 = new test_overload{};
-	//auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
-	//sfn2(1); /* select int ones */
+	DebugNewTitle("dispatch");
+	/* (--1) + (++2) == 3 */
+	DebugValue(dispatch(add, dec , inc)(1, 2));
+
+	DebugNewTitle("fmap");
+	/* (4+1) * (4-1) == 15 */
+	DebugValue(fmap(mul, add, sub)(4, 1));
+
+	DebugNewTitle("overload");
+	overload<void(float), void(int)> ofn1(print, print);
+	ofn1(1);
+	ofn1(1.0f);
 
 
-	//DebugNewTitle("test partial");
-	//DebugSubTitle("function object");
-	//partial(tt, 1)(" hello,partial copy object");
-	//partial(util::move(tt), 1)(" hello,partial move object");
-
-	//DebugSubTitle("function/function pointer");
-	//partial(test_normal_copy_function, util::move(tt))("hello,partial function");
-	//partial(test_normal_move_function, util::move(tt))("hello,partial function");
-	//partial(&test_normal_copy_function, util::move(tt))("hello,partial function");
-	//partial(&test_normal_move_function, util::move(tt))("hello,partial function");
-	//partial(test_normal_copy_function, tt)("hello,partial function");
-	//partial(test_normal_move_function, tt)("hello,partial function");
-	//partial(&test_normal_copy_function, tt)("hello,partial function");
-	//partial(&test_normal_move_function, tt)("hello,partial function");
-	//DebugSubTitle("member function pointer");
-	//partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
-	//partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
-	//partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
+	DebugNewTitle("select overload");
+	auto sfn1 = select_overload<void(int)>(print);
+	sfn1(1); /* select int ones */
+	test_overload * to1 = new test_overload{};
+	auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
+	sfn2(1); /* select int ones */
 
 
+	DebugNewTitle("test partial");
+	DebugSubTitle("function object");
+	partial(tt, 1)(" hello,partial copy object");
+	partial(util::move(tt), 1)(" hello,partial move object");
+	partial(ctt, 1)(" hello,partial move object");
 
-	//DebugNewTitle("test reference and value");
-	//test_copy_t test1{};
-	//const test_copy_t test2{};
-	//int   inta = 1;
-	//const int intb = 1;
+
+	DebugSubTitle("function/function pointer");
+	partial(test_normal_copy_function, util::move(tt))("hello,partial function");
+	partial(&test_normal_copy_function, util::move(tt))("hello,partial function");
+	partial(test_normal_copy_function, tt)("hello,partial function");
+	partial(&test_normal_copy_function, tt)("hello,partial function");
+	DebugSubTitle("member function pointer");
+	partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
+	partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
+	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
 
 	//DebugSubTitle("test val");

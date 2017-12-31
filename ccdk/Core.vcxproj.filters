@@ -708,9 +708,6 @@
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\placeholder.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\integer_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -739,9 +736,6 @@
       <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\capture.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\create.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\function\bind_mfn.h">
@@ -856,22 +850,13 @@
     <ClInclude Include="mpl\fusion\any.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\ebo.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\maybe.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\ref_tuple.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\string_literial.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\tuple.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\tuple_storage.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\val_seq.h">
@@ -916,9 +901,6 @@
     <ClInclude Include="mpl\smart_ptr\default_deleter.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\compress_pair.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\smart_ptr\resource_base.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
@@ -951,6 +933,18 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_invocable.h">
       <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\pair.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\fusion_fwd.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\fusion\imap.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\create.h">
+      <Filter>mpl\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,21 +7,10 @@
 #include<ccdk/mpl/base/arg_pack_first.h>
 
 
-ccdk_namespace_mpl_fn_start
+ccdk_namespace_mpl_util_start
 
-	
 	template<template<typename...> typename T>
 	struct create_t
-	{
-		template<typename... Args>
-		CCDK_FORCEINLINE constexpr  auto operator()(Args&& ...args) const noexcept
-		{
-			return T<decay_t<Args>...>{ util::forward<Args>(args)... };
-		}
-	};
-
-	template<template<typename...> typename T>
-	struct create_raw_t
 	{
 		template<typename... Args>
 		CCDK_FORCEINLINE constexpr  auto  operator()(Args&& ...args) const noexcept
@@ -31,7 +20,7 @@ ccdk_namespace_mpl_fn_start
 	};
 
 	template<template<typename...> typename T>
-	struct create_const_raw_t
+	struct create_const_t
 	{
 		template<typename... Args>
 		CCDK_FORCEINLINE constexpr auto operator()(Args&& ...args) const noexcept
@@ -40,4 +29,4 @@ ccdk_namespace_mpl_fn_start
 		}
 	};
 
-ccdk_namespace_mpl_fn_end
+ccdk_namespace_mpl_util_end

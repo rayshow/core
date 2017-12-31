@@ -4,8 +4,8 @@
 #include<ccdk/mpl/type_traits/is_rref.h>
 #include<ccdk/mpl/type_traits/remove_const.h>
 #include<ccdk/mpl/util/move.h>
-#include<ccdk/mpl/function/create.h>
-#include<ccdk/mpl/function/expr.h>
+#include<ccdk/mpl/util/create.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -14,9 +14,9 @@ ccdk_namespace_mpl_fn_start
 	{
 		typedef expr type;
 		typedef T& value_type;
-		static constexpr uint32 L = 0;	//args length
-		static constexpr uint32 W = 0;  //wild placeholder count of sub-expr(e.g. _ )
-		static constexpr uint32 I = 0;  //max index-placeholder count of sub-expr(e.g. 2_ )
+		static constexpr uint32 size = 0;	//args length
+		static constexpr uint32 wild_size = 0;  //wild placeholder count of sub-expr(e.g. _ )
+		static constexpr uint32 index_size = 0;  //max index-placeholder count of sub-expr(e.g. 2_ )
 
 		value_type t;
 
@@ -55,7 +55,7 @@ ccdk_namespace_mpl_fn_start
 	template<typename T>
 	using ref_t = expr< reference_t<T> >;
 
-	constexpr create_raw_t<ref_t> ref{};
-	constexpr create_const_raw_t<ref_t> cref{};
+	constexpr util::create_t<ref_t> ref{};
+	constexpr util::create_const_t<ref_t> cref{};
 
 ccdk_namespace_mpl_fn_end

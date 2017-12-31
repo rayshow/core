@@ -1,7 +1,7 @@
 #pragma once
 
-#include<ccdk/preprocessor/seq_foreach_tuple.h>
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/preprocessor/seq_foreach_tuple.h>
 #include<ccdk/mpl/base/null_.h>
 #include<ccdk/mpl/base/or_.h>
 #include<ccdk/mpl/base/enable_if.h>
@@ -9,18 +9,18 @@
 #include<ccdk/mpl/base/arg_pack_first.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/move.h>
-#include<ccdk/mpl/fusion/ref_tuple.h>
-#include<ccdk/mpl/fusion/tuple_storage.h>
+#include<ccdk/mpl/fusion/imap.h>
 #include<ccdk/mpl/function/operator.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 
 ccdk_namespace_mpl_fn_start
 
-	//mark expr
-	struct lazy_t {};
-	template<typename T> struct is_lazy_t :false_ {};
-	template<> struct is_lazy_t<lazy_t> :true_ {};
-	constexpr lazy_t lazy{};
+	struct make_lazy_t {};
+	constexpr make_lazy_t mark_lazy{};
+
+	template<typename T> struct is_mark_lazy :false_ {};
+	template<> struct is_mark_lazy<make_lazy_t> :true_ {};
 
 	//mark value
 	template<typename T>
@@ -63,157 +63,120 @@ ccdk_namespace_mpl_fn_start
 	struct pack_wph_step< acc, indice_pack<indice...>, T, Args...>
 		: pack_wph_step< acc + T::W, indice_pack<indice..., acc>, Args...> {};
 
-	template<typename... Args>
-	struct expr;
 
-	template<typename T> struct is_expr :false_ {};
-	template<typename... Args> struct is_expr< expr<Args...> > :true_ {};
+
+
 
 	//operation expr
 	template<typename Fn, typename... Args>
 	struct expr<Fn, Args...>
 	{
-		static constexpr uint32 L = sizeof...(Args);				 //args length
-		static constexpr uint32 W = acc_wph_count< Args...>::value;  //wild placeholder count of sub-expr(e.g. _ )
-		static constexpr uint32 I = max_iph_count< Args...>::value;  //max index-placeholder count of sub-expr(e.g. 2_ )
-		typedef expr              type;
-		typedef make_indice<L>	  indice;
-		typedef fs::tuple_storage<L, indice, decay_t<Args>...> value_type;
+		static constexpr uint32 size = sizeof...(Args);	                     /* args length */
+		static constexpr uint32 wild_size = acc_wph_count< Args...>::value;  /* wild placeholder count of sub-expr(e.g. _ ) */
+		static constexpr uint32 index_size = max_iph_count< Args...>::value; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
+		typedef expr              this_type;
+		typedef make_indice<size> indice_type;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
-		static constexpr indice args_indice{};
+		static constexpr indice_type args_indice{};
 
-		decay_t<Fn>  fn;
-		value_type storage;
+	private:
+		/* closure of lazy eval */
+		decay_t<Fn>                     fn;
+		fs::closure_args<size, Args...> args;
 
-		CCDK_FORCEINLINE constexpr
-		expr(Args&&... args)
-		:storage{ util::move(args)... }
-		{}
+		/* value */
+		CCDK_FORCEINLINE constexpr expr(Args&&... inArgs) :args{ util::forward<Args>(inArgs)... } {}
 
-		CCDK_FORCEINLINE constexpr
-		expr(expr&& e)
-		: storage{ util::move(e.storage) }
-		{}
+		/* move */
+		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
 
-		template<
-			uint32 Start,
-			typename Ctx,
-			uint32... idx,
-			uint32... sft
-		>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__eval_impl(const Ctx& ctx, indice_pack<idx...>, indice_pack<sft...>) const
+		/* eval helper  */
+		template< uint32 Start, typename Content, uint32... Index, uint32... Shift >
+		CCDK_FORCEINLINE constexpr decltype(auto) _eval_impl(const Content& ctx, indice_pack<Index...>, indice_pack<Shift...>) const
 		{
-			return fn(fs::ebo_at< idx >(storage).template eval<Start + sft>(ctx)...);
+			return fn( args.template at<index>().template eval<Start + Shift>(ctx)...);
 		}
 
-		template<
-			uint32 Start,
-			typename Ctx
-		>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		eval(const Ctx& ctx) const
+		/*eval expr */
+		template< uint32 Start, typename Content >
+		CCDK_FORCEINLINE constexpr decltype(auto) eval(const Content& ctx) const
 		{
-			return __eval_impl<Start>(ctx, args_indice, shifts_indice);
+			return _eval_impl<Start>(ctx, args_indice, shifts_indice);
 		}
 
 		//create lazy invoke expr
 		template<typename... Args1>
-		CCDK_FORCEINLINE constexpr
-			decltype(auto)
-			__invoke_impl_is_lazy(true_, Args1&&... args1)
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_is_lazy(true_, Args1&&... args1)
 		{
 			return expr< invoke_t, Args1...>{ args1... };
 		}
 
 		//not lazy invoke , then eval expr
 		template<typename... Args1>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__invoke_impl_is_lazy(false_, Args1&&... args1)
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_is_lazy(false_, Args1&&... args1)
 		{
-			return eval<0>(fs::create_ref_tuple(util::forward<Args1>(args1)...));
+			return eval<0>( fs::create_reference_args(util::forward<Args1>(args1)...) );
 		}
 
 		// no parameter, just eval expr
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__invoke_impl_len(uint_<0>)
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint_<0>)
 		{
-			static_assert(W == 0 && I == 0, "has placeholder but execute with no parameter ");
-			return __invoke_impl_is_lazy(false_{});
+			static_assert(wild_size == 0 && index_size == 0, "has placeholder but execute with no parameter ");
+			return _invoke_impl_is_lazy(false_{});
 		}
 
-		// has parameter, judge is lazy 
-		template<
-			uint32 len,
-			typename T,
-			typename... Args1
-		>
-		CCDK_FORCEINLINE constexpr
-		decltype(auto)
-		__invoke_impl_len(uint_<len>, T&& t, Args1&&... args1)
+		// first type is mark_lazy_t ,translate to lazy exprssion
+		template< uint32 len, typename T, typename... Args1 >
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint_<len>, T&& t, Args1&&... args1)
 		{
-			return __invoke_impl_is_lazy(
-				typename is_lazy_t<T>::type{},
-				util::forward<T>(t),
-				util::forward<Args1>(args1)...
-			);
+			return _invoke_impl_is_lazy( typename is_mark_lazy<T>::type{}, util::forward<T>(t), util::forward<Args1>(args1)... );
 		}
 
 		//enter point
 		// if not lazy check arg count == placeholder count
-		template<
-			typename... Args1,
+		template< typename... Args1,
 			typename = check_t < 
-				or_<  is_lazy_t< arg_pack_first_t<Args1...> >,
-					  bool_< sizeof...(Args1) == u32_max(W, I)> 
-				>>
-		>
-		CCDK_FORCEINLINE constexpr
-			decltype(auto)
-			operator()(Args1&&... args1)
+				or_<  is_mark_lazy< arg_pack_first_t<Args1...> >,
+				bool_< sizeof...(Args1) == u32_max(wild_size, index_size)> >> >
+		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args1&&... args1)
 		{
-			return __invoke_impl_len(uint_c<sizeof...(Args1)>,
-				util::forward<Args1>(args1)...);
+			return _invoke_impl_len(uint_c<sizeof...(Args1)>, util::forward<Args1>(args1)...);
 		}
 	};
 
-	//wild match placeholder _
+	/* wild match placeholder _ */
 	template<>
 	struct expr< null_ >
 	{
-		static constexpr uint32 L = 0;	//args length
-		static constexpr uint32 W = 1;  //wild placeholder count of sub-expr(e.g. _ )
-		static constexpr uint32 I = 0;  //max index-placeholder count of sub-expr(e.g. 2_ )
-		typedef expr           type;
+		static constexpr uint32 size = 0;	    /*  args length */
+		static constexpr uint32 wild_size = 1;  /* wild placeholder count of sub-expr(e.g. _ ) */
+		static constexpr uint32 index_size = 0; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
+		typedef expr           this_type;
 
 		constexpr expr(const expr& e) = default;
 
-		template<uint32 Start, typename Ctx>
-		decltype(auto) eval(const Ctx& ctx) const noexcept
+		template<uint32 Start, typename Context>
+		CCDK_FORCEINLINE decltype(auto) eval(const Context& ctx) const noexcept
 		{
-			return fs::ref_tuple_at<Start>(ctx);
+			return ctx.template at<Start>();
 		}
 	};
 
-	//index match placeholder 1_ / 2_ ...
+	/* index match placeholder 1_ / 2_ ... */
 	template<uint32 index>
 	struct expr< uint_<index> >
 	{
-		static constexpr uint32 L = 0;	    //args length
-		static constexpr uint32 W = 0;      //wild placeholder count of sub-expr(e.g. _ )
-		static constexpr uint32 I = index;  //max index-placeholder count of sub-expr(e.g. 2_ )
-		typedef expr           type;
+		static constexpr uint32 size = 0;			/* args length */
+		static constexpr uint32 wild_size = 0;      /* wild placeholder count of sub-expr(e.g. _ ) */
+		static constexpr uint32 index_size = index; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
+		typedef expr            this_type;
 
 		constexpr expr(const expr& e) = default;
 
-		template<uint32 Start, typename Ctx>
-		decltype(auto) eval(const Ctx& ctx) const noexcept
+		template<uint32 Start, typename Context> 
+		CCDK_FORCEINLINE decltype(auto) eval(const Context& ctx) const noexcept
 		{
-			return fs::ref_tuple_at<index-1>(ctx);
+			return ctx.template at<index-1>();
 		}
 	};
 

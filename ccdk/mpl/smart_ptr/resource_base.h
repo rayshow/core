@@ -4,7 +4,7 @@
 #include<ccdk/mpl/type_traits/is_base_of.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/util/noncopyable.h>
-#include<ccdk/mpl/fusion/compress_pair.h>
+#include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>
 
 ccdk_namespace_mpl_sp_start
@@ -26,7 +26,7 @@ struct default_resource_base : public resource_base
 	typedef default_deleter<Type> deleter_type;
 	typedef Type* pointer_type;
 private:
-	fs::compress_pair<deleter_type, pointer_type> pair;
+	fs::cpair<deleter_type, pointer_type> pair;
 public:
 
 	/* copy */
@@ -39,16 +39,16 @@ public:
 	CCDK_FORCEINLINE default_resource_base(Type* ptr) : pair{ ptr } {}
 
 	/* get managed pointer */
-	virtual void* pointer() const noexcept override  { return (void*)pair.second; }
+	virtual void* pointer() const noexcept override  { return (void*)pair.second(); }
 
 	/*  */
 	virtual resource_base* clone() const override { return new default_resource_base{ *this }; }
 
 	/* unhold pointer */
-	virtual void* release() noexcept override  { pointer_type ret = pair.second; pair.second = nullptr; return ret; }
+	virtual void* release() noexcept override  { pointer_type ret = pair.second(); pair.second() = nullptr; return ret; }
 
 	//destroy managed object
-	virtual ~default_resource_base() { pair.get_first()(pair.second); DebugValue(">> default resource base destructor"); }
+	virtual ~default_resource_base() { pair.first()(pair.second()); DebugValue(">> default resource base destructor"); }
 };
 
 //special deleter
@@ -58,7 +58,7 @@ struct deleter_resource_base :public resource_base
 	typedef Deleter deleter_type;
 	typedef Type*   pointer_type;
 private:
-	fs::compress_pair<Deleter, pointer_type> pair;
+	fs::cpair<Deleter, pointer_type> pair;
 
 public:
 
