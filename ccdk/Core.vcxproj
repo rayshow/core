@@ -164,12 +164,14 @@
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
     <ClInclude Include="mpl\fusion\any.h" />
+    <ClInclude Include="mpl\fusion\array.h" />
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
+    <ClInclude Include="mpl\fusion\ratio.h" />
     <ClInclude Include="mpl\fusion\string_literial.h" />
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />

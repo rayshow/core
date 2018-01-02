@@ -296,6 +296,7 @@ struct derive_t
 	virtual void print() override {}
 };
 
+
 int main()
 {
 	DebugNewTitle("test function static dispatch");
@@ -320,48 +321,66 @@ int main()
 	mfn2(2, "bind mfn2 ");
 	mfn3(3, "bind mfn3 ");
 	mfn4(4, "bind mfn4 ");
-
-	DebugNewTitle("test partial");
-	auto pat1 = partial(call1,test_copy_t{}, 4);
+	function<int(int, const char*)> fn{ mfn1 };
+	fn(5, "bind mfn5");
 
 	DebugNewTitle("test capture");
 	auto cap1 = capture(test_copy_t{}, 4)(call1);
 	DebugValue(cap1("hello, capture"));
+	DebugValueTypeName(cap1);
+	DebugValue(is_mfunction<decltype(cap1)>{});
+	function<int(const char*)> fn2{ cap1 };
+	DebugValue(fn2("hello, capture2"));
 
 	DebugNewTitle("test combine");
 	/* call3( call2( call1( 3, "hello") ) )  */
 	auto cb1 = combine(call1, call2, call3);
 	DebugValue(cb1(test_copy_t{}, 3, "hello,combine"));
-
+	function<int(const test_copy_t&, int, const char*)> fn3{ cb1 };
+	fn3(test_copy_t{}, 3, "hello,combine2");
 
 	DebugNewTitle("dispatch");
 	/* (--1) + (++2) == 3 */
-	DebugValue(dispatch(add, dec , inc)(1, 2));
+	auto dp1 = dispatch(add, dec, inc);
+	DebugValue(dp1(1,2));
+	function<int(int, int)> dp2{ dp1 };
+	DebugValue(dp2(1, 2));
+
 
 	DebugNewTitle("fmap");
 	/* (4+1) * (4-1) == 15 */
-	DebugValue(fmap(mul, add, sub)(4, 1));
+	auto fp1 = fmap(mul, add, sub);
+	DebugValue(fp1(4, 1));
+	function<int(int, int)> fp2{ fp1 };
+	DebugValue(fp2(4, 1));
 
 	DebugNewTitle("overload");
 	overload<void(float), void(int)> ofn1(print, print);
+	function<void(int)> ofn2{ ofn1 };
+	function<void(float)> ofn3{ ofn1 };
 	ofn1(1);
-	ofn1(1.0f);
+	ofn1(2.0f);
+	ofn2(1);
+	ofn3(1.5f);
 
 
 	DebugNewTitle("select overload");
 	auto sfn1 = select_overload<void(int)>(print);
 	sfn1(1); /* select int ones */
+	function<void(int)> sfn2{ sfn1 };
+	sfn2(1);
 	test_overload * to1 = new test_overload{};
-	auto sfn2 = select_overload<void(int)>( to1, &test_overload::print);
-	sfn2(1); /* select int ones */
+	auto sfn3 = select_overload<void(int)>( to1, &test_overload::print);
+	sfn3(1); /* select int ones */
 
 
 	DebugNewTitle("test partial");
 	DebugSubTitle("function object");
 	partial(tt, 1)(" hello,partial copy object");
+	function<int(const char*)> fnp{ partial(tt,1) };
+	fnp("function, partial");
 	partial(util::move(tt), 1)(" hello,partial move object");
 	partial(ctt, 1)(" hello,partial move object");
-
 
 	DebugSubTitle("function/function pointer");
 	partial(test_normal_copy_function, util::move(tt))("hello,partial function");
@@ -374,44 +393,56 @@ int main()
 	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
 
-	//DebugSubTitle("test val");
-	//auto val1 = val(util::move(test1));
-	//auto val2 = val(test2);
-	//auto val3 = val(inta);
-	//auto val4 = val(intb);
-	//DebugValue(val3());
-	//DebugValue(val4());
-	//DebugTypeName< decltype(val1)::value_type >();
-	//DebugTypeName< decltype(val2)::value_type >();
-	//DebugTypeName< decltype(val3)::value_type >();
-	//DebugTypeName< decltype(val4)::value_type >();
+	DebugNewTitle("test expr");
+	auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8; /*1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 == 36*/
+	auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;  /*1 + 2 + 3 + 2 + 3 + 4 + 5 ==  20 */
+	RuntimeAssertTrue(ph1(1, 3, 5, 7)==36);
+	RuntimeAssertTrue(ph2(2, 3, 4, 5)==20);
+	function<int(int, int, int, int)> ph3{ ph1 };
+	RuntimeAssertTrue(ph3(1, 3, 5, 7) == 36);
 
-	//DebugSubTitle("test ref");
-	//auto ref1 = ref(test1);
-	//auto ref2 = ref(test2);
-	//auto ref3 = ref(inta);
-	//ref3() = 3;
-	//auto ref4 = ref(intb);
-	//DebugTypeName< decltype(ref1)::value_type >();
-	//DebugTypeName< decltype(ref2)::value_type >();
-	//DebugValue(ref3());
-	//DebugValue(ref4());
-	//
-	//DebugValue(inta);
-	//DebugSubTitle("test cref");
-	//auto cref1 = cref(test1);
-	//auto cref2 = cref(test2);
-	//auto cref3 = cref(inta);
-	//auto cref4 = cref(intb);
-	//DebugTypeName< decltype(cref1)::value_type >();
-	//DebugTypeName< decltype(cref2)::value_type >();
-	//DebugValue(cref3());
+	DebugSubTitle("test val");
+	test_copy_t test1{ 1 };
+	const test_copy_t test2{ 1 };
+	auto val1 = val(util::move(test1));
+	auto val2 = val(test1);
+	auto val3 = val(test2);
+	auto val4 = val(1);
+	RuntimeAssertTrue(val1().v == 1);
+	RuntimeAssertTrue(val2().v == 1);
+	RuntimeAssertTrue(val3().v == 1);
+	RuntimeAssertTrue(val4() == 1);
+	DebugTypeName< decltype(val1)::value_type >();
+	DebugTypeName< decltype(val2)::value_type >();
+	DebugTypeName< decltype(val3)::value_type >();
+	DebugTypeName< decltype(val4)::value_type >();
 
-	//DebugNewTitle("test expr");
-	//auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8;
-	//auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;
-	//DebugValue(ph1(1, 3, 5, 7));
-	//DebugValue(ph2(2, 3, 4, 5));
+	DebugSubTitle("test ref");
+	int inta = 3;
+	const int intb = 4;
+	auto ref1 = ref(test1);
+	auto ref2 = ref(test2);
+	auto ref3 = ref(inta);
+	auto ref4 = ref(intb);
+	RuntimeAssertTrue(ref3() == 3);
+	RuntimeAssertTrue(ref4() == 4);
+	ref3() = 0;
+	// ref4() = 0;  //error
+	RuntimeAssertTrue(inta == 0);
+
+	DebugTypeName< decltype(ref1)::value_type >();
+	DebugTypeName< decltype(ref2)::value_type >();
+	DebugTypeName< decltype(ref3)::value_type >();
+	DebugTypeName< decltype(ref4)::value_type >();
+
+	DebugSubTitle("test cref");
+	auto cref1 = cref(test1);
+	auto cref2 = cref(test2);
+	auto cref3 = cref(inta);
+	auto cref4 = cref(intb);
+	DebugTypeName< decltype(cref1)::value_type >();
+	DebugTypeName< decltype(cref2)::value_type >();
+	DebugValue(cref3());
 
 	getchar();
 	return 0;

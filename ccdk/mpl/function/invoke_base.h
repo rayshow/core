@@ -35,7 +35,7 @@ ccdk_namespace_mpl_fn_start
 
 	
 	template<
-		typename Fn,       /* T is function object */
+		typename Fn,       /* Fn is function object */
 		typename Ret,
 		typename... Args
 	>
@@ -43,7 +43,9 @@ ccdk_namespace_mpl_fn_start
 	{
 		Fn fn;
 
-		CCDK_FORCEINLINE function_object_invoker(Fn&& inFn) noexcept :fn{ util::move(inFn) } {}
+		template<typename Fn2, typename = check_t< is_convertible<Fn2, Fn>>>
+		CCDK_FORCEINLINE function_object_invoker(Fn2&& inFn) noexcept :fn{ util::forward<Fn2>(inFn) } {}
+		
 
 		virtual Ret invoke(Args... args) override { return fn(util::forward<Args>(args)...); }
 
@@ -64,7 +66,8 @@ ccdk_namespace_mpl_fn_start
 	{
 		Fn fn;
 
-		CCDK_FORCEINLINE normal_function_invoker(Fn inFn) noexcept : fn(inFn) {}
+		template<typename Fn2>
+		CCDK_FORCEINLINE normal_function_invoker(Fn2&& inFn2) noexcept : fn(util::forward<Fn2>(inFn2)) {}
 
 		virtual Ret invoke(Args... args) override { return t(util::forward<Args>(args)...); }
 
@@ -87,9 +90,11 @@ ccdk_namespace_mpl_fn_start
 		Fn     fn;
 		Class* clz;
 
-		CCDK_FORCEINLINE member_function_invoker(Fn inFn) noexcept : fn(inFn), clz(nullptr) {}
+		template<typename Fn2>
+		CCDK_FORCEINLINE member_function_invoker(Fn2 inFn2) noexcept : fn(util::forward<Fn2>(inFn2)), clz(nullptr) {}
 
-		CCDK_FORCEINLINE member_function_invoker(Fn inFn, Class* inClass) noexcept : fn(inFn), clz(inClass) {}
+		template<typename Fn2>
+		CCDK_FORCEINLINE member_function_invoker(Fn2 inFn2, Class* inClass) noexcept : fn(util::forward<Fn2>(inFn2)), clz(inClass) {}
 
 		virtual void set_private_data(void* class_ptr) noexcept override { ccdk_assert(class_ptr != nullptr); clz = (Class*)class_ptr; }
 

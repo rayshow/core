@@ -157,11 +157,11 @@ namespace ccdk {
 	// if T& version constructor not exists, will call const T& version
 	struct test_copy_t
 	{
-		test_copy_t(int val) :v(val) {}
+		test_copy_t(int val) :v(val) { DebugValue("value ctor"); }
 		test_copy_t() { DebugValue("default ctor"); }
-		test_copy_t(test_copy_t&& t) { DebugValue("move ctor"); }
-		test_copy_t(test_copy_t& t) { DebugValue("copy ctor"); }
-		test_copy_t(const test_copy_t& t) { DebugValue("const copy ctor"); }
+		test_copy_t(test_copy_t&& t):v(t.v) { DebugValue("move ctor"); }
+		test_copy_t(test_copy_t& t) :v(t.v) { DebugValue("copy ctor"); }
+		test_copy_t(const test_copy_t& t) :v(t.v) { DebugValue("const copy ctor"); }
 
 		void operator=(test_copy_t& t) { DebugValue("copy assign"); }
 		void operator=(test_copy_t&& t) { DebugValue("move assign"); }

@@ -35,15 +35,15 @@ const varient_base<index, T>& get_base(const varient_base<index, T>& type)
 template<typename T, typename... Args>
 struct varient_impl;
 
-//max support 255 different type
+/* max support 255 different type, more derive will increase the size */
 template<uint32... indice, typename... Args>
 struct varient_impl< indice_pack<indice...>, Args...>
 	:public varient_base<indice, Args>...
 {
-	static constexpr uint32 L = sizeof...(Args);
-	static constexpr uint32 Size = max_align<0, Args...>::MaxSize;
+	static constexpr uint32 size = sizeof...(Args);
+	static constexpr uint32 memory_size = max_align<0, Args...>::MaxSize;
 private:
-	char   memory[Size];
+	char   memory[memory_size];
 	uint8  index;
 
 	CCDK_FORCEINLINE void destruct_old() noexcept { arg_dummy_fn(get_base<indice>(*this).destruct(index, memory)...); }

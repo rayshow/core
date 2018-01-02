@@ -2,7 +2,6 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
-
 #include<ccdk/mpl/base/enable_if.h>
 
 ccdk_namespace_mpl_sp_start

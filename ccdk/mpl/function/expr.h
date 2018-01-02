@@ -16,55 +16,38 @@
 
 ccdk_namespace_mpl_fn_start
 
+	/* mark lazy expression */
 	struct make_lazy_t {};
 	constexpr make_lazy_t mark_lazy{};
 
 	template<typename T> struct is_mark_lazy :false_ {};
 	template<> struct is_mark_lazy<make_lazy_t> :true_ {};
 
-	//mark value
-	template<typename T>
-	struct value_t {};
 
-	//mark ref
-	template<typename T>
-	struct reference_t {};
 
-	// acculate args::W...
+	/* acculate args::wild_size... */
 	template<typename... Args>
-	struct acc_wph_count :uint_<0>
-	{};
+	struct acc_wph_count :uint_<0> {};
 
 	template<typename T, typename... Args>
-	struct acc_wph_count<T, Args...>
-		:uint_< T::W + acc_wph_count<Args...>::value > {};
+	struct acc_wph_count<T, Args...> :uint_< T::wild_size + acc_wph_count<Args...>::value > {};
 
-	//max args::I...
-	constexpr uint32 u32_max(uint32 a, uint32 b)
-	{
-		return a < b ? b : a;
-	}
+	/* max args::index_size... */
+	constexpr uint32 u32_max(uint32 a, uint32 b) { return a < b ? b : a; }
 
+	/* acculate args::index_size... */
 	template<typename... Args>
 	struct max_iph_count :uint_<0> {};
 
 	template<typename T, typename... Args>
-	struct max_iph_count<T, Args...>
-		:uint_< u32_max(T::I, max_iph_count<Args...>::value) > {};
+	struct max_iph_count<T, Args...> :uint_< u32_max(T::index_size, max_iph_count<Args...>::value) > {};
 
+	/* marke wild indice pack */
 	template<uint32 acc, typename pack, typename... Args>
-	struct pack_wph_step
-	{
-		typedef pack type;
-	};
+	struct pack_wph_step { typedef pack type; };
 
-	//make shift indice
 	template<uint32 acc, uint32... indice, typename T, typename... Args>
-	struct pack_wph_step< acc, indice_pack<indice...>, T, Args...>
-		: pack_wph_step< acc + T::W, indice_pack<indice..., acc>, Args...> {};
-
-
-
+	struct pack_wph_step< acc, indice_pack<indice...>, T, Args...> : pack_wph_step< acc + T::wild_size, indice_pack<indice..., acc>, Args...> {};
 
 
 	//operation expr
@@ -76,6 +59,7 @@ ccdk_namespace_mpl_fn_start
 		static constexpr uint32 index_size = max_iph_count< Args...>::value; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
 		typedef expr              this_type;
 		typedef make_indice<size> indice_type;
+		typedef mfunction_tag     tag;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
 		static constexpr indice_type args_indice{};
 
@@ -83,6 +67,8 @@ ccdk_namespace_mpl_fn_start
 		/* closure of lazy eval */
 		decay_t<Fn>                     fn;
 		fs::closure_args<size, Args...> args;
+
+	public:
 
 		/* value */
 		CCDK_FORCEINLINE constexpr expr(Args&&... inArgs) :args{ util::forward<Args>(inArgs)... } {}
@@ -94,7 +80,7 @@ ccdk_namespace_mpl_fn_start
 		template< uint32 Start, typename Content, uint32... Index, uint32... Shift >
 		CCDK_FORCEINLINE constexpr decltype(auto) _eval_impl(const Content& ctx, indice_pack<Index...>, indice_pack<Shift...>) const
 		{
-			return fn( args.template at<index>().template eval<Start + Shift>(ctx)...);
+			return fn( args.template at<Index>().template eval<Start + Shift>(ctx)...);
 		}
 
 		/*eval expr */

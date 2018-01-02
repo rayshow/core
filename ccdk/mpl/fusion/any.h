@@ -15,7 +15,7 @@ struct base_holder
 {
 	virtual base_holder* clone() const  = 0;
 	virtual const std::type_info& type() const noexcept = 0;
-
+	virtual ~base_holder() {};
 };
 
 template<typename T>
@@ -48,6 +48,7 @@ public:
 	/* ret value pointer */
 	CCDK_FORCEINLINE  value_type*  get_pointer()  { return util::addressof(val); }
 
+	virtual ~any_holder() {};
 };
 
 

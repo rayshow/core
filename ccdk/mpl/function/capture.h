@@ -30,18 +30,13 @@ ccdk_namespace_mpl_fn_start
 			return partial( util::forward<Fn>(fn), util::move(content.template at<indice>() )... );
 		}
 		
-		/* function ptr */
-		template< typename Fn, typename = check_t< is_function<Fn> > >
-		CCDK_FORCEINLINE constexpr auto operator()(Fn* fn ) noexcept
+		/* function / function pointer */
+		template< typename Fn>
+		CCDK_FORCEINLINE constexpr auto operator()(Fn&& fn ) noexcept
 		{
-			return _invoke_impl( util::forward<Fn*>(fn), make_indice<size>{} );
-		}
-
-		/* function object or normal function */
-		template< typename Fn, typename = check_t< or_< is_function<Fn>, is_function_obj<Fn>>>   >
-		CCDK_FORCEINLINE constexpr auto operator()( Fn& fn )  noexcept
-		{
-			return _invoke_impl( util::forward<Fn&>(fn), make_indice<size>{} );
+			DebugFunctionName();
+			return _invoke_impl( util::forward<Fn>(fn), make_indice<size>{} );
+			//return false;
 		}
 	};
 		

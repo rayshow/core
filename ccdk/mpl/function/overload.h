@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -9,6 +9,8 @@ ccdk_namespace_mpl_fn_start
 template<typename Fn, typename... Fs>
 struct overload :public overload<Fn>, public overload<Fs...>
 {
+	typedef mfunction_tag tag;
+	
 	using overload<Fn>::operator();
 	using overload<Fs...>::operator();
 

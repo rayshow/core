@@ -12,9 +12,12 @@
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/function/bind_mfn.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
+	/* partial just like bind */
+	
 	template<
 		uint32 TotalSize, /* total args length of Fn */
 		typename Fn,      /* function type */
@@ -25,6 +28,7 @@ ccdk_namespace_mpl_fn_start
 	{
 		constexpr static uint32 size = sizeof...(Args);
 		constexpr static uint32 left_size = TotalSize - size;  /* not stored args of fn */
+		typedef mfunction_tag tag;
 		typedef partial_t this_type;
 		typedef decay_t<Fn> fn_type;
 

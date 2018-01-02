@@ -5,7 +5,7 @@
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/create.h>
 #include<ccdk/mpl/fusion/imap.h>
-
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -15,6 +15,7 @@ ccdk_namespace_mpl_fn_start
 	{
 		static constexpr uint32 size = sizeof...(Fs)+1;
 		typedef combine_t<Fn, Fs...> this_type;
+		typedef mfunction_tag tag;
 
 		fs::closure_args< size, Fn, Fs...> content;
 

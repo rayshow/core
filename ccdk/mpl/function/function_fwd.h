@@ -8,12 +8,21 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/is_array.h>
 #include<ccdk/mpl/type_traits/remove_dim.h>
+#include<ccdk/mpl/type_traits/has_inner_type.h>
 
 ccdk_namespace_mpl_fn_start
 
 /* function declare */
 template<typename T>
 struct function;
+
+/* mark value */
+template<typename T>
+struct value_t {};
+
+/* mark reference */
+template<typename T>
+struct reference_t {};
 
 /* lazy expr declare */
 template<typename... Args>
@@ -22,6 +31,21 @@ struct expr;
 /* justify is lazy expr */
 template<typename T> struct is_expr :false_ {};
 template<typename... Args> struct is_expr< expr<Args...> > :true_ {};
+
+/* mfunction judge */
+struct mfunction_tag {};
+
+namespace detail
+{
+	template<typename T>
+	struct inner_tag_is_mfunction : is_same<typename T::tag, mfunction_tag> {};
+}
+
+template<typename T>
+struct is_mfunction : and_< has_inner_tag<T>, detail::inner_tag_is_mfunction<T>> {};
+
+
+
 
 ccdk_namespace_mpl_fn_end
 

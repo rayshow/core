@@ -5,6 +5,7 @@
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/util/addressof.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -16,6 +17,8 @@ struct select_overload_t;
 template<typename Ret, typename... Args>
 struct select_overload_t<Ret(Args...)>
 {
+	typedef mfunction_tag tag;
+
 	using value_type = Ret(*)(Args...);
 
 	value_type fn;
@@ -29,6 +32,7 @@ struct select_overload_t<Ret(Args...)>
 template<typename Ret, typename Class, typename... Args>
 struct select_overload_t<Ret(Class::*)(Args...)>
 {
+	typedef mfunction_tag tag;
 	using value_type = Ret(Class::*)(Args...);
 
 	value_type fn;

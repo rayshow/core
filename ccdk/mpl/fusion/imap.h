@@ -38,7 +38,7 @@ public:
 	CCDK_FORCEINLINE constexpr imap() : ipair < Indice, Args >{}... {}
 
 	/*value*/
-	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
+	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, decay_t<Args>>...>>>
 	CCDK_FORCEINLINE constexpr imap(Args2 &&... args) : ipair<Indice, Args>{ util::forward<Args2>(args) }... {  }
 
 	/*copy*/
@@ -48,11 +48,11 @@ public:
 	CCDK_FORCEINLINE constexpr imap(imap && other) : ipair < Indice, Args >{ util::move(other) }... {}
 
 	/*template copy*/
-	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
+	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, decay_t<Args>>...>>>
 	CCDK_FORCEINLINE constexpr imap(imap<indice_pack<Indice...>, Args2...> const& other) : ipair < Indice, Args >{ other.template at<Indice>() }... {}
 
 	/*template move*/
-	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
+	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, decay_t<Args>>...>>>
 	CCDK_FORCEINLINE constexpr imap(imap<indice_pack<Indice...>, Args2...> && other) : ipair < Indice, Args >{ util::move(other.template at<Indice>()) }... {}
 
 	template<uint32 Key>

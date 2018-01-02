@@ -5,6 +5,7 @@
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/create.h>
 #include<ccdk/mpl/fusion/imap.h>
+#include<ccdk/mpl/function/function_fwd.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -14,6 +15,7 @@ ccdk_namespace_mpl_fn_start
 	{
 		static constexpr uint32 size = sizeof...(Fs);
 		typedef dispatch_t  this_type;
+		typedef mfunction_tag tag;
 
 		Fn fn;
 		fs::closure_args< size, Fs...> fs;
