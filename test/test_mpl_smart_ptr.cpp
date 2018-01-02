@@ -308,7 +308,8 @@ int main()
 			poly_share_ptr<derive> sp2{ new derive{} };
 			DebugValue(sp2.share_count());
 			DebugValue((bool)sp2);
-			sp1 = sp2;
+			 sp1 = sp2 ;
+			
 			DebugValue(sp1.share_count());
 			DebugValue((bool)sp1);
 		}
@@ -411,7 +412,7 @@ int main()
 			share_ptr<derive> sp2{ new derive{} };
 			DebugValue(sp2.share_count());
 			DebugValue((bool)sp2);
-			sp1 = sp2;
+			DebugValueTypeName(sp1 = sp2);
 			DebugValue(sp1.share_count());
 			DebugValue((bool)sp1);
 		}

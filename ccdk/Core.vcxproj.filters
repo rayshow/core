@@ -46,6 +46,15 @@
     <Filter Include="mpl\smart_ptr">
       <UniqueIdentifier>{5d6b5634-5177-412f-ae32-617d3e997e36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{ca26e5ea-dbd5-4c47-8c97-dfc629e67102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{38ed2fe1-4897-4ef5-bb35-0571bd9b848e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{b8d0c192-e497-4091-bb3b-8743dd1ec62a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />

@@ -7,7 +7,6 @@
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/mpl/function/capture.h>
 #include<ccdk/mpl/function/combine.h>
-#include<ccdk/mpl/function/create.h>
 #include<ccdk/mpl/function/dispatch.h>
 #include<ccdk/mpl/function/fmap.h>
 #include<ccdk/mpl/function/overload.h>
@@ -38,8 +37,37 @@ public:
 	~destructor_maythrow() throw(int) { throw int{}; }
 };
 
+
+class base_op
+{
+public:
+
+	base_op operator=(const base_op& other)
+	{
+		DebugValue("base assign");
+		return base_op{};
+	}
+};
+
+class derive_op: public base_op
+{
+public:
+
+	using base_op::operator=;
+
+	derive_op operator=(const derive_op& other)
+	{
+		return derive_op{};
+	}
+};
+
 int main()
 {
+	DebugValue("test using");
+	derive_op op1{}, op2{};
+	DebugTypeName<decltype(op1 = op2)>();
+
+
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
 	using util::swap;

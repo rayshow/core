@@ -401,7 +401,14 @@ int main()
 	function<int(int, int, int, int)> ph3{ ph1 };
 	RuntimeAssertTrue(ph3(1, 3, 5, 7) == 36);
 
+	DebugSubTitle("test assign expr");
+	auto assign1 = ( _ = 1 );
+	int a = 0;
+	DebugValue(assign1(a));
+	DebugValue(a);
+
 	DebugSubTitle("test val");
+	
 	test_copy_t test1{ 1 };
 	const test_copy_t test2{ 1 };
 	auto val1 = val(util::move(test1));
