@@ -147,6 +147,7 @@
     <ClInclude Include="mpl\base\uint64_.h" />
     <ClInclude Include="mpl\base\uint16.h" />
     <ClInclude Include="mpl\base\wchar_.h" />
+    <ClInclude Include="mpl\function\const_forward.h" />
     <ClInclude Include="mpl\function\expr.h" />
     <ClInclude Include="mpl\function\function_fwd.h" />
     <ClInclude Include="mpl\function\invoke_base.h" />

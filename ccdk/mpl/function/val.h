@@ -21,7 +21,11 @@ ccdk_namespace_mpl_fn_start
 		value_type t;
 
 		/*value constructor*/
-		CCDK_FORCEINLINE constexpr explicit expr(T&& inT)  :t{ util::forward<T>(inT) } {}
+
+		constexpr explicit expr() :t{} {}
+
+		template<typename T2>
+		CCDK_FORCEINLINE constexpr explicit expr(T2&& inT)  :t{ util::forward<T2>(inT) } {}
 
 		/*to value type*/
 		CCDK_FORCEINLINE constexpr explicit operator const value_type&() const noexcept { return t; }

@@ -17,11 +17,11 @@
 ccdk_namespace_mpl_fn_start
 
 	/* mark lazy expression */
-	struct make_lazy_t {};
-	constexpr make_lazy_t mark_lazy{};
+	struct mark_lazy_t {};
+	constexpr mark_lazy_t lazy_{};
 
 	template<typename T> struct is_mark_lazy :false_ {};
-	template<> struct is_mark_lazy<make_lazy_t> :true_ {};
+	template<> struct is_mark_lazy<mark_lazy_t> :true_ {};
 
 	/* acculate args::wild_size... */
 	template<typename... Args>
@@ -48,6 +48,11 @@ ccdk_namespace_mpl_fn_start
 	struct pack_wph_step< acc, indice_pack<indice...>, T, Args...> : pack_wph_step< acc + T::wild_size, indice_pack<indice..., acc>, Args...> {};
 
 
+	/* filter expr */
+	template<typename T> struct filter_expr : if_ < is_expr<T>, T, expr < value_t<T>>> {};
+
+
+
 	template<typename... Args>
 	class expr_base
 	{
@@ -55,6 +60,23 @@ ccdk_namespace_mpl_fn_start
 		typedef expr<Args...> derive_type;
 
 		constexpr expr_base() = default;
+
+		template<typename T, typename = check_t< not_< is_expr<T>>> > 
+		CCDK_FORCEINLINE constexpr auto operator[](T&& t) const
+		{
+			return expr< index_t, derive_type, expr< value_t<T> > >{ const_cast<expr<Args...>&&>(*this), expr< value_t<T>>{util::forward<T>(t)} };
+		}
+
+		template<typename... Args1>
+		CCDK_FORCEINLINE constexpr auto operator[](expr<Args1...>&& e) const 
+		{
+			return expr< add_t, derive_type, expr<Args1...> >{ const_cast<derive_type&&>(*this), const_cast<expr<Args1...>&&>(e) };
+		}
+
+		
+
+
+
 	};
 
 
@@ -100,8 +122,13 @@ ccdk_namespace_mpl_fn_start
 	public:
 		ccdk_expr_lazy_assign
 
+
 		/* value */
-		CCDK_FORCEINLINE explicit constexpr  expr(Args&&... inArgs) :args{ util::forward<Args>(inArgs)... } {}
+		template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
+		CCDK_FORCEINLINE explicit constexpr  expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
+
+		template<typename... Args2>
+		CCDK_FORCEINLINE explicit constexpr  expr(int, Args2&&... args2) {  DebugFunctionName(); }
 
 		/* move */
 		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
@@ -127,7 +154,16 @@ ccdk_namespace_mpl_fn_start
 		typedef expr_base< null_> base_type;
 
 		ccdk_expr_lazy_assign;
+		using base_type::operator[];
 
+		template<typename T>
+		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, T&& t) const
+		{
+			DebugFunctionName();
+			//return expr < value_t<T> >{util::forward<T>(t)};
+			//return this_type{ *this };
+			return expr< invoke_t, this_type, typename filter_expr<T>::type>{ 1, *this, util::forward<T>(t) };
+		}
 
 		constexpr expr() :base_type{} {}
 		constexpr expr(const expr& e) = default;
@@ -147,6 +183,7 @@ ccdk_namespace_mpl_fn_start
 		typedef expr            this_type;
 		typedef expr_base< uint_<index>> base_type;
 		ccdk_expr_lazy_assign
+
 
 		constexpr expr() :base_type{} {}
 		constexpr expr(const expr& e) = default;

@@ -297,8 +297,45 @@ struct derive_t
 };
 
 
+template<typename T>
+decltype(auto) test_forward(T&& t)
+{
+	return std::forward<T>(t);
+}
+
+class test_2 {
+public:
+	void test1()
+	{
+		DebugTypeName<decltype(test_forward(*this))>();
+		test_forward(*this);
+	}
+
+	void test1() const
+	{
+		DebugTypeName<decltype(test_forward(*this))>();
+		test_forward(*this);
+	}
+};
+
 int main()
 {
+
+	DebugTypeName<decltype(test_forward(1))>();
+	test_forward(1);
+	int vi = 1;
+	DebugTypeName<decltype(test_forward(vi))>();
+	test_forward(vi);
+	const int ci = 1;
+	DebugTypeName<decltype(test_forward(ci))>();
+	test_forward(ci);
+
+	test_2 ta{};
+	ta.test1();
+	const test_2 cta{};
+	cta.test1();
+
+
 	DebugNewTitle("test function static dispatch");
 	fn_select_test(0);
 	fn_select_test(simple_nfn);
@@ -406,6 +443,9 @@ int main()
 	int a = 0;
 	DebugValue(assign1(a));
 	DebugValue(a);
+
+	DebugSubTitle("test invoke");
+	auto invoke1 = _(lazy_, 1);
 
 	DebugSubTitle("test val");
 	

@@ -26,7 +26,7 @@ struct reference_t {};
 
 /* lazy expr declare */
 template<typename... Args>
-struct expr;
+class expr;
 
 #define ccdk_expr_lazy_assign template<typename T, typename = check_t< not_< is_expr<T>>> > CCDK_FORCEINLINE constexpr auto operator=(T&& t) const { return expr< assign_t, expr, expr< value_t<T> > >{ const_cast<expr&&>(*this), expr< value_t<T>>{ util::forward<T>(t)} }; } template<typename... Args1> CCDK_FORCEINLINE constexpr auto operator=(expr<Args1...>&& e) const { return expr< assign_t, expr, expr<Args1...> >{ const_cast<expr&&>(*this), const_cast<expr<Args1...>&&>(e) }; }
 

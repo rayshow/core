@@ -961,5 +961,8 @@
     <ClInclude Include="mpl\fusion\ratio.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\const_forward.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
