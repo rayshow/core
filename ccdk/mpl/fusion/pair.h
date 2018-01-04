@@ -25,8 +25,8 @@ struct ipair
 	CCDK_FORCEINLINE constexpr ipair() :value{} {  }
 
 	/* container need check T2 convertible to T , allow narrow cast */
-	template<typename T2, typename = check_t< is_convertible<T2,value_type> > >
-	CCDK_FORCEINLINE constexpr ipair(T2&& t) : value( util::forward<T2>(t) ) {  }
+	template<typename T2, typename = check_t< has_constructor<value_type, T2>>>
+	CCDK_FORCEINLINE constexpr ipair(T2&& t) : value( util::forward<T2>(t) )  { DebugFunctionName(); }
 
 	/* copy */
 	CCDK_FORCEINLINE constexpr ipair(ipair const& other) : value{ other.value } {  }
@@ -35,14 +35,14 @@ struct ipair
 	CCDK_FORCEINLINE constexpr ipair(ipair&& other) : value{ util::move(other.value) } {}
 
 	/* template copy */
-	template<uint32 Key2, typename T2, typename = check_t< is_convertible<T2, value_type> > >
+	template<uint32 Key2, typename T2,  typename = check_t< has_constructor<value_type, T2> > >
 	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> const& other) : value{ other.value } {  }
 
 	/* template move */
-	template<uint32 Key2, typename T2, typename = check_t< is_convertible<T2, value_type> > >
+	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
 	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> && other) : value{ util::move(other.value) } {  }
 
-	template<uint32 Key2, typename T2, typename = check_t< is_convertible<T2, value_type> > >
+	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
 	CCDK_FORCEINLINE void swap(ipair<Key2, T2>& other) { using namespace util; swap(value, other.value); }
 
 };

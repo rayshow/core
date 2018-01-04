@@ -118,7 +118,7 @@ ccdk_namespace_mpl_fn_start
 
 
 		/* value */
-		template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
+		template<typename... Args2>
 		CCDK_FORCEINLINE explicit constexpr  expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
 
 		/* move */
@@ -148,15 +148,7 @@ ccdk_namespace_mpl_fn_start
 		template<typename T>
 		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, T&& t) const
 		{
-<<<<<<< HEAD
-			DebugFunctionName();
-			//return expr < value_t<T> >{util::forward<T>(t)};
-			//return this_type{ *this };
-			return expr< invoke_t, this_type, typename filter_expr<T>::type>{ 1, *this,  util::forward<T>(t)  };
-=======
-			return expr< invoke_t, typename filter_expr<T>::type>{ typename filter_expr<T>::type{ util::forward<T>(t) } };
-			//return expr< invoke_t, /*this_type ,*/typename filter_expr<T>::type>{ 1,/* *this,*/ util::forward<T>(t) };
->>>>>>> 516bcbf3fc4a7669f10634bb5297ac3dffb91d3e
+			return expr< invoke_t, typename filter_expr<T>::type>{ util::forward<T>(t) };
 		}
 
 		constexpr expr() = default;

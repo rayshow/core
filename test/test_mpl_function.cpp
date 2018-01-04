@@ -106,8 +106,6 @@ struct test_obj
 };
 
 
-
-
 template<typename T>
 void test_tmp(T&& t)
 {

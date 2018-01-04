@@ -34,12 +34,10 @@ class imap< indice_pack<Indice...>, Args...>
 {
 public:
 
-	/*default*/
-	CCDK_FORCEINLINE constexpr imap() : ipair < Indice, Args >{}... {}
 
 	/*value*/
-	template<typename... Args2, typename = check_t< and_< is_convertible<Args2, decay_t<Args>>...>>>
-	CCDK_FORCEINLINE constexpr imap(Args2 &&... args) : ipair<Indice, Args>{ util::forward<Args2>(args) }... {  }
+	template<typename... Args2>
+	CCDK_FORCEINLINE constexpr imap(Args2 &&... args2) : ipair<Indice, Args>{ util::forward<Args2>(args2) }... {  }
 
 	/*copy*/
 	CCDK_FORCEINLINE constexpr imap(imap const& other) : ipair < Indice, Args >{ other }... {}

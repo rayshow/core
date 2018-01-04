@@ -64,28 +64,73 @@ public:
 class test_convertible
 {
 public:
-	test_convertible() {}
- 	 test_convertible(int a) {}
-
-	 operator int() { return 0; }
+	 test_convertible() {}
+	 explicit test_convertible(const int& a) {}
+	 explicit operator int() { return 0; }
 };
 
 template<typename T>
 void test_template_cast(const T& t)
 {}
 
+int call1(const test_copy_t& tt, int a, const char*msg)
+{
+	DebugValue(msg);
+	return a;
+}
+
+int call2(int a)
+{
+	return a;
+}
+
+int call3(int a)
+{
+	return a;
+}
+using namespace ccdk::mpl::fn;
+
+
+class base_class
+{
+public:
+	base_class() {}
+	base_class(base_class const& other) { DebugValue("const&"); }
+
+	template<typename T>
+	base_class(T&& t) { DebugValue("template &&"); }
+
+};
+
+
 int main()
 {
-	DebugValue(is_compatible<test_convertible, int>::value);
-	DebugValue( is_convertible<int, test_convertible>::value);
-	
-	DebugValue(is_compatible<test_convertible, int>::value);
-	DebugValue(is_convertible<test_convertible, int>::value);
-	
-	DebugValue(has_constructor<test_convertible, int>::value);
-	DebugValue(has_constructor<int,test_convertible>::value);
+	const base_class  cbc{};
+	base_class bc{ cbc };
 
-	test_template_cast<int>(test_convertible{});
+	DebugNewTitle("test combine");
+	/* call3( call2( call1( 3, "hello") ) )  */
+	auto cb1 = combine(call1, call2, call3);/*
+	DebugValue(cb1(test_copy_t{}, 3, "hello,combine"));
+	function<int(const test_copy_t&, int, const char*)> fn3{ cb1 };*/
+
+	//fn3(test_copy_t{}, 3, "hello,combine2");
+	bool bv;
+	DebugValue(bv = is_compatible<test_convertible, int>::value);
+	DebugValue(bv = is_convertible<int, test_convertible>::value);
+	
+	DebugValue(bv = is_compatible<test_convertible, int>::value);
+	DebugValue(bv = is_convertible<test_convertible, int>::value);
+	
+	DebugValue(bv = has_constructor<test_convertible, int>::value);
+	DebugValue(bv = has_constructor<test_convertible, int&>::value);
+	DebugValue(bv = has_constructor<test_convertible, int&&>::value);
+	DebugValue(bv = has_constructor<test_convertible, const int&>::value);
+	DebugValue(bv = has_constructor<int,test_convertible>::value);
+
+	
+
+	//test_template_cast<int>(test_convertible{});
 
 	getchar();
 	return 0;
