@@ -82,7 +82,7 @@ ccdk_namespace_mpl_fn_start
 
 	/* lazy and wild expr  */
 	template<typename Fn, typename... Args>
-	class expr<Fn, Args...> : public expr_base<Fn,Args...>
+	class expr<Fn, Args...> 
 	{
 	public:
 		static constexpr uint32 size = sizeof...(Args);	                     /* args length */
@@ -91,7 +91,6 @@ ccdk_namespace_mpl_fn_start
 		typedef expr                   this_type;
 		typedef make_indice<size>      indice_type;
 		typedef mfunction_tag          tag;
-		typedef expr_base<Fn, Args...> base_type;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
 		static constexpr indice_type args_indice{};
 
@@ -127,9 +126,9 @@ ccdk_namespace_mpl_fn_start
 		template<typename... Args2, typename = check_t< and_< is_convertible<Args2, Args>...>>>
 		CCDK_FORCEINLINE explicit constexpr  expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
 
-		template<typename... Args2>
-		CCDK_FORCEINLINE explicit constexpr  expr(int, Args2&&... args2) {  DebugFunctionName(); }
-
+		/*template<typename... Args2>
+		CCDK_FORCEINLINE explicit constexpr  expr(int, Args2&&... args2) : args{ util::forward<Args2>(args2)... } {  DebugFunctionName(); }
+*/
 		/* move */
 		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
 
@@ -144,28 +143,24 @@ ccdk_namespace_mpl_fn_start
 
 	/* wild match placeholder _ */
 	template<>
-	class expr< null_ >: public expr_base< null_>
+	class expr< null_ >
 	{
 	public:
 		static constexpr uint32 size = 0;	    /* args length */
 		static constexpr uint32 wild_size = 1;  /* wild placeholder count of sub-expr(e.g. _ ) */
 		static constexpr uint32 index_size = 0; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
-		typedef expr              this_type;
-		typedef expr_base< null_> base_type;
+		typedef expr            this_type;
 
 		ccdk_expr_lazy_assign;
-		using base_type::operator[];
 
 		template<typename T>
 		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, T&& t) const
 		{
-			DebugFunctionName();
-			//return expr < value_t<T> >{util::forward<T>(t)};
-			//return this_type{ *this };
-			return expr< invoke_t, this_type, typename filter_expr<T>::type>{ 1, *this, util::forward<T>(t) };
+			return expr< invoke_t, typename filter_expr<T>::type>{ typename filter_expr<T>::type{ util::forward<T>(t) } };
+			//return expr< invoke_t, /*this_type ,*/typename filter_expr<T>::type>{ 1,/* *this,*/ util::forward<T>(t) };
 		}
 
-		constexpr expr() :base_type{} {}
+		constexpr expr() = default;
 		constexpr expr(const expr& e) = default;
 
 		/*  eval expr */
@@ -175,17 +170,16 @@ ccdk_namespace_mpl_fn_start
 
 	/* index match placeholder 1_ / 2_ ... */
 	template<uint32 index>
-	struct expr< uint_<index> > : public expr_base< uint_<index> >
+	struct expr< uint_<index> > 
 	{
 		static constexpr uint32 size = 0;			/* args length */
 		static constexpr uint32 wild_size = 0;      /* wild placeholder count of sub-expr(e.g. _ ) */
 		static constexpr uint32 index_size = index; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
 		typedef expr            this_type;
-		typedef expr_base< uint_<index>> base_type;
 		ccdk_expr_lazy_assign
 
 
-		constexpr expr() :base_type{} {}
+		constexpr expr() = default;
 		constexpr expr(const expr& e) = default;
 
 		/* eval expr  */
