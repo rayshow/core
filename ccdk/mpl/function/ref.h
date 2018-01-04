@@ -10,8 +10,9 @@
 ccdk_namespace_mpl_fn_start
 
 	template<typename T>
-	struct expr< reference_t<T> >
+	class expr< reference_t<T> >
 	{
+	public:
 		typedef expr          type;
 		typedef T&            value_type;
 		typedef mfunction_tag tag;

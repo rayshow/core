@@ -72,11 +72,6 @@ ccdk_namespace_mpl_fn_start
 		{
 			return expr< add_t, derive_type, expr<Args1...> >{ const_cast<derive_type&&>(*this), const_cast<expr<Args1...>&&>(e) };
 		}
-
-		
-
-
-
 	};
 
 
@@ -128,7 +123,7 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE explicit constexpr  expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
 
 		template<typename... Args2>
-		CCDK_FORCEINLINE explicit constexpr  expr(int, Args2&&... args2) {  DebugFunctionName(); }
+		CCDK_FORCEINLINE explicit constexpr  expr(int, Args2&&... args2) : args{ util::forward<Args2>(args2)... } {  DebugFunctionName(); }
 
 		/* move */
 		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
@@ -162,7 +157,7 @@ ccdk_namespace_mpl_fn_start
 			DebugFunctionName();
 			//return expr < value_t<T> >{util::forward<T>(t)};
 			//return this_type{ *this };
-			return expr< invoke_t, this_type, typename filter_expr<T>::type>{ 1, *this, util::forward<T>(t) };
+			return expr< invoke_t, this_type, typename filter_expr<T>::type>{ 1, *this,  util::forward<T>(t)  };
 		}
 
 		constexpr expr() :base_type{} {}

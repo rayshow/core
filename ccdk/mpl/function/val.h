@@ -8,8 +8,9 @@
 ccdk_namespace_mpl_fn_start
 			
 	template<typename T>
-	struct expr< value_t<T> >
+	class expr< value_t<T> >
 	{
+	public:
 		typedef expr type;
 		typedef decay_t<T> value_type;
 		typedef mfunction_tag     tag;
@@ -28,7 +29,7 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE constexpr explicit expr(T2&& inT)  :t{ util::forward<T2>(inT) } {}
 
 		/*to value type*/
-		CCDK_FORCEINLINE constexpr explicit operator const value_type&() const noexcept { return t; }
+		CCDK_FORCEINLINE constexpr explicit operator const value_type&() const noexcept { return t; DebugFunctionName("=========="); }
 
 		/*eval lazy*/
 		template<uint32 Index, typename... Args> 
