@@ -61,8 +61,34 @@ public:
 	}
 };
 
+class test_convertible
+{
+public:
+	test_convertible() {}
+ 	 test_convertible(int a) {}
+
+	 operator int() { return 0; }
+};
+
+template<typename T>
+void test_template_cast(const T& t)
+{}
+
 int main()
 {
+	DebugValue(is_compatible<test_convertible, int>::value);
+	DebugValue( is_convertible<int, test_convertible>::value);
+	
+	DebugValue(is_compatible<test_convertible, int>::value);
+	DebugValue(is_convertible<test_convertible, int>::value);
+	
+	DebugValue(has_constructor<test_convertible, int>::value);
+	DebugValue(has_constructor<int,test_convertible>::value);
+
+	test_template_cast<int>(test_convertible{});
+
+	getchar();
+	return 0;
 	DebugValue("test using");
 	derive_op op1{}, op2{};
 	DebugTypeName<decltype(op1 = op2)>();
