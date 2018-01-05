@@ -3,13 +3,13 @@
 #include<ccdk/compile.h>
 #include<ccdk/preprocessor/seq_compose.h>
 #include<ccdk/preprocessor/seq_foreach_item.h>
-#include<ccdk/mpl/base/arg_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace tt_impl
+		namespace tt_detail
 		{
 			template<typename T> struct args_of_impl;
 
@@ -37,7 +37,7 @@ namespace ccdk
 #undef FUNCTION_ENUM
 		}
 
-		template<typename T> struct args_of :tt_impl::args_of_impl<T> {};
+		template<typename T> struct args_of :tt_detail::args_of_impl<T> {};
 
 		template<typename T> using  args_of_t = typename args_of<T>::type;
 

@@ -4,9 +4,8 @@
 #include<ccdk/preprocessor/seq_compose.h>
 #include<ccdk/preprocessor/seq_foreach_item.h>
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/not_.h>
-#include<ccdk/mpl/base/arg_pack.h>
+#include<ccdk/mpl/base/logic_.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/traits_case.h>
 

@@ -1,15 +1,14 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/uint_.h>
+#include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/type_traits/is_empty.h>
 #include<ccdk/mpl/type_traits/is_final.h>
-#include<ccdk/mpl/type_traits/is_convertible.h>
+#include<ccdk/mpl/type_traits/has_constructor.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/swap.h>
-#include<ccdk/mpl/base/make_indice.h>
-
 
 ccdk_namespace_mpl_fs_start
 
@@ -26,7 +25,7 @@ struct ipair
 
 	/* container need check T2 convertible to T , allow narrow cast */
 	template<typename T2, typename = check_t< has_constructor<value_type, T2>>>
-	CCDK_FORCEINLINE constexpr ipair(T2&& t) : value( util::forward<T2>(t) )  { DebugFunctionName(); }
+	CCDK_FORCEINLINE explicit constexpr ipair(T2&& t) : value( util::forward<T2>(t) )  {}
 
 	/* copy */
 	CCDK_FORCEINLINE constexpr ipair(ipair const& other) : value{ other.value } {  }
@@ -93,10 +92,10 @@ public:
 	CCDK_FORCEINLINE constexpr cpair() : First{}, scd{} {}
 
 	/* value constructor */
-	template<typename U, typename = check_t< is_convertible<U, second_type>>>
-	CCDK_FORCEINLINE constexpr cpair(U&& u) : First(), scd(util::forward<U>(u)) {}
+	template<typename U, typename = check_t< has_constructor<second_type, U>>>
+	CCDK_FORCEINLINE explicit constexpr cpair(U&& u) : First(), scd(util::forward<U>(u)) {}
 
-	template<typename T, typename U, typename = check_t< is_convertible<T, First>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) : First(util::forward<T>(t)), scd(util::forward<U>(u)) {}
 
 	/* copy */
@@ -106,14 +105,14 @@ public:
 	CCDK_FORCEINLINE constexpr cpair(cpair && other) : First{ util::move(other) }, scd{ util::move(other.scd) } {}
 
 	/* template copy, for compatible type */
-	template<typename T, typename U, typename = check_t< is_convertible<T, First>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(cpair<T,U> const& other) : First{ other.first() }, scd{ other.second() } {}
 
 	/* template move, for compatible type */
-	template<typename T, typename U, typename = check_t< is_convertible<T, First>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) : First{ util::move(other.first()) }, scd{ util::move(other.second()) } {}
 
-	template<typename T, typename U, typename = check_t< is_compatible<T, First>>, typename = check_t< is_compatible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept {  util::swap(scd, other.scd); }
 
 	CCDK_FORCEINLINE constexpr First& first() noexcept { return *this; }
@@ -140,7 +139,7 @@ public:
 	template<typename U>
 	CCDK_FORCEINLINE constexpr cpair(U&& u) : fst{}, scd(util::forward<U>(u)) {}
 
-	template<typename T, typename U, typename = check_t< is_convertible<T, first_type>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) : fst(util::forward<T>(t)), scd(util::forward<U>(u)) {}
 
 	/* copy */
@@ -150,14 +149,14 @@ public:
 	CCDK_FORCEINLINE constexpr cpair(cpair && other) : fst{ util::move(other.fst) }, scd{ util::move(other.scd) } {}
 
 	/* template copy, for compatible type */
-	template<typename T, typename U, typename = check_t< is_convertible<T, First>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> const& other) : fst{ other.first() }, scd{ other.second() } {}
 
 	/* template move, for compatible type */
-	template<typename T, typename U, typename = check_t< is_convertible<T, First>>, typename = check_t< is_convertible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) : fst{ util::move(other.first()) }, scd{ util::move(other.second()) } {}
 
-	template<typename T, typename U, typename = check_t< is_compatible<T, First>>, typename = check_t< is_compatible<U, second_type>> >
+	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
 	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept { using namespace util; swap(fst, other.fst); swap(scd, other.scd); }
 
 	CCDK_FORCEINLINE constexpr First& first() noexcept { return fst; }

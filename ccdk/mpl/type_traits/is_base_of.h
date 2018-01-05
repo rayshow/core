@@ -1,8 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/not_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/remove_cv.h>
 

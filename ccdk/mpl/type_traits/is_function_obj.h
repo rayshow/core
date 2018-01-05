@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/mpl/base/and_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_class.h>
 #include<ccdk/mpl/type_traits/has_invoker.h>
 

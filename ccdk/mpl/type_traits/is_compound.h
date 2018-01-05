@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/type_traits/is_fundamental.h>
-#include<ccdk/mpl/base/not_.h>
+#include<ccdk/mpl/base/logic_.h>
 
 namespace ccdk
 {

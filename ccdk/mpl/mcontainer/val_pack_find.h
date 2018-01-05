@@ -18,10 +18,10 @@ namespace ccdk
 				: val_pack_find_impl<T, val_pack<T, args...>, i + 1, v, c == v> {};
 
 			template<typename T, uint32 i, T v>
-			struct val_pack_find_impl<T, val_pack<T>, i, v, false> :uint_<i> {};
+			struct val_pack_find_impl<T, val_pack<T>, i, v, false> :uint32_<i> {};
 
 			template<typename T, uint32 i, T v, T c, T... args>
-			struct val_pack_find_impl<T, val_pack<T, c, args...>, i, v, true> :uint_<i - 1> {};
+			struct val_pack_find_impl<T, val_pack<T, c, args...>, i, v, true> :uint32_<i - 1> {};
 		}		
 
 		template<typename T, T v, typename P>

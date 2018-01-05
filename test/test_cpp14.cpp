@@ -11,7 +11,7 @@
 #include<ccdk/mpl/base/arg_pack.h>
 #include<ccdk/mpl/base/val_pack.h>
 #include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/int_.h>
+#include<ccdk/mpl/base/int32_.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>

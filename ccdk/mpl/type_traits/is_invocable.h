@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>

@@ -2,7 +2,7 @@
 
 #include<ccdk/type.h>
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/and_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/impl/has_operator_decl.h>
 
 namespace ccdk

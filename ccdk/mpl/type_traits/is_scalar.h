@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_fundamental.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/is_member_ptr.h>

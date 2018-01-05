@@ -7,8 +7,7 @@
 #include<ccdk/type.h>
 //type traits base lib
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 //add remove type traits
 #include<ccdk/mpl/type_traits/add_const.h>
 #include<ccdk/mpl/type_traits/add_const.h>
@@ -289,7 +288,7 @@ int main()
 	AssertFalse(is_unsigned_v<int*>);
 	AssertFalse(is_unsigned_v<int&>);
 	AssertFalse(is_unsigned_v<int[]>);
-	AssertFalse(is_unsigned_v< int_<2> >);
+	AssertFalse(is_unsigned_v< int32_<2> >);
 
 	//is signed
 	AssertTrue(is_signed_v<signed char>);
@@ -308,7 +307,7 @@ int main()
 	AssertFalse(is_signed_v<int*>);
 	AssertFalse(is_signed_v<int&>);
 	AssertFalse(is_signed_v<int[]>);
-	AssertFalse(is_signed_v< int_<2> >);
+	AssertFalse(is_signed_v< int32_<2> >);
 
 	//is nullptr_t
 	AssertTrue(is_nullptr_v<nullptr_t>);
@@ -346,7 +345,7 @@ int main()
 	AssertTrue(is_fundamental_v<float volatile>);
 	AssertTrue(is_fundamental_v<float const>);
 	AssertTrue(is_fundamental_v<float const volatile>);
-	AssertFalse(is_fundamental_v<int_<1>>);
+	AssertFalse(is_fundamental_v<int32_<1>>);
 
 
 	//is member pointer / is mobj pointer / is memfn pointer
@@ -611,7 +610,7 @@ int main()
 	AssertTrue((is_convertible_v<C2&, C1&>));                 //derived& -> base&
 	AssertFalse((is_convertible_v<C1&, C2&>));
 	AssertTrue((is_convertible_v<const char*, std::string>)); //explicit constructor
-	AssertTrue((is_convertible_v<int_<0>, int>));             //explicit convert function
+	AssertTrue((is_convertible_v<int32_<0>, int>));             //explicit convert function
 
 	//is compatible
 	struct TestComp {};

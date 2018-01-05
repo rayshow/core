@@ -9,7 +9,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace tt_detail
 		{
 			template<typename T> struct add_signed_helper { typedef T type; };
 			template<> struct add_signed_helper<char> { typedef signed char type; };
@@ -19,7 +19,7 @@ namespace ccdk
 		}
 
 		//unsigned integer to signed integer
-		template<typename T> struct add_signed :public detail::add_signed_helper< enum_base_t<T> > {};
+		template<typename T> struct add_signed :public tt_detail::add_signed_helper< enum_base_t<T> > {};
 		template<typename T> using add_signed_t = typename add_signed<T>::type;
 	}
 }

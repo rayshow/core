@@ -1,13 +1,13 @@
 #pragma once
 
-#include<ccdk/mpl/base/int_.h>
+#include<ccdk/mpl/base/integer_.h>
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T> struct array_len :public int_<0> { };
-		template<typename T, int len> struct array_len<T[len]>: public int_<len>{};
+		template<typename T> struct array_len :public int32_<0> { };
+		template<typename T, int len> struct array_len<T[len]>: public int32_<len>{};
 		template<typename T> struct array_len<T&> :array_len<T> {};
 		template<typename T> struct array_len<T&&> :array_len<T> {};
 

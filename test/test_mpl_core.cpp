@@ -18,6 +18,15 @@
 #include<ccdk/mpl/function/operator.h>
 #include<stdio.h>
 
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
+#include<ccdk/mpl/mcontainer/at.h>
+#include<ccdk/mpl/mcontainer/begin.h>
+#include<ccdk/mpl/mcontainer/deref.h>
+#include<ccdk/mpl/mcontainer/next.h>
+#include<ccdk/mpl/mcontainer/merge.h>
+#include<ccdk/mpl/mcontainer/find.h>
+
 using namespace ccdk;
 using namespace ccdk::mpl;
 
@@ -105,6 +114,27 @@ public:
 
 int main()
 {
+	typedef arg_pack<int, char, float, short, double> apack1;
+	typedef arg_pack<int[] , char[]> apack2;
+	DebugTypeName< at_t<apack1, 0>>();
+	DebugTypeName< at_t<apack1, 1>>();
+	DebugTypeName< at_t<apack1, 2>>();
+	DebugTypeName< at_t<apack1, 3>>();
+	DebugTypeName< at_t<apack1, 4>>();
+	DebugTypeName< merge_t< apack1, apack2>>();
+	DebugTypeName< merge_t< arg_pack<>, apack2>>();
+	DebugTypeName< find_at< apack1, float> >();
+
+	typedef val_pack<int, 1, 2, 3, 5, 6, 7> vpack1;
+	typedef val_pack<int, 8,9,10> vpack2;
+	DebugTypeName< at_t<vpack1, 0>>();
+	DebugTypeName< at_t<vpack1, 1>>();
+	DebugTypeName< at_t<vpack1, 2>>();
+	DebugTypeName< at_t<vpack1, 3>>();
+	DebugTypeName< at_t<vpack1, 4>>();
+	DebugTypeName< merge_t< vpack1, vpack2>>();
+	DebugTypeName< merge_t< val_pack<int>, vpack2>>();
+
 	const base_class  cbc{};
 	base_class bc{ cbc };
 

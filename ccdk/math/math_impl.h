@@ -1346,24 +1346,24 @@ namespace Aurora3D
 		#ifdef _M_ARM64
 			return vrndq_f32(v);
 		#else
-			float128 int_part;
-			int_part.n128_f32[0] = (int)v.n128_f32[0];
-			int_part.n128_f32[1] = (int)v.n128_f32[1];
-			int_part.n128_f32[2] = (int)v.n128_f32[2];
-			int_part.n128_f32[3] = (int)v.n128_f32[3];
-			return int_part;
+			float128 int32_part;
+			int32_part.n128_f32[0] = (int)v.n128_f32[0];
+			int32_part.n128_f32[1] = (int)v.n128_f32[1];
+			int32_part.n128_f32[2] = (int)v.n128_f32[2];
+			int32_part.n128_f32[3] = (int)v.n128_f32[3];
+			return int32_part;
 		#endif
 		}
 
-		//  float int_part = (int) v[i];
-		//  float floor = int_part - ( v[i] > 0 ? 0: 1 )   
-		//  float round = floor + ( v[i] - int_part > 0.5 ? 1.0:0.0f );
+		//  float int32_part = (int) v[i];
+		//  float floor = int32_part - ( v[i] > 0 ? 0: 1 )   
+		//  float round = floor + ( v[i] - int32_part > 0.5 ? 1.0:0.0f );
 		CCDK_FORCEINLINE float128 VectorRound(const float128& v)
 		{
 			static const float128 kZero = VectorLoad(0.0f);
 			static const float128 kHalf = VectorLoad(0.5f);
 			static const float128 kOne = VectorLoad(1.0f);
-			float128 int_part = VectorIntPart(v);
+			float128 int32_part = VectorIntPart(v);
 			float128 floor = VectorSelect(VectorGreater(v, kZero), kOne, kZero);
 			float128 add = VectorSelect(VectorGreater(VectorSub(v, floor), kHalf), kOne, kZero);
 			return VectorAdd(floor, add);

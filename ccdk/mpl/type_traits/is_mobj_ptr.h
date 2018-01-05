@@ -1,7 +1,6 @@
 
 #pragma once
-#include<ccdk/mpl/base/not_.h>
-#include<ccdk/mpl/base/and_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_member_ptr.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
 

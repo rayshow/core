@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/int_.h>
+#include<ccdk/mpl/base/integer_.h>
 
 #if defined(CCDK_COMPILER_MSVC)
 #pragma warning(push)

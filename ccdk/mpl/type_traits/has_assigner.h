@@ -1,8 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/not_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_rref.h>
 #include<ccdk/mpl/type_traits/add_const_lref.h>
 #include<ccdk/mpl/type_traits/add_lref.h>
@@ -12,7 +11,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace tt_detail
 		{
 			template<typename T, typename P>
 			struct has_assigner_helper
@@ -24,10 +23,8 @@ namespace ccdk
 			};
 		}
 
-		
-
 		//although lvalue assign like std::string() = "xx"; is valid, but still forbidden here for useless of this style
-		template<typename T, typename F> struct has_assigner : and_< not_<is_rref<T>>, detail::has_assigner_helper<F, T>> {};
+		template<typename T, typename F> struct has_assigner : and_< not_<is_rref<T>>, tt_detail::has_assigner_helper<F, T>> {};
 		template<typename T> struct has_copy_assigner :public has_assigner< add_lref_t<T>, add_const_lref_t<T> > {};
 		template<typename T> struct has_move_assigner :public has_assigner< add_lref_t<T>, add_rref_t<T> > {};
 

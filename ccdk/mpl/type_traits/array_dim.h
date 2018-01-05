@@ -1,12 +1,12 @@
 #pragma once
 
-#include<ccdk/mpl/base/int_.h>
+#include<ccdk/mpl/base/integer_.h>
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T, int dim = 0> struct array_dim:public int_<dim> {};
+		template<typename T, int dim = 0> struct array_dim:public int32_<dim> {};
 		template<typename T, int len, int dim> struct array_dim<T[len], dim> : public array_dim<T, dim + 1> {};
 		template<typename T, int dim> struct array_dim<T[], dim> : public array_dim<T, dim+1> {};
 

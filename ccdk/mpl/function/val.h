@@ -21,13 +21,14 @@ ccdk_namespace_mpl_fn_start
 
 		value_type t;
 
-		/*value constructor*/
+		/* value constructor*/
 		constexpr explicit expr() :t{} {}
 
-		template<typename T2>
-		CCDK_FORCEINLINE constexpr explicit expr(T2&& inT) :t{ util::forward<T2>(inT) } { DebugFunctionName(); }
+		/* any constructor */
+		template<typename T2, typename = check_t< has_constructor<value_type,T2>>>
+		CCDK_FORCEINLINE constexpr explicit expr(T2&& inT) :t{ util::forward<T2>(inT) } {}
 
-		/*to value type*/
+		/* to value type*/
 		CCDK_FORCEINLINE constexpr explicit operator const value_type&() const noexcept { return t; }
 
 		/*eval lazy*/

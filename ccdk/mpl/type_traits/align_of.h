@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/mpl/base/size_.h>
+#include<ccdk/mpl/base/integer_.h>
 
 namespace ccdk
 {

@@ -15,12 +15,11 @@ namespace ccdk
 	typedef signed short int         int16;
 	typedef signed int               int32;
 	typedef signed long long         int64;
-	typedef long double              hfloat; 
+	typedef long double              ldouble; 
 	typedef wchar_t                  wchar;  /* wide char */
 	typedef char                     achar;  /* ansi char */
 	typedef char16_t                 char16;
 	typedef char32_t                 char32;
-
 
 	static_assert(sizeof(uint8) == 1, "uint8 is not 1 byte.");
 	static_assert(sizeof(int8) == 1, "int8 is not 1 byte.");
@@ -69,8 +68,8 @@ namespace ccdk
 			try { (content) = (expr); }                                        \
 			catch (...) { ptr::safe_delete((content)); throw;  /* rethrow */ } 
 
-#define ccdk_safe_cleanup_if_exception( statement, cleanup )       \
-			try { (statement); }                                   \
+#define ccdk_safe_cleanup_if_exception( statement, cleanup )                   \
+			try { (statement); }                                               \
 			catch (...) { (cleanup); throw; /* rethrow */ }               
 
 #define ccdk_if_not_this(val)  if(ccdk_likely( ::ccdk::mpl::util::addressof(val)!=this ))

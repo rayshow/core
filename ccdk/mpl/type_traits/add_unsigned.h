@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace tt_detail
 		{
 			template<typename T> struct add_unsigned_helper { typedef T type; };
 			template<> struct add_unsigned_helper<char> { typedef unsigned char type; };
@@ -17,7 +17,7 @@ namespace ccdk
 #undef  ADD_UNSIGNED
 		}
 
-		template<typename T> struct add_unsigned :public detail::add_unsigned_helper< enum_base_t<T> > {};
+		template<typename T> struct add_unsigned :public tt_detail::add_unsigned_helper< enum_base_t<T> > {};
 		template<typename T> using add_unsigned_t = typename add_unsigned<T>::type;
 	}
 }

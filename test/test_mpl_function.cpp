@@ -8,10 +8,10 @@
 #include<cassert>
 #include<functional>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/base/arg_pack.h>
-#include<ccdk/mpl/base/val_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/int_.h>
+#include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
 #include<ccdk/mpl/function/bind_mfn.h>
@@ -26,7 +26,6 @@
 #include<ccdk/mpl/function/val.h>
 #include<ccdk/mpl/function/expr.h>
 #include<ccdk/mpl/function/ref.h>
-#include<ccdk/mpl/base/sfinae.h>
 
 
 using namespace ccdk;

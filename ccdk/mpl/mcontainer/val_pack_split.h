@@ -1,14 +1,14 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/val_pack.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
 
 
 namespace ccdk
 {
 	namespace mpl
 	{
-		namespace base_detail
+		namespace mct_detail
 		{
 			template<typename P, uint32 start, uint32 len, typename T = int32, typename U = val_pack<T>>
 			struct val_pack_split_impl;
@@ -52,10 +52,10 @@ namespace ccdk
 		
 
 		template<typename T, uint32 start, uint32 end, typename P>
-		using val_pack_split = base_detail::val_pack_split_impl< P, start, end - start, T>;
+		using val_pack_split = mct_detail::val_pack_split_impl< P, start, end - start, T>;
 
 		template<typename T, uint32 start, uint32 end, T... args>
-		using val_pack_split_exp = base_detail::val_pack_split_impl< val_pack<T, args...>, start, end - start, T>;
+		using val_pack_split_exp = mct_detail::val_pack_split_impl< val_pack<T, args...>, start, end - start, T>;
 
 	}
 }

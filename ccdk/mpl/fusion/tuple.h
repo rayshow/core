@@ -1,9 +1,9 @@
 #pragma once
 
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/uint_.h>
-#include<ccdk/mpl/base/arg_pack_split.h>
-#include<ccdk/mpl/base/make_indice.h>
+#include<ccdk/mpl/base/logic_.h>
+#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/mcontainer/arg_pack_split.h>
+#include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
@@ -42,7 +42,7 @@ private:
 
 	/* erase or pop front / pop back / earase */
 	template< uint32... indice, typename... Args2, uint32 len >
-	CCDK_FORCEINLINE constexpr  tuple( indice_pack<indice...>, tuple<Args2...>&& tp, uint_<len>) 
+	CCDK_FORCEINLINE constexpr  tuple( indice_pack<indice...>, tuple<Args2...>&& tp, uint32_<len>) 
 		: content{ util::move(tp.content.template at<indice>())... } { }
 
 	/* replace or insert  */
@@ -52,15 +52,15 @@ private:
 
 	/* pop back implements */
 	template< uint32 len, typename... Args2 >
-	CCDK_FORCEINLINE constexpr auto  _pop_back_impl(arg_pack<Args2...>)  { return tuple<Args2...>{  make_indice<size - len>{}, util::move(*this), uint_<len>{} }; }
+	CCDK_FORCEINLINE constexpr auto  _pop_back_impl(arg_pack<Args2...>)  { return tuple<Args2...>{  make_indice<size - len>{}, util::move(*this), uint32_<len>{} }; }
 
 	/* pop front implements */
 	template< uint32 len, typename ... Args1 >
-	CCDK_FORCEINLINE constexpr auto  _pop_front_impl(arg_pack<Args1...>)  { return tuple<Args1...>{ make_indice_from<len, size>{}, util::move(*this), uint_<len>{}  }; }
+	CCDK_FORCEINLINE constexpr auto  _pop_front_impl(arg_pack<Args1...>)  { return tuple<Args1...>{ make_indice_from<len, size>{}, util::move(*this), uint32_<len>{}  }; }
 
 	/* erase implements */
 	template< uint32 start, uint32 end, typename... Args1 >
-	CCDK_FORCEINLINE constexpr auto  _erase_impl(arg_pack<Args1...>) { return tuple<Args1...>{ make_indice_ingore<size, start, end>{}, util::move(*this), uint_<end - start>{} }; }
+	CCDK_FORCEINLINE constexpr auto  _erase_impl(arg_pack<Args1...>) { return tuple<Args1...>{ make_indice_ingore<size, start, end>{}, util::move(*this), uint32_<end - start>{} }; }
 
 	/* replace implements */
 	template< uint32 start, uint32 end, typename... Args1, typename... Args2, typename... Args3 >
@@ -101,11 +101,11 @@ public:
 
 	/* constexpr index */
 	template<typename T, T index, typename = check_in_range<index,0,size> >
-	CCDK_FORCEINLINE constexpr decltype(auto) operator[](integer_<T, index>) { return content.template at<index>(); }
+	CCDK_FORCEINLINE constexpr decltype(auto) operator[](compile_t<T, index>) { return content.template at<index>(); }
 	
 	/* constexpr index */
 	template<typename T, T index, typename = check_in_range<index, 0, size> >
-	CCDK_FORCEINLINE constexpr decltype(auto) operator[](integer_<T, index>) const { return content.template at<index>(); }
+	CCDK_FORCEINLINE constexpr decltype(auto) operator[](compile_t<T, index>) const { return content.template at<index>(); }
 
 	/* constexpr index */
 	template<uint32 index, typename = check_in_range<index, 0, size> >
@@ -153,10 +153,10 @@ template<typename... Args1, typename... Args2 >
 CCDK_FORCEINLINE constexpr auto operator+( tuple<Args1...>& lh, tuple<Args2...>& rh)  { return tuple< Args1..., Args2...>{  make_indice<lh.size>{}, make_indice<rh.size>{}, util::move(lh), util::move(rh)  }; }
 
 template<typename... Args1, typename... Args2>
-CCDK_FORCEINLINE constexpr auto tuple_item_equal(uint_<0>, tuple<Args1...>& lh, tuple<Args2...>& rh) noexcept { return lh.template at<0>() == rh.template at<0>(); }
+CCDK_FORCEINLINE constexpr auto tuple_item_equal(uint32_<0>, tuple<Args1...>& lh, tuple<Args2...>& rh) noexcept { return lh.template at<0>() == rh.template at<0>(); }
 
 template<uint32 index, typename... Args1, typename... Args2>
-CCDK_FORCEINLINE constexpr auto tuple_item_equal(uint_<index>, tuple<Args1...>& lh, tuple<Args2...>& rh) noexcept { return lh.template at<index>() == rh.template at<index>() && tuple_item_equal(uint_<index - 1>{}, lh, rh); }
+CCDK_FORCEINLINE constexpr auto tuple_item_equal(uint32_<index>, tuple<Args1...>& lh, tuple<Args2...>& rh) noexcept { return lh.template at<index>() == rh.template at<index>() && tuple_item_equal(uint32_<index - 1>{}, lh, rh); }
 
 /* equal, compatible 2 tuple */
 template<typename... Args1, typename... Args2, typename = check_t< and_< is_compatible<Args1,Args2>...>>>

@@ -1,8 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_convertible.h>
 #include<ccdk/mpl/type_traits/is_compatible.h>
 #include<ccdk/mpl/type_traits/is_same.h>

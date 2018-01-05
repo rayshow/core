@@ -1,8 +1,7 @@
 #pragma once 
 
 #include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/or_.h>
-#include<ccdk/mpl/base/and_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/declval.h>
 #include<ccdk/mpl/type_traits/remove_pointer.h>
 #include<ccdk/mpl/type_traits/is_class.h>
@@ -12,7 +11,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail                                                  
+		namespace tt_detail
 		{   
 			template<typename T, typename Ret>    
 			struct is_arrow_well_formed_helper
@@ -35,7 +34,7 @@ namespace ccdk
 
 		//operator->() need return class or union pointer, and T::operator->() need be well-formed
 		template<typename T,typename Ret>                              
-		struct has_arrow :public and_<  detail::is_arrow_ret_valid<Ret>, detail::is_arrow_well_formed<T, Ret>> {};
+		struct has_arrow :public and_<  tt_detail::is_arrow_ret_valid<Ret>, tt_detail::is_arrow_well_formed<T, Ret>> {};
 
 		template<typename T, typename Ret>
 		static constexpr bool has_arrow_v = has_arrow<T,Ret>::value;

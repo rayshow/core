@@ -1,22 +1,21 @@
 #pragma once
 
+#include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/integer_.h>
 
-namespace ccdk
+ccdk_namespace_mpl_start
+
+template<bool v> struct bool_ :public compile_t<bool, v>
 {
-	namespace mpl
-	{
-		template<bool v> struct bool_ :public integer_<bool, v>
-		{
-			typedef bool_<v> type;
-		};
+	typedef bool_<v> type;
+};
 
-		template<bool v> bool_<v> bool_c{};
+template<bool v> bool_<v> bool_c{};
 
-		using false_ = bool_<false>;
-		using true_ = bool_<true>;
+using false_ = bool_<false>;
+using true_ = bool_<true>;
 		
-		constexpr false_ false_c{};
-		constexpr true_  true_c{};
-	}
-}
+constexpr false_ false_c{};
+constexpr true_  true_c{};
+
+ccdk_namespace_mpl_end

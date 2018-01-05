@@ -1,21 +1,20 @@
-
+#pragma once
 
 #include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/uint_.h>
-#include<ccdk/mpl/base/make_indice.h>
-#include<ccdk/mpl/type_traits/char_traits.h>
+#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/char_.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/mpl_module.h>
 
 ccdk_namespace_mpl_fs_start
 
+
+
 	//L length of string include '\0'
-	template<
-		typename Ch,
-		uint32 L
-	>
+	template< typename Ch, uint32 L >
 	struct string_literial
 	{
 		Ch storage[L];
@@ -30,7 +29,7 @@ ccdk_namespace_mpl_fs_start
 			pointer arr) noexcept
 			: storage{ 
 				arr[args]..., 
-				char_traits<Ch>::end 
+				char_traits<Ch>::end
 		}
 		{}
 
@@ -73,7 +72,7 @@ ccdk_namespace_mpl_fs_start
 			T index
 		>
 		constexpr auto
-			operator[](integer_<T,index>) const
+			operator[](compile_t<T,index>) const
 		{
 			return storage[index];
 		}

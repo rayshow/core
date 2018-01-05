@@ -10,7 +10,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace tt_impl
+		namespace tt_detail
 		{
 			template<typename T> struct result_of_impl;
 
@@ -38,7 +38,7 @@ namespace ccdk
 #undef FUNCTION_ENUM
 		}
 
-		template<typename T, bool = is_function_obj_v<T> > struct result_of :tt_impl::result_of_impl<T> {};
+		template<typename T, bool = is_function_obj_v<T> > struct result_of :tt_detail::result_of_impl<T> {};
 
 		template<typename T> struct result_of<T,true>
 		{

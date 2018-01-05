@@ -22,21 +22,21 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE constexpr combine_t(Fn && fn, Fs && ... fs) : content{  util::forward<Fn>(fn),  util::forward<Fs>(fs)...  } {}
 
 		template<typename... Args> 
-		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl(uint_<0>, Args&&... args)
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl(uint32_<0>, Args&&... args)
 		{
 			return content.template at<0>()(util::forward<Args>(args)...);
 		}
 
 		template< uint32 index, typename... Args >
-		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl( uint_<index>, Args&&... args )
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl( uint32_<index>, Args&&... args )
 		{
-			return content.template at<index>()( _invoke_impl( uint_<index - 1>{}, util::forward<Args>(args)... ) );
+			return content.template at<index>()( _invoke_impl( uint32_<index - 1>{}, util::forward<Args>(args)... ) );
 		}
 
 		template<typename... Args>
 		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args&&... args)
 		{
-			return _invoke_impl( uint_<size-1>{}, util::forward<Args>(args)... );
+			return _invoke_impl( uint32_<size-1>{}, util::forward<Args>(args)... );
 		}
 	};
 		

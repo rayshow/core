@@ -2,8 +2,7 @@
 
 #include<ccdk/mpl/type_traits/declval.h>
 #include<ccdk/mpl/type_traits/is_fundamental.h>
-#include<ccdk/mpl/base/not_.h>
-#include<ccdk/mpl/base/and_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_void.h>
 
 namespace ccdk

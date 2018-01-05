@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>

@@ -5,10 +5,9 @@
 #include<ccdk/type.h>
 #include<ccdk/mpl/base/if_.h>
 #include<ccdk/mpl/base/derive_if.h>
-#include<ccdk/mpl/base/make_indice.h>
-#include<ccdk/mpl/base/val_pack_merge.h>
+#include<ccdk/mpl/mcontainer/make_indice.h>
+#include<ccdk/mpl/mcontainer/merge.h>
 #include<ccdk/mpl/type_traits/traits_case.h>
-
 
 namespace ccdk
 {

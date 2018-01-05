@@ -9,10 +9,9 @@
 #include<functional>
 #include<stdio.h>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/base/arg_pack.h>
-#include<ccdk/mpl/base/val_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/int_.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
 #include<ccdk/mpl/function/bind_mfn.h>
@@ -219,8 +218,8 @@ int main()
 	//		using namespace ccdk::mpl::util;
 	//		swap(base_ptr, derive_ptr);
 
-	//		unique_ptr<int> int_ptr{ new int{} };
-	//		//swap(base_ptr, int_ptr);            //error, will not found suitable swap
+	//		unique_ptr<int> int32_ptr{ new int{} };
+	//		//swap(base_ptr, int32_ptr);            //error, will not found suitable swap
 	//	}
 	//}
 	//{

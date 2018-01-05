@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/enable_if.h>
+#include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/compatible_type.h>
 #include<ccdk/mpl/type_traits/is_compatible.h>
 #include<ccdk/mpl/type_traits/is_convertible.h>
@@ -26,7 +26,6 @@ ccdk_namespace_mpl_util_start
 	//no suitable implements found, for msvc-17+ to  to get detail line and file error place
 	template< typename T1, typename T2,  typename = check_t<false_> >
 	CCDK_FORCEINLINE void swap(T1& t1, T2& t2) {}
-
 
 
 #elif defined( CCDK_COMPILER_GCC )
@@ -79,12 +78,11 @@ ccdk_namespace_mpl_util_start
 		}
 	}
 
-
 	//suitable compound type with nothrow move constructor and move assigner class
 	template<typename T,
 		typename = check_t< is_class<T>>,
-		typename = check_t< has_nothrow_move_assigner<T> >,
-		typename = check_t< has_nothrow_move_constructor<T> >
+		typename = check_t< has_move_assigner<T> >,
+		typename = check_t< has_move_constructor<T> >
 	>
 	CCDK_FORCEINLINE void swap(T& t1, T& t2)
 	{
@@ -92,7 +90,6 @@ ccdk_namespace_mpl_util_start
 		T tmp{ util::move(t1) };
 		t1 = util::move(t2);
 		t2 = util::move(tmp);
-		
 	}
 
 	//suit for fundamental type 

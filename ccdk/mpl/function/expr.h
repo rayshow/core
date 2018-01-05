@@ -1,18 +1,19 @@
 #pragma once
 
-#include<ccdk/mpl/mpl_module.h>
+
 #include<ccdk/preprocessor/seq_foreach_tuple.h>
 #include<ccdk/mpl/base/null_.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/val_pack.h>
-#include<ccdk/mpl/base/arg_pack_first.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack_first.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/move.h>
+#include<ccdk/mpl/util/dummy_call.h>
 #include<ccdk/mpl/fusion/imap.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/function/function_fwd.h>
-
+#include<ccdk/mpl/mpl_module.h>
 
 ccdk_namespace_mpl_fn_start
 
@@ -25,20 +26,20 @@ ccdk_namespace_mpl_fn_start
 
 	/* acculate args::wild_size... */
 	template<typename... Args>
-	struct acc_wph_count :uint_<0> {};
+	struct acc_wph_count :uint32_<0> {};
 
 	template<typename T, typename... Args>
-	struct acc_wph_count<T, Args...> :uint_< T::wild_size + acc_wph_count<Args...>::value > {};
+	struct acc_wph_count<T, Args...> :uint32_< T::wild_size + acc_wph_count<Args...>::value > {};
 
 	/* max args::index_size... */
 	constexpr uint32 u32_max(uint32 a, uint32 b) { return a < b ? b : a; }
 	 
 	/* acculate args::index_size... */
 	template<typename... Args>
-	struct max_iph_count :uint_<0> {};
+	struct max_iph_count :uint32_<0> {};
 
 	template<typename T, typename... Args>
-	struct max_iph_count<T, Args...> :uint_< u32_max(T::index_size, max_iph_count<Args...>::value) > {};
+	struct max_iph_count<T, Args...> :uint32_< u32_max(T::index_size, max_iph_count<Args...>::value) > {};
 
 	/* marke wild indice pack */
 	template<uint32 acc, typename pack, typename... Args>
@@ -50,29 +51,6 @@ ccdk_namespace_mpl_fn_start
 
 	/* filter expr */
 	template<typename T> struct filter_expr : if_ < is_expr<T>, T, expr < value_t<T>>> {};
-
-
-
-	template<typename... Args>
-	class expr_base
-	{
-	public:
-		typedef expr<Args...> derive_type;
-
-		constexpr expr_base() = default;
-
-		template<typename T, typename = check_t< not_< is_expr<T>>> > 
-		CCDK_FORCEINLINE constexpr auto operator[](T&& t) const
-		{
-			return expr< index_t, derive_type, expr< value_t<T> > >{ const_cast<expr<Args...>&&>(*this), expr< value_t<T>>{util::forward<T>(t)} };
-		}
-
-		template<typename... Args1>
-		CCDK_FORCEINLINE constexpr auto operator[](expr<Args1...>&& e) const 
-		{
-			return expr< add_t, derive_type, expr<Args1...> >{ const_cast<derive_type&&>(*this), const_cast<expr<Args1...>&&>(e) };
-		}
-	};
 
 
 	/* lazy and wild expr  */
@@ -108,10 +86,10 @@ ccdk_namespace_mpl_fn_start
 
 		/* arg len > 0 , static dispatch  by weather args is mark lazy */
 		template< uint32 len, typename T, typename... Args1 >
-		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint_<len>, T&& t, Args1&&... args1) { return _invoke_impl_is_lazy(typename is_mark_lazy<T>::type{}, util::forward<T>(t), util::forward<Args1>(args1)...); }
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint32_<len>, T&& t, Args1&&... args1) { return _invoke_impl_is_lazy(typename is_mark_lazy<T>::type{}, util::forward<T>(t), util::forward<Args1>(args1)...); }
 
 		/* no parameter, just eval expr */
-		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint_<0>) { static_assert(wild_size == 0 && index_size == 0, "has placeholder but execute with no parameter "); return _invoke_impl_is_lazy(false_{}); }
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint32_<0>) { static_assert(wild_size == 0 && index_size == 0, "has placeholder but execute with no parameter "); return _invoke_impl_is_lazy(false_{}); }
 
 	public:
 		ccdk_expr_lazy_assign
@@ -130,7 +108,7 @@ ccdk_namespace_mpl_fn_start
 
 		/* eval enter point, check Args is explicit mark lazy or wild match placeholder  is valid with input args  */
 		template< typename... Args1, typename = check_t <  or_<  is_mark_lazy< arg_pack_first_t<Args1...> >, bool_< sizeof...(Args1) == u32_max(wild_size, index_size)> >> >
-		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args1&&... args1) { return _invoke_impl_len(uint_c<sizeof...(Args1)>, util::forward<Args1>(args1)...); }
+		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args1&&... args1) { return _invoke_impl_len(uint32_c<sizeof...(Args1)>, util::forward<Args1>(args1)...); }
 	};
 
 	/* wild match placeholder _ */
@@ -161,7 +139,7 @@ ccdk_namespace_mpl_fn_start
 
 	/* index match placeholder 1_ / 2_ ... */
 	template<uint32 index>
-	struct expr< uint_<index> > 
+	struct expr< uint32_<index> > 
 	{
 		static constexpr uint32 size = 0;			/* args length */
 		static constexpr uint32 wild_size = 0;      /* wild placeholder count of sub-expr(e.g. _ ) */
@@ -189,7 +167,7 @@ ccdk_namespace_mpl_fn_start
 		constexpr auto operator""_()
 		{
 			static_assert(val_first<char, args...>::value != '0', "number placeholder can't be 0_, need greater then 0");
-			return expr < uint_ < literals::parse_integer<sizeof...(args)>({ args... }) > > {};
+			return expr < uint32_ < literals::parse_integer<sizeof...(args)>({ args... }) > > {};
 		}
 	}
 

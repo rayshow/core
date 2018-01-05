@@ -86,7 +86,7 @@ public:
 	CCDK_FORCEINLINE any& operator=(T&& t) { any{ util::forward<T>(t) }.swap(*this); return *this; }
 
 	/* copy assign, copy may throw */
-	CCDK_FORCEINLINE  any& operator=(const any& other) { any{ other }.swap(*this); return *this; }
+	CCDK_FORCEINLINE any& operator=(const any& other) { any{ other }.swap(*this); return *this; }
 
 	/* move assign*/
 	CCDK_FORCEINLINE any& operator=(any&& other) noexcept { any{ util::move(other) }.swap(other); return *this; }

@@ -22,10 +22,10 @@ template<
 class poly_weak_ptr
 {
 public:
-	typedef poly_weak_ptr                  this_type;
-	typedef RefCount                       ref_count_type;
-	typedef poly_share_ptr<Type, RefCount> share_type;
-	typedef Type                           value_type;
+	typedef poly_weak_ptr                     this_type;
+	typedef RefCount                          ref_count_type;
+	typedef poly_share_ptr<Type, RefCount>    share_type;
+	typedef Type                              value_type;
 	template<typename, typename> friend class poly_share_ptr;
 	template<typename, typename> friend class poly_weak_ptr;
 private:
@@ -61,7 +61,6 @@ public:
 	/* copy assign  */
 	template<typename T2, typename R2, typename = check_t< is_compatible<poly_share_ptr<T2, R2>, share_type>> >
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_share_ptr<T2, R2>& sp) { poly_weak_ptr{ sp }.swap(*this); return *this; }
-
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_weak_ptr& other) { ccdk_if_not_this(other){ poly_weak_ptr{ other }.swap(*this); } return *this; }
 	template<typename T2, typename R2, typename = check_t< is_compatible<poly_share_ptr<T2, R2>, share_type>> >
 	CCDK_FORCEINLINE poly_weak_ptr& operator=(const poly_weak_ptr<T2, R2>& other)  { poly_weak_ptr{ other }.swap(*this); return *this; }

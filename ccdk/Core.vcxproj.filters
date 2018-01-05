@@ -372,9 +372,6 @@
     <ClInclude Include="mpl\type_traits\align_of.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\aligned_storage.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\array_length.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -570,23 +567,11 @@
     <ClInclude Include="mpl\base\bool_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\int_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\uint_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\wchar_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\add_lref.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\enum_base.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\size_.h">
-      <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\array_dim.h">
       <Filter>mpl\type_trait</Filter>
@@ -604,15 +589,6 @@
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\if_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\and_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\or_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\not_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\remove_dim.h">
@@ -646,9 +622,6 @@
       <Filter>mpl\type_trait\impl</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\null_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\add_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_lequal.h">
@@ -705,15 +678,6 @@
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\function.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\overload.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\partial.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
@@ -723,80 +687,17 @@
     <ClInclude Include="mpl\base\char_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\int64_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\uint64_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\uint16.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\int16_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\when_match.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_function_obj.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\arg.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\capture.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\bind_mfn.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\identity.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\combine.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\fmap.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\dispatch.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack_split.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack_first.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack_find_if.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_split.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_at.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_create.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_find.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\make_indice.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\traits_case.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_merge.h">
-      <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\select_case.h">
       <Filter>mpl\type_trait</Filter>
@@ -814,15 +715,6 @@
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
     <ClInclude Include="debug_type.hpp" />
-    <ClInclude Include="mpl\function\operator.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\val.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\ref.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\util\swap.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
@@ -843,12 +735,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\args_of.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\sfinae.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\expr.h">
-      <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\mpl_module.h">
       <Filter>mpl</Filter>
@@ -871,26 +757,11 @@
     <ClInclude Include="mpl\fusion\val_seq.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\select_overload.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\range.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\arg_pack_find_index.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\varient.h">
       <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\op.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\val_pack_max.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\max_align_t.h">
-      <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\bad_cast_exception.h">
       <Filter>mpl\fusion</Filter>
@@ -934,12 +805,6 @@
     <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\function\invoke_base.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\function\function_fwd.h">
-      <Filter>mpl\function</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\is_invocable.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -961,8 +826,88 @@
     <ClInclude Include="mpl\fusion\ratio.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\type_traits\max_aligned_t.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\max_aligned_storage.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\arg.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\bind_mfn.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\capture.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\combine.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
     <ClInclude Include="mpl\function\const_forward.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\dispatch.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\expr.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\fmap.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\function.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\function_fwd.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\invoke_base.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\operator.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\overload.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\partial.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\ref.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\select_overload.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\function\val.h">
+      <Filter>mpl\function</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\mcontainer\arg_pack.h" />
+    <ClInclude Include="mpl\mcontainer\arg_pack_find_if.h" />
+    <ClInclude Include="mpl\mcontainer\arg_pack_find_index.h" />
+    <ClInclude Include="mpl\mcontainer\arg_pack_first.h" />
+    <ClInclude Include="mpl\mcontainer\arg_pack_split.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack_split.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack_at.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack_create.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack_find.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack_max.h" />
+    <ClInclude Include="mpl\mcontainer\make_indice.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack.h" />
+    <ClInclude Include="mpl\mcontainer\at.h" />
+    <ClInclude Include="mpl\base\compile_check.h" />
+    <ClInclude Include="mpl\base\logic_.h" />
+    <ClInclude Include="mpl\base\arithmatic_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\dummy_call.h" />
+    <ClInclude Include="mpl\mcontainer\front.h" />
+    <ClInclude Include="mpl\mcontainer\begin.h" />
+    <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
+    <ClInclude Include="mpl\mcontainer\deref.h" />
+    <ClInclude Include="mpl\mcontainer\end.h" />
+    <ClInclude Include="mpl\mcontainer\next.h" />
+    <ClInclude Include="mpl\mcontainer\merge.h" />
   </ItemGroup>
 </Project>

@@ -25,11 +25,11 @@ template<
 class poly_share_ptr
 {
 public:
-	typedef poly_share_ptr				  this_type;
-	typedef poly_weak_ptr<Type, RefCount> weak_type;
-	typedef RefCount					  ref_count_type;
-	typedef Type						  value_type;
-	typedef Type*					      pointer_type;
+	typedef poly_share_ptr				      this_type;
+	typedef poly_weak_ptr<Type, RefCount>     weak_type;
+	typedef RefCount					      ref_count_type;
+	typedef Type						      value_type;
+	typedef Type*					          pointer_type;
 	template<typename, typename> friend class poly_share_ptr;
 	template<typename, typename> friend class poly_weak_ptr;
 private:

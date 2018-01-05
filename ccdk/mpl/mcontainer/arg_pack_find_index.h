@@ -1,7 +1,8 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/arg_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/base/bool_.h>
 #include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/base/if_.h>
@@ -10,16 +11,6 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<typename T, typename P>
-		struct is_arg_same
-		{
-			static constexpr bool value = false;
-		};
-		template<typename T>
-		struct is_arg_same<T,T>
-		{
-			static constexpr bool value = true;
-		};
 
 		template<typename T>
 		struct always_false

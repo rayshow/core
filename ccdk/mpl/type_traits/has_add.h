@@ -1,8 +1,7 @@
 #pragma once
 
 
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/not_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/is_integer.h>
 #include<ccdk/mpl/type_traits/impl/has_operator_decl.h>
@@ -24,9 +23,11 @@ namespace ccdk
 			{                                                                        
 				template<typename U, typename P,                                    
 				typename = decltype(makeval<U>() += declval<P>())>               
-					static constexpr bool sfinae(int) { return true; }               
+				static constexpr bool sfinae(int) { return true; }               
+
 				template<typename U, typename P>                                     
 				static constexpr bool sfinae(...) { return false; }                  
+
 				static constexpr bool value = sfinae<L, R>(0);                       
 			};                                                                       
 		}                                                                            

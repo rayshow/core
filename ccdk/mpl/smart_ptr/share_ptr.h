@@ -2,9 +2,7 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/not_.h>
-#include<ccdk/mpl/base/and_.h>
-#include<ccdk/mpl/base/or_.h>
+#include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_void.h>
 #include<ccdk/mpl/type_traits/is_class.h>
 #include<ccdk/mpl/type_traits/is_union.h>
