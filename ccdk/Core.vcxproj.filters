@@ -884,12 +884,8 @@
       <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\mcontainer\arg_pack.h" />
-    <ClInclude Include="mpl\mcontainer\arg_pack_find_if.h" />
-    <ClInclude Include="mpl\mcontainer\arg_pack_find_index.h" />
-    <ClInclude Include="mpl\mcontainer\arg_pack_first.h" />
     <ClInclude Include="mpl\mcontainer\arg_pack_split.h" />
     <ClInclude Include="mpl\mcontainer\val_pack_split.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack_at.h" />
     <ClInclude Include="mpl\mcontainer\val_pack_create.h" />
     <ClInclude Include="mpl\mcontainer\val_pack_find.h" />
     <ClInclude Include="mpl\mcontainer\val_pack_max.h" />
@@ -909,5 +905,7 @@
     <ClInclude Include="mpl\mcontainer\end.h" />
     <ClInclude Include="mpl\mcontainer\next.h" />
     <ClInclude Include="mpl\mcontainer\merge.h" />
+    <ClInclude Include="mpl\mcontainer\find.h" />
+    <ClInclude Include="mpl\mcontainer\range.h" />
   </ItemGroup>
 </Project>

@@ -12,7 +12,6 @@ struct forward_at: forward_at< typename next<It>::type, Index-1> {};
 
 template<typename It> struct forward_at<It, 0> : deref<It> {};
 
-
 /* implements by Category */
 template<typename Container, uint32 Index, typename Categroy>
 struct at_impl;

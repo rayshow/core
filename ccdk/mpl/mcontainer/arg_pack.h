@@ -14,8 +14,8 @@ namespace ccdk
 			typedef arg_pack          begin;
 			typedef arg_pack          end;
 			typedef forward_category  category;
-			static constexpr uint32 size = 0;
-			static constexpr bool   empty = true;
+			typedef uint32_<0>        size;
+			typedef true_             empty;
 
 			/* can't deref */
 			/* can't pop_front */
@@ -41,8 +41,8 @@ namespace ccdk
 			typedef T                 deref;
 			typedef arg_pack<Args...> pop_front;
 			typedef T                 front;
-			static constexpr uint32 size  = sizeof...(Args)+1;
-			static constexpr bool   empty = false;
+			typedef uint32_<sizeof...(Args)+1> size;
+			typedef false_            empty;
 
 			template<typename P>
 			struct push_front
