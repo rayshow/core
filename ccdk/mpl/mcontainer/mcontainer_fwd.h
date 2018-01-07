@@ -12,14 +12,16 @@ struct bidirection_categroy : public forward_category {};
 
 struct random_category : bidirection_categroy {};
 
+template<typename Container>
+struct front;
 
 /* iterator begin*/
-template<typename It>
+template<typename Container>
 struct begin;
 
 /* iterator begin*/
-template<typename It>
-struct begin;
+template<typename Container>
+struct end;
 
 /* iterator next */
 template<typename It>
@@ -32,6 +34,24 @@ struct deref;
 /* get type at Index pos */
 template<typename Container, uint32 Index>
 struct at;
+
+template<typename Container>
+struct pop_front;
+
+template<typename Container, uint32 N>
+struct pop_front_n;
+
+template<typename Container>
+struct pop_back;
+
+template<typename Container,typename P>
+struct push_front;
+
+template<typename Container, typename P>
+struct push_back;
+
+template<typename Container>
+struct clear;
 
 
 template<typename... Args> struct arg_pack;

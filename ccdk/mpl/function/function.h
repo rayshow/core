@@ -1,6 +1,7 @@
 #pragma once
 
-#include<ccdk/mpl/mcontainer/arg_pack_first.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/mcontainer/front.h>
 #include<ccdk/mpl/type_traits/is_function.h>
 #include<ccdk/mpl/type_traits/is_function_obj.h>
 #include<ccdk/mpl/type_traits/is_mfn_ptr.h>
@@ -64,7 +65,7 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE Ret _invoke_impl_arg_len(uint32_<L>, Args1&&... args1) { return base_ptr->invoke(util::forward<Args1>(args1)...); }
 
 		/* length(args1) == L + 1, assert is member function call, then static dispatch by First arg type */
-		template<typename... Args1, typename First = remove_ref_t< arg_pack_first_t<Args1...>> >
+		template<typename... Args1, typename First = remove_ref_t< first_t<Args1...>> >
 		CCDK_FORCEINLINE Ret _invoke_impl_arg_len(uint32_<L + 1>, Args1&&... args1) { return _invoke_impl_arg_type(typename is_pointer<First>::type{}, util::forward<Args1>(args1)...); }
 
 		/* clone content */

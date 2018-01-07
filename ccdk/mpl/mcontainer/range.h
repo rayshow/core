@@ -8,7 +8,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename T, T Start, T End, typename = check_t< is_integer<T>>, typename = check_lequal<Start, End> >
+template<typename T, T Start, T End/*, typename = check_t< is_integer<T>>, typename = check_lequal<Start, End> */>
 struct range
 {
 	typedef range                           type;
@@ -25,7 +25,6 @@ struct range
 	{
 		typedef compile_t<T, Start + Index>  type;
 	};
-
 };
 
 ccdk_namespace_mpl_end

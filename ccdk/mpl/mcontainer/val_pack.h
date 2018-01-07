@@ -14,9 +14,25 @@ namespace ccdk
 			typedef val_pack             type;
 			typedef val_pack             begin;
 			typedef val_pack             end;
+			typedef uint32_<0>           size;
+			typedef true_                empty;
+			typedef val_pack             clear;
+
+			template<typename T>
+			struct push_back;
+
+
+			template<T v>
+			struct push_back< compile_t<T,v>>
+			{
+				typedef val_pack<T, v> type;
+			};
+
+			template<typename T>
+			struct push_front;
 			
 			template<T v>
-			struct push_back
+			struct push_front< compile_t<T,v>>
 			{
 				typedef val_pack<T, v> type;
 			};
@@ -41,11 +57,27 @@ namespace ccdk
 			typedef val_pack<T, args...> next;
 			typedef compile_t<T, first>  deref;
 			typedef val_pack<T, args...> pop_front;
+			typedef compile_t<T, first>  front;
+			typedef uint32_<sizeof...(args)+1> size;
+			typedef false_               empty;
+			typedef val_pack<T>          clear;
 			
+			template<typename T>
+			struct push_front;
+
 			template<T v>
-			struct push_front
+			struct push_front< compile_t<T, v>>
 			{
 				typedef val_pack<T, v, first, args...> type;
+			};
+
+			template<typename T>
+			struct push_back;
+
+			template<T v>
+			struct push_back< compile_t<T, v>>
+			{
+				typedef val_pack<T, first, args..., v> type;
 			};
 
 			template<typename T>

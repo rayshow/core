@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/mcontainer/arg_pack_split.h>
+#include<ccdk/mpl/mcontainer/split.h>
 #include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_same.h>
@@ -60,7 +60,7 @@ private:
 
 	/* erase implements */
 	template< uint32 start, uint32 end, typename... Args1 >
-	CCDK_FORCEINLINE constexpr auto  _erase_impl(arg_pack<Args1...>) { return tuple<Args1...>{ make_indice_ingore<size, start, end>{}, util::move(*this), uint32_<end - start>{} }; }
+	CCDK_FORCEINLINE constexpr auto  _erase_impl(arg_pack<Args1...>) { return tuple<Args1...>{ make_indice_ignore<size, start, end>{}, util::move(*this), uint32_<end - start>{} }; }
 
 	/* replace implements */
 	template< uint32 start, uint32 end, typename... Args1, typename... Args2, typename... Args3 >
@@ -121,21 +121,21 @@ public:
 
 	/* pop back len items */
 	template<uint32 len = 1, typename = check_in_range< len, 1, size> >
-	CCDK_FORCEINLINE constexpr auto  pop_back()  { return _pop_back_impl<len>( typename arg_pack_split< size - len, len,  arg_pack<Args...> >::head{} ); }
+	CCDK_FORCEINLINE constexpr auto  pop_back()  { return _pop_back_impl<len>( args_head< size - len, Args... >{} ); }
 
 	/* pop front len items */
 	template<uint32 len = 1, typename = check_in_range< len, 1, size> >
-	CCDK_FORCEINLINE constexpr auto  pop_front()  { return _pop_front_impl<len>(typename arg_pack_split< 0, len, arg_pack<Args...> >::tail{}); }
+	CCDK_FORCEINLINE constexpr auto  pop_front()  { return _pop_front_impl<len>( args_tail< len, Args... >{} ); }
 		
 	/* erase elements [start, end) */
 	template< uint32 start,  uint32 end = start+ 1, typename = check_in_range2<start, end, 0, size> >
-	CCDK_FORCEINLINE constexpr auto  erase() { return _erase_impl<start, end>( typename arg_pack_split<start, end - start, arg_pack<Args...>>::type{} ); }
+	CCDK_FORCEINLINE constexpr auto  erase() { return _erase_impl<start, end>( args_erase<start, end - start, Args...>{} ); }
 	
 	/* replace item in [start, end) */
 	template< uint32 start, uint32 end, typename T, typename... Args1 >
 	CCDK_FORCEINLINE constexpr auto  replace(T&& t, Args1&&... args1 )  
 	{
-		typedef arg_pack_split< start,  end-start, arg_pack<Args...> > pack;
+		typedef split_args< start,  end-start, Args... > pack;
 		return _replace_impl<start, end>( typename pack::head{},  typename pack::tail{}, util::forward<T>(t), util::forward<Args1>(args1)...);
 	}
 
@@ -143,7 +143,7 @@ public:
 	template< uint32 pos, typename T, typename... Args1, typename = check_gequal<pos, 0> >
 	CCDK_FORCEINLINE constexpr auto  insert(T&& t, Args1&&... args1) 
 	{
-		typedef arg_pack_split<pos, 0, arg_pack<Args...>> pack;
+		typedef split_args<pos, 0, Args... > pack;
 		return _insert_impl< pos >( typename pack::head{}, typename pack::tail{}, util::forward<T>(t), util::forward<Args1>(args1)... );
 	}
 };

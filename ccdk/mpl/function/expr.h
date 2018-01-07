@@ -6,7 +6,7 @@
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/mcontainer/arg_pack_first.h>
+#include<ccdk/mpl/mcontainer/front.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/dummy_call.h>
@@ -107,7 +107,7 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE constexpr decltype(auto) eval(const Content& ctx) const { return _eval_impl<Start>(ctx, args_indice, shifts_indice); }
 
 		/* eval enter point, check Args is explicit mark lazy or wild match placeholder  is valid with input args  */
-		template< typename... Args1, typename = check_t <  or_<  is_mark_lazy< arg_pack_first_t<Args1...> >, bool_< sizeof...(Args1) == u32_max(wild_size, index_size)> >> >
+		template< typename... Args1, typename = check_t <  or_<  is_mark_lazy< first_t<Args1...> >, bool_< sizeof...(Args1) == u32_max(wild_size, index_size)> >> >
 		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args1&&... args1) { return _invoke_impl_len(uint32_c<sizeof...(Args1)>, util::forward<Args1>(args1)...); }
 	};
 

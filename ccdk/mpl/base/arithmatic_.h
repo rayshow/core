@@ -5,23 +5,43 @@
 
 ccdk_namespace_mpl_start
 
-template<typename... Args> struct add_;
+/* abstract binary operation */
+template<typename T, typename BinaryOp, T first, T... args>
+struct arithmatic : BinaryOp::template apply< T, first, arithmatic<T, BinaryOp, args...>::value >
+{};
 
-template<typename T> struct add_<T> :public T {};
-
-template<typename T, typename... Args> struct add_<T, Args...> : public int32_<T::value + add_<Args...>::value> {};
-
-template<typename T>
-constexpr T max2(const T& t1, const T& t2)
+template<typename T, typename BinaryOp, T first>
+struct arithmatic<T, BinaryOp, first>
 {
-	return t1 < t2 ? t2 : t1;
-}
+	static constexpr T value = first;
+};
 
-template<typename T>
-constexpr T min2(const T& t1, const T& t2)
+/* add args... */
+struct add2
 {
-	return t1 < t2 ? t1 : t2;
-}
+	template<typename T, T a, T b>
+	struct apply
+	{
+		static constexpr T value = a + b;
+	};
+};
 
+template< typename T, T... args>
+struct add_ :arithmatic<T, add2, args...> {};
+
+/* max args... */
+struct max2
+{
+	template<typename T, T a, T b>
+	struct apply
+	{
+		static constexpr T value = a < b ? b : a;
+	};
+};
+template< typename T, T... args>
+struct max_ :arithmatic<T, max2, args...> {};
+
+template< typename T, T... args>
+static constexpr T max_v = max_<T, args...>::value;
 
 ccdk_namespace_mpl_end

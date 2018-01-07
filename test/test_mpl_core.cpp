@@ -18,6 +18,7 @@
 #include<ccdk/mpl/function/operator.h>
 #include<stdio.h>
 
+#include<ccdk/mpl/base/arithmatic_.h>
 #include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/mcontainer/at.h>
@@ -25,6 +26,7 @@
 #include<ccdk/mpl/mcontainer/deref.h>
 #include<ccdk/mpl/mcontainer/next.h>
 #include<ccdk/mpl/mcontainer/merge.h>
+#include<ccdk/mpl/mcontainer/split.h>
 #include<ccdk/mpl/mcontainer/find.h>
 
 using namespace ccdk;
@@ -114,26 +116,63 @@ public:
 
 int main()
 {
+	DebugNewTitle("test arg pack");
 	typedef arg_pack<int, char, float, short, double> apack1;
 	typedef arg_pack<int[] , char[]> apack2;
+	DebugSubTitle("at");
 	DebugTypeName< at_t<apack1, 0>>();
 	DebugTypeName< at_t<apack1, 1>>();
 	DebugTypeName< at_t<apack1, 2>>();
 	DebugTypeName< at_t<apack1, 3>>();
 	DebugTypeName< at_t<apack1, 4>>();
+	DebugSubTitle("merge");
 	DebugTypeName< merge_t< apack1, apack2>>();
 	DebugTypeName< merge_t< arg_pack<>, apack2>>();
-	DebugTypeName< find_at< apack1, float> >();
+	DebugSubTitle("find");
+	DebugTypeName< find_t< apack1, float> >();
+	DebugSubTitle("push front");
 
+
+	DebugSubTitle("split");
+	DebugTypeName< typename split< apack1, 2>::head >();
+	DebugTypeName< typename split< apack1, 2>::tail >();
+	DebugTypeName< typename split< apack1, 0>::head >();
+	DebugTypeName< typename split< apack1, 0>::tail >();
+	DebugTypeName< typename split< apack1, 5>::head >();
+	DebugTypeName< typename split< apack1, 5>::tail >();
+	DebugTypeName< typename split< apack1, 2,1>::head >();
+	DebugTypeName< typename split< apack1, 2,1>::tail >();
+
+	DebugNewTitle("test val pack");
 	typedef val_pack<int, 1, 2, 3, 5, 6, 7> vpack1;
 	typedef val_pack<int, 8,9,10> vpack2;
+	DebugSubTitle("at");
 	DebugTypeName< at_t<vpack1, 0>>();
 	DebugTypeName< at_t<vpack1, 1>>();
 	DebugTypeName< at_t<vpack1, 2>>();
 	DebugTypeName< at_t<vpack1, 3>>();
 	DebugTypeName< at_t<vpack1, 4>>();
+	DebugSubTitle("merge");
 	DebugTypeName< merge_t< vpack1, vpack2>>();
 	DebugTypeName< merge_t< val_pack<int>, vpack2>>();
+	DebugSubTitle("find");
+	DebugTypeName< find_t< vpack1, compile_t<int,3>> >();
+	DebugSubTitle("split");
+	DebugTypeName< typename split< vpack1, 2>::head >();
+	DebugTypeName< typename split< vpack1, 2>::tail >();
+	DebugTypeName< typename split< vpack1, 0>::head >();
+	DebugTypeName< typename split< vpack1, 0>::tail >();
+	DebugTypeName< typename split< vpack1, 5>::head >();
+	DebugTypeName< typename split< vpack1, 5>::tail >();
+	DebugTypeName< typename split< vpack1, 2, 1>::head >();
+	DebugTypeName< typename split< vpack1, 2, 1>::tail >();
+
+	DebugNewTitle("arithmatic");
+	DebugValue(max_<int, 2, 5, 9, 0, -1>::value);
+	DebugNewTitle("arithmatic");
+	DebugTypeName< typename make_indice<10>::type>();
+	DebugTypeName< typename make_indice_from<4,10>::type>();
+	DebugTypeName< typename make_indice_ignore<10,2,6>::type>();
 
 	const base_class  cbc{};
 	base_class bc{ cbc };

@@ -8,16 +8,16 @@
 #include<cassert>
 #include<functional>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/base/arg_pack.h>
-#include<ccdk/mpl/base/val_pack.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/int32_.h>
+#include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/type_traits/select_case.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/mpl/function/partial.h>
 #include<ccdk/mpl/function/capture.h>
+
 
 using namespace ccdk;
 using namespace ccdk::mpl;

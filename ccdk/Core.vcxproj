@@ -154,9 +154,13 @@
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\mcontainer\arg_pack.h" />
-    <ClInclude Include="mpl\mcontainer\arg_pack_split.h" />
     <ClInclude Include="mpl\mcontainer\at.h" />
     <ClInclude Include="mpl\mcontainer\begin.h" />
+    <ClInclude Include="mpl\mcontainer\clear.h" />
+    <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
+    <ClInclude Include="mpl\mcontainer\pop_front.h" />
+    <ClInclude Include="mpl\mcontainer\push_back.h" />
+    <ClInclude Include="mpl\mcontainer\push_front.h" />
     <ClInclude Include="mpl\mcontainer\range.h" />
     <ClInclude Include="mpl\mcontainer\deref.h" />
     <ClInclude Include="mpl\mcontainer\end.h" />
@@ -166,11 +170,8 @@
     <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
     <ClInclude Include="mpl\mcontainer\merge.h" />
     <ClInclude Include="mpl\mcontainer\next.h" />
+    <ClInclude Include="mpl\mcontainer\split.h" />
     <ClInclude Include="mpl\mcontainer\val_pack.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack_create.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack_find.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack_max.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack_split.h" />
     <ClInclude Include="mpl\mpl_module.h" />
     <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h" />
     <ClInclude Include="mpl\smart_ptr\default_deleter.h" />

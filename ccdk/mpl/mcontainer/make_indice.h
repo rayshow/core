@@ -1,23 +1,18 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/mcontainer/val_pack_create.h>
-#include<ccdk/mpl/mcontainer/val_pack_split.h>
+#include<ccdk/mpl/mcontainer/merge.h>
+#include<ccdk/mpl/mcontainer/make_val_pack.h>
 
+ccdk_namespace_mpl_start
 
-
-namespace ccdk
-{
-	namespace mpl
-	{
 		template<uint32 end>
-		using make_indice = typename val_pack_create<uint32, 0, end>::type;
+		using make_indice = typename make_val_pack<uint32, 0, end>::type;
 
-		template<uint32 start, uint32 end, uint32... args>
-		using make_indice_from = typename val_pack_create<uint32, start, end>::type;
+		template<uint32 start, uint32 end>
+		using make_indice_from = typename make_val_pack< uint32, start, end>::type;
 
-		template<uint32 length, uint32 start, uint32 end>
-		using make_indice_ingore = typename val_pack_split< uint32, start, end, make_indice<length> >::type;
-	}
-}
+		template<uint32 end, uint32 ignore_start, uint32 ignore_end>
+		using make_indice_ignore = typename merge< make_indice<ignore_start>, make_indice_from<ignore_end, end>>::type;
+
+ccdk_namespace_mpl_end

@@ -1,7 +1,8 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/mcontainer/arg_pack_find_index.h>
+#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/mcontainer/find.h>
 #include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/type_traits/max_aligned_storage.h>
 #include<ccdk/mpl/type_traits/decay.h>
@@ -46,13 +47,13 @@ private:
 	CCDK_FORCEINLINE void destruct_old() noexcept { util::dummy_call(get_base<indice>(*this).destruct(index, memory)...); }
 
 public:
-	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	template< typename P, uint32 PIndex = args_find_v<P, Args...> >
 	CCDK_FORCEINLINE varient_impl(const P& p) :varient_base<PIndex, P>{ memory, p, 1 }, index(PIndex)
 	{ 
 		static_assert(PIndex <= 255 , "type not found in bound Types");
 	}
 
-	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	template< typename P, uint32 PIndex = args_find_v<P, Args...> >
 	CCDK_FORCEINLINE P& to()
 	{
 		static_assert(PIndex <= 255, "type not found in bound Types");
@@ -63,7 +64,7 @@ public:
 		ccdk_throw( bad_verient_cast{} );
 	}
 
-	template< typename P, uint32 PIndex = arg_pack_find_index_v<P, Args...> >
+	template< typename P, uint32 PIndex = args_find_v<P, Args...> >
 	CCDK_FORCEINLINE varient_impl& operator=(const P& p)
 	{
 		static_assert(PIndex <= 255, "type not found in bound Types");
