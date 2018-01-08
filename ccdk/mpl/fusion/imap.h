@@ -34,7 +34,7 @@ class imap< indice_pack<Indice...>, Args...>
 {
 public:
 	/*value*/
-	template<typename... Args2>
+	template<typename... Args2, typename = check_t< and_< has_constructor<ipair < Indice, Args >,Args2>...>> >
 	CCDK_FORCEINLINE explicit constexpr imap(Args2 &&... args2) : ipair<Indice, Args>{ util::forward<Args2>(args2) }... {  }
 
 	/*copy*/

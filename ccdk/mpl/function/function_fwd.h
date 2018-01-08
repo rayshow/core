@@ -33,6 +33,9 @@ class expr;
 /* justify is lazy expr */
 template<typename T> struct is_expr :false_ {};
 template<typename... Args> struct is_expr< expr<Args...> > :true_ {};
+template<typename T> struct is_expr<T&> :is_expr<T> {};
+template<typename T> struct is_expr<T&&>:is_expr<T> {};
+template<typename T> struct is_expr<T const&> :is_expr<T> {};
 
 /* mfunction judge */
 struct mfunction_tag {};

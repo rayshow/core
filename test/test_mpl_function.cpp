@@ -317,7 +317,6 @@ public:
 
 int main()
 {
-
 	DebugTypeName<decltype(test_forward(1))>();
 	test_forward(1);
 	int vi = 1;
@@ -422,9 +421,9 @@ int main()
 	partial(test_normal_copy_function, tt)("hello,partial function");
 	partial(&test_normal_copy_function, tt)("hello,partial function");
 	DebugSubTitle("member function pointer");
-	partial(&test_copy_t::test_mfn, tt)(2, "hello, 2 partial  obj member function");
-	partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
-	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
+	partial(&test_copy_t::test_mfn, tt);// (2, "hello, 2 partial  obj member function");
+	//partial(&test_copy_t::test_mfn, &tt)(2, "hello, 2 partial pointer member function");
+	//partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
 
 	//DebugNewTitle("test expr");
@@ -440,9 +439,16 @@ int main()
 	//int a = 0;
 	//DebugValue(assign1(a));
 	//DebugValue(a);
-
-	DebugSubTitle("test invoke");
-	auto invoke1 = _(lazy_, 1);
+	
+	/*DebugSubTitle("test invoke");
+	auto inv = _ + _;*/
+	//auto invoke1 = _(lazy_, _);// +_ + _;// +1_(lazy_, _);
+	
+	
+	//DebugTypeName<decltype(invoke1)>();
+	//DebugValue(invoke1.wild_size);
+	//DebugValue(invoke1.index_size);
+	//DebugValue(invoke1([](int i) { return i; }, 5, 3,2));
 
 	DebugSubTitle("test val");
 	

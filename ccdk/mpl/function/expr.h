@@ -50,7 +50,8 @@ ccdk_namespace_mpl_fn_start
 
 
 	/* filter expr */
-	template<typename T> struct filter_expr : if_ < is_expr<T>, T, expr < value_t<T>>> {};
+	template<typename T> struct expr_filter : if_ < is_expr<T>, decay_t<T>, expr < value_t<T>>> {};
+	template<typename T> using expr_filter_t = typename expr_filter<T>::type;
 
 
 	/* lazy and wild expr  */
@@ -78,13 +79,16 @@ ccdk_namespace_mpl_fn_start
 
 		/* explicit mark lazy,  create lazy invoke expr and return */
 		template<typename... Args1>
-		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_is_lazy(true_, Args1&&... args1) { return expr< invoke_t, Args1...>{ args1... }; }
+		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_is_lazy(true_, Args1&&... args1) 
+		{ 
+			return expr< invoke_t, this_type, expr_filter_t<Args1>...>{ *this, util::forward<Args1>(args1)... };
+		}
 
 		/* not lazy , eval expr */
 		template<typename... Args1>
 		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_is_lazy(false_, Args1&&... args1) { return eval<0>(fs::create_reference_args(util::forward<Args1>(args1)...)); }
 
-		/* arg len > 0 , static dispatch  by weather args is mark lazy */
+		/* arg len > 0 , static dispatch  by weather first args is mark lazy */
 		template< uint32 len, typename T, typename... Args1 >
 		CCDK_FORCEINLINE constexpr decltype(auto) _invoke_impl_len(uint32_<len>, T&& t, Args1&&... args1) { return _invoke_impl_is_lazy(typename is_mark_lazy<T>::type{}, util::forward<T>(t), util::forward<Args1>(args1)...); }
 
@@ -93,7 +97,6 @@ ccdk_namespace_mpl_fn_start
 
 	public:
 		ccdk_expr_lazy_assign
-
 
 		/* value */
 		template<typename... Args2>
@@ -106,7 +109,7 @@ ccdk_namespace_mpl_fn_start
 		template< uint32 Start, typename Content >
 		CCDK_FORCEINLINE constexpr decltype(auto) eval(const Content& ctx) const { return _eval_impl<Start>(ctx, args_indice, shifts_indice); }
 
-		/* eval enter point, check Args is explicit mark lazy or wild match placeholder  is valid with input args  */
+		/* eval enter point, check Args1 is explicit mark lazy or eval expression with wild match placeholder  is valid with input args  */
 		template< typename... Args1, typename = check_t <  or_<  is_mark_lazy< first_t<Args1...> >, bool_< sizeof...(Args1) == u32_max(wild_size, index_size)> >> >
 		CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args1&&... args1) { return _invoke_impl_len(uint32_c<sizeof...(Args1)>, util::forward<Args1>(args1)...); }
 	};
@@ -123,18 +126,19 @@ ccdk_namespace_mpl_fn_start
 
 		ccdk_expr_lazy_assign;
 
-		template<typename T>
-		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, T&& t) const
-		{
-			return expr< invoke_t, typename filter_expr<T>::type>{ util::forward<T>(t) };
-		}
-
 		constexpr expr() = default;
 		constexpr expr(const expr& e) = default;
 
 		/*  eval expr */
 		template<uint32 Start, typename Context>
 		CCDK_FORCEINLINE constexpr decltype(auto) eval(const Context& ctx) const noexcept { return ctx.template at<Start>(); }
+
+		/* make lazy invoke expression */
+		template<typename... Args>
+		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, Args&&... args) const
+		{
+			return expr< invoke_t, this_type, typename expr_filter<Args>::type...>{ *this, util::forward<Args>(args)... };
+		}
 	};
 
 	/* index match placeholder 1_ / 2_ ... */
@@ -147,13 +151,19 @@ ccdk_namespace_mpl_fn_start
 		typedef expr            this_type;
 		ccdk_expr_lazy_assign
 
-
 		constexpr expr() = default;
 		constexpr expr(const expr& e) = default;
 
 		/* eval expr  */
 		template<uint32 Start, typename Context> 
 		CCDK_FORCEINLINE decltype(auto) eval(const Context& ctx) const noexcept { return ctx.template at<index-1>(); }
+
+		/* make lazy invoke expression */
+		template<typename... Args>
+		CCDK_FORCEINLINE constexpr auto operator()(mark_lazy_t, Args&&... args) const
+		{
+			return expr< invoke_t, this_type, typename expr_filter<Args>::type...>{ *this, util::forward<Args>(args)... };
+		}
 	};
 
 	/* placeholder */

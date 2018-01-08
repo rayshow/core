@@ -114,8 +114,29 @@ public:
 };
 
 
+template<typename... Args>
+class test_forward_map
+{
+private:
+	fs::closure_args<sizeof...(Args), Args...> args;
+
+public:
+	test_forward_map(Args&&... inArgs) :args{ util::forward<Args>(inArgs)... }
+	{
+		//util::dummy_call(util::forward<Args>(inArgs)...);
+		DebugFunctionName();
+	}
+};
+
+constexpr util::create_t< test_forward_map > test_forward;
+
 int main()
 {
+	int ta = 0;
+	const int tb = 0;
+	test_forward("fdasfdsa", ta, tb, 1, &test_copy_t::test_mfn);
+
+
 	DebugNewTitle("test arg pack");
 	typedef arg_pack<int, char, float, short, double> apack1;
 	typedef arg_pack<int[] , char[]> apack2;

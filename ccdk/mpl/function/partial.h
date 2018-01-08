@@ -37,6 +37,7 @@ ccdk_namespace_mpl_fn_start
 		
 
 		/* partial args constructor */
+		
 		CCDK_FORCEINLINE partial_t(Fn&& inFn, Args&&... inArgs) :fn{ util::forward<Fn>(inFn) }, args{ util::forward<Args>(inArgs)... } {}
 
 		/* re-partial constructor */
@@ -95,8 +96,11 @@ ccdk_namespace_mpl_fn_start
 		template< typename Fn, typename Fn1 = remove_ref_t<Fn>, typename C, typename... Args >
 		CCDK_FORCEINLINE auto  partial_create_impl( case_t< is_mfn_ptr> , Fn&& fn, C&& c,  Args&&... args ) const noexcept
 		{ 
+			DebugValue("member fn");
 			typedef args_of<Fn1> FnArgs;
-			return partial_function_obj<result_of_t<Fn1>>( typename FnArgs::type{}, fn::bind_mfn(fn, c), util::forward<Args>(args)... );
+			DebugFunctionName();
+			return 0;
+			//return partial_function_obj<result_of_t<Fn1>>( typename FnArgs::type{}, fn::bind_mfn(fn, c), util::forward<Args>(args)... );
 		}
 
 		/* Fn is function object */
