@@ -13,9 +13,6 @@
 #include<ccdk/mpl/fusion/string_literial.h>
 #include<ccdk/mpl/fusion/any.h>
 #include<ccdk/mpl/fusion/varient.h>
-
-
-
 #include<ccdk/type.h>
 #include<ccdk/mpl/fusion/imap.h>
 
