@@ -17,7 +17,7 @@ template<typename... Args> using or_t = typename or_<Args...>::type;
 template<typename... Args> constexpr bool or_v = or_<Args...>::value;
 
 /* default  false */
-template<typename... Args> struct and_ :public false_ {};
+template<typename... Args> struct and_ :public true_ {};
 
 /* only one element */
 template<typename T> struct and_<T> :public T {};

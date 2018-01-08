@@ -126,6 +126,9 @@ public:
 		//util::dummy_call(util::forward<Args>(inArgs)...);
 		DebugFunctionName();
 	}
+
+	test_forward_map(const test_forward_map& other) : args{ other.args } { DebugFunctionName(); }
+	test_forward_map(test_forward_map&& other) : args{ util::move(other.args) } { DebugFunctionName(); }
 };
 
 constexpr util::create_t< test_forward_map > test_forward;
@@ -134,7 +137,10 @@ int main()
 {
 	int ta = 0;
 	const int tb = 0;
-	test_forward("fdasfdsa", ta, tb, 1, &test_copy_t::test_mfn);
+	auto create1 = test_forward("fdsaf", ta, tb, &test_copy_t::test_mfn);
+	auto create2{ create1 };
+	auto create3{ util::move(create1) };
+
 
 
 	DebugNewTitle("test arg pack");

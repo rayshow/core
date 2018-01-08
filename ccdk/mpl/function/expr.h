@@ -65,13 +65,14 @@ ccdk_namespace_mpl_fn_start
 		typedef expr                   this_type;
 		typedef make_indice<size>      indice_type;
 		typedef mfunction_tag          tag;
+		typedef fs::closure_args<size, Args...> closure_type;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
 		static constexpr indice_type args_indice{};
 
 	private:
 		/* closure of lazy eval */
-		Fn                              fn;
-		fs::closure_args<size, Args...> args;
+		Fn            fn;
+		closure_type  args;
 
 		/* eval helper  */
 		template< uint32 Start, typename Content, uint32... Index, uint32... Shift >
@@ -99,8 +100,8 @@ ccdk_namespace_mpl_fn_start
 		ccdk_expr_lazy_assign
 
 		/* value */
-		template<typename... Args2>
-		CCDK_FORCEINLINE explicit constexpr  expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
+		template<typename... Args2, typename = check_t< has_constructor<closure_type, Args2...> >>
+		CCDK_FORCEINLINE explicit constexpr expr(Args2&&... args2) :args{ util::forward<Args2>(args2)... } {}
 
 		/* move */
 		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
