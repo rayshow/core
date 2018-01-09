@@ -9,24 +9,24 @@ ccdk_namespace_mpl_start
 
 namespace mct_detail
 {
-	template<typename Container, typename T, T cur, T end>
+	template<typename Container, typename T, T Cur, T End>
 	struct make_val_pack_impl:
 		make_val_pack_impl< 
-			typename push_back<Container, compile_t<T,cur>>::type,
-			T, cur+1,end
+			typename push_back_<Container, compile_t<T,Cur>>::type,
+			T, Cur+1, End
 		>
 	{};
 
-	template<typename Container, typename T, T end>
-	struct make_val_pack_impl<Container, T, end, end>
+	template<typename Container, typename T, T End>
+	struct make_val_pack_impl<Container, T, End, End>
 	{
 		typedef Container type;
 	};
 }
 
 
-template<typename T, T start, T end>
-struct make_val_pack:mct_detail::make_val_pack_impl< val_pack<T>, T,start,end>
+template<typename T, T Start, T End>
+struct make_val_pack:mct_detail::make_val_pack_impl< val_pack<T>, T,Start,End>
 {};
 
 ccdk_namespace_mpl_end

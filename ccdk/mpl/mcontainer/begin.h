@@ -5,7 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename Container> struct begin
+template<typename Container> struct begin_
 {
 	typedef typename Container::begin type;
 };

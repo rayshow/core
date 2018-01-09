@@ -443,9 +443,10 @@ int main()
 	DebugSubTitle("test invoke");
 	auto invoke1 = _(lazy_, _) + _ + _ + 1_(lazy_, _);	
 	DebugTypeName<decltype(invoke1)>();
-	DebugValue(invoke1.wild_size);
-	DebugValue(invoke1.index_size);
-	DebugValue(invoke1([](int i) { return i; }, 5, 3,2,1));
+	int size;
+	DebugValue(size = invoke1.wild_size);
+	DebugValue(size = invoke1.index_size);
+	DebugValue(size = invoke1([](int i) { return i; }, 5, 3,2,1));
 
 	DebugSubTitle("test val");
 	

@@ -18,7 +18,7 @@ namespace ccdk
 			typedef true_                empty;
 			typedef val_pack             clear;
 
-			template<typename T>
+			template<typename P>
 			struct push_back;
 
 
@@ -28,7 +28,7 @@ namespace ccdk
 				typedef val_pack<T, v> type;
 			};
 
-			template<typename T>
+			template<typename P>
 			struct push_front;
 			
 			template<T v>
@@ -37,7 +37,7 @@ namespace ccdk
 				typedef val_pack<T, v> type;
 			};
 
-			template<typename T>
+			template<typename P>
 			struct merge;
 
 			template<T... args2>
@@ -62,7 +62,7 @@ namespace ccdk
 			typedef false_               empty;
 			typedef val_pack<T>          clear;
 			
-			template<typename T>
+			template<typename P>
 			struct push_front;
 
 			template<T v>
@@ -71,7 +71,7 @@ namespace ccdk
 				typedef val_pack<T, v, first, args...> type;
 			};
 
-			template<typename T>
+			template<typename P>
 			struct push_back;
 
 			template<T v>
@@ -80,7 +80,7 @@ namespace ccdk
 				typedef val_pack<T, first, args..., v> type;
 			};
 
-			template<typename T>
+			template<typename P>
 			struct merge;
 
 			template<T... args2>

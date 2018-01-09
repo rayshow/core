@@ -5,7 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename Container> struct clear
+template<typename Container> struct clear_
 {
 	typedef typename Container::clear type;
 };

@@ -5,7 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename It> struct deref 
+template<typename It> struct deref_
 {
 	typedef typename It::deref type;
 };

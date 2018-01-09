@@ -35,7 +35,7 @@ namespace ccdk
 				typedef arg_pack<P> type;
 			};
 
-			template<typename T> struct merge;
+			template<typename P> struct merge;
 
 			template<typename... Args2> struct merge< arg_pack<Args2...>>
 			{
@@ -73,7 +73,7 @@ namespace ccdk
 				typedef arg_pack<T, Args..., P> type;
 			};
 
-			template<typename T> struct merge;
+			template<typename P> struct merge;
 
 			template<typename... Args2> struct merge< arg_pack<Args2...>>
 			{

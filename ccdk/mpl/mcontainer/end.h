@@ -5,7 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename Container> struct end
+template<typename Container> struct end_
 {
 	typedef typename Container::end type;
 };

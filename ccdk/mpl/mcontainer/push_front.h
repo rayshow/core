@@ -6,7 +6,7 @@
 ccdk_namespace_mpl_start
 
 template<typename Container, typename P>
-struct push_front : Container::template push_front<P>
+struct push_front_ : Container::template push_front<P>
 {};
 
 ccdk_namespace_mpl_end

@@ -5,21 +5,21 @@
 
 ccdk_namespace_mpl_start
 
-template<typename Container> struct front  
+template<typename Container> struct front_
 {
 	typedef typename Container::front type;
 };
 
 template<typename Container>
-using front_t = typename front<Container>::type;
+using front_t = typename front_<Container>::type;
 
 template<typename... Args>
-struct first{};
+struct first_{};
 
 template<typename T, typename... Args>
-struct first<T, Args...> { typedef T type; };
+struct first_<T, Args...> { typedef T type; };
 
 template<typename... Args>
-using first_t = typename first<Args...>::type;
+using first_t = typename first_<Args...>::type;
 
 ccdk_namespace_mpl_end

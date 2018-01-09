@@ -5,7 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename It> struct next 
+template<typename It> struct next_
 {
 	typedef typename It::next type;
 };

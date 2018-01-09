@@ -13,45 +13,45 @@ struct bidirection_categroy : public forward_category {};
 struct random_category : bidirection_categroy {};
 
 template<typename Container>
-struct front;
+struct front_;
 
 /* iterator begin*/
 template<typename Container>
-struct begin;
+struct begin_;
 
 /* iterator begin*/
 template<typename Container>
-struct end;
+struct end_;
 
 /* iterator next */
 template<typename It>
-struct next;
+struct next_;
 
 /* iterator deref */
 template<typename It>
-struct deref;
+struct deref_;
 
 /* get type at Index pos */
 template<typename Container, uint32 Index>
-struct at;
+struct at_;
 
 template<typename Container>
-struct pop_front;
+struct pop_front_;
 
 template<typename Container, uint32 N>
-struct pop_front_n;
+struct pop_front_n_;
 
 template<typename Container>
-struct pop_back;
+struct pop_back_;
 
 template<typename Container,typename P>
-struct push_front;
+struct push_front_;
 
 template<typename Container, typename P>
-struct push_back;
+struct push_back_;
 
 template<typename Container>
-struct clear;
+struct clear_;
 
 
 template<typename... Args> struct arg_pack;
