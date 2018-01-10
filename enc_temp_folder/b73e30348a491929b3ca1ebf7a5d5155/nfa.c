@@ -46,7 +46,7 @@ re2post(char *re)
 		case '(':
 			if(natom > 1){
 				--natom;
-				*dst++ = '.';         /* c(b|c) -> c.bc| */
+				*dst++ = '.';   /* c(b|c) -> c.bc| */
 			}
 			if(p >= paren+100)        /* exceeding 100 pair parentheses*/
 				return NULL;
@@ -77,7 +77,7 @@ re2post(char *re)
 			natom = p->natom;
 			natom++;
 			break;
-		case '*':                     /*apply on one atom*/
+		case '*':
 		case '+':
 		case '?':
 			if(natom == 0)
@@ -85,11 +85,11 @@ re2post(char *re)
 			*dst++ = *re;
 			break;
 		default:
-			if(natom > 1){            /* ab-> ab. */
+			if(natom > 1){          /* ab-> ab. */
 				--natom;
 				*dst++ = '.';
 			}
-			*dst++ = *re;             /* a->a */
+			*dst++ = *re;           /* a->a */
 			natom++;                
 			break;
 		}
@@ -118,10 +118,10 @@ enum
 typedef struct State State;
 struct State
 {
-	int c;         /* char or match or split */
-	State *out;    /* for concatate  */
-	State *out1;   /* for | ? * + */
-	int lastlist;  /* use in NFA step to check weather in clist */
+	int c;
+	State *out;
+	State *out1;
+	int lastlist;
 };
 State matchstate = { Match };	/* matching state */
 int nstate;
@@ -147,12 +147,12 @@ state(int c, State *out, State *out1)
  * Frag.out is a list of places that need to be set to the
  * next state for this fragment.
  */
-typedef struct Frag   Frag;
+typedef struct Frag Frag;
 typedef union Ptrlist Ptrlist;
 struct Frag
 {
-	State *start;  /*frag start state*/
-	Ptrlist *out;  /*frag out brench */
+	State *start;
+	Ptrlist *out;
 };
 
 /* Initialize Frag struct. */
@@ -170,7 +170,7 @@ frag(State *start, Ptrlist *out)
  */
 union Ptrlist
 {
-	Ptrlist *next;  /* will change State pointer */
+	Ptrlist *next;
 	State *s;
 };
 
@@ -180,7 +180,7 @@ list1(State **outp)
 {
 	Ptrlist *l;
 	
-	l = (Ptrlist*)outp; /* will change State pointer */
+	l = (Ptrlist*)outp;
 	l->next = NULL;
 	return l;
 }
