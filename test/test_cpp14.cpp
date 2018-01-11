@@ -30,11 +30,27 @@ test_copy_t get_move()
 	return const_cast<const test_copy_t&>(t);
 }
 
+class test_signle_op
+{
 
+};
+
+
+void operator++(test_signle_op)
+{
+	DebugValue("++1");
+}
+
+void operator++(test_signle_op, int)
+{
+	DebugValue("1++");
+}
 
 int main()
 {
 	test_copy_t t = get_move();
+	++test_signle_op{};
+	test_signle_op{}++;
 
 	getchar();
 	return 0;

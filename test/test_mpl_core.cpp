@@ -133,8 +133,21 @@ public:
 
 constexpr util::create_t< test_forward_map > test_forward;
 
+
+int test_move(const int& i)
+{
+	DebugTypeName< decltype(util::move(i)) >();
+	return 0;
+}
+
 int main()
 {
+	DebugTypeName<const int&&>();
+
+	const test_copy_t tca{1};
+	test_copy_t{ util::fmove(tca) };
+
+	test_move(1);
 	int ta = 0;
 	const int tb = 0;
 	auto create1 = test_forward("fdsaf", ta, tb, &test_copy_t::test_mfn);
@@ -160,15 +173,15 @@ int main()
 	DebugSubTitle("push front");
 
 
-	DebugSubTitle("split");
-	DebugTypeName< typename split< apack1, 2>::head >();
-	DebugTypeName< typename split< apack1, 2>::tail >();
-	DebugTypeName< typename split< apack1, 0>::head >();
-	DebugTypeName< typename split< apack1, 0>::tail >();
-	DebugTypeName< typename split< apack1, 5>::head >();
-	DebugTypeName< typename split< apack1, 5>::tail >();
-	DebugTypeName< typename split< apack1, 2,1>::head >();
-	DebugTypeName< typename split< apack1, 2,1>::tail >();
+	DebugSubTitle("split_");
+	DebugTypeName< typename split_< apack1, 2>::head >();
+	DebugTypeName< typename split_< apack1, 2>::tail >();
+	DebugTypeName< typename split_< apack1, 0>::head >();
+	DebugTypeName< typename split_< apack1, 0>::tail >();
+	DebugTypeName< typename split_< apack1, 5>::head >();
+	DebugTypeName< typename split_< apack1, 5>::tail >();
+	DebugTypeName< typename split_< apack1, 2,1>::head >();
+	DebugTypeName< typename split_< apack1, 2,1>::tail >();
 
 	DebugNewTitle("test val pack");
 	typedef val_pack<int, 1, 2, 3, 5, 6, 7> vpack1;
@@ -184,15 +197,15 @@ int main()
 	DebugTypeName< merge_t< val_pack<int>, vpack2>>();
 	DebugSubTitle("find");
 	DebugTypeName< find_t< vpack1, compile_t<int,3>> >();
-	DebugSubTitle("split");
-	DebugTypeName< typename split< vpack1, 2>::head >();
-	DebugTypeName< typename split< vpack1, 2>::tail >();
-	DebugTypeName< typename split< vpack1, 0>::head >();
-	DebugTypeName< typename split< vpack1, 0>::tail >();
-	DebugTypeName< typename split< vpack1, 5>::head >();
-	DebugTypeName< typename split< vpack1, 5>::tail >();
-	DebugTypeName< typename split< vpack1, 2, 1>::head >();
-	DebugTypeName< typename split< vpack1, 2, 1>::tail >();
+	DebugSubTitle("split_");
+	DebugTypeName< typename split_< vpack1, 2>::head >();
+	DebugTypeName< typename split_< vpack1, 2>::tail >();
+	DebugTypeName< typename split_< vpack1, 0>::head >();
+	DebugTypeName< typename split_< vpack1, 0>::tail >();
+	DebugTypeName< typename split_< vpack1, 5>::head >();
+	DebugTypeName< typename split_< vpack1, 5>::tail >();
+	DebugTypeName< typename split_< vpack1, 2, 1>::head >();
+	DebugTypeName< typename split_< vpack1, 2, 1>::tail >();
 
 	DebugNewTitle("arithmatic");
 	DebugValue(max_<int, 2, 5, 9, 0, -1>::value);

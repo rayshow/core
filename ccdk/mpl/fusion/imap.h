@@ -34,6 +34,8 @@ class imap< indice_pack<Indice...>, Args...>
 {
 public:
 
+	constexpr imap() = default;
+
 	/*value*/
 	template<typename... Args2, typename = check_t< and_< has_constructor< decay_t<Args>,Args2>...>> >
 	CCDK_FORCEINLINE explicit constexpr imap(Args2 &&... args2) : ipair<Indice, Args>{ util::forward<Args2>(args2) }... {  }

@@ -440,15 +440,21 @@ int main()
 	//DebugValue(assign1(a));
 	//DebugValue(a);
 	
-	DebugSubTitle("test invoke");
-	auto invoke1 = _(lazy_, _) + _ + _ + 1_(lazy_, _);	
-	DebugTypeName<decltype(invoke1)>();
-	int size;
-	DebugValue(size = invoke1.wild_size);
-	DebugValue(size = invoke1.index_size);
-	DebugValue(size = invoke1([](int i) { return i; }, 5, 3,2,1));
+	//DebugSubTitle("test invoke");
+	//auto invoke1 = _(_lazy, _) + _ + _ + _1(_lazy, _);
+	//DebugTypeName<decltype(invoke1)>();
+	//int size;
+	//DebugValue(size = invoke1.wild_size);
+	//DebugValue(size = invoke1.index_size);
+	//DebugValue(size = invoke1([](int i) { return i; }, 5, 3,2,1));
 
-	DebugSubTitle("test val");
+	//DebugSubTitle("test val");
+	//auto invoke1 = _ + _;
+	//DebugValue(invoke1(1, 2));
+	auto invoke2 = _ + _ + _ + (--_1)*_ / 4 ;
+	int a = 3;
+	DebugValue(invoke2(a, 2,3,5));
+
 	
 	/*test_copy_t test1{ 1 };
 	const test_copy_t test2{ 1 };

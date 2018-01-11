@@ -19,7 +19,7 @@ ccdk_namespace_mpl_fn_start
 
 	/* mark lazy expression */
 	struct mark_lazy_t {};
-	constexpr mark_lazy_t lazy_{};
+
 
 	template<typename T> struct is_mark_lazy :false_ {};
 	template<> struct is_mark_lazy<mark_lazy_t> :true_ {};
@@ -173,6 +173,25 @@ ccdk_namespace_mpl_fn_start
 		/* _ */
 		constexpr expr<null_> _{};
 
+		constexpr expr<uint32_<1>>  _1{};
+		constexpr expr<uint32_<2>>  _2{};
+		constexpr expr<uint32_<3>>  _3{};
+		constexpr expr<uint32_<4>>  _4{};
+		constexpr expr<uint32_<5>>  _5{};
+		constexpr expr<uint32_<6>>  _6{};
+		constexpr expr<uint32_<7>>  _7{};
+		constexpr expr<uint32_<8>>  _8{};
+		constexpr expr<uint32_<9>>  _9{};
+		constexpr expr<uint32_<10>> _10{};
+		constexpr expr<uint32_<11>> _11{};
+		constexpr expr<uint32_<12>> _12{};
+		constexpr expr<uint32_<13>> _13{};
+		constexpr expr<uint32_<14>> _14{};
+		constexpr expr<uint32_<15>> _15{};
+		constexpr expr<uint32_<16>> _16{};
+
+		constexpr mark_lazy_t _lazy{};
+
 		/* 1_ , 2_ ... */
 		template<char... args>
 		constexpr auto operator""_()
@@ -180,47 +199,68 @@ ccdk_namespace_mpl_fn_start
 			static_assert(val_first<char, args...>::value != '0', "number placeholder can't be 0_, need greater then 0");
 			return expr < uint32_ < literals::parse_integer<sizeof...(args)>({ args... }) > > {};
 		}
+
 	}
+
+	constexpr util::create_t< expr > create_expr{};
 
 
 	/* expr + any T(exclude expr) */
 	template< typename T, typename = check_t< not_< is_expr<T>>>, typename... Args >
 	CCDK_FORCEINLINE constexpr auto operator+(const expr<Args...>& e, T&& t)
 	{
-		return expr< add_t, expr<Args...>, expr< value_t<T> > >{ const_cast<expr<Args...>&&>(e), expr< value_t<T>>{util::forward<T>(t)} };
+		return expr< add_t, expr<Args...>, expr< value_t<T> > >{ util::fmove(e), util::forward<T>(t) };
 	}
 
 	/* any T(exclude expr) + expr */
 	template< typename T, typename = check_t< not_< is_expr<T>>>, typename... Args >
 	CCDK_FORCEINLINE constexpr auto operator+(T&& t, const expr<Args...>& e)
 	{
-		return expr< add_t, expr< value_t<T>>, expr<Args...> >{ util::forward<T>(t), const_cast<expr<Args...>&&>(e) };
+		return expr< add_t, expr< value_t<T>>, expr<Args...> >{ util::forward<T>(t), util::fmove(e) };
 	}
 
 	/* expr + expr */
 	template< typename... Args1, typename... Args2 >
 	CCDK_FORCEINLINE constexpr auto operator+(const expr<Args1...>& e1, const expr<Args2...>& e2)
 	{
-		return expr< add_t, expr<Args1...>, expr<Args2...> >{ const_cast<expr<Args1...>&&>(e1), const_cast<expr<Args2...>&&>(e2) };
+		return expr< add_t, expr<Args1...>, expr<Args2...> >{ util::fmove(e1), util::fmove(e2) };
+	}
+
+	/* expr ++ */
+	template< typename... Args>
+	CCDK_FORCEINLINE constexpr auto operator++(const expr<Args...>& e, int)
+	{
+		return expr< post_inc_t, expr<Args...>>{ util::fmove(e) };
+	}
+
+	/* expr -- */
+	template< typename... Args>
+	CCDK_FORCEINLINE constexpr auto operator--(const expr<Args...>& e, int)
+	{
+		return expr< post_dec_t, expr<Args...>>{ util::fmove(e) };
 	}
 
 
-#define BINARY_OPERATION_DECL(name, sign,...) \
+#define CCDK_BINARY_OPERATION_DECL(name, sign,...) \
 	template< typename T, typename = check_t< not_< is_expr<T>>>, typename... Args >                                                         \
 	CCDK_FORCEINLINE constexpr auto operator sign(const expr<Args...>& e, T&& t)                                                             \
-	{ return expr< name ## _t, expr<Args...>, expr< value_t<T>> >{ const_cast<expr<Args...>&&>(e), expr< value_t<T>>{util::forward<T>(t)}};} \
+	{ return expr< name ## _t, expr<Args...>, expr< value_t<T>> >{ util::fmove(e), util::forward<T>(t) } ;}                                    \
                                                                                                                                              \
 	template< typename T, typename = check_t< not_< is_expr<T>>>, typename... Args >                                                         \
 	CCDK_FORCEINLINE constexpr auto operator sign(T&& t, const expr<Args...>& e)                                                             \
-	{ return expr< name ## _t, expr< value_t<T>>, expr<Args...> >{ util::forward<T>(t), const_cast<expr<Args...>&&>(e) }; }                  \
+	{ return expr< name ## _t, expr< value_t<T>>, expr<Args...> >{ util::forward<T>(t), util::fmove(e) }; }                                  \
                                                                                                                                              \
 	template< typename... Args1, typename... Args2 >                                                                                         \
 	CCDK_FORCEINLINE constexpr auto operator sign(const expr<Args1...>& e1, const expr<Args2...>& e2)                                        \
-	{ return expr< name ## _t, expr<Args1...>, expr<Args2...> >{ const_cast<expr<Args1...>&&>(e1), const_cast<expr<Args2...>&&>(e2) }; } 
+	{ return expr< name ## _t, expr<Args1...>, expr<Args2...> >{ util::fmove(e1), util::fmove(e2) }; } 
 
-	/* same as operator+ */
-	// require operator= 
-	CCDK_PP_FOREACH_TUPLE(BINARY_OPERATION_DECL, (
+#define CCDK_FRONT_UNARY_DECL(name, sign,...) \
+	template< typename... Args>               \
+	CCDK_FORCEINLINE constexpr auto operator sign(const expr<Args...>& e)           \
+	{ return expr< name ## _t, expr<Args...> >{ util::fmove(e) }; }
+
+	/* same as operator+, operator=,operator[],operator() must implement in expr class content */
+	CCDK_PP_FOREACH_TUPLE(CCDK_BINARY_OPERATION_DECL, (
 		(sub, -),
 		(div, / ),
 		(mul, *),
@@ -248,5 +288,18 @@ ccdk_namespace_mpl_fn_start
 		(gequal, >= ),
 		(equal, == ),
 		(nequal, != )));
+
+	/* unary front operation like ++T */
+	CCDK_PP_FOREACH_TUPLE(CCDK_FRONT_UNARY_DECL, (
+		(inc, ++),
+		(dec, --),
+		(deref, *),
+		(negative, -),
+		(positive, +),
+		(logic_not,!),
+		(bit_reverse, ~)));
+
+#undef CCDK_FRONT_UNARY_DECL
+#undef CCDK_BINARY_OPERATION_DECL
 
 ccdk_namespace_mpl_fn_end

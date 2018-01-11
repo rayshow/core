@@ -28,9 +28,9 @@ ccdk_namespace_mpl_fn_start
 	{
 		constexpr static uint32 size = sizeof...(Args);
 		constexpr static uint32 left_size = TotalSize - size;  /* not stored args of fn */
-		typedef mfunction_tag tag;
-		typedef partial_t this_type;
-		typedef decay_t<Fn> fn_type;
+		typedef mfunction_tag   tag;
+		typedef partial_t       this_type;
+		typedef decay_t<Fn>     fn_type;
 
 		fn_type fn;
 		fs::closure_args<size, Args...> args;

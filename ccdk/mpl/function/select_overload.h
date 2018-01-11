@@ -33,12 +33,12 @@ template<typename Ret, typename Class, typename... Args>
 struct select_overload_t<Ret(Class::*)(Args...)>
 {
 	typedef mfunction_tag tag;
-	using value_type = Ret(Class::*)(Args...);
+	using fn_type = Ret(Class::*)(Args...);
 
-	value_type fn;
+	fn_type fn;
 	Class*     clazz;
 
-	CCDK_FORCEINLINE select_overload_t(Class* inClass, value_type inFn) :clazz{ inClass }, fn{ inFn } {}
+	CCDK_FORCEINLINE select_overload_t(Class* inClass, fn_type inFn) :clazz{ inClass }, fn{ inFn } {}
 
 	CCDK_FORCEINLINE constexpr decltype(auto) operator()(Args... args) const { return (clazz->*fn)(args...); }
 };

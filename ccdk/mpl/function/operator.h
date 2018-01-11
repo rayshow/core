@@ -106,6 +106,15 @@ ccdk_namespace_mpl_fn_start
 			return condi ? t1 : t2;
 		}
 	};
+
+	struct deref_member
+	{
+		template<typename Class, typename Member>
+		CCDK_FORCEINLINE constexpr decltype(auto) operator()(const Class& clazz, const Member& member )
+		{
+			return clazz->*member;
+		}
+	};
 			
 	constexpr post_dec_t post_dec{};
 	constexpr post_inc_t post_inc{};
