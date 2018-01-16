@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rd\dfa.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\3rd\nfa.c">
       <Filter>源文件</Filter>
     </ClCompile>

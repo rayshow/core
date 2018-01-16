@@ -287,7 +287,7 @@ struct List
 List l1, l2;
 static int listid;
 
-void addstate(List*, State*);
+void addstate (List*, State*);
 void step(List*, int, List*);
 
 /* Compute initial state list */
@@ -364,45 +364,45 @@ match(State *start, char *s)
 	}
 	return ismatch(clist);
 }
-
-int
-main(int argc, char **argv)
-{
-	int i;
-	char *post;
-	State *start;
-
-	//if(argc < 3){
-	//	fprintf(stderr, "usage: nfa regexp string...\n");
-	//	return 1;
-	//}
-	const char *pattern = "abc(ab|bc)*a*b?c+";
-	printf("reg style %s\n", pattern);
-	post = re2post(pattern);
-	printf("post style %s\n",post);
-	if(post == NULL){
-		fprintf(stderr, "bad regexp %s\n", argv[1]);
-		return 1;
-	}
-	
-	start = post2nfa(post);
-	if(start == NULL){
-		fprintf(stderr, "error in post2nfa %s\n", post);
-		return 1;
-	}
-	
-	l1.s = malloc(nstate*sizeof l1.s[0]);
-	l2.s = malloc(nstate*sizeof l2.s[0]);
-	//for(i=2; i<argc; i++)
-
-	if (match(start, "abcabaaadc"))
-		printf("match");
-	else
-		printf("not match");
-	//		printf("%s\n", argv[i]);
-	getchar();
-	return 0;
-}
+//
+//int
+//main(int argc, char **argv)
+//{
+//	int i;
+//	char *post;
+//	State *start;
+//
+//	//if(argc < 3){
+//	//	fprintf(stderr, "usage: nfa regexp string...\n");
+//	//	return 1;
+//	//}
+//	const char *pattern = "abc(ab|bc)*a*b?c+";
+//	printf("reg style %s\n", pattern);
+//	post = re2post(pattern);
+//	printf("post style %s\n",post);
+//	if(post == NULL){
+//		fprintf(stderr, "bad regexp %s\n", argv[1]);
+//		return 1;
+//	}
+//	
+//	start = post2nfa(post);
+//	if(start == NULL){
+//		fprintf(stderr, "error in post2nfa %s\n", post);
+//		return 1;
+//	}
+//	
+//	l1.s = malloc(nstate*sizeof l1.s[0]);
+//	l2.s = malloc(nstate*sizeof l2.s[0]);
+//	//for(i=2; i<argc; i++)
+//
+//	if (match(start, "abcabaaadc"))
+//		printf("match");
+//	else
+//		printf("not match");
+//	//		printf("%s\n", argv[i]);
+//	getchar();
+//	return 0;
+//}
 
 /*
  * Permission is hereby granted, free of charge, to any person

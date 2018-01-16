@@ -908,5 +908,8 @@
     <ClInclude Include="mpl\mcontainer\push_front.h" />
     <ClInclude Include="mpl\mcontainer\clear.h" />
     <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
+    <ClInclude Include="string\char_traits.h" />
+    <ClInclude Include="string\string.h" />
+    <ClInclude Include="string\string_view.h" />
   </ItemGroup>
 </Project>

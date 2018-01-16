@@ -371,6 +371,9 @@
     <ClInclude Include="preprocessor\uint8_sub_n.h" />
     <ClInclude Include="preprocessor\uint8_sub_one.h" />
     <ClInclude Include="preprocessor\while.h" />
+    <ClInclude Include="string\char_traits.h" />
+    <ClInclude Include="string\string.h" />
+    <ClInclude Include="string\string_view.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

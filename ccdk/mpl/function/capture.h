@@ -36,7 +36,6 @@ ccdk_namespace_mpl_fn_start
 		{
 			DebugFunctionName();
 			return _invoke_impl( util::forward<Fn>(fn), make_indice<size>{} );
-			//return false;
 		}
 	};
 		

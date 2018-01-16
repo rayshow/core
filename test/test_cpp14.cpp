@@ -17,6 +17,7 @@
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/mpl/function/partial.h>
 #include<ccdk/mpl/function/capture.h>
+#include<regex>
 
 
 using namespace ccdk;
@@ -48,6 +49,8 @@ void operator++(test_signle_op, int)
 
 int main()
 {
+	std::regex("a*");
+
 	test_copy_t t = get_move();
 	++test_signle_op{};
 	test_signle_op{}++;
