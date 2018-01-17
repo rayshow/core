@@ -910,6 +910,10 @@
     <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
     <ClInclude Include="string\char_traits.h" />
     <ClInclude Include="string\string.h" />
+    <ClInclude Include="string\string_fwd.h" />
+    <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />
+    <ClInclude Include="memory\memory_traits.h" />
+    <ClInclude Include="mpl\util\copy.h" />
   </ItemGroup>
 </Project>

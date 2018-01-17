@@ -19,10 +19,10 @@ template<wchar_t c> constexpr char32_<c> char32_c{};
 
 
 template<typename T>
-struct char_traits {};
+struct chars_ {};
 
 template<>
-struct char_traits<achar>
+struct chars_<achar>
 {
 	static constexpr achar end  = '\0';
 	static constexpr achar newline = '\n';

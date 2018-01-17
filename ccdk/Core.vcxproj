@@ -111,6 +111,7 @@
     <ClInclude Include="math\vector4.h" />
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
+    <ClInclude Include="memory\memory_traits.h" />
     <ClInclude Include="mpl\base\bool_.h" />
     <ClInclude Include="mpl\base\char_.h" />
     <ClInclude Include="mpl\base\compile_check.h" />
@@ -298,6 +299,7 @@
     <ClInclude Include="mpl\type_traits\select_case.h" />
     <ClInclude Include="mpl\type_traits\traits_case.h" />
     <ClInclude Include="mpl\util\addressof.h" />
+    <ClInclude Include="mpl\util\copy.h" />
     <ClInclude Include="mpl\util\create.h" />
     <ClInclude Include="mpl\util\dummy_call.h" />
     <ClInclude Include="mpl\util\forward.h" />
@@ -373,6 +375,8 @@
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="string\char_traits.h" />
     <ClInclude Include="string\string.h" />
+    <ClInclude Include="string\string_fwd.h" />
+    <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
