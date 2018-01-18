@@ -376,6 +376,7 @@
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="string\char_traits.h" />
     <ClInclude Include="string\string.h" />
+    <ClInclude Include="string\string_builder.h" />
     <ClInclude Include="string\string_fwd.h" />
     <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />

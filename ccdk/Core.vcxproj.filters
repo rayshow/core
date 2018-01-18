@@ -916,5 +916,6 @@
     <ClInclude Include="mpl\util\value.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
+    <ClInclude Include="string\string_builder.h" />
   </ItemGroup>
 </Project>

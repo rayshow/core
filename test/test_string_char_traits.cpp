@@ -14,6 +14,19 @@ using namespace ccdk;
 using namespace ccdk::str;
 using namespace ccdk::mpl;
 
+template<typename T>
+struct test_tmpl
+{
+	test_tmpl() = default;
+
+	template<typename U>
+	test_tmpl(const test_tmpl<U>& tmp) { DebugValue("tmpl constructor"); }
+
+	template<typename U>
+	void test(const test_tmpl<U>& tmp) { DebugValue("tmpl test"); }
+
+};
+
 int main()
 {
 	DebugValue(size_c< common_char_traits<achar>::strlen(u8"abc") >);
@@ -27,7 +40,6 @@ int main()
 	char32 c32s[4];
 	DebugValue( common_char_traits<achar>::strcpy(cs, u8"ab") );
 
-	std::string;
 
 	getchar();
 	return 0;

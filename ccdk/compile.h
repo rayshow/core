@@ -96,6 +96,7 @@
 #define ccdk_assert( expr )  assert( expr )
 #define ccdk_throw( expr ) ( assert(ccdk_throw_at), throw(expr))
 #define ccdk_rethrow()     ( assert(ccdk_rethrow_at), throw )
+#define ccdk_assert_if(expr) ccdk_assert(!(expr)); if(expr)
 #else
 #define ccdk_assert( expr ) 
 #define ccdk_throw( expr )  throw(expr)
