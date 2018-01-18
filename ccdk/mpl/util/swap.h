@@ -54,8 +54,6 @@ ccdk_namespace_mpl_util_start
 		t2 = tmp;
 	}
 
-	
-
 	//for different type pointer, must be compatible
 	template<typename T1, typename T2, typename = check_t< is_compatible<T1*, T2*> >  >
 	CCDK_FORCEINLINE void swap(T1*& t1, T2*& t2) noexcept

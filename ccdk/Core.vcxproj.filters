@@ -715,21 +715,6 @@
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
     <ClInclude Include="debug_type.hpp" />
-    <ClInclude Include="mpl\util\swap.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\forward.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\move.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\noncopyable.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\addressof.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\result_of.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -765,18 +750,6 @@
     </ClInclude>
     <ClInclude Include="mpl\fusion\bad_cast_exception.h">
       <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\size.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\value.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\compatible_cmp.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\hash.h">
-      <Filter>mpl\util</Filter>
     </ClInclude>
     <ClInclude Include="mpl\smart_ptr\default_deleter.h">
       <Filter>mpl\smart_ptr</Filter>
@@ -816,9 +789,6 @@
     </ClInclude>
     <ClInclude Include="mpl\fusion\imap.h">
       <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\create.h">
-      <Filter>mpl\util</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\array.h">
       <Filter>mpl\fusion</Filter>
@@ -892,7 +862,6 @@
     <ClInclude Include="mpl\base\arithmatic_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\util\dummy_call.h" />
     <ClInclude Include="mpl\mcontainer\front.h" />
     <ClInclude Include="mpl\mcontainer\begin.h" />
     <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
@@ -914,6 +883,38 @@
     <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />
     <ClInclude Include="memory\memory_traits.h" />
+    <ClInclude Include="mpl\util\addressof.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\compatible_cmp.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
     <ClInclude Include="mpl\util\copy.h" />
+    <ClInclude Include="mpl\util\create.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\dummy_call.h" />
+    <ClInclude Include="mpl\util\forward.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\hash.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\move.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\noncopyable.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\size.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\swap.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\util_module.h" />
+    <ClInclude Include="mpl\util\value.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

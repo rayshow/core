@@ -309,6 +309,7 @@
     <ClInclude Include="mpl\util\noncopyable.h" />
     <ClInclude Include="mpl\util\size.h" />
     <ClInclude Include="mpl\util\swap.h" />
+    <ClInclude Include="mpl\util\util_module.h" />
     <ClInclude Include="mpl\util\value.h" />
     <ClInclude Include="preprocessor\bool_and.h" />
     <ClInclude Include="preprocessor\bool_equal.h" />

@@ -1,0 +1,4 @@
+﻿  nfa.c
+d:\____git\aurora3d\core\3rd\nfa.c(353): warning C4101: “i”: 未引用的局部变量
+d:\____git\aurora3d\core\3rd\nfa.c(369): warning C4101: “i”: 未引用的局部变量
+  test_nfa.vcxproj -> D:\____git\Aurora3D\core\test\test_nfa\Debug\test_nfa.exe
