@@ -72,7 +72,8 @@ namespace ccdk
 			try { (statement); }                                               \
 			catch (...) { (cleanup); throw; /* rethrow */ }               
 
-#define ccdk_if_not_this(val)  if(ccdk_likely( ::ccdk::mpl::util::addressof(val)!=this ))
+#define ccdk_if_not_this(T)          if(ccdk_likely( ::ccdk::mpl::util::addressof(T)!=this ))
+#define ccdk_if_not_same_addr(T1,T2) if(ccdk_likely( ::ccdk::mpl::util::addressof(T1)!=::ccdk::mpl::util::addressof(T2) ))
 
 	}
 

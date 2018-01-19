@@ -154,7 +154,7 @@ public:
 	/* change  */
 	CCDK_FORCEINLINE constexpr base_string& insert(size_type pos, char_type const* str)
 	{
-		size_type str_eln = traits_type::length(str);
+		size_type str_len = traits_type::length(str);
 		/* need realloc */
 		if (str_len + length > alloc_size)
 		{

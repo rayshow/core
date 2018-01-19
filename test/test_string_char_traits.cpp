@@ -9,37 +9,107 @@
 #include<functional>
 #include<ccdk/string/char_traits.h>
 #include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/util/move.h>
 
 using namespace ccdk;
 using namespace ccdk::str;
 using namespace ccdk::mpl;
 
 template<typename T>
-struct test_tmpl
+void test_copy(const T& src)
 {
-	test_tmpl() = default;
+	T dest{};
+	DebugValue(is_pod_v<T>);
+	DebugValue(has_copy_assigner_v<T>);
+	DebugValue(dest);
+	DebugValue(src);
+	util::copy(dest, src);
+	DebugValue(dest);
+	DebugValue(src);
+}
 
-	template<typename U>
-	test_tmpl(const test_tmpl<U>& tmp) { DebugValue("tmpl constructor"); }
+template<typename T1, typename T2>
+void test_copy(T1& dest, const T2& src)
+{
+	DebugFunctionName();
+	DebugNewTitle("new ");
+	DebugValue(is_pod_v<remove_pointer_t< remove_all_dim_t<T1>>>);
+	DebugValue(has_copy_assigner_v<remove_pointer_t< remove_all_dim_t<T1>>>);
+	if (is_array_v<T1>)
+	{
+		for (int i = 0; i < array_len_v<T1>; ++i)
+		{
+			std::cout << dest[i];
+		}
+		std::cout << "|" << std::endl;
+		for (int i = 0; i < array_len_v<T2>; ++i)
+		{
+			std::cout << src[i];
+		}
+		std::cout << "|" << std::endl;
+	}
+	else {
+		DebugValue(dest);
+	}
+	util::copy(dest, src);
+	if (is_array_v<T1>)
+	{
+		for (int i = 0; i < array_len_v<T1>; ++i)
+		{
+			std::cout << dest[i];
+		}
+		std::cout << "|" << std::endl;
+		for (int i = 0; i < array_len_v<T2>; ++i)
+		{
+			std::cout << src[i];
+		}
+		std::cout << "|" << std::endl;
+	}
+	else {
+		DebugValue(dest);
+	}
+}
 
-	template<typename U>
-	void test(const test_tmpl<U>& tmp) { DebugValue("tmpl test"); }
-
+class test_copy_class
+{
+public:
+	void operator=(const test_copy_class&) {}
 };
 
 int main()
 {
-	DebugValue(size_c< common_char_traits<achar>::strlen(u8"abc") >);
-	DebugValue(size_c< common_char_traits<wchar>::strlen(L"abc") >);
-	DebugValue(size_c< common_char_traits<char16>::strlen(u"abc") >);
-	DebugValue(size_c< common_char_traits<char32>::strlen(U"abc") >);
+	char c = 0;
+	util::copy(c, 'a');
+	util::move(c, 'a');
 
-	char cs[5] = u8"";
-	wchar ws[4];
-	char16 c16s[4];
-	char32 c32s[4];
-	DebugValue( common_char_traits<achar>::strcpy(cs, u8"ab") );
+	
 
+	std::string{};
+
+	char a[6];
+	util::copy(a, "abc");
+	std::string strs1[3] = { };
+	std::string strs2[2] = {"abc", "def"};
+	util::copy(strs1, strs2);
+	util::move(strs1, strs2);
+
+	char buffer[20];
+	const char *name = "hello,world";
+	util::copy(buffer, name, strlen(name) + 1);
+	util::move(buffer, name, strlen(name) + 1);
+
+	std::string strs3[3] = {};
+	std::string strs4[2] = {"hello", "world"};
+
+	strs3[1] = util::fmove(strs4[1]);
+	strs3[0] = util::fmove(strs4[0]);
+
+	util::copy(strs3, strs4, 2);
+	util::move(strs3, strs4, 2);
+
+	test_copy_class tca;
+	util::copy(tca, test_copy_class{});
+	util::move(tca, test_copy_class{});
 
 	getchar();
 	return 0;

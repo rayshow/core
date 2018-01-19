@@ -44,4 +44,19 @@ struct max_ :arithmatic<T, max2, args...> {};
 template< typename T, T... args>
 static constexpr T max_v = max_<T, args...>::value;
 
+/* min args... */
+struct min2
+{
+	template<typename T, T a, T b>
+	struct apply
+	{
+		static constexpr T value = a < b ? a : b;
+	};
+};
+template< typename T, T... args>
+struct min_ :arithmatic<T, min2, args...> {};
+
+template< typename T, T... args>
+static constexpr T min_v = min_<T, args...>::value;
+
 ccdk_namespace_mpl_end
