@@ -12,7 +12,7 @@ ccdk_namespace_string_start
 template<typename Char>
 struct common_char_traits
 {
-	typedef Char                     char_type;
+	typedef Char char_type;
 
 	constexpr static ptr::size_t length(char_type const* str) noexcept
 	{
@@ -23,30 +23,16 @@ struct common_char_traits
 		return len;
 	}
 
-	/* copy n char from src to dest, need ensure dest has large enough memory */
-	CCDK_FORCEINLINE static char_type* copy(char_type *dest, char_type const* src, ptr::size_t n)
+	constexpr static ptr::size_t find(char_type const* source,
+		ptr::size_t source_len, char_type const* search, ptr::size_t search_len) noexcept
 	{
-		using mpl::util::copy;
-		return copy(dest, src, n);
-	}
+		ccdk_assert(search != nullptr && search_len > 0);
+		ptr::size_t *offset = new ptr::size_t[search_len];
+		if (!offset) return source_len;
+		for (ptr::size_t i = 0; i < search_len; ++i)
+		{
 
-	/* copy src[start, end) to dest[pos, pos+ end -start) */
-	CCDK_FORCEINLINE static char_type* copy(char_type* dest, char_type const* src, ptr::size_t start, ptr::size_t end, ptr::size_t pos)
-	{
-		using mpl::util::copy;
-		return copy(dest+pos, src+start, end-start);
-	}
-
-	/* move src[start, end) to dest */
-
-	/* literal copy to  string buffer, string buffer need large enough to hold copy */
-	template< typename From, 
-		typename = mpl::check_t< mpl::is_same<char_type, mpl::remove_all_dim_t<From>>>
-	>
-	CCDK_FORCEINLINE static char_type* copy(char_type* dest, From const& src )
-	{
-		using mpl::util::copy;
-		return copy( dest, src, mpl::array_len_v<From>);
+		}
 	}
 };
 
@@ -57,10 +43,7 @@ template<>
 struct char_traits<achar> : public common_char_traits<achar>
 {
 	typedef common_char_traits<achar> base_type;
-
 	using base_type::length;
-	using base_type::copy;
-
 };
 
 ccdk_namespace_string_end

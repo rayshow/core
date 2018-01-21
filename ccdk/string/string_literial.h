@@ -11,8 +11,6 @@
 
 ccdk_namespace_mpl_fs_start
 
-
-
 	//L length of string include '\0'
 	template< typename Ch, uint32 L >
 	struct string_literial

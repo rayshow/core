@@ -44,7 +44,7 @@ private:
 	char   memory[memory_size];
 	uint8  index;
 
-	CCDK_FORCEINLINE void destruct_old() noexcept { util::dummy_call(get_base<indice>(*this).destruct(index, memory)...); }
+	CCDK_FORCEINLINE void destruct() noexcept { util::dummy_call(get_base<indice>(*this).destruct(index, memory)...); }
 
 public:
 	template< typename P, uint32 PIndex = args_find_v<P, Args...> >
@@ -68,7 +68,7 @@ public:
 	CCDK_FORCEINLINE varient_impl& operator=(const P& p)
 	{
 		static_assert(PIndex <= 255, "type not found in bound Types");
-		destruct_old();
+		destruct();
 		new(memory) P{ p };
 		index = PIndex;
 		return *this;

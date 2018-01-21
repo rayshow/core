@@ -84,8 +84,9 @@ template< typename T,
 >
 CCDK_FORCEINLINE void copy(T* dest, T const* src, ptr::size_t n)
 {
-	if (ccdk_unlikely(n == 0)) return;
+	if (ccdk_unlikely(n == 0 || src == dest)) return;
 	for (ptr::size_t i=0; i<n; ++i) { *(dest + i) = *(src + i); }
 }
+
 
 ccdk_namespace_mpl_util_end

@@ -101,7 +101,7 @@ void move(T(&dest)[D], T(&src)[S])
 template<typename T, typename = check_t< is_pod<T>> >
 CCDK_FORCEINLINE void move(T* dest, const T* src, ptr::size_t n )
 {
-	if (ccdk_unlikely(n == 0)) return;
+	if (ccdk_unlikely(n == 0 || dest == src)) return;
 	memmove((void*)dest, (void*)src, sizeof(T)*n);
 }
 
@@ -112,8 +112,9 @@ template<typename T,
 >
 CCDK_FORCEINLINE void move(T* dest, const T* src, ptr::size_t n)
 {
-	if (ccdk_unlikely(n == 0)) return;
+	if (ccdk_unlikely(n == 0 || dest == src)) return;
 	if (dest > src) {  for (ptr::size_t i = n - 1; i != 0; --i)  { *(dest + i) = fmove(*(src + i)); }  }
+	else if (dest < src) { for (ptr::size_t i = 0; i < n; ++i) { *(dest + i) = fmove(*(src + i)); } }
 }
 
 ccdk_namespace_mpl_util_end

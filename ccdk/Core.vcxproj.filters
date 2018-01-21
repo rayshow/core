@@ -75,13 +75,7 @@
     <ClInclude Include="container\string_ref.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="container\char_trait.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="container\vector.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\bidirection_list.h">
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="container\forward_list.h">
@@ -733,9 +727,6 @@
     <ClInclude Include="mpl\fusion\maybe.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\string_literial.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\fusion\tuple.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
@@ -788,9 +779,6 @@
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\imap.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\array.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\fusion\ratio.h">
@@ -917,5 +905,17 @@
       <Filter>mpl\util</Filter>
     </ClInclude>
     <ClInclude Include="string\string_builder.h" />
+    <ClInclude Include="mpl\iterator\ptr_iterator.h" />
+    <ClInclude Include="mpl\iterator\iterator_fwd.h" />
+    <ClInclude Include="container\blist.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="container\char_trait.h" />
+    <ClInclude Include="container\array.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="string\string_literial.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

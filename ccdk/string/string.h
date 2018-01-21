@@ -2,37 +2,45 @@
 
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/move.h>
+#include<ccdk/mpl/iterator/ptr_iterator.h>
 #include<ccdk/string/string_module.h>
 #include<ccdk/string/char_traits.h>
 
+
 ccdk_namespace_string_start
-
 using namespace mpl;
-
 
 /* uint32 is enough for almost env */
 template<typename Char, typename Size = uint32 >
 class base_string 
 {
 public:
-	typedef Char               char_type;
-	typedef Size               size_type;
-	typedef char_traits<Char>  traits_type;
-	typedef base_string        this_type;
-	typedef Char*              pointer_type;
-	typedef Char&              reference_type;
-	typedef const Char&        const_reference_type;
-	static constexpr float     prealloc_factor = 1.6f;
-	static constexpr Size npos = Size(-1);
-	static constexpr Size max_pos = Size(-2);
+	typedef Char                                           char_type;
+	typedef Char                                           value_type;
+	typedef Size                                           size_type;
+	typedef ptr::diff_t                                    different_type;
+	typedef char_traits<Char>                              traits_type;
+	typedef base_string                                    this_type;
+	typedef Char*                                          pointer_type;
+	typedef Char const*                                    const_pointer_type;
+	typedef Char&                                          reference_type;
+	typedef Char const&                                    const_reference_type;
+	typedef it::iterator<Char*,base_string>                iterator;
+	typedef it::const_iterator<Char*,base_string>          const_iterator;
+	typedef it::reverse_iterator<Char*,base_string>        reverse_iterator;
+	typedef it::const_reverse_iterator<Char*,base_string>  const_reverse_iterator;
+
+	static constexpr float  prealloc_factor = 1.6f;
+	static constexpr Size   npos = Size(-1);
+	static constexpr Size   max_pos = Size(-2);
 
 	template<typename Size2>
 	friend class base_string<Char, Size2>;
 
 private:
-	char_type*   content;      /* string  */
-	size_type    length;       /* content length */
-	size_type    alloc_size;   /* for pre-alloc ex-memory */
+	char_type      content;      /* string  */
+	size_type      length;       /* content length */
+	size_type      alloc_size;   /* for pre-alloc ex-memory */
 
 	/* alloc memory */
 	char_type* alloc_memory(const size_type actual_size)
@@ -49,10 +57,11 @@ private:
 		return buffer;                 
 	}
 
+	/* alloc memory and copy */
 	char_type* realloc_copy(const size_type actual_size)
 	{
 		char_type* buffer = alloc_memory(actual_size);
-		traits_type::copy(buffer, content, length+1);    /* copy 0-terminal */
+		util::copy(buffer, content, length+1);    /* copy 0-terminal */
 		ptr::safe_delete_array(content);
 		content = buffer;
 		length = actual_size;
@@ -62,12 +71,35 @@ private:
 	void alloc_copy(const char_type* str, size_type start, size_type end)
 	{
 		ccdk_assert_if(!str || start >= end ) return;
-		size_type len = end - start;
+		different_type len = end - start;
 		char_type* buffer = alloc_memory(len);
-		traits_type::copy(buffer, str+start, len);      /* copy src to new allocated */
+		util::copy(buffer, str+start, len);      /* copy src to new allocated */
 		buffer[len] = Char(0);
 		content = buffer;
 		length = len;
+	}
+
+	/* replace content[start, end) with str[0, len) */
+	void realloc_replace(size_type start, size_type end, const char_type* str, size_type len)
+	{
+		different_type replace_len = end - start;
+		size_type actual_len = length + len - replace_len;
+		if (actual_len > alloc_size)
+		{
+			/* memory not enough */
+			char_type const* buffer = alloc_memory(actual_len);
+			util::copy(buffer, content, start);                                 /* copy head   */
+			util::copy(buffer + start, str, len);                               /* copy middle */
+			util::copy(buffer + start + len , content + end, length - end + 1); /* copy tail with 0-terminal */
+			ptr::safe_delete_array(content);
+			content = buffer;
+			length = actual_len;
+			return;
+		}
+		/* memory enough */
+		util::move(content + start + len, content + end, length - end + 1); /* move to tail with 0-terminal */
+		util::copy(content + start, str, len);                              /* copy to middle */
+		length = actual_len;
 	}
 
 public:
@@ -132,45 +164,65 @@ public:
 	CCDK_FORCEINLINE constexpr bool empty() const noexcept { return length == 0; }
 
 	/* clear */
-	CCDK_FORCEINLINE constexpr void clear() const noexcept { ccdk_assert(content); content[0] = char_type(0); }
+	CCDK_FORCEINLINE base_string& clear() const noexcept { ccdk_assert(content); content[0] = char_type(0); return *this; }
 
 	/* access */
 	CCDK_FORCEINLINE constexpr char_type& operator[](uint32 at) noexcept { ccdk_assert(content); return content[at]; }
-	CCDK_FORCEINLINE constexpr char_type  operator[](uint32 at) const noexcept { ccdk_assert(content); return content[at]; }
+	CCDK_FORCEINLINE constexpr char_type const& operator[](uint32 at) const noexcept { ccdk_assert(content); return content[at]; }
 
 	CCDK_FORCEINLINE constexpr char_type& at(uint32 at) noexcept { ccdk_assert(content); return content[at]; }
-	CCDK_FORCEINLINE constexpr char_type  at(uint32 at) const noexcept  { ccdk_assert(content); return content[at]; }
+	CCDK_FORCEINLINE constexpr char_type const& at(uint32 at) const noexcept  { ccdk_assert(content); return content[at]; }
 
 	CCDK_FORCEINLINE constexpr char_type& front() noexcept { ccdk_assert(content); return content[0]; }
-	CCDK_FORCEINLINE constexpr char_type  front() const noexcept { ccdk_assert(content); return content[0]; }
+	CCDK_FORCEINLINE constexpr char_type const&  front() const noexcept { ccdk_assert(content); return content[0]; }
 	 
 	CCDK_FORCEINLINE constexpr char_type& back() noexcept { ccdk_assert(content); return content[length-1]; }
-	CCDK_FORCEINLINE constexpr char_type  back() const noexcept { ccdk_assert(content); return content[length-1]; }
+	CCDK_FORCEINLINE constexpr char_type const&  back() const noexcept { ccdk_assert(content); return content[length-1]; }
+	CCDK_FORCEINLINE constexpr char_type* c_str() noexcept { return content; }
+	CCDK_FORCEINLINE constexpr char_type const* c_str() const noexcept { return content; }
 
 	/* sequence */
-	CCDK_FORCEINLINE constexpr void pop_back() noexcept { if (ccdk_likely(length > 0)) { content[length--] = char_type(0); } }
-	CCDK_FORCEINLINE constexpr void push_back(char_type c) { if (length + 1 > alloc_size) { realloc_copy(length+1); } content[length++] = c; content[length] = char_type(0); }
+	CCDK_FORCEINLINE base_string& pop_back() noexcept { if (ccdk_likely(length > 0)) { content[length--] = char_type(0); } return *this; }
+	CCDK_FORCEINLINE base_string& push_back(char_type c) { if (length + 1 > alloc_size) { realloc_copy(length + 1); } content[length++] = c; content[length] = char_type(0); return *this; }
 
-	/* change  */
-	CCDK_FORCEINLINE constexpr base_string& insert(size_type pos, char_type const* str)
-	{
-		size_type str_len = traits_type::length(str);
-		/* need realloc */
-		if (str_len + length > alloc_size)
-		{
-			char_type const* buffer = alloc_memory(str_len + length);
-			traits_type::copy(buffer, content, 0, pos, 0);                  /* copy head */
-			traits_type::copy(buffer, str, 0, str_len, pos);                /* copy middle */
-			traits_type::copy(buffer, content, pos, length, pos + str_len); /* copy tail */
-			ptr::safe_delete_array(content);
-			content = buffer;
-			return;
-		}
-		/* memory enough */
+	/* insert  */
+	CCDK_FORCEINLINE base_string& insert(size_type pos, char_type const* str, size_type len) { ccdk_assert(len != 0 && str!=nullptr); realloc_replace(pos, pos, str, len); return *this; }
+	CCDK_FORCEINLINE base_string& insert(size_type pos, char_type const* str) { insert(pos, str, traits_type::length(str));return *this; }
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str) { insert(pos, str.content, traits_type::length(str)); return *this;}
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str, size_type len) { insert(pos, str.content, len); return *this;}
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str, size_type start, size_type end) { insert(pos, str.content + start, end - start); return *this; }
 
-	}
+	/*erase */
+	CCDK_FORCEINLINE base_string& erase(size_type start, size_type end) { ccdk_assert(end > start); realloc_replace(start, end, nullptr, 0); return *this;}
 
+	/* replace */
+	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, char_type const* str, size_type len) { ccdk_assert(end > start && str != nullptr && len != 0); realloc_replace(start, end, str, len); return *this; }
+	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, char_type const* str) { ccdk_assert(end > start && str != nullptr); realloc_replace(start, end, str, traits_type::length(str)); return *this; }
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str) { ccdk_assert(end > start); realloc_replace(start, end, str.content, str.length); return *this; }
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str, size_type len) { ccdk_assert(end > start); realloc_replace(start, end, str.content, len); return *this; }
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str, size_type rstart, size_type rend) { ccdk_assert(end > start); realloc_replace(start, end, str.content+rstart, rend); return *this; }
 
+	/* iterator */
+	CCDK_FORCEINLINE constexpr iterator begin() const noexcept { return iterator{ content }; }
+	CCDK_FORCEINLINE constexpr iterator end() const noexcept { return iterator{ content+length }; }
+	
+	CCDK_FORCEINLINE constexpr const_iterator cbegin() const noexcept { return const_iterator{ content }; }
+	CCDK_FORCEINLINE constexpr const_iterator cend() const noexcept { return const_iterator{ content + length }; }
+	
+	CCDK_FORCEINLINE constexpr reverse_iterator rbegin() const noexcept { return reverse_iterator{ content + length-1 }; }
+	CCDK_FORCEINLINE constexpr reverse_iterator rend() const noexcept { return reverse_iterator{ content -1 }; }
+	
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator{ content+length-1 }; }
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crend() const noexcept { return const_reverse_iterator{ content - 1 }; }
+
+	/* find */
+	CCDK_FORCEINLINE constexpr size_type find(char_type ch) const noexcept { for (size_type i = 0; i < length; ++i) { if (content[i] == ch) return i; } return npos; }
 };
 
 

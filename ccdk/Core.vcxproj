@@ -72,7 +72,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
-    <ClInclude Include="container\bidirection_list.h" />
+    <ClInclude Include="container\blist.h" />
     <ClInclude Include="container\char_trait.h" />
     <ClInclude Include="container\concurrent_hash_map.h" />
     <ClInclude Include="container\concurrent_hash_set.h" />
@@ -142,7 +142,7 @@
     <ClInclude Include="mpl\function\overload.h" />
     <ClInclude Include="mpl\function\partial.h" />
     <ClInclude Include="mpl\fusion\any.h" />
-    <ClInclude Include="mpl\fusion\array.h" />
+    <ClInclude Include="container\array.h" />
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
@@ -150,10 +150,12 @@
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\ratio.h" />
-    <ClInclude Include="mpl\fusion\string_literial.h" />
+    <ClInclude Include="string\string_literial.h" />
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
+    <ClInclude Include="mpl\iterator\iterator_fwd.h" />
+    <ClInclude Include="mpl\iterator\ptr_iterator.h" />
     <ClInclude Include="mpl\mcontainer\arg_pack.h" />
     <ClInclude Include="mpl\mcontainer\at.h" />
     <ClInclude Include="mpl\mcontainer\begin.h" />
