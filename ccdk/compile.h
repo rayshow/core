@@ -90,7 +90,7 @@
 
 //function like macro
 #if defined( CCDK_DEBUG )
-#include<assert.h>
+#include<cassert>
 #define ccdk_throw_at   false
 #define ccdk_rethrow_at false
 #define ccdk_assert( expr )  assert( expr )

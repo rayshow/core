@@ -6,6 +6,7 @@
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/is_same.h>
+#include<ccdk/string/encoding/ascii.h>
 #include<vector>
 
 ccdk_namespace_string_start
@@ -83,7 +84,6 @@ struct char_traits<achar> : public common_char_traits<achar>
 	{
 
 	}
-
 
 };
 
