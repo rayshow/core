@@ -6,7 +6,6 @@
 #include<ccdk/string/string_module.h>
 #include<ccdk/string/char_traits.h>
 
-
 ccdk_namespace_string_start
 using namespace mpl;
 
@@ -38,7 +37,7 @@ public:
 	friend class base_string<Char, Size2>;
 
 private:
-	char_type      content;      /* string  */
+	pointer_type   content;      /* string  */
 	size_type      length;       /* content length */
 	size_type      alloc_size;   /* for pre-alloc ex-memory */
 
@@ -109,19 +108,14 @@ public:
 	CCDK_FORCEINLINE constexpr base_string(ptr::nullptr_t) noexcept : content{ nullptr }, length{ 0 }, alloc_size{ 0 } {}
 
 	/* c-style string copy */
-	CCDK_FORCEINLINE constexpr base_string( const char_type* str) :base_string() { alloc_copy(str, 0, traits_type::strlen(str)); }
-	CCDK_FORCEINLINE constexpr base_string( char_type const* str, ptr::size_t len) { alloc_copy(str, 0, len);  }
-	CCDK_FORCEINLINE constexpr base_string( char_type const* start, char_type const* end) { alloc_copy(start, 0,  end-start); }
-	CCDK_FORCEINLINE constexpr base_string( Size cap, char_type const* str, Size len) : content{ new char_type[cap] }, length{ len }, alloc_size{ cap } {}
-
+	CCDK_FORCEINLINE constexpr base_string(char_type const* str) :base_string() { alloc_copy(str, 0, traits_type::strlen(str)); }
+	CCDK_FORCEINLINE constexpr base_string(char_type const* str, ptr::size_t len) { alloc_copy(str, 0, len);  }
+	
 	/* copy */
 	CCDK_FORCEINLINE constexpr base_string(base_string const& other) { alloc_copy(other.content, other.length); }
-	CCDK_FORCEINLINE constexpr base_string(base_string const& other, Size len) { ccdk_assert( len < other.length); alloc_copy(other.content,0, len); }
 	CCDK_FORCEINLINE constexpr base_string(base_string const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 	template<typename Size2> 
 	CCDK_FORCEINLINE constexpr base_string(base_string<Char, Size2> const& other) { alloc_copy(other.content,0, other.length); }
-	template<typename Size2>
-	CCDK_FORCEINLINE constexpr base_string(base_string<Char, Size2> const& other, Size len) { ccdk_assert(len < other.length); alloc_copy(other.content,0, len); }
 	template<typename Size2>
 	CCDK_FORCEINLINE constexpr base_string(base_string<Char, Size2> const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 
@@ -146,14 +140,11 @@ public:
 
 	/* assign */
 	CCDK_FORCEINLINE constexpr base_string& assign(char_type const* str) { base_string{ str }.swap(*this); }
-	CCDK_FORCEINLINE constexpr base_string& assign(char_type const* start, char_type const* end) { base_string{ start, end }.swap(*this); }
 	CCDK_FORCEINLINE constexpr base_string& assign(char_type const* str, size_type len) { base_string{ str, len }.swap(*this); }
 	template<typename Size2>
 	CCDK_FORCEINLINE constexpr base_string& assign(base_string<Char,Size2> const& other){ base_string{ other }.swap(*this); }
 	template<typename Size2>
-	CCDK_FORCEINLINE constexpr base_string& assign(base_string<Char, Size2> const& other, Size len) { base_string{ other,len }.swap(*this); }
-	template<typename Size2>
-	CCDK_FORCEINLINE constexpr base_string& assign(base_string<Char, Size2> const& other, Size start, Size end) { base_string{ other,start, end }.swap(*this); }
+	CCDK_FORCEINLINE constexpr base_string& assign(base_string<Char, Size2> const& other, size_type start, size_type end) { base_string{ other,start, end }.swap(*this); }
 	template<typename Size2>
 	CCDK_FORCEINLINE constexpr base_string& assign(base_string<Char, Size2>&& other) { base_string{ util::move(other) }.swap(*this); }
 
@@ -178,6 +169,7 @@ public:
 	 
 	CCDK_FORCEINLINE constexpr char_type& back() noexcept { ccdk_assert(content); return content[length-1]; }
 	CCDK_FORCEINLINE constexpr char_type const&  back() const noexcept { ccdk_assert(content); return content[length-1]; }
+
 	CCDK_FORCEINLINE constexpr char_type* c_str() noexcept { return content; }
 	CCDK_FORCEINLINE constexpr char_type const* c_str() const noexcept { return content; }
 
@@ -191,8 +183,6 @@ public:
 	template<typename Size2>
 	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str) { insert(pos, str.content, traits_type::length(str)); return *this;}
 	template<typename Size2>
-	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str, size_type len) { insert(pos, str.content, len); return *this;}
-	template<typename Size2>
 	CCDK_FORCEINLINE base_string& insert(size_type pos, base_string<Char, Size2> const& str, size_type start, size_type end) { insert(pos, str.content + start, end - start); return *this; }
 
 	/*erase */
@@ -203,8 +193,6 @@ public:
 	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, char_type const* str) { ccdk_assert(end > start && str != nullptr); realloc_replace(start, end, str, traits_type::length(str)); return *this; }
 	template<typename Size2>
 	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str) { ccdk_assert(end > start); realloc_replace(start, end, str.content, str.length); return *this; }
-	template<typename Size2>
-	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str, size_type len) { ccdk_assert(end > start); realloc_replace(start, end, str.content, len); return *this; }
 	template<typename Size2>
 	CCDK_FORCEINLINE base_string& replace(size_type start, size_type end, base_string<Char, Size2> const& str, size_type rstart, size_type rend) { ccdk_assert(end > start); realloc_replace(start, end, str.content+rstart, rend); return *this; }
 
@@ -223,6 +211,18 @@ public:
 
 	/* find */
 	CCDK_FORCEINLINE constexpr size_type find(char_type ch) const noexcept { for (size_type i = 0; i < length; ++i) { if (content[i] == ch) return i; } return npos; }
+	CCDK_FORCEINLINE constexpr size_type find(char_type const* str) { return traits_type::find(content, length, str, traits_type::length(str)); }
+	CCDK_FORCEINLINE constexpr size_type find(char_type const* str, size_type len){ return traits_type::find(content, length, str, traits_type::length(str)); }
+	template<typename Size2>
+	CCDK_FORCEINLINE constexpr size_type find(base_string<Char, Size2> const& str) { return traits_type::find(content, length, str.c_str(), str.length()); }
+	template<typename Size2>
+	CCDK_FORCEINLINE constexpr size_type find(base_string<Char, Size2> const& str, size_type start, size_type end) { ccdk_assert(end > start); return traits_type::find(content, length, str.c_str() + start, end - start); }
+
+	/* trim */
+	CCDK_FORCEINLINE base_string& ltrim() { return base_string{}; }
+	CCDK_FORCEINLINE base_string& rtrim() { return base_string{}; }
+	CCDK_FORCEINLINE base_string& trim() { return base_string{}  }
+
 };
 
 

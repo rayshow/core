@@ -3,6 +3,7 @@
 #include<ccdk/compile.h>
 #include<new>       /* nullptr_t and nothrow_t */
 #include<typeinfo>  /* std::typeinfo */
+#include<cstring>   /*for memory move and copy*/
 
 namespace ccdk
 {

@@ -150,6 +150,9 @@
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\ratio.h" />
+    <ClInclude Include="string\encoding\ascii.h" />
+    <ClInclude Include="string\encoding\iso8859_1.h" />
+    <ClInclude Include="string\encoding\unicode.h" />
     <ClInclude Include="string\string_literial.h" />
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />

@@ -917,5 +917,8 @@
     <ClInclude Include="string\string_literial.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
+    <ClInclude Include="string\encoding\ascii.h" />
+    <ClInclude Include="string\encoding\iso8859_1.h" />
+    <ClInclude Include="string\encoding\unicode.h" />
   </ItemGroup>
 </Project>

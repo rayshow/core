@@ -4,133 +4,91 @@
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/base/char_.h>
+#include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/type_traits/array_length.h>
-#include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/iterator/ptr_iterator.h>
+#include<ccdk/string/string_module.h>
+#include<ccdk/string/char_traits.h>
 
-ccdk_namespace_mpl_fs_start
+ccdk_namespace_string_start
 
-	//L length of string include '\0'
-	template< typename Ch, uint32 L >
+using namespace mpl;
+
+	/* Length length of string include '\0' */
+	template< typename Char, uint32 Length>
 	struct string_literial
 	{
-		Ch storage[L];
-		typedef Ch const* pointer;
-		typedef string_literial<Ch, L> type;
-		typedef const type const_type;
+	public:
+		typedef Char												char_type;
+		typedef Char												value_type;
+		typedef uint32												size_type;
+		typedef ptr::diff_t											different_type;
+		typedef char_traits<Char>									traits_type;
+		typedef string_literial										this_type;
+		typedef Char*												pointer_type;
+		typedef Char const*											const_pointer_type;
+		typedef Char&												reference_type;
+		typedef Char const&                                         const_reference_type;
+		typedef it::iterator<Char*, string_literial>                iterator;
+		typedef it::const_iterator<Char*, string_literial>          const_iterator;
+		typedef it::reverse_iterator<Char*, string_literial>        reverse_iterator;
+		typedef it::const_reverse_iterator<Char*, string_literial>  const_reverse_iterator;
 
-			
-		template<uint32... args>
-		constexpr string_literial(
-			indice_pack<args...>,
-			pointer arr) noexcept
-			: storage{ 
-				arr[args]..., 
-				char_traits<Ch>::end
-		}
-		{}
+		static constexpr uint32   npos = uint32(-1);
+		static constexpr uint32   max_pos = uint32(-2);
 
-		template<
-			uint32... args1,
-			uint32... args2,
-			uint32... args3
-		>
-		constexpr string_literial(
-			indice_pack<args1...>,
-			indice_pack<args2...>,
-			indice_pack<args3...>,
-			pointer arr1,
-			pointer arr2)
-		{}
+		template<uint32 Length2>
+		friend class string_literial<Char, Length2>;
 
-		template<
-			uint32... args1,
-			uint32... args2
-		>
-		constexpr string_literial(
-			indice_pack<args1...>,
-			indice_pack<args2...>,
-			Ch c,
-			pointer arr)
-		:storage { 
-			arr[args1]...,
-			c,
-			arr[args2]...
-		}
-		{}
+		Char storage[Length];
+		
+		/*  constructor */
+		template<uint32... indice>
+		CCDK_FORCEINLINE constexpr string_literial( indice_pack<indice...>, const_pointer_type pointer) noexcept : storage{ pointer[indice]..., Char(0) } {}
 
-		constexpr string_literial(pointer arr) :
-			string_literial(make_indice<L-1>{}, arr)
-		{}
+		/* merge 3-part */
+		template< uint32... indice1, uint32... indice2, uint32... indice3 >
+		CCDK_FORCEINLINE constexpr string_literial( indice_pack<indice1...>, indice_pack<indice2...>, indice_pack<indice3...>, const_pointer_type pointer1, const_pointer_type pointer2) {}
 
+		/* insert middle char */
+		template< uint32... indice1, uint32... indice2>
+		CCDK_FORCEINLINE constexpr string_literial( indice_pack<indice1...>, indice_pack<indice2...>, char_type c, const_pointer_type pointer)
+			:storage { pointer[indice1]..., c, pointer[indice2]... } {}
 
-		template<
-			typename T,
-			T index
-		>
-		constexpr auto
-			operator[](compile_t<T,index>) const
+		/* copy */
+		CCDK_FORCEINLINE constexpr string_literial(const_pointer_type pointer) : string_literial(make_indice<Length-1>{}, pointer) {}
+
+		/* comptile and runtime index */
+		template< typename T, T index > CCDK_FORCEINLINE Char& operator[](uint32 index) { return storage[index]; }
+		template< typename T, T index > CCDK_FORCEINLINE Char const& operator[](uint32 index) { return storage[index]; }
+		template< typename T, T index > CCDK_FORCEINLINE constexpr Char& operator[](compile_t<T,index>) { return storage[index]; }
+		template< typename T, T index > CCDK_FORCEINLINE constexpr Char const& operator[](compile_t<T, index>) const { return storage[index]; }
+
+		template<typename Char2, uint32 Length2>
+		CCDK_FORCEINLINE constexpr bool operator==(const string_literial<Char2,Length2>&other)
 		{
-			return storage[index];
-		}
-
-		template<uint32 L2>
-		constexpr bool 
-			operator==(const string_literial<Ch,L2>& l)
-		{
-			if (L != L2) return false;
-			for (uint32 i = 0; i < L; ++i) if (storage[i] != l.storage[i]) return false;
+			if (length != Length2) return false;
+			for (uint32 i = 0; i < Length; ++i) if (storage[i] != other.storage[i]) return false;
 			return true;
 		}
 
-		constexpr operator pointer() const
-		{
-			return &storage[0];
-		}
+		CCDK_FORCEINLINE constexpr operator pointer() const { return &storage[0]; }
 
-		//find single char
-		constexpr int find_first(Ch a) const
-		{
-			for (int i = 0; i < L; ++i) { if (a == storage[i]) return i; }
-			return L;
-		}
+		/* find first single char */
+		CCDK_FORCEINLINE constexpr int find_first(Char c) const { for (int i = 0; i < Length; ++i) { if (c == storage[i]) return i; } return Length; }
 
-		constexpr int find_last(Ch a) const
-		{
-			for (int i = L - 1; i >= 0; --i) 
-			{ if (a == storage[i]) return i; }
-			return L;
-		}
+		/* find last single char */
+		CCDK_FORCEINLINE constexpr int find_last(Ch a) const { for (int i = Length - 1; i >= 0; --i)  { if (a == storage[i]) return i; } return Length; }
 
-		template<
-			uint32 start,
-			uint32 end,
-			typename = check_in_range2<start, end, 0, L>
-		>
-		constexpr auto 
-			substr() const
-		{
-			return string_literial<Ch, end - start + 1>{
-				make_indice_from<start, end>{},
-				storage
-			};
-		}
+		/* sub string */
+		template< uint32 start, uint32 end, typename = check_in_range2<start, end, 0, Length> >
+		CCDK_FORCEINLINE constexpr auto substr() const { return string_literial<Ch, end - start + 1>{ make_indice_from<start, end>{}, storage }; }
 
-		template<
-			uint32 index,
-			typename = check_in_range<index , 0, L>
-		>
-		constexpr auto  
-			replace(Ch c) const
-		{
-			return string_literial<Ch, L>{ 
-				make_indice<index>{},
-				make_indice_from<index + 1,L>{},
-				c,
-				storage 
-			};
-		}
+		/* runtime replace */
+		template< uint32 index, typename = check_in_range<index , 0, Length> >
+		CCDK_FORCEINLINE constexpr auto replace(Char c) const { return string_literial<Ch, Length>{  make_indice<index>{}, make_indice_from<index + 1,Length>{}, c, storage  }; }
 	};
 
 	template<typename T>
@@ -139,4 +97,4 @@ ccdk_namespace_mpl_fs_start
 		return string_literial<remove_dim_t<T>, array_len<T>::value>{ arr };
 	}
 
-ccdk_namespace_mpl_fs_end
+ccdk_namespace_string_end

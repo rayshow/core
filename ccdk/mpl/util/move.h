@@ -8,7 +8,7 @@
 #include<ccdk/mpl/type_traits/remove_const.h>
 #include<ccdk/mpl/type_traits/is_pod.h>
 #include<ccdk/mpl/util/addressof.h>
-#include<cstring>
+
 
 ccdk_namespace_mpl_util_start
 

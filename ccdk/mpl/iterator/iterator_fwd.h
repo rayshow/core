@@ -4,9 +4,6 @@
 
 ccdk_namespace_mpl_it_start
 
-
-
-
 template<typename... Args>
 class iterator;
 
