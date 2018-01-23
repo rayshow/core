@@ -28,6 +28,7 @@ public:
 	typedef it::const_iterator<Char*,base_string>          const_iterator;
 	typedef it::reverse_iterator<Char*,base_string>        reverse_iterator;
 	typedef it::const_reverse_iterator<Char*,base_string>  const_reverse_iterator;
+	typedef typename traits_type::default_encoding_type    default_encoding_type;
 
 	static constexpr float  prealloc_factor = 1.6f;
 	static constexpr Size   npos = Size(-1);
@@ -83,7 +84,7 @@ private:
 	{
 		different_type replace_len = end - start;
 		size_type actual_len = length + len - replace_len;
-		if (actual_len > alloc_size)
+		if (actual_len >= alloc_size)
 		{
 			/* memory not enough */
 			char_type const* buffer = alloc_memory(actual_len);
@@ -100,6 +101,7 @@ private:
 		util::copy(content + start, str, len);                              /* copy to middle */
 		length = actual_len;
 	}
+
 
 public:
 
@@ -219,9 +221,27 @@ public:
 	CCDK_FORCEINLINE constexpr size_type find(base_string<Char, Size2> const& str, size_type start, size_type end) { ccdk_assert(end > start); return traits_type::find(content, length, str.c_str() + start, end - start); }
 
 	/* trim */
-	CCDK_FORCEINLINE base_string& ltrim() { return base_string{}; }
-	CCDK_FORCEINLINE base_string& rtrim() { return base_string{}; }
-	CCDK_FORCEINLINE base_string& trim() { return base_string{}  }
+	template<typename Encoding = default_encoding_type >
+	CCDK_FORCEINLINE base_string& ltrim() { traits_type::ltrim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE base_string& ltrim(encoding_value ev) { length = traits_type::ltrim(content, length, ev); return *this; }
+
+	template<typename Encoding = default_encoding_type >
+	CCDK_FORCEINLINE base_string& rtrim() { traits_type::rtrim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE base_string& rtrim(encoding_value ev) { length = traits_type::rtrim(content, length, ev); return *this; }
+
+	template<typename Encoding = default_encoding_type >
+	CCDK_FORCEINLINE base_string& trim() { traits_type::trim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE base_string& trim(encoding_value ev) { length = traits_type::trim(content, length, ev); return *this; }
+
+	/* append */
+	CCDK_FORCEINLINE base_string& append(char_type const* str, size_type len) { realloc_replace(length, length, str, len); return *this; }
+	CCDK_FORCEINLINE base_string& append(char_type const* str) { return append(str, traits_type::length(str));  }
+	template<typename Size2> 
+	CCDK_FORCEINLINE base_string& append(base_string<Char, Size2> const& str) { return append(str.content, str.length); }
+	template<typename Size2>
+	CCDK_FORCEINLINE base_string& append(base_string<Char, Size2> const& str, size_type start, size_type end) { return append(str.content+start, end-start); }
+	template<typename T>
+	CCDK_FORCEINLINE base_string& append(T const& t) { traits_type:: } 
 
 };
 

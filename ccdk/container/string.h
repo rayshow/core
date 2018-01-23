@@ -34,7 +34,6 @@ namespace Aurora3D
 		allocator_type allocator;
 	};
 
-
 	template<typename element,
 		typename trait = TCharTrait<element>,
 		typename allocator = std::allocator<element> >

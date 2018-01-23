@@ -67,24 +67,87 @@ template<>
 struct char_traits<achar> : public common_char_traits<achar>
 {
 	typedef common_char_traits<achar> base_type;
+	typedef ascii_encoding            default_encoding_type;
+
 	using base_type::length;
 	using base_type::find;
 
-	void ltrim(achar const* content)
+	/* encoding know at compile-time */
+	template<typename Encoding = default_encoding_type >
+	ptr::size_t ltrim(achar* content, ptr::size_t len)
 	{
-
+		achar const* it = content;
+		ptr::size_t space_count = 0;
+		for (; it != '\0'; ++it, ++space_count) if (!encoding<Encoding>::is_space(*it)) break;
+		util::move(content, content + space_count, len - space_count + 1); /* move forward with 0-terminal */
+		return len - space_count;
 	}
 
-	void rtrim(achar const* content)
+	/* encoding know at run-time */
+	ptr::size_t ltrim(achar* content, ptr::size_t len, encoding_value v)
 	{
-
+		switch (v)
+		{
+		case encoding_value::kAscii:
+			return ltrim<ascii_encoding>(content, len);
+		case encoding_value::kIso8859_1:
+			return ltrim<iso8859_1_encoding>(content, len);
+		case encoding_value::kUnicode:
+			return ltrim<unicode_encoding>(content, len);
+		default: ccdk_assert(0);
+		}
+		ccdk_assert(0);
 	}
 
-	void trim(achar const* content)
+	template<typename Encoding = default_encoding_type >
+	ptr::size_t rtrim(achar * content, ptr::size_t len)
 	{
-
+		achar const* it = content + len-1;
+		achar const* end = content - 1;
+		ptr::size_t space_count = 0;
+		for(;it!=end;--it,++space_count) if (!encoding<Encoding>::is_space(*it)) break;
+		content[len - space_count] = char_type(0);
+		return len - space_count;
 	}
 
+	/* encoding know at run-time */
+	ptr::size_t rtrim(achar* content, ptr::size_t len, encoding_value v)
+	{
+		switch (v)
+		{
+		case encoding_value::kAscii:
+			return rtrim<ascii_encoding>(content, len);
+		case encoding_value::kIso8859_1:
+			return rtrim<iso8859_1_encoding>(content, len);
+		case encoding_value::kUnicode:
+			return rtrim<unicode_encoding>(content, len);
+		default: ccdk_assert(0);
+		}
+		ccdk_assert(0);
+	}
+
+	template<typename Encoding = default_encoding_type >
+	ptr::size_t trim(achar * content, ptr::size_t len)
+	{
+		return ltrim<Encoding>(content, rtrim<Encoding>(content, len));
+	}
+
+	/* encoding know at run-time */
+	ptr::size_t trim(achar* content, ptr::size_t len, encoding_value v)
+	{
+		ptr::size_t rlen = 0;
+		switch (v)
+		{
+		case encoding_value::kAscii:
+			return ltrim<ascii_encoding>(content, rtrim<ascii_encoding>(content, len));
+		case encoding_value::kIso8859_1:
+			return ltrim<iso8859_1_encoding>(content, rtrim<iso8859_1_encoding>(content, len));
+		case encoding_value::kUnicode:
+			return ltrim<unicode_encoding>(content, rtrim<unicode_encoding>(content, len));
+		default: ccdk_assert(0);
+		}
+		ccdk_assert(0);
+	}
 };
 
 template<>

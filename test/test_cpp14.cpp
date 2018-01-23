@@ -19,6 +19,9 @@
 #include<ccdk/mpl/function/capture.h>
 #include<regex>
 
+#include<mutex>
+#include<condition_variable>
+
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -49,11 +52,13 @@ void operator++(test_signle_op, int)
 
 int main()
 {
-	std::regex("a*");
+	std::condition_variable cv;
+	std::mutex mt{};
 
-	test_copy_t t = get_move();
-	++test_signle_op{};
-	test_signle_op{}++;
+	cv.notify_one();
+	cv.wait_for(std::unique_lock<std::mutex>{mt}, std::chrono::microseconds(1000));
+	printf("after waiting ");
+
 
 	getchar();
 	return 0;
