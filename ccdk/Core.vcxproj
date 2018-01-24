@@ -385,6 +385,7 @@
     <ClInclude Include="string\string_fwd.h" />
     <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />
+    <ClInclude Include="string\to_string.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

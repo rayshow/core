@@ -920,5 +920,6 @@
     <ClInclude Include="string\encoding\ascii.h" />
     <ClInclude Include="string\encoding\unicode.h" />
     <ClInclude Include="string\encoding\iso8859_1.h" />
+    <ClInclude Include="string\to_string.h" />
   </ItemGroup>
 </Project>
