@@ -77,7 +77,7 @@ ccdk_namespace_mpl_fn_start
 
 		/* value constructor, call proxy constructor and static dispatch */
 		template<typename Fn, typename NoRefFn = remove_ref_t<Fn>, typename = check_t< or_< is_invocable<NoRefFn>, is_mfunction<NoRefFn>> > >
-		CCDK_FORCEINLINE function(Fn&& fn) noexcept : function(util::forward<Fn>(fn), typename is_function_ptr<NoRefFn>::type{}, typename or_< is_function_obj<NoRefFn>, is_mfunction<NoRefFn>>::type{}, typename is_mfn_ptr<NoRefFn>::type{}) {}
+		CCDK_FORCEINLINE function(Fn&& fn) noexcept : function( util::forward<Fn>(fn), typename is_function_ptr<NoRefFn>::type{}, typename or_< is_function_obj<NoRefFn>, is_mfunction<NoRefFn>>::type{}, typename is_mfn_ptr<NoRefFn>::type{}) {}
 
 		/* copy and move  */
 		CCDK_FORCEINLINE function(const function& other) noexcept : base_ptr{ other.clone_pointer() } {}

@@ -3,6 +3,7 @@
 #include<exception>
 
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/type_traits/is_convertible.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/move.h>
 
@@ -41,9 +42,10 @@ ccdk_namespace_mpl_fn_start
 	>
 	struct function_object_invoker :public invoker_base<Ret, Args...>
 	{
-		Fn fn;
+		typedef decay_t<Fn> fn_type;
+		fn_type fn;
 
-		template<typename Fn2, typename = check_t< is_convertible<Fn2, Fn>>>
+		template<typename Fn2, typename = check_t< is_convertible<Fn2, fn_type>>>
 		CCDK_FORCEINLINE function_object_invoker(Fn2&& inFn) noexcept :fn{ util::forward<Fn2>(inFn) } {}
 		
 

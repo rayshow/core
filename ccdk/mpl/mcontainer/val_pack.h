@@ -1,5 +1,6 @@
 #pragma once
 
+#include<ccdk/mpl/base/bool_.h>
 #include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
 

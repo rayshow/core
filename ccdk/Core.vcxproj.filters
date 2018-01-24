@@ -72,36 +72,6 @@
     <ClInclude Include="container\string.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="container\string_ref.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\vector.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\forward_list.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\hash_map.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\hash_set.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\skip_map.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\skip_set.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\concurrent_hash_map.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\concurrent_hash_set.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\lockfree_circular_queue.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="math\capsule.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -904,13 +874,8 @@
     <ClInclude Include="mpl\util\value.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="string\string_builder.h" />
     <ClInclude Include="mpl\iterator\ptr_iterator.h" />
     <ClInclude Include="mpl\iterator\iterator_fwd.h" />
-    <ClInclude Include="container\blist.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="container\char_trait.h" />
     <ClInclude Include="container\array.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
@@ -921,5 +886,7 @@
     <ClInclude Include="string\encoding\unicode.h" />
     <ClInclude Include="string\encoding\iso8859_1.h" />
     <ClInclude Include="string\to_string.h" />
+    <ClInclude Include="container\container_mudule.h" />
+    <ClInclude Include="container\filter_view.h" />
   </ItemGroup>
 </Project>

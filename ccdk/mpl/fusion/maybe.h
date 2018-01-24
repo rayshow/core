@@ -28,7 +28,7 @@ private:
 
 	template<typename P>
 	CCDK_FORCEINLINE constexpr void construct(P&& p) {
-		new(memory) T{ util::forward(p) };
+		new(memory) T{ util::forward<P>(p) };
 		initalized = true;
 	}
 
@@ -45,11 +45,11 @@ public:
 	CCDK_FORCEINLINE constexpr maybe(T&& t) { construct(util::move(t)); }
 
 	/*copy and move */
-	CCDK_FORCEINLINE constexpr maybe(maybe const& other) { if (other.initalized) { construct(*reinterpret_cast<T*>(memory)); } }
-	CCDK_FORCEINLINE constexpr maybe(maybe&& other) { if (other.initalized) { util::move(construct(*reinterpret_cast<T*>(memory))); } }
+	CCDK_FORCEINLINE constexpr maybe(maybe const& other) { if (other.initalized) { construct(*reinterpret_cast<T*>(other.memory)); } initalized = other.initalized; }
+	CCDK_FORCEINLINE constexpr maybe(maybe&& other) { if (other.initalized) { construct(util::move(*reinterpret_cast<T*>(other.memory))); } initalized = other.initalized; }
 
 	/*swap*/
-	CCDK_FORCEINLINE constexpr swap(maybe& other)
+	CCDK_FORCEINLINE constexpr void swap(maybe& other)
 	{
 		using util;
 		swap(*pointer(), *other.pointer());
@@ -66,7 +66,7 @@ public:
 	CCDK_FORCEINLINE maybe& operator=(maybe && other) { ccdk_if_not_this(other) { maybe{ util::move(other) }.swap(*this); } }
 
 	/* access */
-	CCDK_FORCEINLINE constexpr T* pointer() const { return reinterpret_cast<T*>(memory); }
+	CCDK_FORCEINLINE constexpr T* pointer() const { return reinterpret_cast<T*>((void*)memory); }
 	CCDK_FORCEINLINE operator bool() { return initalized; }
 
 	CCDK_FORCEINLINE T& value() noexcept { return *pointer(); }
@@ -76,7 +76,7 @@ public:
 	CCDK_FORCEINLINE T* operator->() noexcept { return pointer(); }
 	CCDK_FORCEINLINE T const* operator->() const noexcept { return pointer(); }
 
-	constexpr ~maybe() { if (initalized) { destruct(); } }
+	CCDK_FORCEINLINE ~maybe() { if (initalized) { destruct(); } }
 };
 
 

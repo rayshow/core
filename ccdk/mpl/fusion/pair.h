@@ -177,5 +177,17 @@ template<typename T1, typename T2, typename U1, typename U2, typename = check_t<
 CCDK_FORCEINLINE bool operator==(cpair<T1, U1>& lh, cpair<T2, U2>& rh) noexcept { lh.first() == rh.first() && lh.second() == rh.second(); }
 
 
+/* normal pair */
+template<typename First, typename Second>
+struct pair
+{
+	First  first;
+	Second second;
+};
+
+/* make normal pair */
+template<typename T1, typename T2>
+auto make_pair(T1&& t1, T2&& t2) { return pair<T1, T2>{t1, t2}; }
+
 
 ccdk_namespace_mpl_fs_end

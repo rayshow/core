@@ -7,6 +7,7 @@
 #include<ccdk/mpl/type_traits/remove_ref.h>
 #include<ccdk/mpl/type_traits/remove_const.h>
 #include<ccdk/mpl/type_traits/is_pod.h>
+#include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/util/addressof.h>
 
 

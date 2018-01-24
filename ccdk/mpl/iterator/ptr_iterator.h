@@ -26,13 +26,13 @@ public:
 	/* constructor */
 	const_iterator(T const* inPointer) : pointer{ inPointer }{}
 	/* copy */
-	this_reference_type operator=(this_type const& other) noexcept { pointer = other.pointer;}
+	this_type& operator=(this_type const& other) noexcept { pointer = other.pointer;}
 
 	/* ++it */
-	this_reference_type operator++() noexcept { ++pointer; return *this; }
+	this_type& operator++() noexcept { ++pointer; return *this; }
 
 	/* --it */
-	this_reference_type operator--() noexcept { --pointer; return *this; }
+	this_type& operator--() noexcept { --pointer; return *this; }
 
 	/* it++ */
 	this_type operator++(int) const noexcept { return this_type{ pointer++ }; }
@@ -50,10 +50,10 @@ public:
 	different_type operator-(this_type const& other) { return pointer - other.pointer; }
 
 	/* it+=step */
-	this_reference_type operator+=(size_type step) noexcept { return pointer += step; return *this; }
+	this_type& operator+=(size_type step) noexcept { return pointer += step; return *this; }
 
 	/* it+=step */
-	this_reference_type operator-=(size_type step) noexcept { return pointer -= step; return *this; }
+	this_type& operator-=(size_type step) noexcept { return pointer -= step; return *this; }
 
 	/* const */
 	value_type const&  operator*() const noexcept { return *pointer; }

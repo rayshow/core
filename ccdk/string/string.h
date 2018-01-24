@@ -23,10 +23,10 @@ public:
 	typedef Char const*                                    const_pointer_type;
 	typedef Char&                                          reference_type;
 	typedef Char const&                                    const_reference_type;
-	typedef it::iterator<Char*,basic_string>                iterator;
-	typedef it::const_iterator<Char*,basic_string>          const_iterator;
-	typedef it::reverse_iterator<Char*,basic_string>        reverse_iterator;
-	typedef it::const_reverse_iterator<Char*,basic_string>  const_reverse_iterator;
+	typedef it::iterator<Char*,basic_string>               iterator;
+	typedef it::const_iterator<Char*,basic_string>         const_iterator;
+	typedef it::reverse_iterator<Char*,basic_string>       reverse_iterator;
+	typedef it::const_reverse_iterator<Char*,basic_string> const_reverse_iterator;
 	typedef typename traits_type::default_encoding_type    default_encoding_type;
 
 	static constexpr float  prealloc_factor = 1.6f;
@@ -44,7 +44,7 @@ private:
 	/* alloc memory */
 	char_type* alloc_memory(const size_type actual_size)
 	{
-		ccdk_assert_if(actual_size == 0) return;
+		ccdk_assert_if(actual_size == 0) return nullptr;
 		size_type prealloc_size = actual_size * prealloc_factor;
 		if (prealloc_size >= max_size || prealloc_size < actual_size)  /* reach max or round to little size */
 		{
@@ -59,6 +59,7 @@ private:
 	/* alloc memory and copy */
 	char_type* realloc_copy(const size_type actual_size)
 	{
+		if (actual_size == 0) return nullptr;
 		char_type* buffer = alloc_memory(actual_size);
 		util::copy(buffer, content, length+1);    /* copy 0-terminal */
 		ptr::safe_delete_array(content);
@@ -69,7 +70,7 @@ private:
 	/* alloc and copy len elements from str  */
 	void alloc_copy(const char_type* str, size_type start, size_type end)
 	{
-		ccdk_assert_if(!str || start >= end ) return;
+		if (!str || start >= end) return;
 		different_type len = end - start;
 		char_type* buffer = alloc_memory(len);
 		util::copy(buffer, str+start, len);      /* copy src to new allocated */
@@ -81,7 +82,7 @@ private:
 	/* replace content[start, end) with str[0, len) */
 	void realloc_replace(size_type start, size_type end, const char_type* str, size_type len)
 	{
-		different_type replace_len = end - start;
+		different_type replace_len = end - start;           /* maybe zero */
 		size_type actual_len = length + len - replace_len;
 		if (actual_len >= alloc_size)
 		{
@@ -101,7 +102,6 @@ private:
 		length = actual_len;
 	}
 
-
 public:
 
 	/* default and nullptr not alloc memory */
@@ -110,7 +110,7 @@ public:
 
 	/* c-style string copy */
 	CCDK_FORCEINLINE constexpr basic_string(char_type const* str) :basic_string() { alloc_copy(str, 0, traits_type::strlen(str)); }
-	CCDK_FORCEINLINE constexpr basic_string(char_type const* str, ptr::size_t len) { alloc_copy(str, 0, len);  }
+	CCDK_FORCEINLINE constexpr basic_string(char_type const* str, size_type len) { alloc_copy(str, 0, len);  }
 	
 	/* copy */
 	CCDK_FORCEINLINE constexpr basic_string(basic_string const& other) { alloc_copy(other.content, other.length); }
@@ -240,11 +240,8 @@ public:
 	template<typename Size2>
 	CCDK_FORCEINLINE basic_string& append(basic_string<Char, Size2> const& str, size_type start, size_type end) { return append(str.content+start, end-start); }
 	template<typename T>
-	CCDK_FORCEINLINE basic_string& append(T const& t) { traits_type:: } 
-
+	CCDK_FORCEINLINE basic_string& append(T const& t) { return *this; }
 };
-
-
 
 
 ccdk_namespace_string_end

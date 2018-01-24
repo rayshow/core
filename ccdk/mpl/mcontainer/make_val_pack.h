@@ -4,6 +4,7 @@
 #include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
 #include<ccdk/mpl/mcontainer/push_back.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
 
 ccdk_namespace_mpl_start
 

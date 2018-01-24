@@ -72,19 +72,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="compile.h" />
-    <ClInclude Include="container\blist.h" />
-    <ClInclude Include="container\char_trait.h" />
-    <ClInclude Include="container\concurrent_hash_map.h" />
-    <ClInclude Include="container\concurrent_hash_set.h" />
-    <ClInclude Include="container\forward_list.h" />
-    <ClInclude Include="container\hash_map.h" />
-    <ClInclude Include="container\hash_set.h" />
-    <ClInclude Include="container\lockfree_circular_queue.h" />
-    <ClInclude Include="container\skip_map.h" />
-    <ClInclude Include="container\skip_set.h" />
+    <ClInclude Include="container\container_mudule.h" />
+    <ClInclude Include="container\filter_view.h" />
     <ClInclude Include="container\string.h" />
-    <ClInclude Include="container\string_ref.h" />
-    <ClInclude Include="container\vector.h" />
     <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="filesystem\path.h" />
     <ClInclude Include="filesystem\reader.h" />
@@ -150,6 +140,7 @@
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\ratio.h" />
+    <ClInclude Include="string\to_string.h" />
     <ClInclude Include="string\encoding\ascii.h" />
     <ClInclude Include="string\encoding\iso8859_1.h" />
     <ClInclude Include="string\encoding\unicode.h" />
@@ -381,11 +372,9 @@
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="string\char_traits.h" />
     <ClInclude Include="string\string.h" />
-    <ClInclude Include="string\string_builder.h" />
     <ClInclude Include="string\string_fwd.h" />
     <ClInclude Include="string\string_module.h" />
     <ClInclude Include="string\string_view.h" />
-    <ClInclude Include="string\to_string.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

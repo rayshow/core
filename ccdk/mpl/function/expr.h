@@ -5,6 +5,7 @@
 #include<ccdk/mpl/base/null_.h>
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/enable_if.h>
+#include<ccdk/mpl/base/if_.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/mcontainer/front.h>
 #include<ccdk/mpl/type_traits/decay.h>
@@ -105,6 +106,8 @@ ccdk_namespace_mpl_fn_start
 
 		/* move */
 		CCDK_FORCEINLINE constexpr expr(expr&& other) : fn{util::move(other.fn)}, args { util::move(other.args) } {}
+
+		CCDK_FORCEINLINE constexpr expr(expr const& other) : fn{ other.fn }, args{ other.args } {}
 
 		/*eval expr */
 		template< uint32 Start, typename Content >
