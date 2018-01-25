@@ -15,11 +15,6 @@
 
 ccdk_namespace_mpl_util_start
 	
-//template< typename T1, typename T2>
-//CCDK_FORCEINLINE void swap(T1& t1, T2& t2)
-//{
-//	DebugFunctionName();
-//}
 
 #if defined( CCDK_COMPILER_MSVC ) 
 

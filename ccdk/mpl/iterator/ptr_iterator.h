@@ -24,9 +24,10 @@ private:
 public:
 
 	/* constructor */
-	const_iterator(T const* inPointer) : pointer{ inPointer }{}
+	constexpr const_iterator(T const* inPointer) : pointer{ inPointer }{}
+
 	/* copy */
-	this_type& operator=(this_type const& other) noexcept { pointer = other.pointer;}
+	constexpr this_type& operator=(this_type const& other) noexcept { pointer = other.pointer;}
 
 	/* ++it */
 	this_type& operator++() noexcept { ++pointer; return *this; }
@@ -35,19 +36,19 @@ public:
 	this_type& operator--() noexcept { --pointer; return *this; }
 
 	/* it++ */
-	this_type operator++(int) const noexcept { return this_type{ pointer++ }; }
+	constexpr this_type operator++(int) const noexcept { return this_type{ pointer++ }; }
 
 	/* it-- */
-	this_type operator--(int) const noexcept { return this_type{ pointer-- }; }
+	constexpr this_type operator--(int) const noexcept { return this_type{ pointer-- }; }
 
 	/* it+step */
-	this_type operator+(size_type step) const noexcept { return this_type{ pointer + step }; }
+	constexpr this_type operator+(size_type step) const noexcept { return this_type{ pointer + step }; }
 
 	/* it-step */
-	this_type operator-(size_type step) const noexcept { return this_type{ pointer - step }; }
+	constexpr this_type operator-(size_type step) const noexcept { return this_type{ pointer - step }; }
 
 	/* it1 - it2 */
-	different_type operator-(this_type const& other) { return pointer - other.pointer; }
+	constexpr different_type operator-(this_type const& other) { return pointer - other.pointer; }
 
 	/* it+=step */
 	this_type& operator+=(size_type step) noexcept { return pointer += step; return *this; }
@@ -102,10 +103,10 @@ private:
 	pointer_type    pointer;
 public:
 	/* constructor */
-	const_reverse_iterator(pointer_type const* inPointer) noexcept : pointer{ inPointer } {}
+	constexpr const_reverse_iterator(pointer_type const* inPointer) noexcept : pointer{ inPointer } {}
 
 	/* copy */
-	this_reference_type operator=(this_type const& other) noexcept { pointer = other.pointer; }
+	constexpr this_reference_type operator=(this_type const& other) noexcept { pointer = other.pointer; }
 
 	/* ++it */
 	this_reference_type operator++() noexcept { --pointer; return *this; }
@@ -114,19 +115,19 @@ public:
 	this_reference_type operator--() noexcept { ++pointer; return *this; }
 
 	/* it++ */
-	this_type operator++(int) const noexcept { return this_type{ pointer-- }; }
+	constexpr this_type operator++(int) const noexcept { return this_type{ pointer-- }; }
 
 	/* it-- */
-	this_type operator--(int) const noexcept { return this_type{ pointer++ }; }
+	constexpr this_type operator--(int) const noexcept { return this_type{ pointer++ }; }
 
 	/* it+step */
-	this_type operator+(size_type step) const noexcept { return this_type{ pointer - step }; }
+	constexpr this_type operator+(size_type step) const noexcept { return this_type{ pointer - step }; }
 
 	/* it-step */
-	this_type operator-(size_type step) const noexcept { return this_type{ pointer + step }; }
+	constexpr this_type operator-(size_type step) const noexcept { return this_type{ pointer + step }; }
 
 	/* it1 - it2 */
-	different_type operator-(this_type const& other) { return pointer - other.pointer; }
+	constexpr different_type operator-(this_type const& other) { return pointer - other.pointer; }
 
 	/* it+=step */
 	this_reference_type operator+=(size_type step) noexcept { return pointer -= step; return *this; }

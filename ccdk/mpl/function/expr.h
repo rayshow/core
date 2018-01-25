@@ -60,15 +60,15 @@ ccdk_namespace_mpl_fn_start
 	class expr<Fn, Args...> 
 	{
 	public:
-		static constexpr uint32 size = sizeof...(Args);	                     /* args length */
-		static constexpr uint32 wild_size =  acc_wph_count< Args...>::value; /* wild placeholder count of sub-expr(e.g. _ ) */
-		static constexpr uint32 index_size = max_iph_count< Args...>::value; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
+		static constexpr uint32        size = sizeof...(Args);	                     /* args length */
+		static constexpr uint32        wild_size =  acc_wph_count< Args...>::value; /* wild placeholder count of sub-expr(e.g. _ ) */
+		static constexpr uint32        index_size = max_iph_count< Args...>::value; /* max index-placeholder count of sub-expr(e.g. 2_ ) */
 		typedef expr                   this_type;
 		typedef make_indice<size>      indice_type;
 		typedef mfunction_tag          tag;
 		typedef fs::closure_args<size, Args...> closure_type;
 		static constexpr typename pack_wph_step<0, indice_pack<>, Args...>::type shifts_indice{};
-		static constexpr indice_type args_indice{};
+		static constexpr indice_type   args_indice{};
 
 	private:
 		/* closure of lazy eval */

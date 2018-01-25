@@ -3,7 +3,8 @@
 #include<ccdk/compile.h>
 #include<new>       /* nullptr_t and nothrow_t */
 #include<typeinfo>  /* std::typeinfo */
-#include<cstring>   /*for memory move and copy*/
+#include<cstring>   /* for memory move and copy*/
+#include<exception> /* for std exception */
 
 namespace ccdk
 {
@@ -72,6 +73,10 @@ namespace ccdk
 #define ccdk_safe_cleanup_if_exception( statement, cleanup )                   \
 			try { (statement); }                                               \
 			catch (...) { (cleanup); throw; /* rethrow */ }               
+
+#define ccdk_throw_if(expr, except)  if(ccdk_unlikely(expr)){ ccdk_throw(except); }
+#define ccdk_check_index(index, length)  ccdk_throw_if( (((index)>=(length) && (index)<=-(int64)(length))), std::out_of_range{"invalid index"} )
+#define ccdk_check_expr(expr, exception) ccdk_throw_if(!(expr), exception )
 
 #define ccdk_if_not_this(T)          if(ccdk_likely( ::ccdk::mpl::util::addressof(T)!=this ))
 #define ccdk_if_not_same_addr(T1,T2) if(ccdk_likely( ::ccdk::mpl::util::addressof(T1)!=::ccdk::mpl::util::addressof(T2) ))

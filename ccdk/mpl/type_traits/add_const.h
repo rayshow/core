@@ -15,7 +15,7 @@ namespace ccdk {
 		//T&   => T&  const => T&
 		//T&&  => T&& const => T&&
 		//(T[n]) const <=> T const [n] 
-		//add bottom-level const
+		//add bottom-level const 
 		template<typename T> struct add_const { typedef T const type; };
 		template<typename T> using add_const_t = typename add_const<T>::type;
 	}

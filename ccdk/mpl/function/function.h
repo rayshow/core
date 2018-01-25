@@ -72,8 +72,8 @@ ccdk_namespace_mpl_fn_start
 		CCDK_FORCEINLINE invoke_type* clone_pointer() noexcept { base_ptr ? base_ptr->clone() : nullptr; }
 	public:
 		/* default and nullptr constructor */
-		CCDK_FORCEINLINE function() noexcept : base_ptr{ nullptr } {}
-		CCDK_FORCEINLINE function(ptr::nullptr_t) noexcept  : base_ptr{ nullptr }  {}
+		CCDK_FORCEINLINE constexpr function() noexcept : base_ptr{ nullptr } {}
+		CCDK_FORCEINLINE constexpr function(ptr::nullptr_t) noexcept  : base_ptr{ nullptr }  {}
 
 		/* value constructor, call proxy constructor and static dispatch */
 		template<typename Fn, typename NoRefFn = remove_ref_t<Fn>, typename = check_t< or_< is_invocable<NoRefFn>, is_mfunction<NoRefFn>> > >
@@ -81,7 +81,7 @@ ccdk_namespace_mpl_fn_start
 
 		/* copy and move  */
 		CCDK_FORCEINLINE function(const function& other) noexcept : base_ptr{ other.clone_pointer() } {}
-		CCDK_FORCEINLINE function(function& other) noexcept : base_ptr{ other.base_ptr } { other.base_ptr = nullptr;  }
+		CCDK_FORCEINLINE function(function&& other) noexcept : base_ptr{ other.base_ptr } { other.base_ptr = nullptr;  }
 
 
 		/*template copy and move */

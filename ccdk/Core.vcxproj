@@ -74,7 +74,6 @@
     <ClInclude Include="compile.h" />
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\filter_view.h" />
-    <ClInclude Include="container\string.h" />
     <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="filesystem\path.h" />
     <ClInclude Include="filesystem\reader.h" />
@@ -114,6 +113,7 @@
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\integer_.h" />
     <ClInclude Include="mpl\base\null_.h" />
+    <ClInclude Include="mpl\exception\exception.h" />
     <ClInclude Include="mpl\function\const_forward.h" />
     <ClInclude Include="mpl\function\expr.h" />
     <ClInclude Include="mpl\function\function_fwd.h" />
@@ -140,6 +140,9 @@
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\units\ratio.h" />
+    <ClInclude Include="mpl\util\at.h" />
+    <ClInclude Include="mpl\util\data.h" />
+    <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="string\to_string.h" />
     <ClInclude Include="string\encoding\ascii.h" />
     <ClInclude Include="string\encoding\iso8859_1.h" />
@@ -305,7 +308,6 @@
     <ClInclude Include="mpl\util\noncopyable.h" />
     <ClInclude Include="mpl\util\size.h" />
     <ClInclude Include="mpl\util\swap.h" />
-    <ClInclude Include="mpl\util\util_module.h" />
     <ClInclude Include="mpl\util\value.h" />
     <ClInclude Include="preprocessor\bool_and.h" />
     <ClInclude Include="preprocessor\bool_equal.h" />

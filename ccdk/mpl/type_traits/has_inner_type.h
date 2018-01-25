@@ -16,6 +16,7 @@ namespace ccdk
 		//test if typename T::tag is well-formed
 		CCDK_TT_HAS_INNER_DECL(tag, tag);
 
+
 		template<typename T, typename V>
 		struct has_inner_value
 		{

@@ -10,39 +10,30 @@ ccdk_namespace_mpl_util_start
 
 //no suitable implements found, for msvc-17+ to  to get detail line and file error place
 template< typename T, typename = check_t<false_> >
-CCDK_FORCEINLINE void size(const T&) {}
-template< typename T, typename = check_t<false_> >
-CCDK_FORCEINLINE bool empty(const T&) { return false;  }
+CCDK_FORCEINLINE decltype(auto) data(Container const& ct) {}
 
 
 #elif defined( CCDK_COMPILER_GCC )
 
 //no suitable implements found, for gcc  to get detail line and file error place 
 template< typename T>
-CCDK_FORCEINLINE void size(const T&);
-template< typename T>
-CCDK_FORCEINLINE bool empty(const T&);
+CCDK_FORCEINLINE decltype(auto) data(Container const& ct);
 
 #else //clang or some compiler not found suitable method
 
+
 template< typename T>
-CCDK_FORCEINLINE void size(const T&)
+CCDK_FORCEINLINE decltype(auto) data(Container const& ct)
 {
 	static_assert(false_::value, "no suitable size function found");
 }
 
-template< typename T>
-CCDK_FORCEINLINE bool empty(const T&)
-{
-	static_assert(false_::value, "no suitable size function found");
-	return false;
-}
 #endif
 
 template<typename T>
-struct has_member_size
+struct has_member_data
 {
-	template<typename P, typename = decltype( declval<P>().size() )>
+	template<typename P, typename = decltype( declval<P>().data() )>
 	bool sfinae(int) { return true; }
 	template<typename P>
 	bool sfinae(...) { return false; }
@@ -51,10 +42,7 @@ struct has_member_size
 
 
 /* default call size(), need check has function T::size() */
-template<typename Container, typename = check_t< has_member_size<Container>  >
-CCDK_FORCEINLINE void size(const Container& ct) noexcept { return ct.size(); }
-
-template<typename Container, typename = check_t< has_member_size<Container>  >
-CCDK_FORCEINLINE bool empty(const Container& ct) noexcept { return ct.size()==0; }
+template<typename Container, typename = check_t< has_member_data<Container>  >
+CCDK_FORCEINLINE decltype(auto) data(Container const& ct) noexcept { return ct.data(); }
 
 ccdk_namespace_mpl_util_end

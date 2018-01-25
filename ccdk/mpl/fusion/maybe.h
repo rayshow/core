@@ -51,7 +51,7 @@ public:
 	/*swap*/
 	CCDK_FORCEINLINE constexpr void swap(maybe& other)
 	{
-		using util;
+		using util::swap;
 		swap(*pointer(), *other.pointer());
 		swap(initalized, other.initalized);
 	}

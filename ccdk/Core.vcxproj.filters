@@ -69,9 +69,6 @@
     <ClInclude Include="filesystem\writer.h">
       <Filter>filesystem</Filter>
     </ClInclude>
-    <ClInclude Include="container\string.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="math\capsule.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -867,7 +864,6 @@
     <ClInclude Include="mpl\util\swap.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\util\util_module.h" />
     <ClInclude Include="mpl\util\value.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
@@ -886,5 +882,9 @@
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\filter_view.h" />
     <ClInclude Include="mpl\units\ratio.h" />
+    <ClInclude Include="mpl\util\at.h" />
+    <ClInclude Include="mpl\util\data.h" />
+    <ClInclude Include="mpl\util\fill.h" />
+    <ClInclude Include="mpl\exception\exception.h" />
   </ItemGroup>
 </Project>
