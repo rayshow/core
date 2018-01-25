@@ -11,7 +11,7 @@
 #include<ccdk/mpl/base/integer_.h>
 #include<ccdk/mpl/util/move.h>
 #include<vector>
-
+#include<ratio>
 using namespace ccdk;
 using namespace ccdk::str;
 using namespace ccdk::mpl;
@@ -23,6 +23,8 @@ int main()
 	std::string search{ "ABD" };
 	ptr::size_t pos = str::char_traits<char>::find(source.c_str(), source.length(), search.c_str(), search.length());
 	DebugValue(pos);
+
+	std::ratio<1, 2> rt;
 	getchar();
 	return 0;
 }

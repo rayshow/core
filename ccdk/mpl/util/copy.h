@@ -80,7 +80,7 @@ CCDK_FORCEINLINE void copy(T* dest, T const* src, ptr::size_t n)
 /* copy n T from src to dest for pod */
 template< typename T, 
 	typename = check_t< not_<is_pod<T>>>,          /* T is not pod  */
-	typename = check_t< has_copy_assigner<T>>      /* and has copy asssigner */
+	typename = check_t< has_copy_assigner<T>>      /* and has copy assigner */
 >
 CCDK_FORCEINLINE void copy(T* dest, T const* src, ptr::size_t n)
 {

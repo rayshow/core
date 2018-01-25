@@ -751,9 +751,6 @@
     <ClInclude Include="mpl\fusion\imap.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\ratio.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\max_aligned_t.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -888,5 +885,6 @@
     <ClInclude Include="string\to_string.h" />
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\filter_view.h" />
+    <ClInclude Include="mpl\units\ratio.h" />
   </ItemGroup>
 </Project>

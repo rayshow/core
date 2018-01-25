@@ -37,5 +37,5 @@
 #define ccdk_namespace_mpl_sp_end  ccdk_namespace_end_of_3 
 
 //module unit
-#define ccdk_namespace_mpl_unit_start namespace ccdk{ namespace mpl{ namespace unit{
-#define ccdk_namespace_mpl_unit_end  ccdk_namespace_end_of_3 
+#define ccdk_namespace_mpl_units_start namespace ccdk{ namespace mpl{ namespace units{
+#define ccdk_namespace_mpl_units_end  ccdk_namespace_end_of_3 

@@ -10,7 +10,6 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
-
 template<typename T>
 struct filter_t
 {
@@ -25,7 +24,7 @@ struct filter_view_t
 {
 	typedef typename Container::value_type  value_type;
 	typedef typename Container::filter_type filter_type;
-	Container& container;
+	Container&  container;
 	filter_type filter;
 
 	/* container[{start, end, step, pred } ] = v */
@@ -42,7 +41,6 @@ struct filter_view_t
 	{
 
 	}
-
 };
 
 ccdk_namespace_ct_end
