@@ -10,14 +10,16 @@
 #include<ccdk/mpl/base/arithmatic_.h>
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/mcontainer/find.h>
-#include<ccdk/mpl/fusion/string_literial.h>
+
 #include<ccdk/mpl/fusion/any.h>
 #include<ccdk/mpl/fusion/varient.h>
 #include<ccdk/type.h>
 #include<ccdk/mpl/fusion/imap.h>
+#include<ccdk/string/string_literial.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
+using namespace ccdk::str;
 using namespace ccdk::mpl::literals;
 using namespace ccdk::mpl::fs;
 

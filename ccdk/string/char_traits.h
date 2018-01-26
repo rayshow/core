@@ -7,6 +7,8 @@
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/string/encoding/ascii.h>
+#include<ccdk/string/encoding/iso8859_1.h>
+#include<ccdk/string/encoding/unicode.h>
 #include<vector>
 
 ccdk_namespace_string_start

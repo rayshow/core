@@ -139,6 +139,8 @@
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
+    <ClInclude Include="mpl\mcontainer\add.h" />
+    <ClInclude Include="mpl\mcontainer\sub.h" />
     <ClInclude Include="mpl\units\ratio.h" />
     <ClInclude Include="mpl\util\at.h" />
     <ClInclude Include="mpl\util\data.h" />

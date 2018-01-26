@@ -35,7 +35,7 @@ struct ratio
 {
 	static_assert(D != 0, "den is 0");
 
-	static constexpr int64 gcd = detail::gcd(abs(N), abs(D));
+	static constexpr int64 gcd = detail::gcd(detail::abs(N), detail::abs(D));
 	static constexpr int64 num = N / gcd;
 	static constexpr int64 den = D / gcd;
 

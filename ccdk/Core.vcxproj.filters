@@ -886,5 +886,7 @@
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="mpl\exception\exception.h" />
+    <ClInclude Include="mpl\mcontainer\add.h" />
+    <ClInclude Include="mpl\mcontainer\sub.h" />
   </ItemGroup>
 </Project>

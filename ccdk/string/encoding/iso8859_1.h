@@ -313,23 +313,23 @@ struct encoding<iso8859_1_encoding>
 		208 , 209 , 210 , 211 , 212 , 213 , 214 , 0   , 216 , 217 , 218 , 219 , 220 , 221 , 222 , 255 ,  /*256*/
 	};
 
-	CCDK_FORCEINLINE bool is_iso_8859_1(char32 ch) { return 0 == (ch & ~0xff); }
+	CCDK_FORCEINLINE static bool is_iso_8859_1(char32 ch) { return 0 == (ch & ~0xff); }
 
-	CCDK_FORCEINLINE bool is_latin1(char32 ch) { return is_iso_8859_1(ch); }
+	CCDK_FORCEINLINE static bool is_latin1(char32 ch) { return is_iso_8859_1(ch); }
 
-	CCDK_FORCEINLINE bool is_alpha(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kAlpha; }
+	CCDK_FORCEINLINE static bool is_alpha(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kAlpha; }
 
-	CCDK_FORCEINLINE bool is_digit(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kDigit; }
+	CCDK_FORCEINLINE static bool is_digit(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kDigit; }
 
-	CCDK_FORCEINLINE bool is_xdigit(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kXDigit; }
+	CCDK_FORCEINLINE static bool is_xdigit(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kXDigit; }
 
-	CCDK_FORCEINLINE bool is_punct(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kPunct; }
+	CCDK_FORCEINLINE static bool is_punct(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kPunct; }
 
-	CCDK_FORCEINLINE bool is_ctrl(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kCtrl; }
+	CCDK_FORCEINLINE static bool is_ctrl(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kCtrl; }
 
-	CCDK_FORCEINLINE bool is_space(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kSpace; }
+	CCDK_FORCEINLINE static bool is_space(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kSpace; }
 
-	CCDK_FORCEINLINE bool is_lower(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kLower; }
+	CCDK_FORCEINLINE static bool is_lower(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kLower; }
 
 	CCDK_FORCEINLINE bool is_upper(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kUpper; }
 

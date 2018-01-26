@@ -208,7 +208,7 @@ int main()
 	DebugTypeName< typename split_< vpack1, 2, 1>::tail >();
 
 	DebugNewTitle("arithmatic");
-	DebugValue(max_<int, 2, 5, 9, 0, -1>::value);
+	DebugValue(exp_max_<int, 2, 5, 9, 0, -1>::value);
 	DebugNewTitle("arithmatic");
 	DebugTypeName< typename make_indice<10>::type>();
 	DebugTypeName< typename make_indice_from<4,10>::type>();

@@ -211,7 +211,7 @@ int main()
 	AssertFalse(false_c);
 
 	//and_
-	AssertFalse(and_v<>);
+	AssertTrue(and_v<>);
 	AssertTrue(and_v< is_void<void> >);
 	AssertFalse(and_v< is_void<int> >);
 	AssertTrue((and_v< is_void<void>, is_void<void const> >));  //both need to be true

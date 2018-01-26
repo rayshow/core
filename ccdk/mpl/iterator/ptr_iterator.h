@@ -68,7 +68,9 @@ template<typename T,typename Container>
 struct iterator<T*,Container> : const_iterator<T*, Container>
 {
 public:
-	typedef const_iterator<T, Container> base_type;
+	typedef const_iterator<T, Container>       base_type;
+	typedef typename base_type::value_type     value_type;
+	typedef typename base_type::different_type different_type;
 	using base_type::operator+;
 	using base_type::operator-;
 	using base_type::operator++;
@@ -149,6 +151,9 @@ struct reverse_iterator<T*,Container>
 {
 public:
 	typedef const_reverse_iterator<T*, Container> base_type;
+	typedef typename base_type::value_type        value_type;
+	typedef typename base_type::different_type    different_type;
+
 	using base_type::operator+;
 	using base_type::operator-;
 	using base_type::operator++;

@@ -7,17 +7,17 @@ ccdk_namespace_mpl_start
 
 /* abstract binary operation */
 template<typename T, typename BinaryOp, T first, T... args>
-struct arithmatic : BinaryOp::template apply< T, first, arithmatic<T, BinaryOp, args...>::value >
+struct exp_arithmatic_ : BinaryOp::template apply< T, first, exp_arithmatic_<T, BinaryOp, args...>::value >
 {};
 
 template<typename T, typename BinaryOp, T first>
-struct arithmatic<T, BinaryOp, first>
+struct exp_arithmatic_<T, BinaryOp, first>
 {
 	static constexpr T value = first;
 };
 
 /* add args... */
-struct add2
+struct exp_add2
 {
 	template<typename T, T a, T b>
 	struct apply
@@ -27,10 +27,10 @@ struct add2
 };
 
 template< typename T, T... args>
-struct add_ :arithmatic<T, add2, args...> {};
+struct exp_add_ :exp_arithmatic_<T, exp_add2, args...> {};
 
 /* max args... */
-struct max2
+struct exp_max2
 {
 	template<typename T, T a, T b>
 	struct apply
@@ -39,13 +39,13 @@ struct max2
 	};
 };
 template< typename T, T... args>
-struct max_ :arithmatic<T, max2, args...> {};
+struct exp_max_ : exp_arithmatic_<T, exp_max2, args...> {};
 
 template< typename T, T... args>
-static constexpr T max_v = max_<T, args...>::value;
+static constexpr T exp_max_v = exp_max_<T, args...>::value;
 
 /* min args... */
-struct min2
+struct exp_min2
 {
 	template<typename T, T a, T b>
 	struct apply
@@ -54,9 +54,9 @@ struct min2
 	};
 };
 template< typename T, T... args>
-struct min_ :arithmatic<T, min2, args...> {};
+struct exp_min_ :exp_arithmatic_<T, exp_min2, args...> {};
 
 template< typename T, T... args>
-static constexpr T min_v = min_<T, args...>::value;
+static constexpr T exp_min_v = exp_min_<T, args...>::value;
 
 ccdk_namespace_mpl_end

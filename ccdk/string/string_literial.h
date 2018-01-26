@@ -39,11 +39,14 @@ using namespace mpl;
 		static constexpr uint32   npos = uint32(-1);
 		static constexpr uint32   max_pos = uint32(-2);
 
-		template<uint32 Length2>
-		friend class string_literial<Char, Length2>;
+		template<typename Char2, uint32 Length2>
+		friend class string_literial;
 
+	private:
 		Char storage[Length];
 		
+	public:
+
 		/*  constructor */
 		template<uint32... indice>
 		CCDK_FORCEINLINE constexpr string_literial( indice_pack<indice...>, const_pointer_type pointer) noexcept : storage{ pointer[indice]..., Char(0) } {}
@@ -67,28 +70,28 @@ using namespace mpl;
 		template< typename T, T index > CCDK_FORCEINLINE constexpr Char const& operator[](compile_t<T, index>) const { return storage[index]; }
 
 		template<typename Char2, uint32 Length2>
-		CCDK_FORCEINLINE constexpr bool operator==(const string_literial<Char2,Length2>&other)
+		CCDK_FORCEINLINE constexpr bool operator==(const string_literial<Char2,Length2>& other)
 		{
-			if (length != Length2) return false;
+			if (Length != Length2) return false;
 			for (uint32 i = 0; i < Length; ++i) if (storage[i] != other.storage[i]) return false;
 			return true;
 		}
 
-		CCDK_FORCEINLINE constexpr operator pointer() const { return &storage[0]; }
+		CCDK_FORCEINLINE constexpr operator const_pointer_type() const { return &storage[0]; }
 
 		/* find first single char */
 		CCDK_FORCEINLINE constexpr int find_first(Char c) const { for (int i = 0; i < Length; ++i) { if (c == storage[i]) return i; } return Length; }
 
 		/* find last single char */
-		CCDK_FORCEINLINE constexpr int find_last(Ch a) const { for (int i = Length - 1; i >= 0; --i)  { if (a == storage[i]) return i; } return Length; }
+		CCDK_FORCEINLINE constexpr int find_last(Char a) const { for (int i = Length - 1; i >= 0; --i)  { if (a == storage[i]) return i; } return Length; }
 
 		/* sub string */
 		template< uint32 start, uint32 end, typename = check_in_range2<start, end, 0, Length> >
-		CCDK_FORCEINLINE constexpr auto substr() const { return string_literial<Ch, end - start + 1>{ make_indice_from<start, end>{}, storage }; }
+		CCDK_FORCEINLINE constexpr auto substr() const { return string_literial<Char, end - start + 1>{ make_indice_from<start, end>{}, storage }; }
 
 		/* runtime replace */
 		template< uint32 index, typename = check_in_range<index , 0, Length> >
-		CCDK_FORCEINLINE constexpr auto replace(Char c) const { return string_literial<Ch, Length>{  make_indice<index>{}, make_indice_from<index + 1,Length>{}, c, storage  }; }
+		CCDK_FORCEINLINE constexpr auto replace(Char c) const { return string_literial<Char, Length>{  make_indice<index>{}, make_indice_from<index + 1,Length>{}, c, storage  }; }
 	};
 
 	template<typename T>
