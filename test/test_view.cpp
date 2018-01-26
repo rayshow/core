@@ -21,12 +21,13 @@ public:
 
 int abs(int a)
 {
-	return ( (0x80000000 & a) >>30 - 1) * a;
+	
 }
 
 int main()
 {
-	DebugValue( abs( -1 ));
+	DebugValue(abs(300));
+	DebugValue(abs(-7988786));
 	array<char, 10> buffer{ "abcdefg" };
 	array<char, 20> buffer2{ 'a' };
 	buffer2[-1] = 0;
@@ -35,7 +36,7 @@ int main()
 	buffer.fit_capcity()[{ 0, -1 }] = 'a';
 	printf(" buffer %s \n", buffer.data());
 	
-
+	std::ratio<
 	getchar();
 	return 0;
 }
