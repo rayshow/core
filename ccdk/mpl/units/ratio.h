@@ -2,6 +2,8 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/mcontainer/div.h>
+#include<ccdk/mpl/units/units_fwd.h>
 
 ccdk_namespace_mpl_units_start
 
@@ -70,6 +72,22 @@ struct ratio
 	struct equal : bool_ < (num * Other::den == Other::num * den) >{};
 };
 
+
+/* convert value from ratio<N1,D1> to ratio<N2,N2> */
+template<int64 N1, int64 D1, int64 N2, int64 D2>
+struct converter_< ratio<N1, D1>, ratio<N2, D2> >
+{
+	static constexpr bool value = true;       
+
+	typedef div_< ratio<N1, D1>, ratio<N2, D2>>::type type;
+	static constexpr double factor = (double)type::num / (double)type::den;
+
+	template<typename T>
+	constexpr static T apply(T const& t) { return t*factor; }
+};
+
+
+
 typedef ratio<1, 1000000000000000000LL> atto;
 typedef ratio<1, 1000000000000000LL> femto;
 typedef ratio<1, 1000000000000LL> pico;
@@ -78,6 +96,7 @@ typedef ratio<1, 1000000> micro;
 typedef ratio<1, 1000> milli;
 typedef ratio<1, 100> centi;
 typedef ratio<1, 10> deci;
+typedef ratio<1, 1> uniform;
 typedef ratio<10, 1> deca;
 typedef ratio<100, 1> hecto;
 typedef ratio<1000, 1> kilo;

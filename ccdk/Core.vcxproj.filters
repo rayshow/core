@@ -890,5 +890,7 @@
     <ClInclude Include="mpl\mcontainer\sub.h" />
     <ClInclude Include="mpl\units\quantity.h" />
     <ClInclude Include="mpl\units\dimension.h" />
+    <ClInclude Include="mpl\mcontainer\div.h" />
+    <ClInclude Include="mpl\units\units_fwd.h" />
   </ItemGroup>
 </Project>
