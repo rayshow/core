@@ -1,6 +1,6 @@
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/function/create.h>
+#include<ccdk/string/string_literial.h>
 #include<ccdk/mpl/function/partial.h>
 #include<cstdio>
 
@@ -11,16 +11,20 @@
 using namespace ccdk::mpl::fn;
 using namespace ccdk;
 
-void test()
+
+using namespace boost;
+
+proto::terminal< std::ostream&>::type cout_ = { std::cout };
+
+template<typename Expr>
+void evaluate(Expr const& expr)
 {
-	DebugValue("hello");
+	proto::default_context ctx;
+	proto::eval(expr, ctx);
 }
-
-
 
 int main()
 {
-	auto p = partial(test);
-
+	evaluate(cout_ << "hello" << "," << "world");
 	return 0;
 }

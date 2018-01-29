@@ -13,6 +13,7 @@
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/mpl/function/function_fwd.h>
+#include<ccdk/mpl/fusion/imap.h>
 
 ccdk_namespace_mpl_fn_start
 

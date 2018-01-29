@@ -31,7 +31,7 @@ struct encoding<unicode_encoding>
 		static constexpr uint8 kDigit_Punct = kDigit | kPunct;
 	};
 
-	static constexpr achar iso_8859_1_category_table[] =
+	static constexpr uint8 iso_8859_1_category_table[] =
 	{
 		/* mean Dec            bits         */
 		/* NUL  0    */ iso_8859_1_category::kCtrl,
@@ -293,7 +293,7 @@ struct encoding<unicode_encoding>
 	};
 
 
-	static constexpr achar iso_8859_1_conv_table[] =
+	static constexpr uint8 iso_8859_1_conv_table[] =
 	{
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*16*/
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*32*/
