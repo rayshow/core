@@ -6,18 +6,18 @@
 ccdk_namespace_mpl_start
 
 template<typename T, typename U>
-struct add2_ : T::template add<U>{};
+struct mul2_ : T::template mul<U>{};
 
 template<typename T, typename... Args>
-struct add_;
+struct mul_;
 
 template<typename T>
-struct add_<T> { typedef T type; };
+struct mul_<T> { typedef T type; };
 
 template<typename T, typename U, typename... Args>
-struct add_<T,U,Args...> : add_< typename add2_<T, U>::type, Args...> {};
+struct mul_<T,U,Args...> : mul_< typename mul2_<T, U>::type, Args...> {};
 
 template<typename T, typename ... Args>
-using add_t_ = typename add_<T, Args...>::type;
+using mul_t_ = typename mul_<T, Args...>::type;
 
 ccdk_namespace_mpl_end

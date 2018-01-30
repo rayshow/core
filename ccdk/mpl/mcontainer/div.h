@@ -18,6 +18,6 @@ template<typename T, typename U, typename... Args>
 struct div_<T,U,Args...> : div_< typename div2_<T, U>::type, Args...> {};
 
 template<typename T, typename ... Args>
-using div_t = typename div_<T, Args...>::type;
+using div_t_ = typename div_<T, Args...>::type;
 
 ccdk_namespace_mpl_end

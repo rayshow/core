@@ -6,7 +6,6 @@
 ccdk_namespace_mpl_start
 
 template<typename T, typename U>
-struct sub_ : T::template add<U>{};
-
+struct less : T::template less<U>{};
 
 ccdk_namespace_mpl_end

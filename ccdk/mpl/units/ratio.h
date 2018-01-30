@@ -2,7 +2,9 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/if_.h>
 #include<ccdk/mpl/mcontainer/div.h>
+#include<ccdk/mpl/mcontainer/less.h>
 #include<ccdk/mpl/units/units_fwd.h>
 
 ccdk_namespace_mpl_units_start
@@ -85,6 +87,11 @@ struct converter_< ratio<N1, D1>, ratio<N2, D2> >
 	template<typename T>
 	constexpr static T apply(T const& t) { return t*factor; }
 };
+
+/* choose small denominator ratio as main transform target */
+template< int64 N1, int64 D1, int64 N2, int64 D2>
+struct main_transform< ratio<N1, D1>, ratio<N2, D2> >
+	: if_< (D1<D2), ratio<N1, D1>, ratio<N2, D2> >,{};
 
 
 

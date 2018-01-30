@@ -86,9 +86,24 @@ namespace literals
 	}
 
 	template<int size>
-	constexpr long double parse_float(const char(&arr)[size])
+	constexpr long double parse_float(const char(&literials)[size])
 	{
-		// 1.0f   1e-5f  float
+		// 1.11f / 1.11 / 1e-5f / 1e2f  float
+		// 
+		int len = size;
+		bool exp = false;
+		if (literials[len - 1] == 'f')
+		{
+			--len;                       /* skip f */
+		}
+		long double val = 0.0;
+
+		for (int i = 0; i < len; ++i)
+		{
+			if()
+		}
+
+
 		return 1.0f;
 	}
 

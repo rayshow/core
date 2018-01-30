@@ -17,6 +17,7 @@ void evaluate(Expr const& expr)
 	proto::eval(expr, ctx);
 }
 
+typedef int const&  iref;
 int main()
 {
 	evaluate(cout_ << "hello" << "," << "world");
