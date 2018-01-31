@@ -11,7 +11,7 @@ typedef float default_value_type;  /* float as units value type is enough for mo
 template<typename From, typename To>
 struct converter_
 {
-	static constexpr value = false;
+	static constexpr bool value = false;
 };
 
 template<typename From, typename To>

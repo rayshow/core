@@ -9,6 +9,7 @@
 #include<ccdk/mpl/mcontainer/add.h>
 #include<ccdk/mpl/mcontainer/mul_.h>
 #include<ccdk/mpl/util/move.h>
+#include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/units/dimension.h>
 #include<ccdk/mpl/units/ratio.h>
  
@@ -27,6 +28,9 @@ class quantity
 public:
 	typedef quantity   this_type;
 	typedef ValueType  value_type;
+	template<typename,typename,typename>
+	friend class quantity;
+
 private:
 	value_type value;
 public:
@@ -34,7 +38,8 @@ public:
 	CCDK_FORCEINLINE constexpr quantity() :value{} {}
 
 	/* value initalized */
-	CCDK_FORCEINLINE constexpr explicit quantity(const value_type& inValue) :value{ inValue } {}
+	template<typename T, typename = check_t< has_constructor<value_type, T>>>
+	CCDK_FORCEINLINE constexpr explicit quantity(T&& t) :value( util::forward<T>(t) ) {}
 
 	/* same type copy */
 	CCDK_FORCEINLINE constexpr quantity(const quantity& other) : value{ other.value } {}
@@ -100,6 +105,11 @@ public:
 		typedef typename add_< Dimension, Dimension2>::type                         dimension_type2;
 		return quantity< value_type2, dimension_type2, transform_type2>{ other.value * value };
 	}
+
+	operator value_type() const noexcept
+	{
+		return value;
+	}
 };
 
 #undef quantity_new_type_decl
@@ -109,16 +119,13 @@ template<typename Transform>
 using length =  quantity<default_value_type, length_, Transform>; /* different kind transform of length  */
 using ulength = length< uniform >;          /* default base length is 1m, all other length depends on it */
 
-namespace literals
-{
+/* meter */
+template<char... args>
+constexpr auto operator""_m() noexcept { return ulength{  ccdk_literial_parse_float(args) }; }
 
+/* kilometer */
+template<char... args>
+constexpr auto operator""_km() noexcept{ return length< kilo >{ ccdk_literial_parse_float(args) }; }
 
-	/* meter */
-	template<char... args>
-	constexpr auto operator""m()
-	{
-		return ulength{ 0 };
-	}
-}
 
 ccdk_namespace_mpl_units_end

@@ -4,8 +4,11 @@
 #include<boost/proto/proto.hpp>
 #include<boost/any.hpp>
 #include<boost/lockfree/queue.hpp>
+#include<ccdk/mpl/base/integer_.h>
 
 using namespace boost;
+using namespace ccdk::mpl;
+using namespace ccdk::mpl::literals;
 
 proto::terminal< std::ostream&>::type cout_ = { std::cout };
 proto::literal<int> int_ = 1;
@@ -16,6 +19,8 @@ void evaluate(Expr const& expr)
 	proto::default_context ctx;
 	proto::eval(expr, ctx);
 }
+
+
 
 typedef int const&  iref;
 int main()

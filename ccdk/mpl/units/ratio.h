@@ -81,7 +81,7 @@ struct converter_< ratio<N1, D1>, ratio<N2, D2> >
 {
 	static constexpr bool value = true;       
 
-	typedef div_< ratio<N1, D1>, ratio<N2, D2>>::type type;
+	typedef typename div_< ratio<N1, D1>, ratio<N2, D2>>::type type;
 	static constexpr double factor = (double)type::num / (double)type::den;
 
 	template<typename T>
@@ -91,7 +91,7 @@ struct converter_< ratio<N1, D1>, ratio<N2, D2> >
 /* choose small denominator ratio as main transform target */
 template< int64 N1, int64 D1, int64 N2, int64 D2>
 struct main_transform< ratio<N1, D1>, ratio<N2, D2> >
-	: if_< (D1<D2), ratio<N1, D1>, ratio<N2, D2> >,{};
+	: if_c< (D1<D2), ratio<N1, D1>, ratio<N2, D2> >{};
 
 
 

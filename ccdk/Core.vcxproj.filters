@@ -894,5 +894,6 @@
     <ClInclude Include="mpl\units\units_fwd.h" />
     <ClInclude Include="mpl\mcontainer\less.h" />
     <ClInclude Include="mpl\mcontainer\mul_.h" />
+    <ClInclude Include="mpl\mstate_machine\state_machine.h" />
   </ItemGroup>
 </Project>

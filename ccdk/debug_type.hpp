@@ -196,7 +196,7 @@ namespace ccdk {
 	template<typename T>
 	void type_copy(T* dest, const T* src, uint32 len)
 	{
-		for (int i = 0; i < len; ++i)
+		for (uint32 i = 0; i < len; ++i)
 		{
 			dest[i] = src[i];
 		}

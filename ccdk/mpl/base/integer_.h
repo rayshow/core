@@ -47,7 +47,7 @@ template<ptr::diff_t v> constexpr diff_<v> diff_c{};
 
 namespace literals
 {
-	constexpr long long parse_char(char a) noexcept
+	constexpr int parse_char(char a) noexcept
 	{
 		char base = 0;
 		if (a <= 'Z' && a >= 'A') base = 'A' - 10;
@@ -85,26 +85,64 @@ namespace literals
 		return value;
 	}
 
+	constexpr long double exp10(int exp)
+	{
+		long double val = 1.0L;
+		if (exp > 0) { while (exp--) val *= 10.0L; }
+		else if (exp < 0) { while (exp++) val /= 10.0L; }
+		return val;
+	}
+
 	template<int size>
 	constexpr long double parse_float(const char(&literials)[size])
 	{
 		// 1.11f / 1.11 / 1e-5f / 1e2f  float
 		// 
 		int len = size;
-		bool exp = false;
-		if (literials[len - 1] == 'f')
-		{
-			--len;                       /* skip f */
-		}
-		long double val = 0.0;
-
+		int dot_pos = len;
+		int e_pos = len;
 		for (int i = 0; i < len; ++i)
 		{
-			if()
+			if (literials[i] == '.') dot_pos = i;
+			if (literials[i] == 'e') e_pos = i;
 		}
 
+		int exp = 0;
+		bool negtive_exp = false;
+		int e_start = e_pos + 1;
+		
+		//is exp mode 
+		if (e_pos !=len )
+		{
+			if (literials[e_pos + 1] == '-')
+			{
+				negtive_exp = true;
+				++e_start;
+			}
+			//112
+			int multiplier = 1LL;
+			for (int i = len-1; i >= e_start; --i)
+			{
+				exp += parse_char(literials[i]) * multiplier;
+				multiplier *= 10;
+			}
+			if (negtive_exp) exp = -exp;
+		}
+		
+		long double val = 0.0L;
+		long double multiplier = 1.0L;
+		if ( dot_pos!=len ) multiplier = exp10( dot_pos - e_pos + 1 );
 
-		return 1.0f;
+		for (int i = e_pos - 1; i >= 0; --i)
+		{
+			if (literials[i] != '.')
+			{
+				val += parse_char(literials[i]) * multiplier;
+				multiplier *= 10.0L;
+			}
+		}
+		
+		return val * exp10(exp);
 	}
 
 	//constexpr integer
@@ -119,7 +157,10 @@ namespace literals
 	constexpr auto operator""_th()
 	{
 		return compile_c< int32, parse_integer<sizeof...(args)>({ args... }) >;
-	}
+	} 
+
+#define ccdk_literial_parse_int(args) literals::parse_integer<sizeof...(args)>({ args... })
+#define ccdk_literial_parse_float(args) literals::parse_float<sizeof...(args)>({ args... })
 }
 
 ccdk_namespace_mpl_end
