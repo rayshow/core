@@ -11,7 +11,7 @@
 #include<ccdk/preprocessor/uint8_div.h>
 
 //for( uint i = start; i<= end; i++)
-//	call(i, end -i, others... )
+//	call(i, end -i, vargs... )
 //if( step == 0)
 //  return;
 //else  
@@ -19,7 +19,7 @@
 #define CCDK_PP_RANGE_CALL(start, end, step, call, ...)                         \
 			CCDK_PP_INT_IF( step,                                               \
 				CCDK_PP_RANGE_CALL_CMP,                                         \
-				CCDK_PP_RANGE_CALL_END)##(start, end, step, call, __VA_ARGS__)    
+				CCDK_PP_RANGE_CALL_END)(start, end, step, call, __VA_ARGS__)
 
 //return directly
 #define CCDK_PP_RANGE_CALL_END(...)
@@ -31,7 +31,7 @@
 #define CCDK_PP_RANGE_CALL_CMP(start, end, step, call, ...)                      \
 			CCDK_PP_IF( CCDK_PP_LESS(start, end),                                 \
 				CCDK_PP_RANGE_CALL_SMALL_TO_BIG,                                 \
-				CCDK_PP_RANGE_CALL_BIG_TO_SMALL)##(start, end, step, call, __VA_ARGS__)  \
+				CCDK_PP_RANGE_CALL_BIG_TO_SMALL)(start, end, step, call, __VA_ARGS__)  \
 
 // do small to  big loop
 #define CCDK_PP_RANGE_CALL_SMALL_TO_BIG(start, end, step, call, ...)                 \
@@ -51,7 +51,7 @@
 #define CCDK_PP_RANGE_CALL_CHECK_STEP(count, N, step, call, op, ...) \
 			CCDK_PP_INT_IF(CCDK_PP_SUB1(step),                                  \
 				CCDK_PP_RANGE_CALL_DIV_STEP,                         \
-				CCDK_PP_RANGE_CALL_LOOP_START)##(                    \
+				CCDK_PP_RANGE_CALL_LOOP_START)(                    \
 					count, N, step, call, op, __VA_ARGS__)
 
 // step not 1, count = count / step
@@ -63,9 +63,9 @@
 
 // start loop
 #define CCDK_PP_RANGE_CALL_LOOP_START(count, N, step, call, op, ...) \
-			CCDK_PP_RANGE_CALL_LOOP##count##(N, step, call, op, __VA_ARGS__)
+			CCDK_PP_RANGE_CALL_LOOP##count(N, step, call, op, __VA_ARGS__)
 
-#define CCDK_PP_RANGE_CALL_CONNECT(x, y) CCDK_PP_RANGE_CALL_CONNECT_STEP(x##y)
+#define CCDK_PP_RANGE_CALL_CONNECT(x, y) CCDK_PP_RANGE_CALL_CONNECT_STEP(x y)
 #define CCDK_PP_RANGE_CALL_CONNECT_STEP(result ) result
 
 #define CCDK_PP_RANGE_CALL_LOOP0(N, step, call, op, ...)   CCDK_PP_RANGE_CALL_CONNECT(call,(N, 0, __VA_ARGS__))

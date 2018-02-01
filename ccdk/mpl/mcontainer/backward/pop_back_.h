@@ -5,9 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename It> struct deref_
-{
-	typedef typename It::deref type;
-};
+template<typename Container, typename P>
+struct push_back_: Container::template push_back<P> {};
 
 ccdk_namespace_mpl_end

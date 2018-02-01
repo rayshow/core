@@ -1,16 +1,15 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/derive_if.h>
 
 ccdk_namespace_mpl_start
 
-/* default false */
+/* or_ default false */
 template<typename ... Args> struct or_ :public false_ {};
 
-/* have least one element is constexpr true */
+/* or_ true if at least one element is  true */
 template<typename T, typename... Args>
 struct or_<T, Args...> : public derive_if<T, true_, or_<Args...>> {};
 
@@ -29,7 +28,6 @@ struct and_<T1, T2, Args...> : public derive_if<T1, and_<T2, Args...>, false_ > 
 
 template<typename... Args> using and_t = typename and_<Args...>::type;
 template<typename... Args> static constexpr bool and_v = and_<Args...>::value;
-
 
 template<typename T> struct not_ : public bool_< !T::value > {};
 

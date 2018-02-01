@@ -5,8 +5,7 @@
 
 ccdk_namespace_mpl_start
 
-template<typename Container, typename P>
-struct push_back_: Container::template push_back<P>
-{};
+template<typename T, typename U>
+struct sub_ : T::template sub<U>{};
 
 ccdk_namespace_mpl_end

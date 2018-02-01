@@ -525,9 +525,6 @@
     <ClInclude Include="mpl\type_traits\remove_volatile.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\bool_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\type_traits\add_lref.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -581,9 +578,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h">
       <Filter>mpl\type_trait\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\null_.h">
-      <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\has_lequal.h">
       <Filter>mpl\type_trait</Filter>
@@ -642,19 +636,10 @@
     <ClInclude Include="mpl\base\enable_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\integer_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\char_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\when_match.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_function_obj.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits\identity.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\traits_case.h">
@@ -806,29 +791,10 @@
       <Filter>mpl\function</Filter>
     </ClInclude>
     <ClInclude Include="mpl\mcontainer\arg_pack.h" />
-    <ClInclude Include="mpl\mcontainer\make_indice.h" />
     <ClInclude Include="mpl\mcontainer\val_pack.h" />
-    <ClInclude Include="mpl\mcontainer\at.h" />
     <ClInclude Include="mpl\base\compile_check.h" />
     <ClInclude Include="mpl\base\logic_.h" />
-    <ClInclude Include="mpl\base\arithmatic_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\mcontainer\front.h" />
-    <ClInclude Include="mpl\mcontainer\begin.h" />
     <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
-    <ClInclude Include="mpl\mcontainer\deref.h" />
-    <ClInclude Include="mpl\mcontainer\end.h" />
-    <ClInclude Include="mpl\mcontainer\next.h" />
-    <ClInclude Include="mpl\mcontainer\merge.h" />
-    <ClInclude Include="mpl\mcontainer\find.h" />
-    <ClInclude Include="mpl\mcontainer\range.h" />
-    <ClInclude Include="mpl\mcontainer\split.h" />
-    <ClInclude Include="mpl\mcontainer\pop_front.h" />
-    <ClInclude Include="mpl\mcontainer\push_back.h" />
-    <ClInclude Include="mpl\mcontainer\push_front.h" />
-    <ClInclude Include="mpl\mcontainer\clear.h" />
-    <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
     <ClInclude Include="string\char_traits.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="string\string_fwd.h" />
@@ -886,14 +852,55 @@
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="mpl\exception\exception.h" />
-    <ClInclude Include="mpl\mcontainer\add.h" />
-    <ClInclude Include="mpl\mcontainer\sub.h" />
     <ClInclude Include="mpl\units\quantity.h" />
     <ClInclude Include="mpl\units\dimension.h" />
-    <ClInclude Include="mpl\mcontainer\div.h" />
     <ClInclude Include="mpl\units\units_fwd.h" />
-    <ClInclude Include="mpl\mcontainer\less.h" />
-    <ClInclude Include="mpl\mcontainer\mul_.h" />
     <ClInclude Include="mpl\mstate_machine\state_machine.h" />
+    <ClInclude Include="mpl\mcontainer\arithmatic\mul_.h" />
+    <ClInclude Include="mpl\mcontainer\algoritm\fold_.h" />
+    <ClInclude Include="mpl\mcontainer\algoritm\index_.h" />
+    <ClInclude Include="mpl\mcontainer\range_.h" />
+    <ClInclude Include="mpl\mcontainer\algoritm\merge_.h" />
+    <ClInclude Include="mpl\mcontainer\algoritm\split_.h" />
+    <ClInclude Include="mpl\mcontainer\arithmatic\add_.h" />
+    <ClInclude Include="mpl\mcontainer\arithmatic\div_.h" />
+    <ClInclude Include="mpl\mcontainer\arithmatic\sub_.h" />
+    <ClInclude Include="mpl\mcontainer\backward\back_.h" />
+    <ClInclude Include="mpl\mcontainer\backward\pop_back_.h" />
+    <ClInclude Include="mpl\mcontainer\backward\push_back_.h" />
+    <ClInclude Include="mpl\mcontainer\backward\rbegin_.h" />
+    <ClInclude Include="mpl\mcontainer\backward\rend_.h" />
+    <ClInclude Include="mpl\mcontainer\compare\less_.h" />
+    <ClInclude Include="mpl\mcontainer\compare\equal_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\empty_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\deref_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\clear_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\begin_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\end_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\front_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\next_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\pop_front_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\push_front_.h" />
+    <ClInclude Include="mpl\mcontainer\forward\size_.h" />
+    <ClInclude Include="mpl\mcontainer\make_indice.h" />
+    <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
+    <ClInclude Include="mpl\mcontainer\random\at_.h" />
+    <ClInclude Include="mpl\mcontainer\random\erase_.h" />
+    <ClInclude Include="mpl\mcontainer\random\insert_.h" />
+    <ClInclude Include="mpl\base\identity.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\literials_parse.h" />
+    <ClInclude Include="mpl\base\type_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\mcontainer\arithmatic\arithmatic_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\arithmetic_.h" />
+    <ClInclude Include="mpl\base\placeholder.h" />
+    <ClInclude Include="mpl\mcontainer\mfunction\lambda_.h" />
+    <ClInclude Include="mpl\base\apply_.h" />
+    <ClInclude Include="mpl\base\fold_args.h" />
   </ItemGroup>
 </Project>

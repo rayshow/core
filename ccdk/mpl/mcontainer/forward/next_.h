@@ -5,8 +5,11 @@
 
 ccdk_namespace_mpl_start
 
-template<typename T, typename U>
-struct sub_ : T::template add<U>{};
+template<typename It> struct next_
+{
+	typedef typename It::next type;
+};
 
+template<typename It> using next_t_ = typename next_<It>::type;
 
 ccdk_namespace_mpl_end

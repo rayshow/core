@@ -1,5 +1,5 @@
-
 #pragma once
+
 #include<ccdk/mpl/type_traits/remove_ref.h>
 
 namespace ccdk

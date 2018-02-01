@@ -174,7 +174,7 @@ ccdk_namespace_mpl_fn_start
 	namespace ph
 	{
 		/* _ */
-		constexpr expr<null_> _{};
+		constexpr expr<null_> x_{};
 
 		constexpr expr<uint32_<1>>  _1{};
 		constexpr expr<uint32_<2>>  _2{};

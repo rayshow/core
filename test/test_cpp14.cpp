@@ -7,59 +7,31 @@
 #include<type_traits>
 #include<cassert>
 #include<functional>
-#include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/mcontainer/arg_pack.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/type_traits/select_case.h>
-#include<ccdk/mpl/function/arg.h>
-#include<ccdk/mpl/function/function.h>
-#include<ccdk/mpl/function/bind_mfn.h>
-#include<ccdk/mpl/function/partial.h>
-#include<ccdk/mpl/function/capture.h>
-#include<regex>
+#include<ccdk/mpl/base/arithmetic_.h>
+#include<ccdk/mpl/base/placeholder.h>
+#include<ccdk/debug_type.hpp>
 
-#include<mutex>
-#include<condition_variable>
-
-
-using namespace ccdk;
 using namespace ccdk::mpl;
-using namespace ccdk::mpl::literals;
+using namespace ccdk;
 
-
-test_copy_t t{};
-test_copy_t get_move()
-{
-	return const_cast<const test_copy_t&>(t);
-}
-
-class test_signle_op
-{
-
-};
-
-
-void operator++(test_signle_op)
-{
-	DebugValue("++1");
-}
-
-void operator++(test_signle_op, int)
-{
-	DebugValue("1++");
-}
 
 int main()
 {
-	std::condition_variable cv;
-	std::mutex mt{};
+	int v;
+	DebugValue(v = add2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = add_v< int32_<1>, int32_<2> >);
+	DebugValue(v = add_cv< int, 1,2 >);
 
-	cv.notify_one();
-	cv.wait_for(std::unique_lock<std::mutex>{mt}, std::chrono::microseconds(1000));
-	printf("after waiting ");
-
-
+	DebugValue(v = sub2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = div2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = mul2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = mod2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = shl2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = shr2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = reverse_< int32_<1> >::value);
+	DebugValue(v = reverse_< int32_<1> >::value);
+	
+		 
 	getchar();
 	return 0;
 }

@@ -13,7 +13,7 @@ namespace ccdk
 		namespace tt_detail
 		{
 			template<typename T, bool IsVoid = is_void_v<T> > struct add_rref_helper { typedef T&& type; };
-			template<typename T>                                 struct add_rref_helper<T, true> { typedef T type; };
+			template<typename T>                              struct add_rref_helper<T, true> { typedef T type; };
 		}
 		template<typename T> struct add_rref: public tt_detail::add_rref_helper<T>{};
 		template<typename T> using add_rref_t = typename add_rref<T>::type;

@@ -1,13 +1,14 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 
 ccdk_namespace_mpl_start
 
 /* abstract binary operation */
 template<typename T, typename BinaryOp, T first, T... args>
-struct exp_arithmatic_ : BinaryOp::template apply< T, first, exp_arithmatic_<T, BinaryOp, args...>::value >
+struct exp_arithmatic_ : 
+	BinaryOp::template apply< T, first, exp_arithmatic_<T, BinaryOp, args...>::value >
 {};
 
 template<typename T, typename BinaryOp, T first>
@@ -16,18 +17,7 @@ struct exp_arithmatic_<T, BinaryOp, first>
 	static constexpr T value = first;
 };
 
-/* add args... */
-struct exp_add2
-{
-	template<typename T, T a, T b>
-	struct apply
-	{
-		static constexpr T value = a + b;
-	};
-};
 
-template< typename T, T... args>
-struct exp_add_ :exp_arithmatic_<T, exp_add2, args...> {};
 
 /* max args... */
 struct exp_max2
@@ -53,6 +43,7 @@ struct exp_min2
 		static constexpr T value = a < b ? a : b;
 	};
 };
+
 template< typename T, T... args>
 struct exp_min_ :exp_arithmatic_<T, exp_min2, args...> {};
 

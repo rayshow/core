@@ -10,6 +10,6 @@ template<typename Container, typename Container2>
 struct merge_ : Container::template merge<Container2>{};
 
 template<typename Container, typename Container2>
-using merge_t = typename merge_<Container, Container2>::type;
+using merge_t_ = typename merge_<Container, Container2>::type;
 
 ccdk_namespace_mpl_end

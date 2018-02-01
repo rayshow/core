@@ -22,6 +22,7 @@
 #include<ccdk/preprocessor/seq_foreach_tuple.h>
 #include<ccdk/preprocessor/range_prefix.h>
 #include<ccdk/preprocessor/range_wrap.h>
+#include<ccdk/preprocessor/range_call.h>
 #include<ccdk/preprocessor/range_alias.h>
 #include<ccdk/preprocessor/seq_unpack.h>
 using namespace std;
@@ -76,6 +77,7 @@ int main()
 
 	static_assert(3 == CCDK_PP_SIZE((1, 2, 3)), "seq size failed");
 	static_assert(5 == CCDK_PP_AT((4, 5, 6), 1), "seq number failed");
+	OUTPUT("0. seq expand: \n", CCDK_PP_RANGE_CALL(1,4,1, FOREACH_CALL, CCDK_PP_EMPTY));
 	OUTPUT("1. seq expand: \n", CCDK_PP_EXPAND(CCDK_PP_EXPAND((1, 2, 3), 4),5));
 	OUTPUT("2. seq unpack: \n", CCDK_PP_UNPACK((1, 2, 3)));
 	OUTPUT("3. seq compose: \n", CCDK_PP_COMPOSE((1, 2), (3, 4)));
