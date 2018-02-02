@@ -854,26 +854,6 @@
     <ClInclude Include="mpl\units\units_fwd.h" />
     <ClInclude Include="mpl\mstate_machine\state_machine.h" />
     <ClInclude Include="mpl\mcontainer\range_.h" />
-    <ClInclude Include="mpl\mcontainer\backward\back_.h" />
-    <ClInclude Include="mpl\mcontainer\backward\pop_back_.h" />
-    <ClInclude Include="mpl\mcontainer\backward\push_back_.h" />
-    <ClInclude Include="mpl\mcontainer\backward\rbegin_.h" />
-    <ClInclude Include="mpl\mcontainer\backward\rend_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\empty_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\deref_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\clear_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\begin_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\end_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\front_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\next_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\pop_front_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\push_front_.h" />
-    <ClInclude Include="mpl\mcontainer\forward\size_.h" />
-    <ClInclude Include="mpl\mcontainer\make_indice.h" />
-    <ClInclude Include="mpl\mcontainer\make_val_pack.h" />
-    <ClInclude Include="mpl\mcontainer\random\at_.h" />
-    <ClInclude Include="mpl\mcontainer\random\erase_.h" />
-    <ClInclude Include="mpl\mcontainer\random\insert_.h" />
     <ClInclude Include="mpl\base\identity.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -886,12 +866,15 @@
     <ClInclude Include="mpl\base\fold_args.h" />
     <ClInclude Include="mpl\base\compare_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
-    <ClInclude Include="mpl\base\has_inner_type.h" />
-    <ClInclude Include="mpl\base\has_inner_value.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\merge_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\split_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\count_if_.h" />
+    <ClInclude Include="mpl\mcontainer\iterator_.h" />
+    <ClInclude Include="mpl\mcontainer\forward_.h" />
+    <ClInclude Include="mpl\mcontainer\backward_.h" />
+    <ClInclude Include="mpl\mcontainer\random_.h" />
+    <ClInclude Include="mpl\mcontainer\extensible_.h" />
   </ItemGroup>
 </Project>

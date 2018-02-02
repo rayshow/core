@@ -9,20 +9,20 @@
 
 ccdk_namespace_mpl_start
 
-template<int64 T> struct arg_ {};
+template<int64 Index> struct arg_ {};
 
-typedef arg_<-1> __;    /* mapping single type according to position, _ may conflict with ph::_ */
+typedef arg_<-1> __;    /* mapping single type according to position, avoid conflict with ccdk::mpl::fn::ph::_ */
 typedef arg_<-2> ___;   /* mapping all input args */
 
 /* is placeholder ? */
-template<typename T> struct is_placeholder_ :public false_ {};
+template<typename T> struct is_placeholder_ :public false_ {}; 
 template<int32 N> struct is_placeholder_<arg_<N>> :public true_ {};
 
-/* is _ ? */
+/* is __ ? */
 template<typename T> struct is_nplaceholder :public false_ {};
 template<> struct is_nplaceholder<arg_<-1>> :public true_ {};
 
-/* is __ ? */
+/* is ___ ? */
 template<typename T> struct is_aplaceholder :public false_ {};
 template<> struct is_aplaceholder<arg_<-2>> : public true_ {};
 
@@ -34,6 +34,7 @@ struct contain_nplaceholder :public or_< is_nplaceholder<Args>...> {};
 template<typename... Args> 
 struct containe_aplaceholder :public or_< is_aplaceholder<Args>... > {};
 
+/* _1 ~ _16 */
 #define CCDK_PLACEHOLDER_SPECIALIZATION_DECL(N, index, ...)                                        \
 template<> struct arg_<N>                                                                          \
 { template<CCDK_PP_RANGE_PREFIX(typename T, 1, N, (, ))> struct apply { typedef T ## N type; }; }; \

@@ -6,11 +6,11 @@
 ccdk_namespace_mpl_start
 
 /*  equal */
-template<typename T, typename U> struct equal_ : T::template equal_<U>{};
+template<typename T, typename U> struct equal_ : T::template equal<U>{};
 template<typename T, typename U> static constexpr bool equal_v = equal_<T, U>::value;
 
 /* less */
-template<typename T, typename U> struct less_ : T::template less_<U>{};
+template<typename T, typename U> struct less_ : T::template less<U>{};
 template<typename T, typename U> static constexpr bool less_v = less_<T, U>::value;
 
 /* not equal */

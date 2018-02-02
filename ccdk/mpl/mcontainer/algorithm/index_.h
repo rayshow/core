@@ -6,39 +6,36 @@
 #include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
-#include<ccdk/mpl/mcontainer/forward/deref_.h>
-#include<ccdk/mpl/mcontainer/forward/begin_.h>
-#include<ccdk/mpl/mcontainer/forward/end_.h>
-#include<ccdk/mpl/mcontainer/forward/next_.h>
+#include<ccdk/mpl/mcontainer/iterator_.h>
 
 
 ccdk_namespace_mpl_start
 
-namespace mct_detail
+namespace mpl_impl
 {
 	template<typename It, typename T, uint32 Index>
 	struct index_impl : 
 			derive_if< 
-				is_same< deref_t_<It>, T >,
+				is_same< deref_t<It>, T >,
 				uint32_< Index >, 
-				index_impl< next_t_<It>, T, Index + 1>>
+				index_impl< next_t<It>, T, Index + 1>>
 	{};
 
 
-	template<typename It, typename Pred, uint32 Index>
+	template<typename It, CCDK_MPL_TFN(Pred), uint32 Index>
 	struct index_if_impl:
 			derive_if< 
-				apply_< Pred, deref_t<It> >,
+				Pred< deref_t<It>>,
 				uint32_<Index>, 
 				index_if_impl< next_t<It>, Pred, Index + 1>>
 	{};
 }
 
 template<typename Container, typename T> 
-struct index_ : mct_detail::index_impl < begin_t_<Container> , T, 0 >{};
+struct index_ : mpl_impl::index_impl < begin_t<Container> , T, 0 >{};
 
 template<typename Container, typename Pred>
-struct index_if_ : mct_detail::index_if_impl< begin_t_<Container>, Pred, 0> {};
+struct index_if_ : mpl_impl::index_if_impl< begin_t<Container>, Pred, 0> {};
 
 template<typename Container, typename T>
 using index_t = typename index_<Container, T>::type;

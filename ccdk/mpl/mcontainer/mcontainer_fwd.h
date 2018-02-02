@@ -6,10 +6,8 @@
 ccdk_namespace_mpl_start
 
 /* mconainter category */
-struct forward_category {};
-
+struct forward_category { };
 struct bidirection_categroy : public forward_category {};
-
 struct random_category : bidirection_categroy {};
 
 template<typename Container>

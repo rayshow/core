@@ -15,24 +15,21 @@ struct compile_t
 	constexpr operator T() const { return v; }
 
 	/* add two compile_t */
-	template<typename P> struct add_    : compile_t< decltype(v +  P::value),  (v +  P::value)> {};
-	template<typename P> struct sub_    : compile_t< decltype(v -  P::value),  (v -  P::value)> {};
-	template<typename P> struct mul_    : compile_t< decltype(v *  P::value),  (v *  P::value)> {};
-	template<typename P> struct div_    : compile_t< decltype(v /  P::value),  (v /  P::value)> {};
-	template<typename P> struct mod_    : compile_t< decltype(v %  P::value),  (v %  P::value)> {};
-	template<typename P> struct shl_    : compile_t< decltype(v << P::value),  (v << P::value)> {};
-	template<typename P> struct shr_    : compile_t< decltype(v >> P::value),  (v >> P::value)> {};
-	template<typename P> struct bitand_ : compile_t< decltype(v &  P::value),  (v &  P::value)> {};
-	template<typename P> struct bitor_  : compile_t< decltype(v |  P::value),  (v |  P::value)> {};
-	template<typename P> struct equal_  : compile_t< decltype(v == P::value),  (v == P::value)> {};
-	template<typename P> struct less_   : compile_t< decltype(v <  P::value),  (v <  P::value)> {};
+	template<typename P> struct add   : compile_t< decltype(v +  P::value),  (v +  P::value)> {};
+	template<typename P> struct sub   : compile_t< decltype(v -  P::value),  (v -  P::value)> {};
+	template<typename P> struct mul   : compile_t< decltype(v *  P::value),  (v *  P::value)> {};
+	template<typename P> struct div   : compile_t< decltype(v /  P::value),  (v /  P::value)> {};
+	template<typename P> struct mod   : compile_t< decltype(v %  P::value),  (v %  P::value)> {};
+	template<typename P> struct shl   : compile_t< decltype(v << P::value),  (v << P::value)> {};
+	template<typename P> struct shr   : compile_t< decltype(v >> P::value),  (v >> P::value)> {};
+	template<typename P> struct band  : compile_t< decltype(v &  P::value),  (v &  P::value)> {};
+	template<typename P> struct bor   : compile_t< decltype(v |  P::value),  (v |  P::value)> {};
+	template<typename P> struct equal : compile_t< decltype(v == P::value),  (v == P::value)> {};
+	template<typename P> struct less  : compile_t< decltype(v <  P::value),  (v <  P::value)> {};
 
 	/* unary  */
-	struct reverse_  :compile_t<T, ~v> {};
-	struct negative_ :compile_t<T, -v> {};
-	struct positive_ :compile_t<T, +v> {};
-	struct inc_      :compile_t<T, ++v> {};
-	struct dec_      :compile_t<T, --v> {};
+	struct next     :compile_t<T, ++v> {};
+	struct front    :compile_t<T, --v> {};
 };
 
 /* bool wrap */
@@ -87,6 +84,8 @@ template<char32 c> constexpr char32_<c> char32_c{};
 struct null_ {};
 template<typename T> struct is_null :public false_ {};
 template<> struct is_null< null_> : public true_ {};
+
+
 
 namespace literals
 {

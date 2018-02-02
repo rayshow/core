@@ -74,7 +74,7 @@ namespace ccdk
 			try { (statement); }                                               \
 			catch (...) { (cleanup); throw; /* rethrow */ }               
 
-#define ccdk_throw_if(expr, except)  if(ccdk_unlikely(expr)){ ccdk_throw(except); }
+#define ccdk_throw_if(expr, except)      if(ccdk_unlikely(expr)){ ccdk_throw(except); }
 #define ccdk_check_index(index, length)  ccdk_throw_if( (((index)>=(length) && (index)<=-(int64)(length))), std::out_of_range{"invalid index"} )
 #define ccdk_check_expr(expr, exception) ccdk_throw_if(!(expr), exception )
 

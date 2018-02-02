@@ -25,7 +25,7 @@ namespace mct_detail
 
 
 /* at : get type at Index of Container */
-template<typename Container, uint32 Index> 
+template<typename Container, uint32 Index>
 struct at_ : mct_detail::at_impl< Container, Index, typename Container::category> {};
 
 template<typename Container, uint32 Index>

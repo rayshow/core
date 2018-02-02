@@ -3,6 +3,7 @@
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
+#include<ccdk/mpl/mcontainer/extensible_.h>
 
 ccdk_namespace_mpl_start
 
@@ -89,11 +90,47 @@ struct val_pack <T,first,args...>
 	};
 };
 
+/* indice pack */
 template<uint32... indice> using indice_pack = val_pack<uint32, indice...>;
 
+/* is indice pack */
 template<typename T> struct is_indice_pack :false_ {};
-
 template<uint32... indice> struct is_indice_pack< indice_pack<indice...>> :true_ {};
 
+/* indice pack first */
 template<typename T, T c, T... args> struct val_first { static constexpr T value = c; };
+
+namespace mpl_impl
+{
+	template<typename T, T Cur, T End, typename Container>
+	struct make_val_pack_impl;
+
+	template<typename T, T Cur, T End, T... args>
+	struct make_val_pack_impl<T,Cur,End, val_pack<T, args...>> : make_val_pack_impl< T, Cur + 1, End, val_pack<T,args...,Cur> >
+	{
+		static_assert(Cur < End, "Cur need small then End");
+	};
+
+	template<typename T, T End, T... args>
+	struct make_val_pack_impl<T, End, End, val_pack<T,args...>>
+	{
+		typedef val_pack<T, args...> type;
+	};
+}
+
+/* make val pack */
+template<typename T, T Start, T End>
+struct make_val_pack : mpl_impl::make_val_pack_impl<T, Start, End, val_pack<T>> {};
+
+/* make indice */
+template<uint32 End>
+using make_indice = typename make_val_pack<uint32, 0, End>::type;
+
+template<uint32 Start, uint32 End>
+using make_indice_from = typename make_val_pack< uint32, Start, End>::type;
+
+template<uint32 End, uint32 IgnoreStart, uint32 IgnoreEnd>
+using make_indice_ignore = merge_t< make_indice<IgnoreStart>, make_indice_from<IgnoreEnd, End> >;
+
+
 ccdk_namespace_mpl_end
