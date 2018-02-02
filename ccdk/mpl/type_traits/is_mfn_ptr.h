@@ -3,7 +3,7 @@
 #include<ccdk/preprocessor/seq_compose.h>
 #include<ccdk/preprocessor/seq_foreach_item.h>
 
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 
 
 namespace ccdk

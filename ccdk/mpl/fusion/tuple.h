@@ -1,8 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/logic_.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/mcontainer/split.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_same.h>

@@ -65,7 +65,7 @@ namespace ccdk
 			struct push_front
 			{
 				typedef arg_pack<P, T, Args...> type;
-			};
+			}; 
 
 			template<typename P>
 			struct push_back

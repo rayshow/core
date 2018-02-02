@@ -43,6 +43,6 @@ struct has_member_at
 
 /* default call size(), need check has function T::size() */
 template<typename Container, typename = check_t< has_member_at<Container>  >
-	CCDK_FORCEINLINE decltype(auto) at(Container const& ct, uint32 index) noexcept { return ct.at(index); }
+CCDK_FORCEINLINE decltype(auto) at(Container const& ct, uint32 index) noexcept { return ct.at(index); }
 
-	ccdk_namespace_mpl_util_end
+ccdk_namespace_mpl_util_end

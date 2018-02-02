@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/compile.h>
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/declval.h>
 

@@ -11,6 +11,6 @@ template<typename Container> struct begin_
 };
 
 template<typename Container>
-using begin_t_ = typename begin_<Container>::type;
+using begin_t = typename begin_<Container>::type;
 
 ccdk_namespace_mpl_end

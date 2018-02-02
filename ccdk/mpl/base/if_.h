@@ -1,5 +1,7 @@
 #pragma once
 
+#include<ccdk/mpl/mpl_module.h>
+
 ccdk_namespace_mpl_start
 
 /* if true, inner type is T1, otherwise is T2 */

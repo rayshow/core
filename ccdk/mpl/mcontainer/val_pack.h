@@ -1,8 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/bool_.h>
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
 
 ccdk_namespace_mpl_start

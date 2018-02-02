@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/type_traits/is_enum.h>
 #include<ccdk/mpl/type_traits/traits_case.h>
 

@@ -804,9 +804,6 @@
     <ClInclude Include="mpl\util\addressof.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\util\compatible_cmp.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\util\copy.h" />
     <ClInclude Include="mpl\util\create.h">
       <Filter>mpl\util</Filter>
@@ -856,22 +853,12 @@
     <ClInclude Include="mpl\units\dimension.h" />
     <ClInclude Include="mpl\units\units_fwd.h" />
     <ClInclude Include="mpl\mstate_machine\state_machine.h" />
-    <ClInclude Include="mpl\mcontainer\arithmatic\mul_.h" />
-    <ClInclude Include="mpl\mcontainer\algoritm\fold_.h" />
-    <ClInclude Include="mpl\mcontainer\algoritm\index_.h" />
     <ClInclude Include="mpl\mcontainer\range_.h" />
-    <ClInclude Include="mpl\mcontainer\algoritm\merge_.h" />
-    <ClInclude Include="mpl\mcontainer\algoritm\split_.h" />
-    <ClInclude Include="mpl\mcontainer\arithmatic\add_.h" />
-    <ClInclude Include="mpl\mcontainer\arithmatic\div_.h" />
-    <ClInclude Include="mpl\mcontainer\arithmatic\sub_.h" />
     <ClInclude Include="mpl\mcontainer\backward\back_.h" />
     <ClInclude Include="mpl\mcontainer\backward\pop_back_.h" />
     <ClInclude Include="mpl\mcontainer\backward\push_back_.h" />
     <ClInclude Include="mpl\mcontainer\backward\rbegin_.h" />
     <ClInclude Include="mpl\mcontainer\backward\rend_.h" />
-    <ClInclude Include="mpl\mcontainer\compare\less_.h" />
-    <ClInclude Include="mpl\mcontainer\compare\equal_.h" />
     <ClInclude Include="mpl\mcontainer\forward\empty_.h" />
     <ClInclude Include="mpl\mcontainer\forward\deref_.h" />
     <ClInclude Include="mpl\mcontainer\forward\clear_.h" />
@@ -894,13 +881,17 @@
     <ClInclude Include="mpl\base\type_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\mcontainer\arithmatic\arithmatic_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\arithmetic_.h" />
     <ClInclude Include="mpl\base\placeholder.h" />
-    <ClInclude Include="mpl\mcontainer\mfunction\lambda_.h" />
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\fold_args.h" />
+    <ClInclude Include="mpl\base\compare_.h" />
+    <ClInclude Include="mpl\base\arithmetic_.h" />
+    <ClInclude Include="mpl\base\has_inner_type.h" />
+    <ClInclude Include="mpl\base\has_inner_value.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\merge_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\split_.h" />
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ using namespace ccdk;
 int main()
 {
 	int v;
-	DebugValue(v = add2_< int32_<1>, int32_<2> >::type::value);
+	DebugValue(v = add2_< int32_<1>, int32_<2> >::value);
 	DebugValue(v = add_v< int32_<1>, int32_<2> >);
 	DebugValue(v = add_cv< int, 1,2 >);
 

@@ -14,4 +14,12 @@ struct apply_
 template<typename MFn, typename... Args>
 using apply_t = typename apply_<MFn,Args...>::type;
 
+
+template<template<typename...> typename TFn, typename... Args>
+struct tapply_
+{
+	typedef typename TFn<Args...>::type type;
+};
+
+
 ccdk_namespace_mpl_end

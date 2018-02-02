@@ -56,5 +56,4 @@ template<typename T> struct positive_ : T::positive_ {};
 template<typename T> struct dec_ : T::dec_ {};
 template<typename T> struct inc_ : T::inc_ {};
 
-
 ccdk_namespace_mpl_end

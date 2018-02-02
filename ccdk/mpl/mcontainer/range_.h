@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/is_integer.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>

@@ -2,7 +2,7 @@
 
 #include<ccdk/type.h>
 #include<ccdk/mpl/mcontainer/algoritm/merge_.h>
-#include<ccdk/mpl/mcontainer/algoritm/make_val_pack.h>
+#include<ccdk/mpl/mcontainer/make_val_pack.h>
 
 ccdk_namespace_mpl_start
 
