@@ -15,21 +15,21 @@ struct compile_t
 	constexpr operator T() const { return v; }
 
 	/* add two compile_t */
-	template<typename P> struct add   : compile_t< decltype(v +  P::value),  (v +  P::value)> {};
-	template<typename P> struct sub   : compile_t< decltype(v -  P::value),  (v -  P::value)> {};
-	template<typename P> struct mul   : compile_t< decltype(v *  P::value),  (v *  P::value)> {};
-	template<typename P> struct div   : compile_t< decltype(v /  P::value),  (v /  P::value)> {};
-	template<typename P> struct mod   : compile_t< decltype(v %  P::value),  (v %  P::value)> {};
-	template<typename P> struct shl   : compile_t< decltype(v << P::value),  (v << P::value)> {};
-	template<typename P> struct shr   : compile_t< decltype(v >> P::value),  (v >> P::value)> {};
-	template<typename P> struct band  : compile_t< decltype(v &  P::value),  (v &  P::value)> {};
-	template<typename P> struct bor   : compile_t< decltype(v |  P::value),  (v |  P::value)> {};
-	template<typename P> struct equal : compile_t< decltype(v == P::value),  (v == P::value)> {};
-	template<typename P> struct less  : compile_t< decltype(v <  P::value),  (v <  P::value)> {};
+	template<typename P> using add = compile_t< decltype(v +  P::value),  (v +  P::value)>;
+	template<typename P> using sub = compile_t< decltype(v -  P::value),  (v -  P::value)>;
+	template<typename P> using mul = compile_t< decltype(v *  P::value),  (v *  P::value)>;
+	template<typename P> using div = compile_t< decltype(v /  P::value),  (v /  P::value)>;
+	template<typename P> using mod = compile_t< decltype(v %  P::value),  (v %  P::value)>;
+	template<typename P> using shl = compile_t< decltype(v << P::value),  (v << P::value)>;
+	template<typename P> using shr = compile_t< decltype(v >> P::value),  (v >> P::value)>;
+	template<typename P> using band = compile_t< decltype(v &  P::value),  (v &  P::value)>;
+	template<typename P> using bor = compile_t< decltype(v |  P::value),  (v |  P::value)>;
+	template<typename P> using equal = compile_t< decltype(v == P::value),  (v == P::value)>;
+	template<typename P> using less = compile_t< decltype(v <  P::value),  (v <  P::value)>;
 
 	/* unary  */
-	struct next     :compile_t<T, ++v> {};
-	struct front    :compile_t<T, --v> {};
+	using next =  compile_t<T, v + 1>;
+	using prior = compile_t<T, v - 1>;
 };
 
 /* bool wrap */
@@ -51,8 +51,8 @@ template<int16 v>  using int16_  = compile_t<int16, v>;
 template<int32 v>  using int32_  = compile_t<int32, v>;
 template<int64 v>  using int64_  = compile_t<int64, v>;
 
-template<ptr::size_t v> using size_ = compile_t<ptr::size_t, v>;
-template<ptr::diff_t v> using diff_ = compile_t<ptr::diff_t, v>;
+template<ptr::size_t v> using size_t_ = compile_t<ptr::size_t, v>;
+template<ptr::diff_t v> using diff_t_ = compile_t<ptr::diff_t, v>;
 
 /* template constexpr int */
 template<int8 v>  constexpr int8_<v>  int8_c{};
@@ -66,8 +66,8 @@ template<int32 v> constexpr uint32_<v> uint32_c{};
 template<int64 v> constexpr uint64_<v> uint64_c{};
 template<typename T, T v> constexpr compile_t<T,v> compile_c{};
 
-template<ptr::size_t v> constexpr size_<v> size_c{};
-template<ptr::diff_t v> constexpr diff_<v> diff_c{};
+template<ptr::size_t v> constexpr size_t_<v> size_c{};
+template<ptr::diff_t v> constexpr diff_t_<v> diff_c{};
 
 /* char wrap */
 template<achar c>  using achar_  = compile_t<achar, c>;

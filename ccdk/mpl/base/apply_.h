@@ -42,7 +42,8 @@ namespace mpl_impl
 		template<typename... Args2>
 		struct apply :TFN<Args...> 
 		{
-			static_assert(sizeof...(Args) == sizeof...(Args2),"replace call Args1 size need be same with Args2")
+			static_assert(sizeof...(Args) == sizeof...(Args2),
+				"replace call Args1 size need be same with Args2");
 		};
 	};
 

@@ -37,7 +37,7 @@ struct containe_aplaceholder :public or_< is_aplaceholder<Args>... > {};
 /* _1 ~ _16 */
 #define CCDK_PLACEHOLDER_SPECIALIZATION_DECL(N, index, ...)                                        \
 template<> struct arg_<N>                                                                          \
-{ template<CCDK_PP_RANGE_PREFIX(typename T, 1, N, (, ))> struct apply { typedef T ## N type; }; }; \
+{ template<CCDK_PP_RANGE_PREFIX(typename T, 1, N, (, )),typename... Args> struct apply { typedef T ## N type; }; }; \
 typedef arg_<N> _ ## N;
 
 CCDK_PP_RANGE_CALL(1, 16, 1, CCDK_PLACEHOLDER_SPECIALIZATION_DECL, CCDK_PP_EMPTY);

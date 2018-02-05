@@ -7,14 +7,14 @@ ccdk_namespace_mpl_start
 
 /* clear */
 template<typename Container> struct clear_ { typedef typename Container::clear type; };
-template<typename Container> using clear_t = Container::clear;
+template<typename Container> using clear_t = typename  Container::clear;
 
 /* empty */
 template<typename Container> struct empty_ :Container::empty {};
 
-
 /* size */
 template<typename Container> struct size_ :Container::size {};
+template<typename Container> constexpr uint32 size_v = size_<Container>::value;
 
 /* merge */
 template<typename Container, typename Container2> struct merge_ : Container::template merge<Container2>{};

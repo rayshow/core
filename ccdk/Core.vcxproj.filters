@@ -870,11 +870,11 @@
     <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\split_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\count_if_.h" />
     <ClInclude Include="mpl\mcontainer\iterator_.h" />
     <ClInclude Include="mpl\mcontainer\forward_.h" />
     <ClInclude Include="mpl\mcontainer\backward_.h" />
     <ClInclude Include="mpl\mcontainer\random_.h" />
     <ClInclude Include="mpl\mcontainer\extensible_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\count_if_.h" />
   </ItemGroup>
 </Project>

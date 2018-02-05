@@ -10,28 +10,31 @@
 #include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/base/placeholder.h>
 #include<ccdk/debug_type.hpp>
-
+#include<ccdk/mpl/mcontainer/arg_pack.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
+#include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
+#include<ccdk/mpl/base/if_.h>
+#include<ccdk/mpl/mcontainer/forward_.h>
+#include<ccdk/mpl/mcontainer/backward_.h>
+#include<ccdk/mpl/type_traits/is_float.h>
+#include<ccdk/mpl/type_traits/is_same.h>
 using namespace ccdk::mpl;
 using namespace ccdk;
+
+template<typename T, typename... Args>
+struct replace :lambda_<T>::template apply<Args...>{};
 
 
 int main()
 {
-	int v;
-	DebugValue(v = add2_< int32_<1>, int32_<2> >::value);
-	DebugValue(v = add_v< int32_<1>, int32_<2> >);
-	DebugValue(v = add_cv< int, 1,2 >);
+	typedef arg_pack<int, float, char, double> arg1;
+	typedef arg_pack<int, float, char, double> arg2;
+	DebugValue(count_if_<arg_pack<__, int,__,__,float>, is_placeholder_>::value);
 
-	DebugValue(v = sub2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = div2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = mul2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = mod2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = shl2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = shr2_< int32_<1>, int32_<2> >::type::value);
-	DebugValue(v = reverse_< int32_<1> >::value);
-	DebugValue(v = reverse_< int32_<1> >::value);
-	
-		 
+	typedef replace< if_< is_same<__,__>, _2, char>, float,float> test;
+	DebugTypeName< typename test::type >();
+
+
 	getchar();
 	return 0;
 }

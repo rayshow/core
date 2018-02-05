@@ -16,7 +16,7 @@ template<typename T, typename U>
 using add2_t = typename add2_<T, U>::type;
 
 template<typename T, typename... Args>
-struct add_ : fold_args< add2_, T, Args...> {};
+struct add_ : reverse_fold_args< add2_, T, Args...> {};
 
 template<typename T, typename ... Args>
 using add_t = typename add_<T, Args...>::type;
@@ -40,7 +40,7 @@ static constexpr T add_cv = add_c<T, Args...>::value;
 #define CCDK_MPL_BINARY_ARITHMATIC_OP( name, sign,...)                                                                      \
 template<typename T, typename U> struct name ## 2_ : T::template name<U>{};                                                 \
 template<typename T, typename U> using  name ## 2_t = typename name ## 2_<T, U>::type;                                      \
-template<typename T, typename... Args> struct name ## _ : fold_args< name ## 2_, T,Args...> {};                             \
+template<typename T, typename... Args> struct name ## _ : reverse_fold_args< name ## 2_, T,Args...> {};                             \
 template<typename T, typename... Args> using  name ##_t = typename name ## _<T, Args...>::type;                             \
 template<typename T, typename... Args> static constexpr auto name ## _v = name ## _<T, Args...>::value;                     \
 template<typename T, T First, T... Args> struct name ## _c : compile_t<T, (First sign name ## _c<T, Args...>::value)> {};   \

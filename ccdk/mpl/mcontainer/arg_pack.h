@@ -25,7 +25,6 @@ struct arg_pack<>
 	template<typename P> struct push_front { typedef arg_pack<P> type; };
 	template<typename P> struct push_back { typedef arg_pack<P> type; };
 
-
 	template<typename P> struct merge;
 	template<typename... Args2> struct merge< arg_pack<Args2...>> { typedef arg_pack<Args2...> type;	};
 };
@@ -49,13 +48,10 @@ struct arg_pack<T, Args...>
 	typedef arg_pack<>        clear;
 
 	template<typename P> struct push_front { typedef arg_pack<P, T, Args...> type; }; 
-
 	template<typename P> struct push_back { typedef arg_pack<T, Args..., P> type; };
 
 	template<typename P> struct merge;
 	template<typename... Args2> struct merge< arg_pack<Args2...>> { typedef arg_pack<T,Args..., Args2...> type; };
-
-	template<uint32 Index> struct split_at;
 };
 
 
