@@ -4,11 +4,9 @@
 #include<boost/proto/proto.hpp>
 #include<boost/any.hpp>
 #include<boost/lockfree/queue.hpp>
-#include<ccdk/mpl/base/integer_.h>
+#include<boost/mpl/filter_view.hpp>
 
 using namespace boost;
-using namespace ccdk::mpl;
-using namespace ccdk::mpl::literals;
 
 proto::terminal< std::ostream&>::type cout_ = { std::cout };
 proto::literal<int> int_ = 1;

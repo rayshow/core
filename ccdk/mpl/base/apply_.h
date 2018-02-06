@@ -4,9 +4,6 @@
 
 ccdk_namespace_mpl_start
 
-#define CCDK_MPL_TFN(T)  template<typename...> typename T
-#define CCDK_MPL_TFN1(T) template<typename, typename...> typename T
-
 /* meta-function apply */
 template<typename MFn, typename... Args>
 struct apply_:MFn::template apply<Args...> {};

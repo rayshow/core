@@ -46,7 +46,7 @@ struct state_machine
 		template<typename Event>
 		constexpr void dispatch(this_type& fsm, int state, Event const& evt)
 		{
-
+			fsm.default_action(fsm, state, evt);
 		}
 	};
 
@@ -58,7 +58,7 @@ struct state_machine
 	template<typename Event>
 	constexpr void default_action(this_type& fsm, int state, Event const& evt)
 	{
-		static_cast<derive_type>(fsm).
+		
 	}
 
 	template<typename Event>
