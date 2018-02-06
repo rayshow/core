@@ -8,24 +8,25 @@ ccdk_namespace_mpl_start
 template<typename MFn, typename... Args>
 struct apply_:MFn::template apply<Args...> {};
 
+template<CCDK_TFN( TFn), typename... Args>
+struct call_ :TFn<Args...> {};
+
 template<typename MFn, typename... Args>
 using apply_t = typename apply_<MFn,Args...>::type;
 
-/* template-function apply */
-template<CCDK_MPL_TFN(TFn), typename... Args> struct call_:TFn<Args...> {};
-
 /* partial add apply */
-template<CCDK_MPL_TFN(TFn), typename... Args>
+template<CCDK_TFN(TFn), typename... Args>
 struct add_apply_
 {
-	template<typename... Args2> struct apply:TFn<Args..., Args2...> {};
+	template<typename T2, typename... Args2> struct apply:TFn<Args..., T2,Args2...> {};
 };
 
+
 /* reverse partial apply */
-template<CCDK_MPL_TFN(TFn), typename... Args>
+template<CCDK_TFN(TFn), typename... Args>
 struct reverse_add_apply_
 {
-	template<typename... Args2> struct apply :TFn<Args2..., Args...> {};
+	template<typename T2, typename... Args2> struct apply :TFn<T2,Args2..., Args...> {};
 };
 
 /* replace call */
@@ -33,7 +34,7 @@ namespace mpl_impl
 {
 	template<typename T> struct replace_call_impl;
 
-	template<CCDK_MPL_TFN(TFN), typename... Args>
+	template<CCDK_TFN(TFN), typename... Args>
 	struct replace_call_impl< TFN<Args...> >
 	{
 		template<typename... Args2>

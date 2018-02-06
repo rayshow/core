@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include<cstdio>
 #include<ccdk/debug_type.hpp>
 #include<ccdk/mpl/units/quantity.h>
 #include<ccdk/mpl/mstate_machine/state_machine.h>

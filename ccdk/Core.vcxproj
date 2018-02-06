@@ -140,7 +140,7 @@
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\count_if_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\find_.h" />

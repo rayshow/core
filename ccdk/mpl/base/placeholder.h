@@ -16,7 +16,7 @@ typedef arg_<-2> ___;   /* mapping all input args */
 
 /* is placeholder ? */
 template<typename T> struct is_placeholder_ :public false_ {}; 
-template<int32 N> struct is_placeholder_<arg_<N>> :public true_ {};
+template<int64 N> struct is_placeholder_<arg_<N>> :public true_ {};
 
 /* is __ ? */
 template<typename T> struct is_nplaceholder :public false_ {};
@@ -33,6 +33,9 @@ struct contain_nplaceholder :public or_< is_nplaceholder<Args>...> {};
 /* arg pack contain Arg<-2> ? */
 template<typename... Args> 
 struct containe_aplaceholder :public or_< is_aplaceholder<Args>... > {};
+
+
+
 
 /* _1 ~ _16 */
 #define CCDK_PLACEHOLDER_SPECIALIZATION_DECL(N, index, ...)                                        \

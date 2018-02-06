@@ -8,50 +8,60 @@
 #include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/mcontainer/iterator_.h>
-#include<ccdk/mpl/mcontainer/algorithm/count_if_.h>
 
 ccdk_namespace_mpl_start
 
 	namespace mpl_impl { 
 		template<typename Indice, typename Pack> struct lambda_n;
 		template<typename T, typename NIndex> struct lambda_1;
-		template<typename T> struct lambda_impl;
 	}
 
-	template<typename Fn, typename ... Args>
-	struct lambda_ :public apply_< mpl::mpl_impl::lambda_impl<Fn>, Args...> {};
+	template<typename T>
+	struct lambda_
+	{
+		template<typename N, typename... NArgs>
+		struct apply : apply_< T, N, NArgs...> {};
+	};
 
+	template< CCDK_TFN1(TFn), typename ... Args>
+	struct lambda_< TFn<Args...> >
+	{
+		static constexpr int N = sizeof...(Args);
+		typedef arg_pack<Args ...>      pack_type;
+		typedef make_indice_from<1, N+1>   indice_type;
+
+		////T == ___ && N == 1 || Args1+T contain no ___
+		//static_assert(
+		//	(is_aplaceholder<T>::value && N == 1) ||
+		//	!containe_aplaceholder<T, Args...>::value,
+		//	"___ no need extra template parameter");
+
+		/*template< typename... Args2>
+		struct apply : call_<TFn, apply_t<Args, Args2...>...> {};
+*/
+		template<typename T2, typename... Args2>
+		struct apply :mpl_impl::lambda_n<indice_type, pack_type>::template apply<add_apply_<TFn>, T2, Args2...>
+		{};
+	};
+
+	template<typename Fn, typename T, typename ... Args>
+	struct apply_lambda_ :public apply_< lambda_<Fn>, T, Args...> {};
 
 	namespace mpl_impl
 	{
-		template<typename T>
-		struct lambda_impl
-		{
-			template<typename N, typename... NArgs>
-			struct apply : apply_< T, N, NArgs...> {};
-		};
+		
+		template< typename It, typename Count, uint32 Step>
+		struct count_placeholder_impl :
+				  count_placeholder_impl< next_t<It>,
+					derive_if< is_placeholder_<deref_t<It>>, next_t<Count>, Count>, Step - 1>
+		{};
 
-		template< CCDK_MPL_TFN1(TFn), typename T, typename ... Args>
-		struct lambda_impl< TFn<T, Args...> >
-		{
-			static constexpr int N = 1 + sizeof...(Args);
-			typedef arg_pack<T, Args ...> pack_type;
-			typedef make_indice<N>         indice_type;
-
-			//T == ___ && N == 1 || Args1+T contain no ___
-			static_assert(
-				(is_aplaceholder<T>::value && N == 1) ||
-				!containe_aplaceholder<T, Args...>::value,
-				"___ no need extra template parameter");
-
-			template<typename T2, typename... Args2>
-			struct apply :
-				derive_if<
-				is_aplaceholder<T>,
-				call_< TFn, T2, Args2...>,
-				apply_< mpl_impl::lambda_n<indice_type, pack_type>, add_apply_<TFn>, T2, Args2...> >
-			{};
-		};
+		template< typename It, typename Count>
+		struct count_placeholder_impl<It, Count, 0> :Count {};
+		
+		/* count placeholder in Container */
+		template<typename Container, uint32 Step>
+		struct count_placeholder :count_placeholder_impl<begin_t<Container>, uint32_<0>, Step> {};
 
 		/* if   Fn::template apply<Args...>::type exists return it
 		   else return Fn::template Apply<Args...>::this_type, this_type from apply_< OriginalFn >::tempalte Apply<prefix,...>
@@ -70,40 +80,36 @@ ccdk_namespace_mpl_start
 			template<typename Fn, typename T2, typename... Args2>
 			struct apply:apply_< Fn,
 					apply_t<
-					lambda_1<Args, count_if_< Container, is_placeholder_, Indice + 1>>,
-					T2, Args2...>... > {};
+						lambda_1<Args, count_placeholder< Container, Indice>>,
+						T2, Args2...
+					 >... > {};
 		};
 
-		//normal type
+		//normal type, keep unchange
 		template<typename T, typename NIndex>
 		struct lambda_1
 		{
-			template<typename T2, typename... Args>
+			template<typename... Args>
 			struct apply
 			{
 				typedef T type;
 			};
 		};
 
-		// select Index type from Args...
-		template<int32 Index, typename NIndex>
+		// mapping placeholder to Type
+		template<int64 Index, typename NIndex>
 		struct lambda_1< arg_<Index>, NIndex >
 		{
 			template<typename... Args>
-			struct apply : arg_<Index>::template apply<Args...> {};
+			struct apply
+			{
+				typedef apply_t< arg_< (Index > 0) ? Index : NIndex::value >, Args...> type;
+			};
 		};
 
-		//__ -> _N, select N type from Args...
-		template<typename NIndex>
-		struct lambda_1< arg_<-1>, NIndex>
-		{
-			template<typename... Args>
-			struct apply :public arg_<NIndex::value>::template apply<Args...> {};
-		};
-
-		//recursive replace
-		template< CCDK_MPL_TFN1(TFn), typename NIndex, typename T, typename... Args>
-		struct lambda_1< TFn<T, Args...>, NIndex>: lambda_impl<TFn<T,Args...>> {};
+		// is template, recursive replace placeholder
+		template< CCDK_TFN1(TFn), typename NIndex, typename T, typename... Args>
+		struct lambda_1< TFn<T, Args...>, NIndex>: lambda_<TFn<T,Args...>> {};
 
 	}//detail end
 ccdk_namespace_mpl_end
