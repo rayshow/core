@@ -23,26 +23,24 @@ ccdk_namespace_mpl_start
 		struct apply : apply_< T, N, NArgs...> {};
 	};
 
+	/* avoid double nest lambda_ */
+	template<typename... Args>
+	struct lambda_< lambda_<Args...>>:lambda_<Args...> {};
+
 	template< CCDK_TFN1(TFn), typename ... Args>
 	struct lambda_< TFn<Args...> >
 	{
 		static constexpr int N = sizeof...(Args);
-		typedef arg_pack<Args ...>      pack_type;
+		typedef arg_pack<Args ...>         pack_type;
 		typedef make_indice_from<1, N+1>   indice_type;
 
-		////T == ___ && N == 1 || Args1+T contain no ___
-		//static_assert(
-		//	(is_aplaceholder<T>::value && N == 1) ||
-		//	!containe_aplaceholder<T, Args...>::value,
-		//	"___ no need extra template parameter");
-
-		/*template< typename... Args2>
-		struct apply : call_<TFn, apply_t<Args, Args2...>...> {};
-*/
 		template<typename T2, typename... Args2>
 		struct apply :mpl_impl::lambda_n<indice_type, pack_type>::template apply<add_apply_<TFn>, T2, Args2...>
 		{};
 	};
+
+	template<typename T>
+	using lambda_t = typename lambda_<T>::type;
 
 	template<typename Fn, typename T, typename ... Args>
 	struct apply_lambda_ :public apply_< lambda_<Fn>, T, Args...> {};
@@ -67,7 +65,7 @@ ccdk_namespace_mpl_start
 		   else return Fn::template Apply<Args...>::this_type, this_type from apply_< OriginalFn >::tempalte Apply<prefix,...>
 		*/
 		template<typename Fn, typename... Args>
-		struct select_apply_type : public select_type<apply_<Fn, Args...>> {};
+		struct select_apply_type : public select_type_<apply_<Fn, Args...>> {};
 
 		template<typename Fn, typename... Args>
 		using select_apply_type_t = typename select_apply_type<Fn, Args...>::type;
@@ -82,7 +80,8 @@ ccdk_namespace_mpl_start
 					apply_t<
 						lambda_1<Args, count_placeholder< Container, Indice>>,
 						T2, Args2...
-					 >... > {};
+						>... 
+			> {};
 		};
 
 		//normal type, keep unchange

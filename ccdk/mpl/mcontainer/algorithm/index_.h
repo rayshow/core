@@ -8,27 +8,35 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
 #include<ccdk/mpl/mcontainer/iterator_.h>
+#include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
 
 ccdk_namespace_mpl_start
 
-/* get index if Pred is true */
-template<typename Begin, typename End, typename Pred, int32 Index=0>
-struct iter_index_if_ : 
-		derive_if< apply_<Pred, deref_t<Begin>>, int32_<Index>, 
-			iter_index_if_< next_t<Begin>, End, Pred, Index + 1>>
-{};
+namespace mpl_impl
+{
+	/* get index if Pred is true */
+	template<typename Begin, typename End, typename Pred, int32 Index = 0>
+	struct iter_index_if_impl :
+				derive_if< apply_<Pred, deref_t<Begin>>, int32_<Index>,
+					iter_index_if_impl< next_t<Begin>, End, Pred, Index + 1>>{};
 
-/* not found is -1 */
-template<typename End, typename Pred, int32 Index>
-struct iter_index_if_<End, End,Pred,Index>  :int32_< -1> {};
+	/* not found is -1 */
+	template<typename End, typename Pred, int32 Index>
+	struct iter_index_if_impl<End, End, Pred, Index> :int32_< -1> {};
+
+}
+
+/* get index if Pred is true */
+template<typename Begin, typename End, typename Pred>
+struct iter_index_if_ :mpl_impl::iter_index_if_impl<Begin, End, lambda_<Pred>> {};
 
 /* get index of T */
 template<typename Begin, typename End, typename T>
-struct iter_index_ : iter_index_if_<Begin, End, add_apply_<is_same, T>> {};
+struct iter_index_ : mpl_impl::iter_index_if_impl<Begin, End, add_apply_<is_same, T>> {};
 
 /* get index from container if Pred is true */
 template< typename Container, typename Pred>
-struct index_if_ :iter_index_if_<begin_t<Container>, end_t<Container>, Pred> {};
+struct index_if_ :iter_index_if_<begin_t<Container>, end_t<Container>, Pred > {};
 
 /* get index of T from container */
 template< typename Container, typename T>

@@ -34,9 +34,6 @@ struct contain_nplaceholder :public or_< is_nplaceholder<Args>...> {};
 template<typename... Args> 
 struct containe_aplaceholder :public or_< is_aplaceholder<Args>... > {};
 
-
-
-
 /* _1 ~ _16 */
 #define CCDK_PLACEHOLDER_SPECIALIZATION_DECL(N, index, ...)                                        \
 template<> struct arg_<N>                                                                          \

@@ -1,13 +1,12 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/compatible_type.h>
 #include<ccdk/mpl/type_traits/is_compatible.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
-#include<ccdk/mpl/mcontainer/add.h>
-#include<ccdk/mpl/mcontainer/mul_.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/units/dimension.h>

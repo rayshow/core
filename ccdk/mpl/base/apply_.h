@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/type_traits/has_inner_type.h>
 
 ccdk_namespace_mpl_start
 
@@ -18,7 +19,8 @@ using apply_t = typename apply_<MFn,Args...>::type;
 template<CCDK_TFN(TFn), typename... Args>
 struct add_apply_
 {
-	template<typename T2, typename... Args2> struct apply:TFn<Args..., T2,Args2...> {};
+	template<typename T2, typename... Args2> struct apply:
+		select_type_<TFn<Args..., T2, Args2...>> { };
 };
 
 

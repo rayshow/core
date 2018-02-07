@@ -1,10 +1,9 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/if_.h>
-#include<ccdk/mpl/mcontainer/div.h>
-#include<ccdk/mpl/mcontainer/less.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/units/units_fwd.h>
 
 ccdk_namespace_mpl_units_start
@@ -93,8 +92,7 @@ template< int64 N1, int64 D1, int64 N2, int64 D2>
 struct main_transform< ratio<N1, D1>, ratio<N2, D2> >
 	: if_c< (D1<D2), ratio<N1, D1>, ratio<N2, D2> >{};
 
-
-
+// scalar
 typedef ratio<1, 1000000000000000000LL> atto;
 typedef ratio<1, 1000000000000000LL> femto;
 typedef ratio<1, 1000000000000LL> pico;

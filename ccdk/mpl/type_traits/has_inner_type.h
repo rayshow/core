@@ -18,14 +18,17 @@ namespace ccdk
 
 		/* Fn::type exists, return Fn::type */
 		template<typename Fn, bool = has_inner_type_v<Fn>>
-		struct select_type : public Fn {};
+		struct select_type_ : public Fn {};
 
 		/* Fn::type not exists, return Fn::wrapper_type */
 		template<typename Fn>
-		struct select_type<Fn, false>
+		struct select_type_<Fn, false>
 		{
-			typedef typename Fn::this_type type;
+			typedef  Fn type;
 		};
+
+		template<typename Fn>
+		using select_type_t = typename select_type_<Fn>::type;
 
 
 		template<typename T, typename V>

@@ -13,6 +13,7 @@
 #include<ccdk/mpl/mcontainer/algorithm/find_.h>
 #include<ccdk/mpl/mcontainer/algorithm/fold_.h>
 #include<ccdk/mpl/mcontainer/algorithm/index_.h>
+#include<ccdk/mpl/mcontainer/view/filter_view_.h>
 #include<ccdk/mpl/mcontainer/forward_.h>
 #include<ccdk/mpl/mcontainer/backward_.h>
 
@@ -38,18 +39,21 @@ struct get_second
 	};
 };
 
+struct eof_ {};
 int main()
 {
 	DebugNewTitle("test lambda_")
 	int v = 0;
-	typedef replace< derive_if< is_same<__, __>, _1, _2 >, uint32_<1>, uint32_<1>> replace1;
-	typedef replace< derive_if< is_same<__, __>, _1, _2 >, uint32_<1>, uint32_<0>> replace2;
+	typedef apply_t< lambda_< derive_if< is_same<__, __>, _1, _2 >>, uint32_<1>, uint32_<1>> replace1;
+	typedef apply_t< lambda_< derive_if< is_same<__, __>, _1, _2 >>, uint32_<1>, uint32_<0>> replace2;
+	DebugTypeName< apply_t< lambda_< is_same<__, __>>, int, float>>();
+
 	AssertTrue(replace1::value);
 	AssertFalse(replace2::value);
 
 	DebugNewTitle("test count_ ");
 	typedef arg_pack<int, float, char, double, float> arg1;
-	typedef count_if_< arg1, lambda_<is_same<__,float> > > cf1;
+	typedef count_if_< arg1, is_same<__,float>  > cf1;
 	typedef count_if_< arg1, add_apply_<is_float> > cf2;
 	AssertTrue((count_v< arg1, char>) == 1);
 	AssertTrue((count_v< arg1, wchar>) == 0);
@@ -58,19 +62,25 @@ int main()
 
 	DebugNewTitle("test find_");
 	typedef range_<uint32, 2, 10> range1;
-	AssertTrue(( deref_t<find_t<range1, uint32_<5>>>::value) == 3 );
-
+	AssertTrue((deref_t<find_t<range1, uint32_<5>>>::value) == 5 );
+	AssertTrue((deref_t<find_if_t<range1, is_same<__, uint32_<5>>>>::value) == 5);
+	
 	DebugNewTitle("test fold_");
-	typedef range_<uint32, 1, 6> range2;
-	DebugTypeName< fold_left_t< range2, int, tree>>();
-	DebugTypeName< fold_right_t< range2, int, tree>>();
-	DebugTypeName< reverse_fold_left_t< range2, int, tree>>();
-	DebugTypeName< reverse_fold_right_t< range2, int, tree>>();
+	DebugTypeName< fold_left_t< arg1, eof_,  tree<__,__> >>();
+	DebugTypeName< fold_right_t< arg1, eof_, tree<__,__>>>();
+	DebugTypeName< reverse_fold_left_t< arg1, eof_, tree<__, __>>>();
+	DebugTypeName< reverse_fold_right_t< arg1, eof_, tree<__, __>>>();
 
 	DebugNewTitle("test index_ ");
 	AssertTrue((index_v< arg1, float > == 1));
 	AssertTrue((index_v< arg1, double > == 3));
 	AssertTrue((index_v< arg1, wchar > == -1));
+	AssertTrue((index_if_v< arg1, is_float<__> > == 1));
+
+	DebugNewTitle("test filter view ");
+	typedef arg_pack<float, int, char, double, short, long, long long, long double> arg2;
+	DebugTypeName< fold_left_t< filter_view_< arg2, is_null<__>>, eof_, tree<__,__> >>();
+	DebugTypeName< fold_left_t< filter_view_< arg2, is_integer<__>>, eof_, tree<__, __> >>();
 
 	getchar();
 	return 0;

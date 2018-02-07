@@ -878,5 +878,8 @@
     <ClInclude Include="mpl\mcontainer\algorithm\find_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\split_at_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
+    <ClInclude Include="mpl\mcontainer\vector_.h" />
+    <ClInclude Include="mpl\mcontainer\slist_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\transform_.h" />
   </ItemGroup>
 </Project>

@@ -3,34 +3,39 @@
 #include<ccdk/mpl/base/apply_.h>
 #include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/base/identity.h>
+#include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/mcontainer/iterator_.h>
 #include<ccdk/mpl/mcontainer/extensible_.h>
-#include<ccdk/mpl/type_traits/is_same.h>
+#include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
 
 ccdk_namespace_mpl_start
 
+namespace mpl_impl
+{
+	template<typename Begin, typename End, typename Pred>
+	struct iter_find_if_impl:
+		derive_if<
+			apply_< Pred, deref_t<Begin>>,
+				identity< Begin>,
+				iter_find_if_impl< next_t<Begin>, End, Pred>> {};
+
+	template<typename End, typename MFn>
+	struct iter_find_if_impl<End, End, MFn> { typedef End type; };
+}
+
 /* iterator find */
 template<typename Begin, typename End, typename MFn>
-struct iter_find_if_
-{
-	typedef typename derive_if<
-		apply_< MFn, deref_t<Begin>>,
-		identity< Begin>,
-		iter_find_if_< next_t<Begin>, End, MFn>>::type type;
-};
-
-template<typename End, typename MFn>
-struct iter_find_if_<End,End,MFn> { typedef End type; };
+struct iter_find_if_ : mpl_impl::iter_find_if_impl<Begin, End, lambda_<MFn>> {};
 
 template<typename Begin, typename End, typename T>
-struct iter_find_ : iter_find_if_<Begin, End, add_apply_< is_same, T> > {};
+struct iter_find_ : mpl_impl::iter_find_if_impl<Begin, End, add_apply_< is_same, T> > {};
 
 /* container find */
 template<typename Container, typename MFn>
 struct find_if_ :iter_find_if_< begin_t<Container>, end_t<Container>, MFn> {};
 
 template<typename Container, typename T>
-struct find_ :iter_find_< begin_t<Container>, next_t<Container>, T> {};
+struct find_ :iter_find_< begin_t<Container>, end_t<Container>, T> {};
 
 /* alias */
 template<typename Begin, typename End, typename MFn>
