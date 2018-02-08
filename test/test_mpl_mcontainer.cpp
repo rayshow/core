@@ -8,6 +8,7 @@
 #include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/mcontainer/range_.h>
+#include<ccdk/mpl/mcontainer/slist_.h>
 #include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
 #include<ccdk/mpl/mcontainer/algorithm/count_.h>
 #include<ccdk/mpl/mcontainer/algorithm/find_.h>
@@ -81,6 +82,11 @@ int main()
 	typedef arg_pack<float, int, char, double, short, long, long long, long double> arg2;
 	DebugTypeName< fold_left_t< filter_view_< arg2, is_null<__>>, eof_, tree<__,__> >>();
 	DebugTypeName< fold_left_t< filter_view_< arg2, is_integer<__>>, eof_, tree<__, __> >>();
+
+	DebugNewTitle("test slist_");
+	typedef slist_init_t< float, int, char, double, short> slist1;
+	DebugTypeName< slist1 >();
+	DebugValue((count_if_v<slist1, is_float<__>>));
 
 	getchar();
 	return 0;

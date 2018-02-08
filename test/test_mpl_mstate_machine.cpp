@@ -44,7 +44,8 @@ private:
 		row< pause, stop_event, stopped, &player::stop_palyback>,
 		row< pause, open_close_event, open, &player::stop_and_open>
 	> transition_table;
-
+public:
+	player() :state_machine(stopped) {}
 };
 
 template<typename T>
@@ -59,6 +60,7 @@ int main()
 {
 	player p{};
 	p.process_event(open_close_event{});
+	p.process_event(play_event{});
 	int v = 0;
 	DebugValue(v = test_mfn< add_apply_<is_placeholder_>>::value);
 

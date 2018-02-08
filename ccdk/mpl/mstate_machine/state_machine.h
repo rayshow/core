@@ -20,7 +20,7 @@ protected:
 
 	int state;
 
-	state_machine() :state{ derive_type::initial_state } {}
+	state_machine(int state) :state{ state } {}
 
 
 	template< int CurrentState, class Event, int NextState, void(T::*Action)(Event const&)>
@@ -43,8 +43,11 @@ protected:
 
 		CCDK_FORCEINLINE static void dispatch(derive_type& fsm, int state, event_type const& evt)
 		{
+			DebugValue("try state: ", Row::curr_state);
 			if (state == Row::curr_state)
 			{
+				state = Row::next_state;
+				DebugValue("state: ", state);
 				return Row::execute(fsm, evt);
 			}
 			return NextDispatcher::dispatch(fsm, state, evt);
@@ -56,6 +59,7 @@ protected:
 		template<typename Event>
 		CCDK_FORCEINLINE static void dispatch(this_type& fsm, int state, Event const& evt)
 		{
+			DebugValue("default state");
 			fsm.default_action(fsm, state, evt);
 		}
 	};

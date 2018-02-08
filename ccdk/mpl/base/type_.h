@@ -26,6 +26,8 @@ struct compile_t
 	template<typename P> using bor = compile_t< decltype(v |  P::value),  (v |  P::value)>;
 	template<typename P> using equal = compile_t< decltype(v == P::value),  (v == P::value)>;
 	template<typename P> using less = compile_t< decltype(v <  P::value),  (v <  P::value)>;
+	template<typename P> using min = compile_t< decltype(v + P::value), (v < P::value ? v : P::value)>;
+	template<typename P> using max = compile_t< decltype(v + P::value), (v > P::value ? v : P::value)>;
 
 	/* unary  */
 	using next =  compile_t<T, v + 1>;
