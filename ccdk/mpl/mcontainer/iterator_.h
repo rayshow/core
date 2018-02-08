@@ -15,7 +15,7 @@ template<typename Container>  using end_t = typename Container::end;
 
 /* rbegin */
 template<typename Container> struct rbegin_{ typedef typename Container::rbegin type; };
-template<typename Container> using rbegin_t = typename Container::rbegin;
+template<typename Container> using  rbegin_t = typename Container::rbegin;
 
 /* rend */
 template<typename Container> struct rend_ { typedef typename Container::rend type; };

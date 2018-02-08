@@ -2,6 +2,7 @@
 
 #include<ccdk/compile.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
+#include<ccdk/mpl/base/type_.h>
 
 ccdk_namespace_mpl_start
 
@@ -17,14 +18,28 @@ struct slist_
 	typedef T                front;
 	typedef slist_<null_>    clear;
 	typedef Next             pop_front;
+	typedef false_           empty;
+	typedef uint32_< 1 + Next::size::value> size;
 
 	template<typename T2>
 	using push_front = slist_< T2, this_type >;
 };
 
-/* no deref, no next */
+
 template<>
-struct slist_<null_, null_> {};
+struct slist_<null_, null_> 
+{
+	typedef slist_     type;
+	typedef slist_     this_type;
+	/* no deref, no next , no front, no pop_front, */
+	typedef slist_     begin;
+	typedef slist_     end;
+	typedef true_      empty;
+	typedef uint32_<0> size;
+
+	template<typename T2>
+	using push_front = slist_< T2, this_type >;
+};
 
 template<typename T, typename... Args>
 struct slist_init_

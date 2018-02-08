@@ -51,8 +51,13 @@ struct push_back_;
 template<typename Container>
 struct clear_;
 
+
+/* container */
 template<typename... Args> struct arg_pack;
 
 template<typename T, T... args> struct val_pack;
+
+template<typename... Args>
+struct vector_;
 
 ccdk_namespace_mpl_end

@@ -9,6 +9,7 @@
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/mcontainer/range_.h>
 #include<ccdk/mpl/mcontainer/slist_.h>
+#include<ccdk/mpl/mcontainer/random_.h>
 #include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
 #include<ccdk/mpl/mcontainer/algorithm/count_.h>
 #include<ccdk/mpl/mcontainer/algorithm/find_.h>
@@ -87,6 +88,13 @@ int main()
 	typedef slist_init_t< float, int, char, double, short> slist1;
 	DebugTypeName< slist1 >();
 	DebugValue((count_if_v<slist1, is_float<__>>));
+
+	DebugNewTitle("test at");
+	DebugTypeName<at_t<arg_pack<int, float, double>, 0>>();
+	DebugTypeName<at_t<arg_pack<int, float, double>, 1>>();
+	DebugTypeName<at_t<arg_pack<int, float, double>, 2>>();
+
+
 
 	getchar();
 	return 0;

@@ -21,8 +21,17 @@ namespace mct_detail
 	template<typename Container, uint32 Index>
 	struct at_impl< Container, Index, forward_category> :forward_at< typename begin_<Container>::type, Index> {};
 
-}
+	/* bidirection container */
+	template<typename Container, uint32 Index>
+	struct at_impl< Container, Index, bidirection_categroy> :forward_at< typename begin_<Container>::type, Index> {};
 
+	/* random conatiner */
+	template<typename Container, uint32 Index>
+	struct at_impl< Container, Index, random_category>
+	{
+		typedef typename Container::template at<Index> type;
+	};
+}
 
 /* at : get type at Index of Container */
 template<typename Container, uint32 Index>

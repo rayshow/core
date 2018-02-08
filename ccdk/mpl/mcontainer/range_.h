@@ -19,7 +19,6 @@ struct range_reverse_iter_
 /* no-define for no-range_ */
 template<typename T1, typename T2> struct range_merge_;
 
-
 template<typename T, T Start, T End>
 struct range_
 {
