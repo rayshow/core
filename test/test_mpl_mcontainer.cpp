@@ -18,6 +18,7 @@
 #include<ccdk/mpl/mcontainer/view/filter_view_.h>
 #include<ccdk/mpl/mcontainer/forward_.h>
 #include<ccdk/mpl/mcontainer/backward_.h>
+#include<ccdk/mpl/mcontainer/random_.h>
 
 
 using namespace ccdk::mpl;
@@ -89,11 +90,15 @@ int main()
 	DebugTypeName< slist1 >();
 	DebugValue((count_if_v<slist1, is_float<__>>));
 
-	DebugNewTitle("test at");
-	DebugTypeName<at_t<arg_pack<int, float, double>, 0>>();
-	DebugTypeName<at_t<arg_pack<int, float, double>, 1>>();
-	DebugTypeName<at_t<arg_pack<int, float, double>, 2>>();
-
+	DebugNewTitle("test arg_pack");
+	typedef arg_pack<int, float, double> pack2;
+	DebugTypeName<at_t<pack2, 0>>();
+	DebugTypeName<at_t<pack2, 1>>();
+	DebugTypeName<at_t<pack2, 2>>();
+	DebugTypeName<pop_back_t<pop_back_t<pack2>>>();
+	DebugTypeName<push_back_t<push_back_t<pack2, double>,char>>();
+	DebugTypeName<back_t<pack2>>();
+	
 
 
 	getchar();

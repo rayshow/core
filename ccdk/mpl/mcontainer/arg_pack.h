@@ -80,8 +80,8 @@ struct arg_pack<T, Args...>
 	typedef arg_pack<>           clear;
 
 	/* random at */
-	template<int32 Index>              using at = typename arg_pack_at_and_delete_at< Index, T, Args...>::at;
-	template<int32 Index>              using erase_at = typename arg_pack_at_and_delete_at< Index, T, Args...>::erase_at;
+	template<int32 Index>              using at = typename arg_pack_at_and_erase_at< Index, T, Args...>::at;
+	template<int32 Index>              using erase_at = typename arg_pack_at_and_erase_at< Index, T, Args...>::erase_at;
 	template<int32 Index, typename T2> using insert_at = arg_pack_insert_at<Index, T2, T, Args...>;
 
 	/* front operation */
@@ -91,8 +91,8 @@ struct arg_pack<T, Args...>
 
 	/* back operation */
 	template<typename T2> using  push_back = arg_pack<T, Args..., T2>;
-	using                        pop_back  = erase_at<size::value - 1>;
-	template<typename T2> using  push_back = insert_at<size::value - 1, T2>;
+	using                        back      = at<size::value - 1>;
+    using                        pop_back  = erase_at<size::value - 1>;
 
 	/* merge */
 	template<typename P>  using  merge = arg_pack_merge< P, T, Args...>;
@@ -104,18 +104,18 @@ struct arg_pack<T, Args...>
 
 /* get 0 */
 template<typename T0, typename... Args> 
-struct arg_pack_at_and_delete_at<0, T0, Args...>
+struct arg_pack_at_and_erase_at<0, T0, Args...>
 { 
 	typedef T0                at;   
-	typedef arg_pack<Args...> erase;
+	typedef arg_pack<Args...> erase_at;
 };
 
 #define CCDK_ENUM_ARG_PACK_AT_AND_DELETE_AT(Index, _, ...)                                               \
 template<CCDK_PP_RANGE_PREFIX(typename T, 0, Index,(,)), typename... Args>                               \
-struct arg_pack_at_and_delete_at<Index, CCDK_PP_RANGE_PREFIX(T, 0, Index, (, )), Args...>                \
+struct arg_pack_at_and_erase_at<Index, CCDK_PP_RANGE_PREFIX(T, 0, Index, (, )), Args...>                \
 {                                                                                                        \
 	typedef T ## Index at;                                                                               \
-	typedef arg_pack<CCDK_PP_RANGE_PREFIX(T, 0, CCDK_PP_SUB1(Index), (, )), Args...> erase;              \
+	typedef arg_pack<CCDK_PP_RANGE_PREFIX(T, 0, CCDK_PP_SUB1(Index), (, )), Args...> erase_at;           \
 };  
 
 /* get 1~50 */
@@ -123,12 +123,12 @@ CCDK_PP_RANGE_CALL(1, CCDK_ARG_PACK_INSTANCE_MAX, 1, CCDK_ENUM_ARG_PACK_AT_AND_D
 
 /* get 50~ unlimit , clip to 0~50 */
 template<uint32 Index, CCDK_PP_RANGE_PREFIX(typename T, 0, CCDK_ARG_PACK_INSTANCE_MAX, (, )), typename... Args>
-struct arg_pack_at_and_delete_at<Index, CCDK_PP_RANGE_PREFIX(T, 0, CCDK_ARG_PACK_INSTANCE_MAX, (, )), Args...>
+struct arg_pack_at_and_erase_at<Index, CCDK_PP_RANGE_PREFIX(T, 0, CCDK_ARG_PACK_INSTANCE_MAX, (, )), Args...>
 {
-	typedef typename arg_pack_at_and_delete_at<Index - CCDK_ARG_PACK_INSTANCE_MAX, Args...>::at    at;
-	typedef arg_pack<CCDK_PP_RANGE_PREFIX(T, 0, CCDK_ARG_PACK_INSTANCE_MAX_SUB1, (, ))>            head;
-	typedef typename arg_pack_at_and_delete_at<Index - CCDK_ARG_PACK_INSTANCE_MAX, Args...>::erase tail;
-	typedef merge_t<head, tail>                                                                    erase;
+	typedef typename arg_pack_at_and_erase_at<Index - CCDK_ARG_PACK_INSTANCE_MAX, Args...>::at       at;
+	typedef arg_pack<CCDK_PP_RANGE_PREFIX(T, 0, CCDK_ARG_PACK_INSTANCE_MAX_SUB1, (, ))>               head;
+	typedef typename arg_pack_at_and_erase_at<Index - CCDK_ARG_PACK_INSTANCE_MAX, Args...>::erase_at tail;
+	typedef merge_t<head, tail>                                                                       erase_at;
 };
 
 #undef CCDK_ENUM_ARG_PACK_AT
