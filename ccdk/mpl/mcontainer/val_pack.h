@@ -3,7 +3,7 @@
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/mcontainer/mcontainer_fwd.h>
-#include<ccdk/mpl/mcontainer/extensible_.h>
+#include<ccdk/mpl/mcontainer/entirety_.h>
 
 ccdk_namespace_mpl_start
 
@@ -50,17 +50,17 @@ struct val_pack<T>
 template<typename T, T first, T... args>
 struct val_pack <T,first,args...>
 { 
-	typedef forward_category     category;
-	typedef val_pack             type; 
-	typedef val_pack             begin;
-	typedef val_pack<T>          end;
-	typedef val_pack<T, args...> next;
-	typedef compile_t<T, first>  deref;
-	typedef val_pack<T, args...> pop_front;
-	typedef compile_t<T, first>  front;
-	typedef uint32_<sizeof...(args)+1> size;
-	typedef false_               empty;
-	typedef val_pack<T>          clear;
+	typedef forward_category            category;
+	typedef val_pack                    type; 
+	typedef val_pack                    begin;
+	typedef val_pack<T>                 end;
+	typedef val_pack<T, args...>        next;
+	typedef compile_t<T, first>         deref;
+	typedef val_pack<T, args...>        pop_front;
+	typedef compile_t<T, first>         front;
+	typedef uint32_<sizeof...(args)+1>  size;
+	typedef false_                      empty;
+	typedef val_pack<T>                 clear;
 			
 	template<typename P>
 	struct push_front;

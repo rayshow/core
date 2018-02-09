@@ -32,6 +32,7 @@ private:
 	enum { empty, open, stopped, playing, pause, initial_state };
 
 	typedef arg_pack<
+		//     source   trigger     dest        
 		row< stopped, play_event, playing, &player::start_play>,
 		row< stopped, open_close_event, playing, &player::open_drawer>,
 		row< open, open_close_event, empty, &player::close_drawer>,

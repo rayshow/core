@@ -43,6 +43,46 @@ struct get_second
 };
 
 struct eof_ {};
+
+template<typename Index, typename... Args> struct arg_test;
+
+template<typename T0, typename... Args> 
+struct arg_test<uint32_<0>,T0, Args...>
+{ 
+	static constexpr bool value = true; 
+	typedef T0 type;
+};
+
+
+template<typename T0, typename T1, typename... Args> 
+struct arg_test<uint32_<1>,T0,T1, Args...>
+{
+	static constexpr bool value = true; 
+	typedef T1 type;
+};
+
+
+template<typename T0, typename T1, typename T2, typename... Args>
+struct arg_test<uint32_<2>,T0,T1,T2,Args...>
+{ 
+	static constexpr bool value = true;
+	typedef T2 type;
+};
+
+template<typename T0, typename T1, typename T2, typename T3, typename... Args>
+struct arg_test<uint32_<3>, T0, T1, T2,T3, Args...>
+{
+	static constexpr bool value = true;
+	typedef T3 type;
+};
+
+template<typename Index, typename T0, typename T1, typename T2, typename T3, typename T4, typename... Args> 
+struct arg_test< Index,T0,T1,T2,T3, T4, Args...>
+{
+	static constexpr bool value = false; 
+	typedef typename arg_test<uint32_<Index::value-4>,T4,Args...>::type type;
+};
+
 int main()
 {
 	DebugNewTitle("test lambda_")
@@ -50,7 +90,7 @@ int main()
 	typedef apply_t< lambda_< derive_if< is_same<__, __>, _1, _2 >>, uint32_<1>, uint32_<1>> replace1;
 	typedef apply_t< lambda_< derive_if< is_same<__, __>, _1, _2 >>, uint32_<1>, uint32_<0>> replace2;
 	DebugTypeName< apply_t< lambda_< is_same<__, __>>, int, float>>();
-
+ 
 	AssertTrue(replace1::value);
 	AssertFalse(replace2::value);
 
@@ -91,16 +131,38 @@ int main()
 	DebugValue((count_if_v<slist1, is_float<__>>));
 
 	DebugNewTitle("test arg_pack");
-	typedef arg_pack<int, float, double> pack2;
-	DebugTypeName<at_t<pack2, 0>>();
-	DebugTypeName<at_t<pack2, 1>>();
-	DebugTypeName<at_t<pack2, 2>>();
+	typedef arg_pack<int, float, double, short, long , long long> pack2;
+	typedef arg_pack<char, short> pack3;
+	DebugSubTitle("test backward");
 	DebugTypeName<pop_back_t<pop_back_t<pack2>>>();
 	DebugTypeName<push_back_t<push_back_t<pack2, double>,char>>();
 	DebugTypeName<back_t<pack2>>();
-	
+	DebugSubTitle("test merge");
+	DebugTypeName<merge_t<pack2, pack3>>();
+	DebugSubTitle("test split");
+	DebugTypeName<split_head_t<pack2, 0>>();
+	DebugTypeName<split_tail_t<pack2, 0>>();
+	DebugTypeName<split_head_t<pack2, 3>>();
+	DebugTypeName<split_tail_t<pack2, 3>>();
+	DebugTypeName<split_head_t<pack2, 5>>();
+	DebugTypeName<split_tail_t<pack2, 5>>();
+	DebugTypeName<split_head_t<pack2, 6>>();
+	DebugTypeName<split_tail_t<pack2, 6>>();
 
+	DebugSubTitle("test insert");
+	DebugTypeName<insert_at_t<pack2, 0, char>>();
+	DebugTypeName<insert_at_t<pack2, 3, char>>();
+	DebugTypeName<insert_at_t<pack2, 5, char>>();
+	DebugTypeName<insert_at_t<pack2, 6, char>>();
+	DebugSubTitle("test at");
+	DebugTypeName<at_t<pack2, 0>>();
+	DebugTypeName<at_t<pack2, 3>>();
+	DebugTypeName<at_t<pack2, 5>>();
 
+	DebugSubTitle("test erase");
+	DebugTypeName<erase_t<pack2, 5>>();
+	DebugTypeName<erase_t<pack2, 0>>();
+	DebugTypeName<erase_t<pack2, 1, 3>>();
 	getchar();
 	return 0;
 }

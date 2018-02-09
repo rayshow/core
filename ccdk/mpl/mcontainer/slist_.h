@@ -37,8 +37,8 @@ struct slist_<null_, null_>
 	typedef true_      empty;
 	typedef uint32_<0> size;
 
-	template<typename T2>
-	using push_front = slist_< T2, this_type >;
+	template<typename T2> using push_front = slist_< T2, this_type >;
+	
 };
 
 template<typename T, typename... Args>

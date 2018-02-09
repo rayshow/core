@@ -11,6 +11,14 @@
 ccdk_namespace_mpl_msm_start
 
 /* implements from mpl book */
+
+// 1. enter, exit event
+// 2. guard condition
+// 3. log2S dispatch
+// 4. compose-state
+// 5. defered-event
+// 6. sub-machine
+// 7. Kleen event(any)
 template<typename T>
 struct state_machine
 {

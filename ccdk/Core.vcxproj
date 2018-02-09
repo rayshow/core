@@ -146,11 +146,10 @@
     <ClInclude Include="mpl\mcontainer\algorithm\find_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\sort_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\split_at_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\transform_.h" />
     <ClInclude Include="mpl\mcontainer\backward_.h" />
     <ClInclude Include="mpl\mcontainer\view\btree_view_.h" />
-    <ClInclude Include="mpl\mcontainer\extensible_.h" />
+    <ClInclude Include="mpl\mcontainer\entirety_.h" />
     <ClInclude Include="mpl\mcontainer\forward_.h" />
     <ClInclude Include="mpl\mcontainer\random_.h" />
     <ClInclude Include="mpl\base\placeholder.h" />

@@ -5,7 +5,7 @@
 #include<ccdk/mpl/base/identity.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/mcontainer/iterator_.h>
-#include<ccdk/mpl/mcontainer/extensible_.h>
+#include<ccdk/mpl/mcontainer/entirety_.h>
 #include<ccdk/mpl/mcontainer/algorithm/lambda_.h>
 
 ccdk_namespace_mpl_start

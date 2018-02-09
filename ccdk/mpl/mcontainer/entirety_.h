@@ -20,4 +20,11 @@ template<typename Container> constexpr uint32 size_v = size_<Container>::value;
 template<typename Container, typename Container2> struct merge_ : Container::template merge<Container2>{};
 template<typename Container, typename Container2> using merge_t = typename merge_<Container, Container2>::type;
 
+/* split */
+template<typename Container, int32 Index> struct split_ : Container::template split<Index>{};
+template<typename Container, int32 Index> using split_head_t = typename split_<Container,Index>::split_head;
+template<typename Container, int32 Index> using split_tail_t = typename split_<Container,Index>::split_tail;
+
+
+
 ccdk_namespace_mpl_end
