@@ -1,7 +1,7 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 
 namespace ccdk
 {
@@ -11,8 +11,8 @@ namespace ccdk
 		template< ptr::size_t MinAlign, ptr::size_t MinSize, typename T, typename... Args>
 		struct max_aligned_storage
 		{
-			static constexpr ptr::size_t MaxSize = exp_max_v<ptr::size_t, MinSize, sizeof(T), sizeof(Args)...>;
-			static constexpr ptr::size_t MaxAlign = exp_max_v< ptr::size_t, MinAlign, alignof(T), alignof(Args)...>;
+			static constexpr ptr::size_t MaxSize = max_val<ptr::size_t, MinSize, sizeof(T), sizeof(Args)...>;
+			static constexpr ptr::size_t MaxAlign = max_val< ptr::size_t, MinAlign, alignof(T), alignof(Args)...>;
 			struct type
 			{
 				alignas(MaxAlign) uint8 data[MaxSize];

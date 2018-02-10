@@ -10,8 +10,7 @@
 #include<ccdk/mpl/type_traits.h>
 #include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/function/arg.h>
 #include<ccdk/mpl/function/function.h>
 #include<ccdk/mpl/function/bind_mfn.h>
@@ -426,37 +425,37 @@ int main()
 	partial(&test_copy_t::test_mfn, tt)(2)("hello, 3 partial  obj member function");
 
 
-	//DebugNewTitle("test expr");
-	//auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8; /*1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 == 36*/
-	//auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;  /*1 + 2 + 3 + 2 + 3 + 4 + 5 ==  20 */
-	//RuntimeAssertTrue(ph1(1, 3, 5, 7)==36);
-	//RuntimeAssertTrue(ph2(2, 3, 4, 5)==20);
-	//function<int(int, int, int, int)> ph3{ ph1 };
-	//RuntimeAssertTrue(ph3(1, 3, 5, 7) == 36);
+	DebugNewTitle("test expr");
+	auto ph1 = _ + 2 + _ + 4 + _ + 6 + _ + 8; /*1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 == 36*/
+	auto ph2 = 1_ + 1 + 2_ + _ + _ + _ + 4_;  /*1 + 2 + 3 + 2 + 3 + 4 + 5 ==  20 */
+	RuntimeAssertTrue(ph1(1, 3, 5, 7)==36);
+	RuntimeAssertTrue(ph2(2, 3, 4, 5)==20);
+	function<int(int, int, int, int)> ph3{ ph1 };
+	RuntimeAssertTrue(ph3(1, 3, 5, 7) == 36);
 
-	//DebugSubTitle("test assign expr");
-	//auto assign1 = ( _ = 1 );
-	//int a = 0;
-	//DebugValue(assign1(a));
-	//DebugValue(a);
+	DebugSubTitle("test assign expr");
+	auto assign1 = ( _ = 1 );
+	int a = 0;
+	DebugValue(assign1(a));
+	DebugValue(a);
 	
-	//DebugSubTitle("test invoke");
-	//auto invoke1 = _(_lazy, _) + _ + _ + _1(_lazy, _);
-	//DebugTypeName<decltype(invoke1)>();
-	//int size;
-	//DebugValue(size = invoke1.wild_size);
-	//DebugValue(size = invoke1.index_size);
-	//DebugValue(size = invoke1([](int i) { return i; }, 5, 3,2,1));
+	DebugSubTitle("test invoke");
+	auto invoke1 = _(_lazy, _) + _ + _ + _1(_lazy, _);
+	DebugTypeName<decltype(invoke1)>();
+	int size;
+	DebugValue(size = invoke1.wild_size);
+	DebugValue(size = invoke1.index_size);
+	DebugValue(size = invoke1([](int i) { return i; }, 5, 3,2,1));
 
-	//DebugSubTitle("test val");
-	//auto invoke1 = _ + _;
-	//DebugValue(invoke1(1, 2));
-	auto invoke2 = _ + _ + _ + (--_1)*_ / 4 ;
-	int a = 3;
-	DebugValue(invoke2(a, 2,3,5));
+	DebugSubTitle("test val");
+	auto invoke2 = _ + _;
+	DebugValue(invoke2(1, 2));
+	auto invoke3 = _ + _ + _ + (--_1)*_ / 4 ;
+	int aaa = 3;
+	DebugValue(invoke3(aaa, 2,3,5));
 
 	
-	/*test_copy_t test1{ 1 };
+	test_copy_t test1{ 1 };
 	const test_copy_t test2{ 1 };
 	auto val1 = val(util::move(test1));
 	auto val2 = val(test1);
@@ -469,34 +468,34 @@ int main()
 	DebugTypeName< decltype(val1)::value_type >();
 	DebugTypeName< decltype(val2)::value_type >();
 	DebugTypeName< decltype(val3)::value_type >();
-	DebugTypeName< decltype(val4)::value_type >();*/
+	DebugTypeName< decltype(val4)::value_type >();
 
-	//DebugSubTitle("test ref");
-	//int inta = 3;
-	//const int intb = 4;
-	//auto ref1 = ref(test1);
-	//auto ref2 = ref(test2);
-	//auto ref3 = ref(inta);
-	//auto ref4 = ref(intb);
-	//RuntimeAssertTrue(ref3() == 3);
-	//RuntimeAssertTrue(ref4() == 4);
-	//ref3() = 0;
-	//// ref4() = 0;  //error
-	//RuntimeAssertTrue(inta == 0);
+	DebugSubTitle("test ref");
+	int inta = 3;
+	const int intb = 4;
+	auto ref1 = ref(test1);
+	auto ref2 = ref(test2);
+	auto ref3 = ref(inta);
+	auto ref4 = ref(intb);
+	RuntimeAssertTrue(ref3() == 3);
+	RuntimeAssertTrue(ref4() == 4);
+	ref3() = 0;
+	// ref4() = 0;  //error
+	RuntimeAssertTrue(inta == 0);
 
-	//DebugTypeName< decltype(ref1)::value_type >();
-	//DebugTypeName< decltype(ref2)::value_type >();
-	//DebugTypeName< decltype(ref3)::value_type >();
-	//DebugTypeName< decltype(ref4)::value_type >();
+	DebugTypeName< decltype(ref1)::value_type >();
+	DebugTypeName< decltype(ref2)::value_type >();
+	DebugTypeName< decltype(ref3)::value_type >();
+	DebugTypeName< decltype(ref4)::value_type >();
 
-	//DebugSubTitle("test cref");
-	//auto cref1 = cref(test1);
-	//auto cref2 = cref(test2);
-	//auto cref3 = cref(inta);
-	//auto cref4 = cref(intb);
-	//DebugTypeName< decltype(cref1)::value_type >();
-	//DebugTypeName< decltype(cref2)::value_type >();
-	//DebugValue(cref3());
+	DebugSubTitle("test cref");
+	auto cref1 = cref(test1);
+	auto cref2 = cref(test2);
+	auto cref3 = cref(inta);
+	auto cref4 = cref(intb);
+	DebugTypeName< decltype(cref1)::value_type >();
+	DebugTypeName< decltype(cref2)::value_type >();
+	DebugValue(cref3());
 
 	getchar();
 	return 0;

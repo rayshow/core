@@ -71,7 +71,6 @@ struct arg_pack<T, Args...>
 	typedef arg_pack             begin;
 	typedef arg_pack<>           end;
 	typedef arg_pack<Args...>    next;
-	typedef 
 	typedef T                    deref;
 	
 	/* attribute  */
@@ -98,6 +97,21 @@ struct arg_pack<T, Args...>
 	template<typename P>  using  merge = typename mpl_impl::arg_pack_merge< arg_pack, P >::type;
 	template<int32 Index> using  split =  mpl_impl::arg_pack_index_op<Index - 1, CCDK_NEED_CLAMP(Index-1), T, Args...>;
 };
+
+
+template<int32 index, typename... Args>
+struct args_split:arg_pack<Args...>::template split<index>
+{
+	typedef typename arg_pack<Args...>::template split<index> split_type;
+	typedef typename split_type::split_head head;
+	typedef typename split_type::split_tail tail;
+};
+
+template<int32 Index, typename... Args>
+using args_head_t = typename args_split<Index, Args...>::head;
+
+template<int32 Index, typename... Args>
+using args_tail_t = typename args_split<Index, Args...>::tail;
 
 
 namespace mpl_impl

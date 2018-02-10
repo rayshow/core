@@ -18,16 +18,12 @@
 #include<ccdk/mpl/function/operator.h>
 #include<stdio.h>
 
-#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/mcontainer/at.h>
-#include<ccdk/mpl/mcontainer/begin.h>
-#include<ccdk/mpl/mcontainer/deref.h>
-#include<ccdk/mpl/mcontainer/next.h>
-#include<ccdk/mpl/mcontainer/merge.h>
-#include<ccdk/mpl/mcontainer/split.h>
-#include<ccdk/mpl/mcontainer/find.h>
+#include<ccdk/mpl/mcontainer/random_.h>
+#include<ccdk/mpl/mcontainer/iterator_.h>
+#include<ccdk/mpl/mcontainer/forward_.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -142,112 +138,6 @@ int test_move(const int& i)
 
 int main()
 {
-	DebugTypeName<const int&&>();
-
-	const test_copy_t tca{1};
-	test_copy_t{ util::fmove(tca) };
-
-	test_move(1);
-	int ta = 0;
-	const int tb = 0;
-	auto create1 = test_forward("fdsaf", ta, tb, &test_copy_t::test_mfn);
-	auto create2{ create1 };
-	auto create3{ util::move(create1) };
-
-
-
-	DebugNewTitle("test arg pack");
-	typedef arg_pack<int, char, float, short, double> apack1;
-	typedef arg_pack<int[] , char[]> apack2;
-	DebugSubTitle("at");
-	DebugTypeName< at_t<apack1, 0>>();
-	DebugTypeName< at_t<apack1, 1>>();
-	DebugTypeName< at_t<apack1, 2>>();
-	DebugTypeName< at_t<apack1, 3>>();
-	DebugTypeName< at_t<apack1, 4>>();
-	DebugSubTitle("merge");
-	DebugTypeName< merge_t< apack1, apack2>>();
-	DebugTypeName< merge_t< arg_pack<>, apack2>>();
-	DebugSubTitle("find");
-	DebugTypeName< find_t< apack1, float> >();
-	DebugSubTitle("push front");
-
-
-	DebugSubTitle("split_");
-	DebugTypeName< typename split_< apack1, 2>::head >();
-	DebugTypeName< typename split_< apack1, 2>::tail >();
-	DebugTypeName< typename split_< apack1, 0>::head >();
-	DebugTypeName< typename split_< apack1, 0>::tail >();
-	DebugTypeName< typename split_< apack1, 5>::head >();
-	DebugTypeName< typename split_< apack1, 5>::tail >();
-	DebugTypeName< typename split_< apack1, 2,1>::head >();
-	DebugTypeName< typename split_< apack1, 2,1>::tail >();
-
-	DebugNewTitle("test val pack");
-	typedef val_pack<int, 1, 2, 3, 5, 6, 7> vpack1;
-	typedef val_pack<int, 8,9,10> vpack2;
-	DebugSubTitle("at");
-	DebugTypeName< at_t<vpack1, 0>>();
-	DebugTypeName< at_t<vpack1, 1>>();
-	DebugTypeName< at_t<vpack1, 2>>();
-	DebugTypeName< at_t<vpack1, 3>>();
-	DebugTypeName< at_t<vpack1, 4>>();
-	DebugSubTitle("merge");
-	DebugTypeName< merge_t< vpack1, vpack2>>();
-	DebugTypeName< merge_t< val_pack<int>, vpack2>>();
-	DebugSubTitle("find");
-	DebugTypeName< find_t< vpack1, compile_t<int,3>> >();
-	DebugSubTitle("split_");
-	DebugTypeName< typename split_< vpack1, 2>::head >();
-	DebugTypeName< typename split_< vpack1, 2>::tail >();
-	DebugTypeName< typename split_< vpack1, 0>::head >();
-	DebugTypeName< typename split_< vpack1, 0>::tail >();
-	DebugTypeName< typename split_< vpack1, 5>::head >();
-	DebugTypeName< typename split_< vpack1, 5>::tail >();
-	DebugTypeName< typename split_< vpack1, 2, 1>::head >();
-	DebugTypeName< typename split_< vpack1, 2, 1>::tail >();
-
-	DebugNewTitle("arithmatic");
-	DebugValue(exp_max_<int, 2, 5, 9, 0, -1>::value);
-	DebugNewTitle("arithmatic");
-	DebugTypeName< typename make_indice<10>::type>();
-	DebugTypeName< typename make_indice_from<4,10>::type>();
-	DebugTypeName< typename make_indice_ignore<10,2,6>::type>();
-
-	const base_class  cbc{};
-	base_class bc{ cbc };
-
-	DebugNewTitle("test combine");
-	/* call3( call2( call1( 3, "hello") ) )  */
-	auto cb1 = combine(call1, call2, call3);/*
-	DebugValue(cb1(test_copy_t{}, 3, "hello,combine"));
-	function<int(const test_copy_t&, int, const char*)> fn3{ cb1 };*/
-
-	//fn3(test_copy_t{}, 3, "hello,combine2");
-	bool bv;
-	DebugValue(bv = is_compatible<test_convertible, int>::value);
-	DebugValue(bv = is_convertible<int, test_convertible>::value);
-	
-	DebugValue(bv = is_compatible<test_convertible, int>::value);
-	DebugValue(bv = is_convertible<test_convertible, int>::value);
-	
-	DebugValue(bv = has_constructor<test_convertible, int>::value);
-	DebugValue(bv = has_constructor<test_convertible, int&>::value);
-	DebugValue(bv = has_constructor<test_convertible, int&&>::value);
-	DebugValue(bv = has_constructor<test_convertible, const int&>::value);
-	DebugValue(bv = has_constructor<int,test_convertible>::value);
-
-	
-
-	//test_template_cast<int>(test_convertible{});
-
-	getchar();
-	return 0;
-	DebugValue("test using");
-	derive_op op1{}, op2{};
-	DebugTypeName<decltype(op1 = op2)>();
-
-
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
 	using util::swap;
@@ -338,7 +228,7 @@ int main()
 	}
 	try
 	{
-		ptr2 = new(std::nothrow_t{}) destructor_maythrow[10000000000000000ULL];
+		ptr2 = new(std::nothrow_t{}) destructor_maythrow[10000000ULL];
 		DebugValue("maythrow 2");
 	}
 	catch (...) {

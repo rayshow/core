@@ -7,9 +7,10 @@
 #include<iostream>
 #include<type_traits>
 #include<assert.h>
-#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/type_traits.h>
-#include<ccdk/mpl/mcontainer/find.h>
+#include<ccdk/mpl/mcontainer/algorithm/find_.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 
 #include<ccdk/mpl/fusion/any.h>
 #include<ccdk/mpl/fusion/varient.h>

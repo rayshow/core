@@ -673,27 +673,6 @@
     <ClInclude Include="mpl\base\derive_if.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\fusion\any.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\maybe.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\tuple.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\val_seq.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\range.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\varient.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\bad_cast_exception.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\smart_ptr\default_deleter.h">
       <Filter>mpl\smart_ptr</Filter>
     </ClInclude>
@@ -723,15 +702,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\is_invocable.h">
       <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\pair.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\fusion_fwd.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\fusion\imap.h">
-      <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\max_aligned_t.h">
       <Filter>mpl\type_trait</Filter>
@@ -881,5 +851,15 @@
     <ClInclude Include="mpl\mcontainer\view\btree_view_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\sort_.h" />
     <ClInclude Include="mpl\mcontainer\entirety_.h" />
+    <ClInclude Include="mpl\fusion\any.h" />
+    <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
+    <ClInclude Include="mpl\fusion\fusion_fwd.h" />
+    <ClInclude Include="mpl\fusion\imap.h" />
+    <ClInclude Include="mpl\fusion\maybe.h" />
+    <ClInclude Include="mpl\fusion\pair.h" />
+    <ClInclude Include="mpl\fusion\range.h" />
+    <ClInclude Include="mpl\fusion\tuple.h" />
+    <ClInclude Include="mpl\fusion\val_seq.h" />
+    <ClInclude Include="mpl\fusion\varient.h" />
   </ItemGroup>
 </Project>

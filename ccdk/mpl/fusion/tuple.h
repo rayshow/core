@@ -2,7 +2,10 @@
 
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/type_.h>
-#include<ccdk/mpl/mcontainer/make_indice.h>
+#include<ccdk/mpl/mcontainer/val_pack.h>
+#include<ccdk/mpl/mcontainer/entirety_.h>
+#include<ccdk/mpl/mcontainer/random_.h>
+#include<ccdk/mpl/mcontainer/arg_pack.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
@@ -120,21 +123,21 @@ public:
 
 	/* pop back len items */
 	template<uint32 len = 1, typename = check_in_range< len, 1, size> >
-	CCDK_FORCEINLINE constexpr auto  pop_back()  { return _pop_back_impl<len>( args_head< size - len, Args... >{} ); }
+	CCDK_FORCEINLINE constexpr auto  pop_back()  { return _pop_back_impl<len>( args_head_t< size - len, Args... >{} ); }
 
 	/* pop front len items */
 	template<uint32 len = 1, typename = check_in_range< len, 1, size> >
-	CCDK_FORCEINLINE constexpr auto  pop_front()  { return _pop_front_impl<len>( args_tail< len, Args... >{} ); }
+	CCDK_FORCEINLINE constexpr auto  pop_front()  { return _pop_front_impl<len>(args_tail_t< len, Args... >{} ); }
 		
 	/* erase elements [start, end) */
 	template< uint32 start,  uint32 end = start+ 1, typename = check_in_range2<start, end, 0, size> >
-	CCDK_FORCEINLINE constexpr auto  erase() { return _erase_impl<start, end>( args_erase<start, end - start, Args...>{} ); }
+	CCDK_FORCEINLINE constexpr auto  erase() { return _erase_impl<start, end>( args_erase_t<start, end, Args...>{} ); }
 	
 	/* replace item in [start, end) */
 	template< uint32 start, uint32 end, typename T, typename... Args1 >
 	CCDK_FORCEINLINE constexpr auto  replace(T&& t, Args1&&... args1 )  
 	{
-		typedef split_args< start,  end-start, Args... > pack;
+		typedef args_erase< start,  end, Args... > pack;
 		return _replace_impl<start, end>( typename pack::head{},  typename pack::tail{}, util::forward<T>(t), util::forward<Args1>(args1)...);
 	}
 
@@ -142,7 +145,7 @@ public:
 	template< uint32 pos, typename T, typename... Args1, typename = check_gequal<pos, 0> >
 	CCDK_FORCEINLINE constexpr auto  insert(T&& t, Args1&&... args1) 
 	{
-		typedef split_args<pos, 0, Args... > pack;
+		typedef args_split<pos, Args... > pack;
 		return _insert_impl< pos >( typename pack::head{}, typename pack::tail{}, util::forward<T>(t), util::forward<Args1>(args1)... );
 	}
 };

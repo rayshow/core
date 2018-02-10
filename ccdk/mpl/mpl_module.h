@@ -21,7 +21,6 @@
 #define ccdk_namespace_mpl_msm_start namespace ccdk{ namespace mpl{ namespace msm{
 #define ccdk_namespace_mpl_msm_end   ccdk_namespace_end_of_3
 
-
 //module function
 #define ccdk_namespace_mpl_fn_start  namespace ccdk{ namespace mpl{ namespace fn{
 #define ccdk_namespace_mpl_fn_end    ccdk_namespace_end_of_3

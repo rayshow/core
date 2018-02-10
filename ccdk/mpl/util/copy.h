@@ -3,7 +3,7 @@
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/base/logic_.h>
-#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/type_traits/is_pod.h>
 #include<ccdk/mpl/type_traits/is_scalar.h>
 #include<ccdk/mpl/type_traits/is_array.h>
@@ -52,7 +52,7 @@ template<typename T, ptr::size_t D, ptr::size_t S,
 >
 CCDK_FORCEINLINE void copy(T(&dest)[D], const T(&src)[S]) noexcept
 {
-	static constexpr ptr::size_t Min = min_v<ptr::size_t, D, S>;
+	static constexpr ptr::size_t Min = min_val<ptr::size_t, D, S>;
 	memcpy((void*)addressof(dest), (void*)addressof(src), sizeof(T)*Min);
 }
 
@@ -63,7 +63,7 @@ template<typename T, ptr::size_t D, ptr::size_t S,
 >
 CCDK_FORCEINLINE void copy(T(&dest)[D], const T(&src)[S])
 {
-	static constexpr ptr::size_t Min = min_v<ptr::size_t, D, S>;
+	static constexpr ptr::size_t Min = min_val<ptr::size_t, D, S>;
 	for (int i = 0; i < Min; ++i) { dest[i] = src[i]; }
 }
 

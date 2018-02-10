@@ -26,23 +26,23 @@ template<typename Container, int32 Index>
 using erase_at_t = typename erase_at_<Container, Index>::type;
 
 /* erase [Start, End) */
-template<typename Container, int32 Start, int32 End = Start+1, bool =(End==Start+1)>
+template<typename Container, int32 Start, int32 End = Start+1>
 struct erase_
 {
-	static_assert(Start >= 0 && End > Start && End <= size_v<Container>, "out of range");
+	static_assert(Start >= 0 && End > Start && End <= (int32)size_v<Container>, "out of range");
 	typedef split_head_t<Container,Start> head;
 	typedef split_tail_t<Container, End>  tail;
 	typedef merge_t<head, tail>           type;
 };
 
-/* erase only 1-elements */
-template<typename Container, int32 Start, int32 End>
-struct erase_<Container, Start, End, true>: erase_at_<Container,Start> {};
-
 template<typename Container, int32 Start, int32 End = Start+1>
 using erase_t = typename erase_<Container, Start, End>::type;
 
-template<typename int32 Start, int32 End, typename... Args>
-struct erase_args:erase_<arg_pack<Args...>, Start, End>{};
+template< int32 Start, int32 End, typename... Args>
+struct args_erase : erase_<arg_pack<Args...>, Start, End> {};
+
+template< int32 Start, int32 End, typename... Args>
+using args_erase_t = typename args_erase<Start, End, Args...>::type;
+
 
 ccdk_namespace_mpl_end

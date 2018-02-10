@@ -17,7 +17,7 @@ template<uint32 Key, typename T>
 struct ipair
 {
 	typedef decay_t<T> value_type;
-	template<uint32, typename> friend class ipair;
+	template<uint32, typename> friend struct ipair;
 
 	value_type value;
 
@@ -83,7 +83,7 @@ template<typename First, typename Second, bool = is_empty_v<First> && !is_final_
 struct cpair: public First
 {
 	typedef decay_t<Second> second_type;
-	template<typename, typename, bool> friend class cpair;
+	template<typename, typename, bool> friend struct cpair;
 private:
 	second_type scd;
 
@@ -129,7 +129,7 @@ struct cpair<First,Second,false>
 {
 	typedef decay_t<First> first_type;
 	typedef decay_t<Second> second_type;
-	template<typename, typename, bool> friend class cpair;
+	template<typename, typename, bool> friend struct cpair;
 private:
 	first_type  fst;
 	second_type scd;

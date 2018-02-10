@@ -335,9 +335,9 @@ struct encoding<unicode_encoding>
 
 	CCDK_FORCEINLINE static bool is_alnum(char32 ch) { ccdk_assert(ch < 256);  is_alpha(ch) || is_digit(ch); }
 
-	CCDK_FORCEINLINE static achar to_lower(char32 ch) { ccdk_assert(ch < 256); return is_upper(ch) ? iso_8859_1_conv_table[ch] : ch; }
+	CCDK_FORCEINLINE static achar to_lower(char32 ch) { ccdk_assert(ch < 256); return is_upper(ch) ? (achar)iso_8859_1_conv_table[ch] : (achar)ch; }
 
-	CCDK_FORCEINLINE achar to_upper(char32 ch) { ccdk_assert(ch < 256); return is_lower(ch) ? iso_8859_1_conv_table[ch] : ch; }
+	CCDK_FORCEINLINE achar to_upper(char32 ch) { ccdk_assert(ch < 256); return is_lower(ch) ? (achar)iso_8859_1_conv_table[ch] : (achar)ch; }
 };
 
 ccdk_namespace_string_end

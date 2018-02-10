@@ -13,6 +13,9 @@ ccdk_namespace_mpl_sp_start
 template< typename T, typename D, typename R>
 class share_ptr_base;
 
+template< typename T, typename D>
+class unique_ptr_base;
+
 template< typename T,typename D, typename R>
 class share_ptr;
 
@@ -25,8 +28,7 @@ class poly_share_ptr;
 template<typename T, typename R>
 class poly_weak_ptr;
 
-template< typename T, typename D>
-class unique_ptr_base;
+
 
 
 

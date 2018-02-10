@@ -21,8 +21,9 @@ template<
 	typename Type,      
 	typename Deleter 
 >
-struct unique_ptr_base :public util::noncopyable
+class unique_ptr_base :public util::noncopyable
 {
+public:
 	typedef unique_ptr_base			this_type;
 	typedef remove_dim_t<Type>	    value_type;
 	typedef value_type*		        pointer_type;

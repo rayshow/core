@@ -13,7 +13,7 @@ ccdk_namespace_mpl_fn_start
 
 /* function declare */
 template<typename T>
-struct function;
+class function;
 
 /* mark value */
 template<typename T>

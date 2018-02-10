@@ -106,7 +106,7 @@ namespace test_swap
 			int value;
 			test_swap_t(int v) :value{ v } {}
 			test_swap_t() {}
-			void swap(test_swap_t& other)  { using  ccdk::mpl::util::swap; swap(value, other.value); }
+			void swap(test_swap_t& other)  {   ccdk::mpl::util::swap(value, other.value); }
 		};
 
 		//adl swap test

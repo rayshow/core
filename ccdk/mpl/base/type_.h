@@ -30,8 +30,8 @@ struct compile_t
 	template<typename P> using max = compile_t< decltype(v + P::value), (v > P::value ? v : P::value)>;
 
 	/* unary  */
-	using next =  compile_t<T, v + 1>;
-	using prior = compile_t<T, v - 1>;
+	using next =  compile_t<T, T(v + 1)>;
+	using prior = compile_t<T, T(v - 1)>;
 };
 
 /* bool wrap */

@@ -39,22 +39,14 @@ struct range_
 	using at = compile_t<T, Start + Index::value>;
 
 	/* split  by index */
-	template<typename Index>
-	struct split_at
-	{
-		static_assert(Index::value >= 0 && Index::value<= End-Start, "split index out of range");
-		typedef range_<T, Start, Start + Index::value > head;
-		typedef range_<T, Start + Index::value, End>    tail;
-	};
-
-	/* split by index */
-	template<typename Iter>
+	template<int32 Index>
 	struct split
 	{
-		static_assert(Iter::value >= Start && Iter::value < End, "split iter out of range");
-		typedef range_<T, Start, Iter::value> head;
-		typedef range_<T, Iter::value, End>   end;
+		static_assert(Index >= 0 && Index <= End-Start, "split index out of range");
+		typedef range_<T, Start, Start + Index > split_head;
+		typedef range_<T, Start + Index, End>    split_tail;
 	};
+
 
 	template<typename T2>
 	using merge = range_merge_<this_type, T2>;

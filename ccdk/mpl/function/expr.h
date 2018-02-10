@@ -2,12 +2,12 @@
 
 
 #include<ccdk/preprocessor/seq_foreach_tuple.h>
-#include<ccdk/mpl/base/null_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/base/enable_if.h>
 #include<ccdk/mpl/base/if_.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/mcontainer/front.h>
+#include<ccdk/mpl/mcontainer/forward_.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/dummy_call.h>
@@ -174,7 +174,7 @@ ccdk_namespace_mpl_fn_start
 	namespace ph
 	{
 		/* _ */
-		constexpr expr<null_> x_{};
+		constexpr expr<null_> _{};
 
 		constexpr expr<uint32_<1>>  _1{};
 		constexpr expr<uint32_<2>>  _2{};
@@ -200,7 +200,7 @@ ccdk_namespace_mpl_fn_start
 		constexpr auto operator""_()
 		{
 			static_assert(val_first<char, args...>::value != '0', "number placeholder can't be 0_, need greater then 0");
-			return expr < uint32_ < literals::parse_integer<sizeof...(args)>({ args... }) > > {};
+			return expr < uint32_ < parse_integer<sizeof...(args)>({ args... }) > > {};
 		}
 
 	}

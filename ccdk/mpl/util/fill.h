@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/logic_.h>
-#include<ccdk/mpl/base/arithmatic_.h>
+#include<ccdk/mpl/base/arithmetic_.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/type_traits/is_pod.h>

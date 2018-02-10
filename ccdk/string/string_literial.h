@@ -1,10 +1,7 @@
 #pragma once
 
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/base/enable_if.h>
-#include<ccdk/mpl/base/integer_.h>
-#include<ccdk/mpl/base/char_.h>
-#include<ccdk/mpl/mcontainer/make_indice.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/type_traits/array_length.h>
@@ -18,7 +15,7 @@ using namespace mpl;
 
 	/* Length length of string include '\0' */
 	template< typename Char, uint32 Length>
-	struct string_literial
+	class string_literial
 	{
 	public:
 		typedef Char												char_type;

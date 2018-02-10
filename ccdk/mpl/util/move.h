@@ -85,7 +85,7 @@ template<typename T, ptr::size_t D, ptr::size_t S,
 >
 void move(T(&dest)[D], T(&src)[S])
 {
-	memcpy((void*)addressof(dest), (void*)addressof(src), sizeof(T)*min_v<ptr::size_t, D, S>);
+	memcpy((void*)addressof(dest), (void*)addressof(src), sizeof(T)*min_val<ptr::size_t, D, S>);
 }
 
 /* pod-type array*/
@@ -95,7 +95,7 @@ template<typename T, ptr::size_t D, ptr::size_t S,
 >
 void move(T(&dest)[D], T(&src)[S])
 { 
-	for (int i = 0; i < min_v<ptr::size_t, D, S>; ++i) { dest[i] = fmove(src[i]); }
+	for (int i = 0; i < min_val<ptr::size_t, D, S>; ++i) { dest[i] = fmove(src[i]); }
 }
 
 /* pod type array  */
