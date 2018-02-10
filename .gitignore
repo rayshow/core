@@ -4,6 +4,7 @@ Debug/*
 Release/*
 *.VC.db
 .vs
+.vs/*
 x64/*
 */Debug/*
 */Release/*

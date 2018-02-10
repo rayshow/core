@@ -73,7 +73,8 @@
   <ItemGroup>
     <ClInclude Include="compile.h" />
     <ClInclude Include="container\container_mudule.h" />
-    <ClInclude Include="container\filter_view.h" />
+    <ClInclude Include="container\filter\filter_view.h" />
+    <ClInclude Include="container\slist.h" />
     <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="filesystem\path.h" />
     <ClInclude Include="filesystem\reader.h" />
