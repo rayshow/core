@@ -41,7 +41,7 @@ struct has_member_at
 };
 
 
-/* default call size(), need check has function T::size() */
+/* default call size(), need check has function T::at() */
 template<typename Container, typename = check_t< has_member_at<Container>  >
 CCDK_FORCEINLINE decltype(auto) at(Container const& ct, uint32 index) noexcept { return ct.at(index); }
 
