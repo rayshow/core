@@ -765,12 +765,6 @@
     <ClInclude Include="mpl\base\compile_check.h" />
     <ClInclude Include="mpl\base\logic_.h" />
     <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
-    <ClInclude Include="string\char_traits.h" />
-    <ClInclude Include="string\string.h" />
-    <ClInclude Include="string\string_fwd.h" />
-    <ClInclude Include="string\string_module.h" />
-    <ClInclude Include="string\string_view.h" />
-    <ClInclude Include="memory\memory_traits.h" />
     <ClInclude Include="mpl\util\addressof.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
@@ -805,13 +799,6 @@
     <ClInclude Include="container\array.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="string\string_literial.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="string\encoding\ascii.h" />
-    <ClInclude Include="string\encoding\unicode.h" />
-    <ClInclude Include="string\encoding\iso8859_1.h" />
-    <ClInclude Include="string\to_string.h" />
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="mpl\units\ratio.h" />
     <ClInclude Include="mpl\util\at.h" />
@@ -862,5 +849,21 @@
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="container\filter\filter_view.h" />
     <ClInclude Include="container\slist.h" />
+    <ClInclude Include="memory\simple_new_allocator.h" />
+    <ClInclude Include="memory\memory_module.h" />
+    <ClInclude Include="mpl\iterator\iterator.h" />
+    <ClInclude Include="memory\allocator_traits.h" />
+    <ClInclude Include="text\encoding\ascii.h" />
+    <ClInclude Include="text\encoding\iso8859_1.h" />
+    <ClInclude Include="text\encoding\unicode.h" />
+    <ClInclude Include="text\char_traits.h" />
+    <ClInclude Include="text\string.h" />
+    <ClInclude Include="text\string_fwd.h" />
+    <ClInclude Include="text\string_literial.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="text\string_module.h" />
+    <ClInclude Include="text\string_view.h" />
+    <ClInclude Include="text\to_string.h" />
   </ItemGroup>
 </Project>

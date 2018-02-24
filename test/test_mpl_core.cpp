@@ -136,8 +136,26 @@ int test_move(const int& i)
 	return 0;
 }
 
+//
+//template<class... _Types>
+//using void_ = void;
+//
+//template<class T, class = void>
+//	struct inner_element_type
+//{	
+//	using type = T;
+//};
+//
+//template<class T>
+//struct inner_element_type<T, void_<typename T::element_type>>
+//{	
+//	using type = typename T::element_type;
+//};
+
 int main()
 {
+	std::pointer_traits<void>();
+
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
 	using util::swap;

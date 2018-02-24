@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/string/string_module.h>
+#include<ccdk/text/string_module.h>
 
 ccdk_namespace_string_start
 
@@ -21,7 +21,7 @@ struct encoding;
 template<typename T, typename String>
 struct to_string_t;
 
-template<typename Char, typename Size >
+template<typename Char, typename Alloc, typename Size >
 class basic_string;
 
 

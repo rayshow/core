@@ -7,10 +7,13 @@
 #include<type_traits>
 #include<cassert>
 #include<functional>
+#include<thread>
+
 
 int main()
 {
-
+	std::allocator<char>;
+	std::thread t1{};
 	getchar();
 	return 0;
 }

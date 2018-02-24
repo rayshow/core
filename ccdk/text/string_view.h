@@ -4,8 +4,8 @@
 #include<ccdk/mpl/iterator/ptr_iterator.h>
 #include<ccdk/mpl/fusion/range.h>
 #include<ccdk/mpl/fusion/pair.h>
-#include<ccdk/string/string_module.h>
-#include<ccdk/string/char_traits.h>
+#include<ccdk/text/string_module.h>
+#include<ccdk/text/char_traits.h>
 
 ccdk_namespace_string_start
 using namespace mpl;
@@ -57,9 +57,9 @@ public:
 	void swap(this_type & other) { range.swap(other.range); }
 
 	/* copy assign */
-	CCDK_FORCEINLINE operator=(this_type const& other) { ccdk_if_not_this(other) { this_type{ other }.swap(*this); } }
+	CCDK_FORCEINLINE this_type& operator=(this_type const& other) { ccdk_if_not_this(other) { this_type{ other }.swap(*this); } return *this; }
 	template<typename Size2>
-	CCDK_FORCEINLINE operator=(basic_string_view<Char, Size2> const& other) { this_type{ other }.swap(*this); }
+	CCDK_FORCEINLINE this_type& operator=(basic_string_view<Char, Size2> const& other) { this_type{ other }.swap(*this); return *this; }
 
 	/* assign */
 

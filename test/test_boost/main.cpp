@@ -5,6 +5,7 @@
 #include<boost/any.hpp>
 #include<boost/lockfree/queue.hpp>
 #include<boost/mpl/filter_view.hpp>
+#include<boost/smart_ptr/make_shared.hpp>
 
 using namespace boost;
 
@@ -23,6 +24,7 @@ void evaluate(Expr const& expr)
 typedef int const&  iref;
 int main()
 {
+	make_shared<int,int>(1, 2);
 	evaluate(cout_ << "hello" << "," << "world");
 	evaluate(int_ + 1);
 	getchar();

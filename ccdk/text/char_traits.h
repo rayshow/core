@@ -1,14 +1,14 @@
 #pragma once
 
-#include<ccdk/string/string_module.h>
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/is_same.h>
-#include<ccdk/string/encoding/ascii.h>
-#include<ccdk/string/encoding/iso8859_1.h>
-#include<ccdk/string/encoding/unicode.h>
+#include<ccdk/text/string_module.h>
+#include<ccdk/text/encoding/ascii.h>
+#include<ccdk/text/encoding/iso8859_1.h>
+#include<ccdk/text/encoding/unicode.h>
 #include<vector>
 
 ccdk_namespace_string_start

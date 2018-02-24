@@ -3,9 +3,9 @@
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
-#include<ccdk/string/string_module.h>
-#include<ccdk/string/string_fwd.h>
-#include<ccdk/string/char_traits.h>
+#include<ccdk/text/string_module.h>
+#include<ccdk/text/string_fwd.h>
+#include<ccdk/text/char_traits.h>
 
 ccdk_namespace_string_start
 
