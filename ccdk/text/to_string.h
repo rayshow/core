@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ccdk/string/string_module.h>
+#include<ccdk/text/string_module.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/base/bool_.h>
 

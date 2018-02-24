@@ -10,8 +10,8 @@
 #define ccdk_namespace_mpl_start     namespace ccdk{ namespace mpl{
 #define ccdk_namespace_mpl_end       ccdk_namespace_end_of_2
 
-#define ccdk_namespace_typetraits_impl_start namespace ccdk{ namespace mpl { namespace impl{
-#define ccdk_namespace_typetraits_impl_end ccdk_namespace_end_of_3
+#define ccdk_namespace_mpl_tt_impl_start namespace ccdk{ namespace mpl { namespace tt{
+#define ccdk_namespace_mpl_tt_impl_end ccdk_namespace_end_of_3
 
 //meta-container
 #define ccdk_namespace_mpl_mct_start namespace ccdk{ namespace mpl{ namespace mct{
@@ -34,7 +34,7 @@
 #define ccdk_namespace_mpl_fs_end    ccdk_namespace_end_of_3
 
 //module util 
-#define ccdk_namespace_mpl_util_start namespace ccdk{ namespace mpl{ namespace util{
+#define ccdk_namespace_mpl_util_start namespace ccdk{ namespace mpl{ inline namespace util{
 #define ccdk_namespace_mpl_util_end  ccdk_namespace_end_of_3 
 
 //module smart_ptr

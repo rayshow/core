@@ -16,6 +16,12 @@ namespace ccdk
 		//test if typename T::tag is well-formed
 		CCDK_TT_HAS_INNER_DECL(tag, tag);
 
+		//test if typename T::size_type is well-formed
+		CCDK_TT_HAS_INNER_DECL(size_type, size_type);
+
+		//test if typename T::different_type is well-formed
+		CCDK_TT_HAS_INNER_DECL(different_type, different_type);
+
 		/* Fn::type exists, return Fn::type */
 		template<typename Fn, bool = has_inner_type_v<Fn>>
 		struct select_type_ : public Fn {};

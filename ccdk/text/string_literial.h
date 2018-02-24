@@ -6,8 +6,8 @@
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
-#include<ccdk/string/string_module.h>
-#include<ccdk/string/char_traits.h>
+#include<ccdk/text/string_module.h>
+#include<ccdk/text/char_traits.h>
 
 ccdk_namespace_string_start
 

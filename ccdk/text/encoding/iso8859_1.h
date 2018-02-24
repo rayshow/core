@@ -3,14 +3,14 @@
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
-#include<ccdk/string/string_module.h>
-#include<ccdk/string/string_fwd.h>
-#include<ccdk/string/char_traits.h>
+#include<ccdk/text/string_module.h>
+#include<ccdk/text/string_fwd.h>
+#include<ccdk/text/char_traits.h>
 
 ccdk_namespace_string_start
 
 template<>
-struct encoding<unicode_encoding>
+struct encoding<iso8859_1_encoding>
 {
 	struct iso_8859_1_category
 	{
@@ -289,7 +289,7 @@ struct encoding<unicode_encoding>
 		/* ü  252    */ iso_8859_1_category::kLower_Alpha,
 		/* ý  253    */ iso_8859_1_category::kLower_Alpha,
 		/* þ  254    */ iso_8859_1_category::kLower_Alpha,
-		/* ÿ  255    */ iso_8859_1_category::kLower_Alpha,
+		/* ÿ  255    */ iso_8859_1_category::kLower_Alpha,	
 	};
 
 
@@ -300,9 +300,9 @@ struct encoding<unicode_encoding>
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*48*/
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*64*/
 		0   , 'a' , 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h' , 'i' , 'j' , 'k' , 'l' , 'm' , 'n' , 'o' ,  /*80*/
-		'p' , 'q' , 'r' , 's' , 't' , 'u' , 'v' , 'w' , 'x' , 'y' , 'z' , 0   , 0   , 0   , 0   , 0   ,  /*96*/
+	    'p' , 'q' , 'r' , 's' , 't' , 'u' , 'v' , 'w' , 'x' , 'y' , 'z' , 0   , 0   , 0   , 0   , 0   ,  /*96*/
 		0   , 'A' , 'B' , 'C' , 'D' , 'E' , 'F' , 'G' , 'H' , 'I' , 'G' , 'K' , 'L' , 'M' , 'N' , 'O' ,  /*112*/
-		'P' , 'Q' , 'R' , 'S' , 'T' , 'U' , 'V' , 'W' , 'X' , 'Y' , 'Z' , 0   , 0   , 0   , 0   , 0   ,  /*128*/
+	    'P' , 'Q' , 'R' , 'S' , 'T' , 'U' , 'V' , 'W' , 'X' , 'Y' , 'Z' , 0   , 0   , 0   , 0   , 0   ,  /*128*/
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*144*/
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*160*/
 		0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   ,  /*176*/
@@ -331,13 +331,13 @@ struct encoding<unicode_encoding>
 
 	CCDK_FORCEINLINE static bool is_lower(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kLower; }
 
-	CCDK_FORCEINLINE static bool is_upper(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kUpper; }
+	CCDK_FORCEINLINE bool is_upper(char32 ch) { ccdk_assert(ch < 256);  return iso_8859_1_category_table[ch] & iso_8859_1_category::kUpper; }
 
-	CCDK_FORCEINLINE static bool is_alnum(char32 ch) { ccdk_assert(ch < 256);  is_alpha(ch) || is_digit(ch); }
+	CCDK_FORCEINLINE bool is_alnum(char32 ch) { ccdk_assert(ch < 256);  is_alpha(ch) || is_digit(ch); }
 
-	CCDK_FORCEINLINE static achar to_lower(char32 ch) { ccdk_assert(ch < 256); return is_upper(ch) ? (achar)iso_8859_1_conv_table[ch] : (achar)ch; }
+	CCDK_FORCEINLINE achar to_lower(char32 ch) { ccdk_assert(ch < 256); return (achar)is_upper(ch) ? iso_8859_1_conv_table[ch] : (achar)ch; }
 
-	CCDK_FORCEINLINE achar to_upper(char32 ch) { ccdk_assert(ch < 256); return is_lower(ch) ? (achar)iso_8859_1_conv_table[ch] : (achar)ch; }
+	CCDK_FORCEINLINE achar to_upper(char32 ch) { ccdk_assert(ch < 256); return (achar)is_lower(ch) ? iso_8859_1_conv_table[ch] : (achar)ch; }
 };
 
 ccdk_namespace_string_end

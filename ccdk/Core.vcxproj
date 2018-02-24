@@ -101,7 +101,9 @@
     <ClInclude Include="math\vector4.h" />
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
-    <ClInclude Include="memory\memory_traits.h" />
+    <ClInclude Include="memory\allocator_traits.h" />
+    <ClInclude Include="memory\memory_module.h" />
+    <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
     <ClInclude Include="mpl\base\compare_.h" />
@@ -144,6 +146,7 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
+    <ClInclude Include="mpl\iterator\iterator.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
@@ -168,11 +171,11 @@
     <ClInclude Include="mpl\util\at.h" />
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\fill.h" />
-    <ClInclude Include="string\to_string.h" />
-    <ClInclude Include="string\encoding\ascii.h" />
-    <ClInclude Include="string\encoding\iso8859_1.h" />
-    <ClInclude Include="string\encoding\unicode.h" />
-    <ClInclude Include="string\string_literial.h" />
+    <ClInclude Include="text\to_string.h" />
+    <ClInclude Include="text\encoding\ascii.h" />
+    <ClInclude Include="text\encoding\iso8859_1.h" />
+    <ClInclude Include="text\encoding\unicode.h" />
+    <ClInclude Include="text\string_literial.h" />
     <ClInclude Include="mpl\iterator\iterator_fwd.h" />
     <ClInclude Include="mpl\iterator\ptr_iterator.h" />
     <ClInclude Include="mpl\mcontainer\arg_pack.h" />
@@ -378,11 +381,11 @@
     <ClInclude Include="preprocessor\uint8_sub_n.h" />
     <ClInclude Include="preprocessor\uint8_sub_one.h" />
     <ClInclude Include="preprocessor\while.h" />
-    <ClInclude Include="string\char_traits.h" />
-    <ClInclude Include="string\string.h" />
-    <ClInclude Include="string\string_fwd.h" />
-    <ClInclude Include="string\string_module.h" />
-    <ClInclude Include="string\string_view.h" />
+    <ClInclude Include="text\char_traits.h" />
+    <ClInclude Include="text\string.h" />
+    <ClInclude Include="text\string_fwd.h" />
+    <ClInclude Include="text\string_module.h" />
+    <ClInclude Include="text\string_view.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
