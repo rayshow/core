@@ -1,8 +1,8 @@
 #pragma once
 
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
 
-ccdk_namespace_string_start
+ccdk_namespace_text_start
 
 class ascii_encoding {};      /* ascii  7-bit achar */
 class iso8859_1_encoding {};  /* latin1 8-bit achar */
@@ -25,4 +25,4 @@ template<typename Char, typename Alloc, typename Size >
 class basic_string;
 
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

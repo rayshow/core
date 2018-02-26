@@ -4,10 +4,10 @@
 #include<ccdk/mpl/iterator/ptr_iterator.h>
 #include<ccdk/mpl/fusion/range.h>
 #include<ccdk/mpl/fusion/pair.h>
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
 #include<ccdk/text/char_traits.h>
 
-ccdk_namespace_string_start
+ccdk_namespace_text_start
 using namespace mpl;
 
 template<typename Char, typename Size = ptr::size_t>
@@ -103,4 +103,4 @@ public:
 	CCDK_FORCEINLINE auto crend() const noexcept { return const_iterator{ range.start - 1 }; }
 };
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

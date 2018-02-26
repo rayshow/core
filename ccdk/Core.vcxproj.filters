@@ -858,12 +858,13 @@
     <ClInclude Include="text\encoding\unicode.h" />
     <ClInclude Include="text\char_traits.h" />
     <ClInclude Include="text\string.h" />
-    <ClInclude Include="text\string_fwd.h" />
     <ClInclude Include="text\string_literial.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
-    <ClInclude Include="text\string_module.h" />
     <ClInclude Include="text\string_view.h" />
     <ClInclude Include="text\to_string.h" />
+    <ClInclude Include="text\text_module.h" />
+    <ClInclude Include="text\text_fwd.h" />
+    <ClInclude Include="mpl\type_traits\has_swap.h" />
   </ItemGroup>
 </Project>

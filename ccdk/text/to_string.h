@@ -1,10 +1,10 @@
 #pragma once
 
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/mpl/base/bool_.h>
+#include<ccdk/mpl/base/type_.h>
 
-ccdk_namespace_string_start
+ccdk_namespace_text_start
 
 template<typename From, typename To, bool = sizeof(From)< sizeof(To) >
 struct is_char_convertible : mpl::true_ {};
@@ -91,4 +91,4 @@ constexpr to_string_t<T, String> to_string{};
 #undef ccdk_xint_to_string
 #undef ccdk_xuint_to_string
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

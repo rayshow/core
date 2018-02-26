@@ -2,16 +2,18 @@
 
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/move.h>
+#include<ccdk/mpl/util/fill.h>
 #include<ccdk/mpl/type_traits/is_unsigned.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/memory/simple_new_allocator.h>
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
+#include<ccdk/text/text_fwd.h>
 #include<ccdk/text/char_traits.h>
-#include<ccdk/text/string_fwd.h>
 
-ccdk_namespace_string_start
+
+ccdk_namespace_text_start
 using namespace mpl;
 using namespace mem;
 
@@ -83,11 +85,24 @@ private:
 	{
 		if (!str || start >= end) return;
 		different_type len = end - start;
-		char_type* buffer = alloc_memory(len);
+		char_type* buffer = alloc_memory(len);   /* may throw */
 		util::copy(buffer, str+start, len);      /* copy src to new allocated */
-		buffer[len] = Char(0);
+		buffer[len] = char_type(0);
 		content = buffer;
 		length = len;
+	}
+
+	/* alloc fill */
+	void alloc_fill(char_type c, size_type n)
+	{
+		if (n > 0)
+		{
+			char_type* buffer = alloc_memory(n);
+			util::fill(buffer, c, n);
+			buffer[n] = char_type(0);
+			content = buffer;
+			length = n;
+		}
 	}
 
 	/* replace content[start, end) with str[0, len) */
@@ -119,22 +134,25 @@ public:
 	CCDK_FORCEINLINE constexpr basic_string() noexcept : content{ nullptr }, length{ 0 }, alloc_size{ 0 } {}
 	CCDK_FORCEINLINE constexpr basic_string(ptr::nullptr_t) noexcept : content{ nullptr }, length{ 0 }, alloc_size{ 0 } {}
 
+	/* fill */
+	CCDK_FORCEINLINE basic_string(size_type n, char_type c = char_type(0)) { alloc_fill(c, n); }
+
 	/* c-style string copy */
-	CCDK_FORCEINLINE constexpr basic_string(char_type const* str) :basic_string() { alloc_copy(str, 0, traits_type::length(str)); }
-	CCDK_FORCEINLINE constexpr basic_string(char_type const* str, size_type len) { alloc_copy(str, 0, len);  }
+	CCDK_FORCEINLINE basic_string(char_type const* str) :basic_string() { alloc_copy(str, 0, traits_type::length(str)); }
+	CCDK_FORCEINLINE basic_string(char_type const* str, size_type len) { alloc_copy(str, 0, len);  }
 	
 	/* copy */
-	CCDK_FORCEINLINE constexpr basic_string(basic_string const& other) { alloc_copy(other.content, 0,other.length); }
-	CCDK_FORCEINLINE constexpr basic_string(basic_string const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
+	CCDK_FORCEINLINE  basic_string(basic_string const& other) { alloc_copy(other.content, 0,other.length); }
+	CCDK_FORCEINLINE  basic_string(basic_string const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string(basic_string<Char, Alloc2, Size2> const& other) { alloc_copy(other.content,0, other.length); }
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2> const& other) { alloc_copy(other.content,0, other.length); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string(basic_string<Char, Alloc2, Size2> const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2> const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 
 	/* move */
-	CCDK_FORCEINLINE constexpr basic_string(basic_string&& other) noexcept :content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
+	CCDK_FORCEINLINE  basic_string(basic_string&& other) noexcept :content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string(basic_string<Char, Alloc2, Size2>&& other) noexcept : content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2>&& other) noexcept : content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
 
 	/* swap */
 	CCDK_FORCEINLINE constexpr void swap(basic_string& other) noexcept {  mpl::swap(content, other.content); mpl::swap(length, other.length); mpl::swap(alloc_size, other.alloc_size); }
@@ -167,7 +185,7 @@ public:
 	CCDK_FORCEINLINE constexpr bool empty() const noexcept { return length == 0; }
 
 	/* clear */
-	CCDK_FORCEINLINE basic_string& clear() const noexcept { ccdk_assert(content); content[0] = char_type(0); return *this; }
+	CCDK_FORCEINLINE basic_string& clear() const noexcept { ccdk_assert(content); content[0] = char_type(0); length = 0; return *this; }
 
 	/* access */
 	CCDK_FORCEINLINE constexpr char_type& operator[](uint32 at) noexcept { ccdk_assert(content); return content[at]; }
@@ -262,4 +280,4 @@ using wstring = basic_string<wchar>;
 using u16string = basic_string<char16>;
 using u32string = basic_string<char32>;
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

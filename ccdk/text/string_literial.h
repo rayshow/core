@@ -6,10 +6,10 @@
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
 #include<ccdk/text/char_traits.h>
 
-ccdk_namespace_string_start
+ccdk_namespace_text_start
 
 using namespace mpl;
 
@@ -97,4 +97,4 @@ using namespace mpl;
 		return string_literial<remove_dim_t<T>, array_len<T>::value>{ arr };
 	}
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

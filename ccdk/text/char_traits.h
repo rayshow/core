@@ -5,13 +5,13 @@
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/is_same.h>
-#include<ccdk/text/string_module.h>
+#include<ccdk/text/text_module.h>
 #include<ccdk/text/encoding/ascii.h>
 #include<ccdk/text/encoding/iso8859_1.h>
 #include<ccdk/text/encoding/unicode.h>
 #include<vector>
 
-ccdk_namespace_string_start
+ccdk_namespace_text_start
 
 template<typename Char>
 struct common_char_traits
@@ -176,4 +176,4 @@ struct char_traits<char32> : public common_char_traits<char32>
 	using base_type::find;
 };
 
-ccdk_namespace_string_end
+ccdk_namespace_text_end

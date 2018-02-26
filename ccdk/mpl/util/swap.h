@@ -11,6 +11,7 @@
 #include<ccdk/mpl/type_traits/is_fundamental.h>
 #include<ccdk/mpl/type_traits/is_compound.h>
 #include<ccdk/mpl/type_traits/is_class.h>
+#include<ccdk/mpl/type_traits/has_swap.h>
 #include<ccdk/mpl/util/move.h>
 
 ccdk_namespace_mpl_util_start
@@ -71,20 +72,6 @@ ccdk_namespace_mpl_util_start
 		}
 	}
 
-	//suitable compound type with nothrow move constructor and move assigner class
-	template<typename T,
-		typename = check_t< is_class<T>>,
-		typename = check_t< has_move_assigner<T> >,
-		typename = check_t< has_move_constructor<T> >
-	>
-	CCDK_FORCEINLINE void swap(T& t1, T& t2)
-	{
-		DebugValue("class move swap");
-		T tmp{ util::move(t1) };
-		t1 = util::move(t2);
-		t2 = util::move(tmp);
-	}
-
 	//suit for fundamental type 
 	template<typename T, typename = check_t< is_fundamental<T> >>
 	CCDK_FORCEINLINE void swap(T& t1, T& t2)
@@ -93,6 +80,34 @@ ccdk_namespace_mpl_util_start
 		T tmp = t1;
 		t1 = t2;
 		t2 = tmp;
+	}
+
+	//suit for class  with t1.swap(t2) method 
+	template<typename T,
+		typename = check_t< is_compound<T> >,
+		typename = check_t< has_swap<T, T>>
+	>
+		CCDK_FORCEINLINE void swap(T& t1, T& t2)
+	{
+		DebugValue("class inner swap");
+		t1.swap(t2);
+	}
+
+
+	//suitable compound type with no swap function and 
+	// with  move constructor and move assigner class
+	template<typename T,
+		typename = check_t< is_class<T>>,
+		typename = check_t< has_move_assigner<T> >,
+		typename = check_t< has_move_constructor<T>>,
+		typename = check_t< not_< has_swap<T,T>>>
+	>
+	CCDK_FORCEINLINE void swap(T& t1, T& t2)
+	{
+		DebugValue("class move swap");
+		T tmp{ util::move(t1) };
+		t1 = util::move(t2);
+		t2 = util::move(tmp);
 	}
 
 ccdk_namespace_mpl_util_end

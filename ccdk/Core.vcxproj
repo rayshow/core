@@ -164,6 +164,7 @@
     <ClInclude Include="mpl\mcontainer\slist_.h" />
     <ClInclude Include="mpl\mcontainer\view\filter_view_.h" />
     <ClInclude Include="mpl\mstate_machine\state_machine.h" />
+    <ClInclude Include="mpl\type_traits\has_swap.h" />
     <ClInclude Include="mpl\units\units_fwd.h" />
     <ClInclude Include="mpl\units\dimension.h" />
     <ClInclude Include="mpl\units\quantity.h" />
@@ -383,8 +384,8 @@
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="text\char_traits.h" />
     <ClInclude Include="text\string.h" />
-    <ClInclude Include="text\string_fwd.h" />
-    <ClInclude Include="text\string_module.h" />
+    <ClInclude Include="text\text_fwd.h" />
+    <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\string_view.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
