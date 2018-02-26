@@ -26,7 +26,7 @@
 #define ccdk_namespace_mpl_fn_end    ccdk_namespace_end_of_3
 
 //module iterator
-#define ccdk_namespace_mpl_it_start  namespace ccdk{ namespace mpl{ namespace it{
+#define ccdk_namespace_mpl_it_start  namespace ccdk{ namespace mpl{ inline namespace it{
 #define ccdk_namespace_mpl_it_end    ccdk_namespace_end_of_3
 
 //module fusion

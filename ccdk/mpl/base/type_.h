@@ -41,6 +41,8 @@ using false_ = compile_t<bool, false>;
 using true_  = compile_t<bool, true>;
 constexpr false_ false_c{};
 constexpr true_  true_c{};
+template<bool v>
+constexpr bool_<v> bool_c{};
 
 /* int wrap  */
 template<uint8 v>  using uint8_  = compile_t<uint8, v>;

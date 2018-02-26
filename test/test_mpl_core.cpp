@@ -25,6 +25,12 @@
 #include<ccdk/mpl/mcontainer/iterator_.h>
 #include<ccdk/mpl/mcontainer/forward_.h>
 
+#include<ccdk/mpl/util/construct.h>
+#include<ccdk/mpl/util/destruct.h>
+#include<ccdk/mpl/iterator/uninitialized_copy.h>
+
+#include<memory>
+
 using namespace ccdk;
 using namespace ccdk::mpl;
 
@@ -152,9 +158,35 @@ int test_move(const int& i)
 //	using type = typename T::element_type;
 //};
 
+
+struct test_construct
+{
+	char a;
+	std::string name;
+	int b;
+
+	test_construct(char ia, std::string iname, int ib) : a{ia}, name{iname}, b{ib}{}
+
+	~test_construct() { a = 0, name = ""; b = 0; }
+};
+
+template<typename It>
+struct iterator_traits_test
+{
+	typedef int type;
+
+};
+
+
+template<typename T>
+struct iterator_traits_test<T*>
+{
+	typedef T type;
+};
+
+
 int main()
 {
-	std::pointer_traits<void>();
 
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
@@ -253,6 +285,24 @@ int main()
 		DebugValue(ptr2);
 		DebugValue("throw 2");
 	}
+
+	DebugNewTitle("test construct");
+	char buffer[sizeof(test_construct)];
+	util::construct<test_construct>(buffer, 'v', "hello", 2);
+	test_construct* tc = reinterpret_cast<test_construct*>(buffer);
+	DebugValue(tc->a);
+	DebugValue(tc->name);
+	DebugValue(tc->b);
+	util::destruct<test_construct>(buffer);
+	DebugValue(tc->a);
+	DebugValue(tc->name);
+	DebugValue(tc->b);
+
+	
+
+	DebugTypeName< typename iterator_traits_test<int>::type>();
+	DebugTypeName< typename iterator_traits_test<int*>::type>();
+	DebugTypeName< typename iterator_traits_test<int const*>::type>();
 
 	getchar();
 	return 0;

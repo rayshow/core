@@ -866,5 +866,9 @@
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\text_fwd.h" />
     <ClInclude Include="mpl\type_traits\has_swap.h" />
+    <ClInclude Include="mpl\util\construct.h" />
+    <ClInclude Include="mpl\util\destruct.h" />
+    <ClInclude Include="mpl\iterator\uninitialized_copy.h" />
+    <ClInclude Include="mpl\iterator\iterator_traits.h" />
   </ItemGroup>
 </Project>

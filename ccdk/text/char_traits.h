@@ -76,7 +76,7 @@ struct char_traits<achar> : public common_char_traits<achar>
 
 	/* encoding know at compile-time */
 	template<typename Encoding = default_encoding_type >
-	ptr::size_t ltrim(achar* content, ptr::size_t len)
+	static constexpr ptr::size_t ltrim(achar* content, ptr::size_t len)
 	{
 		achar const* it = content;
 		ptr::size_t space_count = 0;
@@ -86,7 +86,7 @@ struct char_traits<achar> : public common_char_traits<achar>
 	}
 
 	/* encoding know at run-time */
-	ptr::size_t ltrim(achar* content, ptr::size_t len, encoding_value v)
+	static constexpr ptr::size_t ltrim(achar* content, ptr::size_t len, encoding_value v)
 	{
 		switch (v)
 		{
@@ -102,7 +102,7 @@ struct char_traits<achar> : public common_char_traits<achar>
 	}
 
 	template<typename Encoding = default_encoding_type >
-	ptr::size_t rtrim(achar * content, ptr::size_t len)
+	static constexpr ptr::size_t rtrim(achar * content, ptr::size_t len)
 	{
 		achar const* it = content + len-1;
 		achar const* end = content - 1;
@@ -113,7 +113,7 @@ struct char_traits<achar> : public common_char_traits<achar>
 	}
 
 	/* encoding know at run-time */
-	ptr::size_t rtrim(achar* content, ptr::size_t len, encoding_value v)
+	static constexpr ptr::size_t rtrim(achar* content, ptr::size_t len, encoding_value v)
 	{
 		switch (v)
 		{
@@ -129,13 +129,13 @@ struct char_traits<achar> : public common_char_traits<achar>
 	}
 
 	template<typename Encoding = default_encoding_type >
-	ptr::size_t trim(achar * content, ptr::size_t len)
+	static constexpr ptr::size_t trim(achar * content, ptr::size_t len)
 	{
 		return ltrim<Encoding>(content, rtrim<Encoding>(content, len));
 	}
 
 	/* encoding know at run-time */
-	ptr::size_t trim(achar* content, ptr::size_t len, encoding_value v)
+	static constexpr  ptr::size_t trim(achar* content, ptr::size_t len, encoding_value v)
 	{
 		ptr::size_t rlen = 0;
 		switch (v)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/fill.h>
@@ -53,6 +54,22 @@ private:
 	pointer_type   content;      /* string  */
 	size_type      length;       /* content length */
 	size_type      alloc_size;   /* for pre-alloc ex-memory */
+
+	/* [0, length) */
+	CCDK_FORCEINLINE size_type reverse_index(different_type pos) noexcept
+	{
+		if (pos >= 0) return (size_type)pos;
+		ccdk_assert(pos + length > 0);
+		return (size_type)(length + pos);
+	}
+
+	/* [0, length] */
+	CCDK_FORCEINLINE size_type range_reverse_index(different_type pos) noexcept
+	{
+		if (pos >= 0) return (size_type)pos;
+		ccdk_assert(pos + length >= 0);
+		return (size_type)(length + pos+1);
+	}
 
 	/* alloc memory */
 	char_type* alloc_memory(const size_type actual_size)
@@ -128,6 +145,22 @@ private:
 		length = actual_len;
 	}
 
+	/* forward find count */
+	template<ptr::diff_t Count>
+	CCDK_FORCEINLINE constexpr size_type find_impl(mpl::false_, char_type ch) const noexcept
+	{
+		ptr::diff_t c = 0;
+		for (size_type i = 0; i < length; ++i) { if (content[i] == ch && ++c ==Count) return i; } return npos;
+	}
+
+	/* backward find count */
+	template<ptr::diff_t Count>
+	CCDK_FORCEINLINE constexpr size_type find_impl(mpl::true_, char_type ch) const noexcept
+	{
+		ptr::diff_t c = 0;
+		for (size_type i = length-1; i >=0; --i) { if (content[i] == ch && --c == Count) return i; } return npos;
+	}
+
 public:
 
 	/* default and nullptr not alloc memory */
@@ -158,10 +191,10 @@ public:
 	CCDK_FORCEINLINE constexpr void swap(basic_string& other) noexcept {  mpl::swap(content, other.content); mpl::swap(length, other.length); mpl::swap(alloc_size, other.alloc_size); }
 
 	/* copy assign, avoid self assign */
-	CCDK_FORCEINLINE constexpr basic_string& operator=(char_type const* str) { if (str != content) { basic_string{ str }.swap(*this); } }
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string const& other) { ccdk_if_not_this(other) { basic_string{ other }.swap(*this); } }
+	CCDK_FORCEINLINE constexpr basic_string& operator=(char_type const* str) { if (str != content) { basic_string{ str }.swap(*this); } return *this; }
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string const& other) { ccdk_if_not_this(other) { basic_string{ other }.swap(*this); } return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2> const& other) { basic_string{ other }.swap(*this); }
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2> const& other) { basic_string{ other }.swap(*this); return *this; }
 
 	/* move assign, avoid self assign*/
 	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string&& other) { ccdk_if_not_this(other) { basic_string{ util::move(other) }.swap(*this); }  return *this; }
@@ -169,62 +202,63 @@ public:
 	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2>&& other) { basic_string{ util::move(other) }.swap(*this); return *this; }
 
 	/* assign */
-	CCDK_FORCEINLINE constexpr basic_string& assign(char_type const* str) { basic_string{ str }.swap(*this); }
-	CCDK_FORCEINLINE constexpr basic_string& assign(char_type const* str, size_type len) { basic_string{ str, len }.swap(*this); }
+	CCDK_FORCEINLINE constexpr basic_string& assign(char_type const* str) { basic_string{ str }.swap(*this); return *this; }
+	CCDK_FORCEINLINE constexpr basic_string& assign(char_type const* str, size_type len) { basic_string{ str, len }.swap(*this); return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2> const& other){ basic_string{ other }.swap(*this); }
+	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2> const& other){ basic_string{ other }.swap(*this); return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2> const& other, size_type start, size_type end) { basic_string{ other,start, end }.swap(*this); }
+	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2> const& other, size_type start, size_type end) { basic_string{ other,start, end }.swap(*this); return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2>&& other) { basic_string{ util::move(other) }.swap(*this); }
+	CCDK_FORCEINLINE constexpr basic_string& assign(basic_string<Char, Alloc2, Size2>&& other) { basic_string{ util::move(other) }.swap(*this); return *this; }
 
 	/* size */
 	CCDK_FORCEINLINE constexpr size_type size() const noexcept { return length; }
 	CCDK_FORCEINLINE constexpr size_type capcity() const noexcept { return alloc_size; }
 	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept { return allocator_type::max_allocate_size(); }
 	CCDK_FORCEINLINE constexpr bool empty() const noexcept { return length == 0; }
+	CCDK_FORCEINLINE constexpr size_type back_index(size_type pos) { return length - pos; }
 
 	/* clear */
-	CCDK_FORCEINLINE basic_string& clear() const noexcept { ccdk_assert(content); content[0] = char_type(0); length = 0; return *this; }
+	CCDK_FORCEINLINE basic_string& clear() noexcept { ccdk_assert(content); content[0] = char_type(0); length = 0; return *this; }
 
 	/* access */
-	CCDK_FORCEINLINE constexpr char_type& operator[](uint32 at) noexcept { ccdk_assert(content); return content[at]; }
-	CCDK_FORCEINLINE constexpr char_type const& operator[](uint32 at) const noexcept { ccdk_assert(content); return content[at]; }
+	CCDK_FORCEINLINE constexpr char_type& operator[](different_type pos) noexcept  { ccdk_assert(content && -pos<(different_type)length && pos<(different_type)length); return content[reverse_index(pos) ]; }
+	CCDK_FORCEINLINE constexpr char_type const& operator[](different_type pos) const noexcept { ccdk_assert(content && -pos<(different_type)length && pos<(different_type)length); return content[reverse_index(pos) ]; }
 
-	CCDK_FORCEINLINE constexpr char_type& at(uint32 at) noexcept { ccdk_assert(content); return content[at]; }
-	CCDK_FORCEINLINE constexpr char_type const& at(uint32 at) const noexcept  { ccdk_assert(content); return content[at]; }
+	CCDK_FORCEINLINE constexpr char_type& at(size_type pos) noexcept { ccdk_assert(content && pos<length);  return content[pos];  }
+	CCDK_FORCEINLINE constexpr char_type const& at(size_type pos) const noexcept { ccdk_assert(content && pos<length); return content[pos]; }
 
-	CCDK_FORCEINLINE constexpr char_type& front() noexcept { ccdk_assert(content); return content[0]; }
-	CCDK_FORCEINLINE constexpr char_type const&  front() const noexcept { ccdk_assert(content); return content[0]; }
+	CCDK_FORCEINLINE constexpr char_type& front(size_type pos = 0) noexcept { ccdk_assert(content); return content[0]; }
+	CCDK_FORCEINLINE constexpr char_type const& front(size_type pos = 0) const noexcept { ccdk_assert(content); return content[0]; }
 	 
-	CCDK_FORCEINLINE constexpr char_type& back() noexcept { ccdk_assert(content); return content[length-1]; }
-	CCDK_FORCEINLINE constexpr char_type const&  back() const noexcept { ccdk_assert(content); return content[length-1]; }
+	CCDK_FORCEINLINE constexpr char_type& back(size_type pos = 0) noexcept { ccdk_assert(content); return content[length-1-pos]; }
+	CCDK_FORCEINLINE constexpr char_type const& back(size_type pos = 0) const noexcept { ccdk_assert(content); return content[length-1-pos]; }
 
 	CCDK_FORCEINLINE constexpr char_type* c_str() noexcept { return content; }
 	CCDK_FORCEINLINE constexpr char_type const* c_str() const noexcept { return content; }
 
 	/* sequence */
-	CCDK_FORCEINLINE basic_string& pop_back() noexcept { if (ccdk_likely(length > 0)) { content[length--] = char_type(0); } return *this; }
+	CCDK_FORCEINLINE basic_string& pop_back() noexcept { if (ccdk_likely(length > 0)) { content[--length] = char_type(0); } return *this; }
 	CCDK_FORCEINLINE basic_string& push_back(char_type c) { if (length + 1 > alloc_size) { realloc_copy(length + 1); } content[length++] = c; content[length] = char_type(0); return *this; }
 
 	/* insert  */
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, char_type const* str, size_type len) { ccdk_assert(len != 0 && str!=nullptr); realloc_replace(pos, pos, str, len); return *this; }
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, char_type const* str) { insert(pos, str, traits_type::length(str));return *this; }
+	CCDK_FORCEINLINE basic_string& insert(different_type pos, char_type const* str, size_type len) { ccdk_assert(len != 0 && str != nullptr); pos = range_reverse_index(pos);  realloc_replace(pos, pos, str, len); return *this; }
+	CCDK_FORCEINLINE basic_string& insert(different_type pos, char_type const* str) { insert(pos, str, traits_type::length(str));return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, basic_string<Char, Alloc2, Size2> const& str) { insert(pos, str.content, traits_type::length(str)); return *this;}
+	CCDK_FORCEINLINE basic_string& insert(different_type pos, basic_string<Char, Alloc2, Size2> const& str) { insert(pos, str.content, str.size() ); return *this;}
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, basic_string<Char, Alloc2, Size2> const& str, size_type start, size_type end) { insert(pos, str.content + start, end - start); return *this; }
+	CCDK_FORCEINLINE basic_string& insert(different_type pos, basic_string<Char, Alloc2, Size2> const& str, size_type start, size_type end) { insert(pos, str.content + start, end - start); return *this; }
 
 	/*erase */
-	CCDK_FORCEINLINE basic_string& erase(size_type start, size_type end) { ccdk_assert(end > start); realloc_replace(start, end, nullptr, 0); return *this;}
+	CCDK_FORCEINLINE basic_string& erase(different_type start, different_type end) { start = range_reverse_index(start); end = range_reverse_index(end);  ccdk_assert(end > start && end<=length); realloc_replace(start, end, nullptr, 0); return *this; }
 
 	/* replace */
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, char_type const* str, size_type len) { ccdk_assert(end > start && str != nullptr && len != 0); realloc_replace(start, end, str, len); return *this; }
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, char_type const* str) { ccdk_assert(end > start && str != nullptr); realloc_replace(start, end, str, traits_type::length(str)); return *this; }
+	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, char_type const* str, size_type len) { start = range_reverse_index(start); end = range_reverse_index(end); ccdk_assert(end > start && str && len != 0); realloc_replace(start, end, str, len); return *this; }
+	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, char_type const* str) { return replace(start, end, str, traits_type::length(str)); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, basic_string<Char, Alloc2, Size2> const& str) { ccdk_assert(end > start); realloc_replace(start, end, str.content, str.length); return *this; }
+	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, basic_string<Char, Alloc2, Size2> const& str) { return replace(start, end, str.c_str(), str.size()); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, basic_string<Char, Alloc2, Size2> const& str, size_type rstart, size_type rend) { ccdk_assert(end > start); realloc_replace(start, end, str.content+rstart, rend); return *this; }
+	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, basic_string<Char, Alloc2, Size2> const& str, size_type rstart, size_type rend) { ccdk_assert(rend > rstart && rend < str.size());  return replace(start, end, str.c_str() + rstart, rend - rstart); }
 
 	/* iterator */
 	CCDK_FORCEINLINE constexpr iterator begin() const noexcept { return iterator{ content }; }
@@ -240,7 +274,9 @@ public:
 	CCDK_FORCEINLINE constexpr const_reverse_iterator crend() const noexcept { return const_reverse_iterator{ content - 1 }; }
 
 	/* find */
-	CCDK_FORCEINLINE constexpr size_type find(char_type ch) const noexcept { for (size_type i = 0; i < length; ++i) { if (content[i] == ch) return i; } return npos; }
+	template<different_type Count = 1>
+	CCDK_FORCEINLINE constexpr size_type find(char_type ch) const noexcept { return find_impl<Count>(mpl::bool_c<(Count < 0)>, ch); }
+
 	CCDK_FORCEINLINE constexpr size_type find(char_type const* str) { return traits_type::find(content, length, str, traits_type::length(str)); }
 	CCDK_FORCEINLINE constexpr size_type find(char_type const* str, size_type len){ return traits_type::find(content, length, str, traits_type::length(str)); }
 	template<typename Alloc2, typename Size2>
@@ -250,16 +286,16 @@ public:
 
 	/* trim */
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& ltrim() { traits_type::ltrim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) { length = traits_type::ltrim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& ltrim() noexcept { length = traits_type::ltrim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) noexcept { length = traits_type::ltrim(content, length, ev); return *this; }
 
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& rtrim() { traits_type::rtrim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& rtrim(encoding_value ev) { length = traits_type::rtrim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& rtrim() noexcept { length = traits_type::rtrim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE basic_string& rtrim(encoding_value ev) noexcept { length = traits_type::rtrim(content, length, ev); return *this; }
 
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& trim() { traits_type::trim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& trim(encoding_value ev) { length = traits_type::trim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& trim() noexcept { length = traits_type::trim<Encoding>(content, length); return *this; }
+	CCDK_FORCEINLINE basic_string& trim(encoding_value ev) noexcept { length = traits_type::trim(content, length, ev); return *this; }
 
 	/* append */
 	CCDK_FORCEINLINE basic_string& append(char_type const* str, size_type len) { realloc_replace(length, length, str, len); return *this; }
@@ -279,5 +315,6 @@ using string  = basic_string<achar>;
 using wstring = basic_string<wchar>;
 using u16string = basic_string<char16>;
 using u32string = basic_string<char32>;
+
 
 ccdk_namespace_text_end

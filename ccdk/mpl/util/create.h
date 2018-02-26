@@ -10,24 +10,24 @@
 
 ccdk_namespace_mpl_util_start
 
-	template<template<typename...> typename T>
-	struct create_t
+template<template<typename...> typename T>
+struct create_t
+{
+	template<typename... Args>
+	CCDK_FORCEINLINE constexpr auto operator()(Args&& ...args) const noexcept
 	{
-		template<typename... Args>
-		CCDK_FORCEINLINE constexpr  auto  operator()(Args&& ...args) const noexcept
-		{
-			return T<Args...>{  util::forward<Args>(args)... };
-		}
-	};
+		return T<Args...>{  util::forward<Args>(args)... };
+	}
+};
 
-	template<template<typename...> typename T>
-	struct create_const_t
+template<template<typename...> typename T>
+struct create_const_t
+{
+	template<typename... Args>
+	CCDK_FORCEINLINE constexpr auto operator()(Args&& ...args) const noexcept
 	{
-		template<typename... Args>
-		CCDK_FORCEINLINE constexpr auto operator()(Args&& ...args) const noexcept
-		{
-			return T< add_top_const_t< Args> ...>{ util::forward<Args>(args)... };
-		}
-	};
+		return T< add_top_const_t< Args> ...>{ util::forward<Args>(args)... };
+	}
+};
 
 ccdk_namespace_mpl_util_end

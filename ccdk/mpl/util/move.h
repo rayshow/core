@@ -80,7 +80,8 @@ void move(T& dest, const T& src)
 }
 
 /* pod-type array*/
-template<typename T, ptr::size_t D, ptr::size_t S,
+template<
+	typename T, ptr::size_t D, ptr::size_t S,
 	typename = check_t< is_pod<T>>
 >
 void move(T(&dest)[D], T(&src)[S])

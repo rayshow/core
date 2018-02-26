@@ -38,6 +38,8 @@ public:
 	typedef value_type const&                   const_reference;
 	typedef typename get_size_type<Alloc>::type size_type;
 	typedef typename get_diff_type<Alloc>::type different_type;
+	template<typename P>
+	using rebind = Alloc::template rebind<P>;
 
 	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) 
 	{
@@ -52,12 +54,12 @@ public:
 
 	CCDK_FORCEINLINE static void deallocate(allocator_type& alloc, pointer& p, size_type n) 
 	{
-		sizeof(*p);
+		sizeof(*p); /* check imcomplete type */
 		if(p!=nullptr) alloc.deallocate(p,n); 
 		p = nullptr;
 	}
 
-	CCDK_FORCEINLINE static size_type max_allocate_size() noexcept { return size_type(-1) / sizeof(value_type); }
+	CCDK_FORCEINLINE static constexpr size_type max_allocate_size() noexcept { return size_type(-1) / sizeof(value_type); }
 };
 
 

@@ -21,7 +21,6 @@ CCDK_FORCEINLINE decltype(auto) data(Container const& ct);
 
 #else //clang or some compiler not found suitable method
 
-
 template< typename T>
 CCDK_FORCEINLINE decltype(auto) data(Container const& ct)
 {

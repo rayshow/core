@@ -4,7 +4,7 @@
 
 ccdk_namespace_mpl_it_start
 
-/* iterator satisfies: dereferenceable, incrementiable, swapable */
+/* iterator satisfies: equal-comparable, dereferenceable, incrementiable, swapable */
 struct iterator_category {};
 
 /* input iterator satisfies: equal-comparable, member-reference, post-incrementiable,   */
