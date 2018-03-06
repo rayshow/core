@@ -10,10 +10,23 @@
 #include<thread>
 
 
+struct empty1 {};
+struct empty2 {};
+struct empty3 {};
+struct empty4 {};
+struct empty5 {};
+struct empty6 {};
+ 
+struct derive :public empty1, public empty2, public empty3, public empty4, public empty5, public empty6
+{
+	int a;
+};
+
+
 int main()
 {
-	std::allocator<char>;
-	std::thread t1{};
+	printf("%d", sizeof(derive));
+
 	getchar();
 	return 0;
 }

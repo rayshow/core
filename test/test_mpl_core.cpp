@@ -174,7 +174,6 @@ template<typename It>
 struct iterator_traits_test
 {
 	typedef int type;
-
 };
 
 
@@ -187,7 +186,6 @@ struct iterator_traits_test<T*>
 
 int main()
 {
-
 	DebugNewTitle("test swap");
 	DebugSubTitle("test pointer swap");
 	using util::swap;
@@ -297,8 +295,6 @@ int main()
 	DebugValue(tc->a);
 	DebugValue(tc->name);
 	DebugValue(tc->b);
-
-	
 
 	DebugTypeName< typename iterator_traits_test<int>::type>();
 	DebugTypeName< typename iterator_traits_test<int*>::type>();

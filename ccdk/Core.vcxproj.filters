@@ -870,5 +870,6 @@
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\iterator\uninitialized_copy.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
+    <ClInclude Include="container\vector.h" />
   </ItemGroup>
 </Project>
