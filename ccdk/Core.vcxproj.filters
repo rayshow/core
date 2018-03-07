@@ -871,5 +871,6 @@
     <ClInclude Include="mpl\iterator\uninitialized_copy.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
     <ClInclude Include="container\vector.h" />
+    <ClInclude Include="mpl\iterator\uninitialized_fill.h" />
   </ItemGroup>
 </Project>

@@ -149,6 +149,7 @@
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="mpl\iterator\iterator.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
+    <ClInclude Include="mpl\iterator\uninitialized_fill.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />

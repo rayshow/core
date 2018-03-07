@@ -6,6 +6,7 @@
 #include<boost/lockfree/queue.hpp>
 #include<boost/mpl/filter_view.hpp>
 #include<boost/smart_ptr/make_shared.hpp>
+#include<boost/phoenix.hpp>
 
 using namespace boost;
 
@@ -18,7 +19,6 @@ void evaluate(Expr const& expr)
 	proto::default_context ctx;
 	proto::eval(expr, ctx);
 }
-
 
 
 typedef int const&  iref;

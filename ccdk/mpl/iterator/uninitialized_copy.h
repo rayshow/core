@@ -36,6 +36,7 @@ constexpr void uninitialized_copy(InputIt begin, InputIt end, ForwardIt begin2)
 	}
 }
 
+
 template<typename T1, typename T2>
 void uninitialized_copy(T1 const* begin, T1 const* end, T2 * begin2) 
 		noexcept(has_nothrow_constructor_v<T2,T1>)
@@ -57,6 +58,7 @@ void uninitialized_copy(T1 const* begin, T1 const* end, T2 * begin2)
 		throw;
 	}
 }
+
 
 
 template<
