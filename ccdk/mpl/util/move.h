@@ -10,7 +10,6 @@
 #include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/util/addressof.h>
 
-
 ccdk_namespace_mpl_util_start
 
 /*
