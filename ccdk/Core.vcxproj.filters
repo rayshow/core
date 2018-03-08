@@ -868,9 +868,10 @@
     <ClInclude Include="mpl\type_traits\has_swap.h" />
     <ClInclude Include="mpl\util\construct.h" />
     <ClInclude Include="mpl\util\destruct.h" />
-    <ClInclude Include="mpl\iterator\uninitialized_copy.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
     <ClInclude Include="container\vector.h" />
-    <ClInclude Include="mpl\iterator\uninitialized_fill.h" />
+    <ClInclude Include="mpl\util\uninitialized_fill.h" />
+    <ClInclude Include="mpl\util\uninitialized_copy.h" />
+    <ClInclude Include="mpl\type_traits\is_byte.h" />
   </ItemGroup>
 </Project>
