@@ -23,8 +23,7 @@ namespace ut_impl
 
 	/* non-pod */
 	template<typename ForwardIt, typename Source = iterator_value_t<ForwardIt> >
-	CCDK_FORCEINLINE static void destruct_range_helper(ForwardIt begin, ForwardIt end, false_)
-		noexcept(has_nothrow_destructor_v< Source >)
+	CCDK_FORCEINLINE static void destruct_range_helper(ForwardIt begin, ForwardIt end, false_) noexcept
 	{
 		for (ForwardIt it = begin; it != end; ++it) { (*it).~Source(); }
 	}
@@ -32,8 +31,7 @@ namespace ut_impl
 
 /* destruct [begin, end) */
 template<typename ForwardIt, typename Source = iterator_value_t<ForwardIt> >
-CCDK_FORCEINLINE static constexpr void destruct_range(ForwardIt begin, ForwardIt end)
-	noexcept(has_nothrow_destructor_v< Source >)
+CCDK_FORCEINLINE static constexpr void destruct_range(ForwardIt begin, ForwardIt end) noexcept
 {
 	ut_impl::destruct_range_helper(begin, end, typename has_trivial_destructor<Source>::type{} );
 }

@@ -791,9 +791,6 @@
     <ClInclude Include="mpl\util\swap.h">
       <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\util\value.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\iterator\ptr_iterator.h" />
     <ClInclude Include="mpl\iterator\iterator_fwd.h" />
     <ClInclude Include="container\array.h">
@@ -873,5 +870,6 @@
     <ClInclude Include="mpl\util\uninitialized_fill.h" />
     <ClInclude Include="mpl\util\uninitialized_copy.h" />
     <ClInclude Include="mpl\type_traits\is_byte.h" />
+    <ClInclude Include="mpl\util\uninitialized_move.h" />
   </ItemGroup>
 </Project>

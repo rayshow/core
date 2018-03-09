@@ -27,7 +27,7 @@
 
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/destruct.h>
-#include<ccdk/mpl/iterator/uninitialized_copy.h>
+#include<ccdk/mpl/util/uninitialized_copy.h>
 
 #include<memory>
 
@@ -183,6 +183,22 @@ struct iterator_traits_test<T*>
 	typedef T type;
 };
 
+template<
+	typename T,
+	typename It,
+	typename = check_t< not_< is_pointer<It>>>,
+	typename... Args>
+	CCDK_FORCEINLINE static void test_arg_check(It memory, Args&& ... args)
+{
+	DebugValue("It");
+}
+
+template<typename T, typename... Args>
+CCDK_FORCEINLINE static void test_arg_check(void* memory, Args&& ... args)
+{
+	DebugValue("void*");
+}
+
 
 int main()
 {
@@ -299,6 +315,11 @@ int main()
 	DebugTypeName< typename iterator_traits_test<int>::type>();
 	DebugTypeName< typename iterator_traits_test<int*>::type>();
 	DebugTypeName< typename iterator_traits_test<int const*>::type>();
+
+	DebugNewTitle("test arg check");
+	char memory[10];
+	test_arg_check<int>(memory, 0);
+	test_arg_check<int>(int{}, 0);
 
 	getchar();
 	return 0;

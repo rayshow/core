@@ -179,6 +179,7 @@
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="mpl\util\uninitialized_copy.h" />
+    <ClInclude Include="mpl\util\uninitialized_move.h" />
     <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\encoding\ascii.h" />
     <ClInclude Include="text\encoding\iso8859_1.h" />
@@ -325,7 +326,6 @@
     <ClInclude Include="mpl\util\noncopyable.h" />
     <ClInclude Include="mpl\util\size.h" />
     <ClInclude Include="mpl\util\swap.h" />
-    <ClInclude Include="mpl\util\value.h" />
     <ClInclude Include="preprocessor\bool_and.h" />
     <ClInclude Include="preprocessor\bool_equal.h" />
     <ClInclude Include="preprocessor\bool_if.h" />

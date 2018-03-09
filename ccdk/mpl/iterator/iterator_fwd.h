@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/type_traits/has_inner_type.h>
 
 ccdk_namespace_mpl_it_start
 
@@ -34,5 +35,9 @@ class reverse_iterator;
 
 template<typename... Args>
 class const_reverse_iterator;
+
+
+
+
 
 ccdk_namespace_mpl_it_end
