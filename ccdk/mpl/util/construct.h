@@ -5,7 +5,11 @@
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/has_deref.h>
+#include<ccdk/mpl/type_traits/has_constructor.h>
+#include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/util/destruct.h>
 #include<ccdk/mpl/util/forward.h>
+#include<ccdk/mpl/util/move.h>
 
 ccdk_namespace_mpl_util_start
 
@@ -28,6 +32,263 @@ CCDK_FORCEINLINE static void construct(void* memory, Args&& ... args)
 	new(memory) T(util::forward<Args>(args)...);
 }
 
+
+
+
+namespace ut_impl
+{
+	/* no-optim construct from iterator range */
+	template<
+		typename InputIt, typename ForwardIt,
+		typename Source = iterator_value_t<InputIt>,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest,Source>>
+	>
+	ForwardIt construct_copy_range_impl(ForwardIt tbegin, InputIt fbegin, InputIt fend, false_)
+	noexcept(has_nothrow_constructor_v<Dest, Source>)
+	{
+		DebugValue(" construct_copy_range  iterator copy");
+		const InputIt it = fbegin;
+		const ForwardIt it2 = tbegin;
+		try { for (; it != fend; ++it, ++it2) construct< Dest >(it2, *it); }
+		catch (...) { destruct_range(tbegin, it2); throw; }
+		return it2;
+	}
+
+	/* is byte pointer type, use memcpy-optimize */
+	template< typename T1, typename T2 >
+	CCDK_FORCEINLINE T1* construct_copy_range_impl(T1* tbegin, T2* fbegin, T2* fend, true_) noexcept 
+	{
+		DebugValue(" construct_copy_range memcpy copy");
+		return memcpy(tbegin, fbegin, fend - fbegin);
+	}
+
+	/* no-optim construct from iterator count range */
+	template<
+		typename InputIt, typename ForwardIt,
+		typename Source = iterator_value_t<InputIt>,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest, Source>>
+	>
+	ForwardIt construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, false_)
+	noexcept(has_nothrow_constructor_v<Dest, Source>)
+	{
+		DebugValue(" construct_copy_n iterator-n copy");
+		const InputIt = fbegin;
+		const ForwardIt it2 = tbegin;
+		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest  >(it, *it2); }
+		catch (...) { destruct_range(tbegin, it2); throw; }
+		return it2;
+	}
+
+	/* is byte pointer type, use memcpy-optimize */
+	template< typename T1, typename T2 >
+	CCDK_FORCEINLINE T1* construct_copy_n_impl(T1* dest, T2* src, ptr::size_t n, true_) noexcept
+	{
+		DebugValue(" construct_copy_n memcpy-n copy");
+		return memcpy(dest, src, n);
+	}
+
+	/* no-optim construct from iterator range */
+	template<
+		typename InputIt, typename ForwardIt,
+		typename Source = iterator_value_t<InputIt>,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest, Source>>
+	>
+	ForwardIt construct_move_range_impl(ForwardIt tbegin, InputIt fbegin, InputIt fend, false_) noexcept
+	{
+		DebugValue(" construct_move_range  iterator copy");
+		const InputIt it = fbegin;
+		const ForwardIt it2 = tbegin;
+		try { for (; it != fend; ++it, ++it2) construct< Dest >(it2, util::move(*it) ); }
+		catch (...) { destruct_range(tbegin, it2); throw; }
+		return it2;
+	}
+
+	/* is byte pointer type, use memcpy-optimize */
+	template< typename T1, typename T2 >
+	CCDK_FORCEINLINE T1* construct_move_range_impl(T1* tbegin, T2* fbegin, T2* fend, true_) noexcept 
+	{
+		DebugValue(" construct_move_range memcpy copy");
+		return memcpy(tbegin, fbegin, fend - fbegin);
+	}
+
+	/* no-optim construct from iterator count range */
+	template<
+		typename InputIt, typename ForwardIt,
+		typename Source = iterator_value_t<InputIt>,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest, Source>>
+	>
+		ForwardIt construct_move_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, false_)
+		noexcept(has_nothrow_constructor_v<Dest, Source>)
+	{
+		DebugValue(" construct_move_n iterator-n copy");
+		const InputIt = fbegin;
+		const ForwardIt it2 = tbegin;
+		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest>(it, util::move(*it2)); }
+		catch (...) { destruct_range(tbegin, it2); throw; }
+		return it2;
+	}
+
+	/* is byte pointer type, use memcpy-optimize */
+	template< typename T1, typename T2 >
+	CCDK_FORCEINLINE T1* construct_move_n_impl(T1* dest, T2* src, ptr::size_t n, true_) noexcept
+	{
+		DebugValue(" construct_move_n memcpy-n copy");
+		return memcpy(dest, src, n);
+	}
+
+
+	/* not byte type, iterate fill */
+	template<
+		typename ForwardIt, typename T,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest,T>>
+	>
+	ForwardIt construct_fill_range_impl(ForwardIt begin, ForwardIt end, T const t, false_)
+		noexcept(has_nothrow_constructor_v<Dest, T>)
+	{
+		DebugValue(" uninitalized iterator fill");
+		const ForwardIt it = begin;
+		try { for (; it != end; ++it) construct< Dest >(it, t); }
+		catch (...) { destruct_range(begin, it); throw; }
+		return it;
+	}
+
+
+	/* is byte pointer type, use memset fill */
+	template< typename It, typename T >
+	CCDK_FORCEINLINE It* construct_fill_range_impl(It* begin, It* end, T const& t, true_) noexcept {
+		DebugValue(" uninitalized memset fill");
+		return memset(begin, t, end - begin);
+	}
+
+	/* not byte type, iterate fill */
+	template<
+		typename ForwardIt, typename T,
+		typename Dest = iterator_value_t<ForwardIt>,
+		typename = check_t< has_constructor<Dest, T>>
+	>
+	ForwardIt construct_fill_n_impl(ForwardIt begin, ForwardIt end, T const& t, false_)
+		noexcept(has_nothrow_constructor_v<Dest, T>)
+	{
+		DebugValue(" uninitalized-n iterator fill");
+		const ForwardIt it = begin;
+		ptr::size_t c = 0;
+		try { for (; c<n; ++c, ++it) construct< Dest  >(it, t); }
+		catch (...) { destruct_range(begin, it); throw; }
+		return it;
+	}
+
+	/* is byte pointer type, use memset fill */
+	template< typename It, typename T >
+	CCDK_FORCEINLINE It* construct_fill_n_impl(It* begin, It* end, T const& t) noexcept {
+		DebugValue(" uninitalized-n memset fill");
+		return memset(begin, t, n);
+	}
+
+	/* only one arg, try use fill n */
+	template< typename T, typename T2>
+	CCDK_FORCEINLINE T* construct_n_impl(T* begin, ptr::size_t n, true_, T2 const& t)
+		noexcept(has_nothrow_constructor_v<T,T2>)
+	{
+		return util::construct_fill_n(begin, t, n);
+	}
+
+	/* more then one arg, iterate over to construct  */
+	template< typename T, typename... Args>
+	CCDK_FORCEINLINE T* construct_n_impl(T* begin, ptr::size_t n, false, Args&&... args)
+		noexcept(has_nothrow_constructor_v<T, Args...>)
+	{
+		for (int i = 0; i < n; ++i) { construct<T>(begin + i, util::forward<Args>(args)...); }
+	}
+}
+
+/* construct iterator [tbegin, tbegin+fend-fbegin) with [fbegin, fend) */
+template<
+	typename InputIt, typename ForwardIt,
+	typename Source = iterator_value_t<InputIt>,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor<Dest, Source>>
+>
+CCDK_FORCEINLINE ForwardIt construct_copy_range(ForwardIt tbegin, InputIt fbegin, InputIt fend)
+	noexcept(has_constructor_v<Dest,Source>)
+{
+	return ut_impl::construct_copy_range_impl(tbegin, fbegin, fend, can_do_memcpy_c<Source, Dest>);
+}
+
+/* construct [tbegin, tbegin+n) from [fbegin, fbegin + n) */
+template<
+	typename InputIt, typename ForwardIt,
+	typename Source = iterator_value_t<InputIt>,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor<Dest, Source>>
+>
+CCDK_FORCEINLINE ForwardIt construct_copy_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n)
+noexcept(has_nothrow_constructor_v<Dest, Source>)
+{
+	return ut_impl::construct_copy_n_impl(tbegin, fbegin, n, can_do_memcpy_c<Source, Dest>);
+}
+
+
+/* construct [tbegin, tend) with t */
+template<
+	typename ForwardIt, typename T,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor< Dest, T>>
+>
+CCDK_FORCEINLINE ForwardIt construct_fill_range(ForwardIt begin, ForwardIt end, T const& t)
+noexcept(has_nothrow_constructor_v<Dest, T>)
+{
+	return ut_impl::construct_fill_range_impl(begin, end, t, can_do_memset_c<ForwardIt, T>);
+}
+
+/* construct [tbegin, tbegin+n) with t */
+template<
+	typename ForwardIt, typename T,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor<Dest, T>>
+>
+CCDK_FORCEINLINE ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
+noexcept(has_nothrow_constructor_v<Dest, T>)
+{
+	return ut_impl::construct_fill_n_impl(begin, t, n, can_do_memset_c<ForwardIt, T>);
+}
+
+
+/* construct [tbegin, tbegin + fend-fbegin) moving from [fbegin, fend) */
+template<
+	typename InputIt, typename ForwardIt,
+	typename Source = iterator_value_t<InputIt>,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor<Dest, Source>>
+>
+CCDK_FORCEINLINE ForwardIt construct_move_range(ForwardIt tbegin, InputIt fbegin, InputIt fend) noexcept
+{
+	return ut_impl::construct_move_range_impl(tbegin, fbegin, fend, can_do_memcpy_c<Source, Dest>);
+}
+
+/* copy [begin, begin+n) to [begin2, begin2 + n) */
+template<
+	typename InputIt, typename ForwardIt,
+	typename Source = iterator_value_t<InputIt>,
+	typename Dest = iterator_value_t<ForwardIt>,
+	typename = check_t< has_constructor<Dest, Source>>
+>
+CCDK_FORCEINLINE ForwardIt construct_move_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n) noexcept
+{
+	return ut_impl::construct_move_n_impl(tbegin, fbegin, n, can_do_memcpy_c<Source, Dest>);
+}
+
+/* inplace construct in [ (T*)memory, (T*)memory+n) with args... */
+template<typename T, typename... Args>
+CCDK_FORCEINLINE static void construct_n(void* memory, ptr::size_t n, Args&& ... args)
+{
+	return ut_impl::construct_n_impl(static_cast<T>(memory), n,
+		bool_c<sizeof...(Args) == 1>, util::forward<Args>(args)...);
+}
 
 
 ccdk_namespace_mpl_util_end

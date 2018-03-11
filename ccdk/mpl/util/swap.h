@@ -11,18 +11,15 @@
 #include<ccdk/mpl/type_traits/is_fundamental.h>
 #include<ccdk/mpl/type_traits/is_compound.h>
 #include<ccdk/mpl/type_traits/is_class.h>
-#include<ccdk/mpl/type_traits/has_swap.h>
 #include<ccdk/mpl/util/move.h>
 
 ccdk_namespace_mpl_util_start
-	
 
 #if defined( CCDK_COMPILER_MSVC ) 
 
 	//no suitable implements found, for msvc-17+ to  to get detail line and file error place
 	template< typename T1, typename T2,  typename = check_t<false_> >
 	CCDK_FORCEINLINE void swap(T1& t1, T2& t2) {}
-
 
 #elif defined( CCDK_COMPILER_GCC )
 	
@@ -39,6 +36,28 @@ ccdk_namespace_mpl_util_start
 	}
 	
 #endif
+	
+	namespace ut_impl
+	{
+		template<typename T1, typename T2>
+		struct has_swap_impl
+		{
+			template<typename P1, typename P2,
+				typename = decltype(declval<P1>().swap(declval<P2>()))>
+				constexpr static bool sfinae(int) { return true; }
+
+			template<typename P1, typename P2>
+			constexpr static bool sfinae(...) { return false; }
+
+			constexpr static bool value = sfinae<T1, T2>(0);
+		};
+	}
+	template<typename T1, typename T2>
+	struct has_member_swap :bool_< ut_impl::has_swap_impl<T1, T2>::value > {};
+
+	template<typename T1, typename T2>
+	static constexpr bool  has_member_swap_v = ut_impl::has_swap_impl<T1, T2>::value;
+
 
 	//for same type pointer
 	template<typename T>
@@ -85,7 +104,7 @@ ccdk_namespace_mpl_util_start
 	//suit for class  with t1.swap(t2) method 
 	template<typename T,
 		typename = check_t< is_compound<T> >,
-		typename = check_t< has_swap<T, T>>
+		typename = check_t< has_member_swap<T, T>>
 	>
 		CCDK_FORCEINLINE void swap(T& t1, T& t2)
 	{
@@ -100,7 +119,7 @@ ccdk_namespace_mpl_util_start
 		typename = check_t< is_class<T>>,
 		typename = check_t< has_move_assigner<T> >,
 		typename = check_t< has_move_constructor<T>>,
-		typename = check_t< not_< has_swap<T,T>>>
+		typename = check_t< not_< has_member_swap<T,T>>>
 	>
 	CCDK_FORCEINLINE void swap(T& t1, T& t2)
 	{

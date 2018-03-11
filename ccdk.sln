@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccdk", "ccdk\Core.vcxproj", "{9CF25D83-D719-4757-B9E5-D21517BD5A7C}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.memory", "test\test.mpl.memory\test.mpl.memory.vcxproj", "{3C08B5CB-EB83-41B9-BCE4-54703B30FCD3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.text.string", "test\test.text.string\test.text.string.vcxproj", "{B6CBEDA5-1594-4B29-85D4-B2B55D47AE2E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "algorithm", "algorithm\algorithm.vcxproj", "{26F869C2-4603-4E75-8EAC-548B1B987215}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -181,6 +183,14 @@ Global
 		{B6CBEDA5-1594-4B29-85D4-B2B55D47AE2E}.Release|Win32.Build.0 = Release|Win32
 		{B6CBEDA5-1594-4B29-85D4-B2B55D47AE2E}.Release|x64.ActiveCfg = Release|x64
 		{B6CBEDA5-1594-4B29-85D4-B2B55D47AE2E}.Release|x64.Build.0 = Release|x64
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Debug|Win32.ActiveCfg = Debug|Win32
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Debug|Win32.Build.0 = Debug|Win32
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Debug|x64.ActiveCfg = Debug|x64
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Debug|x64.Build.0 = Debug|x64
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Release|Win32.ActiveCfg = Release|Win32
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Release|Win32.Build.0 = Release|Win32
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Release|x64.ActiveCfg = Release|x64
+		{26F869C2-4603-4E75-8EAC-548B1B987215}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

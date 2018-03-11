@@ -42,6 +42,12 @@ struct iterator_traits<T*>
 template<typename T>
 using iterator_value_t = typename iterator_traits<T>::value_type;
 
+template<typename T>
+using iterator_categroy_t = typename iterator_traits<T>::category;
+
+template<typename T>
+constexpr iterator_categroy_t<T> iterator_categroy_c{}
+
 
 /* can do memset to It1 range */
 template<

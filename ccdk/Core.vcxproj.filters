@@ -862,14 +862,12 @@
     <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\text_fwd.h" />
-    <ClInclude Include="mpl\type_traits\has_swap.h" />
     <ClInclude Include="mpl\util\construct.h" />
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
     <ClInclude Include="container\vector.h" />
-    <ClInclude Include="mpl\util\uninitialized_fill.h" />
-    <ClInclude Include="mpl\util\uninitialized_copy.h" />
     <ClInclude Include="mpl\type_traits\is_byte.h" />
-    <ClInclude Include="mpl\util\uninitialized_move.h" />
+    <ClInclude Include="algorithm\distance.h" />
+    <ClInclude Include="algorithm\algorithm_mudole.h" />
   </ItemGroup>
 </Project>

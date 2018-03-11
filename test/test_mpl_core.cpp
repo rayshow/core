@@ -27,7 +27,6 @@
 
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/destruct.h>
-#include<ccdk/mpl/util/uninitialized_copy.h>
 
 #include<memory>
 
