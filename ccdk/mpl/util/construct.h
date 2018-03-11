@@ -229,6 +229,7 @@ template<
 CCDK_FORCEINLINE ForwardIt construct_copy_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n)
 noexcept(has_nothrow_constructor_v<Dest, Source>)
 {
+	if (n == 0) return;
 	return ut_impl::construct_copy_n_impl(tbegin, fbegin, n, can_do_memcpy_c<Source, Dest>);
 }
 
@@ -254,6 +255,7 @@ template<
 CCDK_FORCEINLINE ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
 noexcept(has_nothrow_constructor_v<Dest, T>)
 {
+	if (n == 0) return;
 	return ut_impl::construct_fill_n_impl(begin, t, n, can_do_memset_c<ForwardIt, T>);
 }
 
@@ -279,6 +281,7 @@ template<
 >
 CCDK_FORCEINLINE ForwardIt construct_move_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n) noexcept
 {
+	if (n == 0) return;
 	return ut_impl::construct_move_n_impl(tbegin, fbegin, n, can_do_memcpy_c<Source, Dest>);
 }
 
@@ -286,6 +289,7 @@ CCDK_FORCEINLINE ForwardIt construct_move_n(ForwardIt tbegin, InputIt fbegin, pt
 template<typename T, typename... Args>
 CCDK_FORCEINLINE static void construct_n(void* memory, ptr::size_t n, Args&& ... args)
 {
+	if (n == 0) return;
 	return ut_impl::construct_n_impl(static_cast<T>(memory), n,
 		bool_c<sizeof...(Args) == 1>, util::forward<Args>(args)...);
 }

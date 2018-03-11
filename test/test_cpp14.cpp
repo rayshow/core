@@ -8,6 +8,7 @@
 #include<cassert>
 #include<functional>
 #include<thread>
+#include<vector>
 #include<type_traits>
 
 #include<ccdk/mpl/type_traits/has_constructor.h>
@@ -90,7 +91,7 @@ int main()
 	//TestHasTrivialConstructor<volatile int*, int volatile *>();
 
 
-
+	
 
 	int a = 0;
 	int *b = &a;
@@ -99,7 +100,8 @@ int main()
 	const volatile int* e = &a;
 
 
-
+	std::vector<int> int1{};
+	std::vector<int> int2(int1.begin(), int1.end());
 
 
 

@@ -178,6 +178,7 @@
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\util\fill.h" />
+    <ClInclude Include="text\string.h" />
     <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\encoding\ascii.h" />
     <ClInclude Include="text\encoding\iso8859_1.h" />
@@ -388,7 +389,7 @@
     <ClInclude Include="preprocessor\uint8_sub_one.h" />
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="text\char_traits.h" />
-    <ClInclude Include="text\string.h" />
+    <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\text_fwd.h" />
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\string_view.h" />

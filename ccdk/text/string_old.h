@@ -9,7 +9,6 @@
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/memory/simple_new_allocator.h>
-#include<ccdk/container/vector.h>
 #include<ccdk/text/text_module.h>
 #include<ccdk/text/text_fwd.h>
 #include<ccdk/text/char_traits.h>
@@ -21,104 +20,186 @@ using namespace mem;
 
 template<
 	typename Char,
-	typename Size = uint32,                              /* offen uint32 is enough*/
-	typename Alloc = mem::simple_new_allocator<Char>
-	
+	typename Alloc = mem::simple_new_allocator<Char>,
+	typename Size = uint32                              /* offen uint32 is enough*/
 >
-class basic_string 
+class basic_string : protected Alloc
 {
 public:
-	typedef ct::vector<Char, Size, Alloc, units::ratio<2, 1>>   vector_type;
 	typedef Char                                           char_type;
-	typedef basic_string                                   this_type;
+	typedef Char                                           value_type;
+	typedef Size                                           size_type;
+	typedef ptr::diff_t                                    different_type;
 	typedef char_traits<Char>                              traits_type;
+	typedef basic_string                                   this_type;
+	typedef Char*                                          pointer_type;
+	typedef Char const*                                    const_pointer_type;
+	typedef Char&                                          reference_type;
+	typedef Char const&                                    const_reference_type;
+	typedef allocator_traits<Alloc>                        allocator_type;
+	typedef it::iterator<Char*,basic_string>               iterator;
+	typedef it::const_iterator<Char*,basic_string>         const_iterator;
+	typedef it::reverse_iterator<Char*,basic_string>       reverse_iterator;
+	typedef it::const_reverse_iterator<Char*,basic_string> const_reverse_iterator;
 	typedef typename traits_type::default_encoding_type    default_encoding_type;
-	typedef allocator_traits<Alloc>  allocator_type;
 
-	/* common */
-	typedef Char                     value_type;
-	typedef Size                     size_type;
-	typedef ptr::diff_t              different_type;
-	typedef Char*                    pointer_type;
-	typedef Char const*              const_pointer_type;
-	typedef Char&                    reference_type;
-	typedef Char const&              const_reference_type;
+	static_assert(is_unsigned_v<size_type>, "size type need be unsigned integer");
+	static constexpr float  prealloc_factor = 1.6f;
+	static constexpr Size   npos = Size(-1);
 
-	/* iterator */
-	typedef Char*                         iterator_type;
-	typedef Char const*                   const_iterator_type;
-	typedef reverse_iterator<Char*>       reverse_iterator_type;
-	typedef reverse_iterator<Char const*> const_reverse_iterator_type;
-
-	template<typename Char2, typename Size2, typename Alloc2>
+	template<typename Char2,typename Alloc2, typename Size2>
 	friend class basic_string;
 
 private:
-	vector_type content;
+	pointer_type   content;      /* string  */
+	size_type      length;       /* content length */
+	size_type      alloc_size;   /* for pre-alloc ex-memory */
+
+	/* [0, length) */
+	CCDK_FORCEINLINE size_type reverse_index(different_type pos) noexcept
+	{
+		if (pos >= 0) return (size_type)pos;
+		ccdk_assert(pos + length > 0);
+		return (size_type)(length + pos);
+	}
+
+	/* [0, length] */
+	CCDK_FORCEINLINE size_type range_reverse_index(different_type pos) noexcept
+	{
+		if (pos >= 0) return (size_type)pos;
+		ccdk_assert(pos + length >= 0);
+		return (size_type)(length + pos+1);
+	}
+
+	/* alloc memory */
+	char_type* alloc_memory(const size_type actual_size)
+	{
+		ccdk_assert_if(actual_size == 0) return nullptr;
+		size_type prealloc_size = actual_size * prealloc_factor;
+		if (prealloc_size == npos || prealloc_size < actual_size)         /* reach max or round to little size */
+		{
+			ccdk_throw(std::bad_alloc{});
+		}
+		if (prealloc_size < 24) prealloc_size = 24; 
+		char_type* buffer = allocator_type::allocate(*this, prealloc_size); /* may throw std::bad_alloc */
+		alloc_size = prealloc_size;                       /* alloc success */
+		return buffer;                 
+	}
+
+	/* alloc memory and copy */
+	char_type* realloc_copy(const size_type actual_size)
+	{
+		if (actual_size == 0) return nullptr;
+		char_type* buffer = alloc_memory(actual_size);
+		util::copy(buffer, content, length+1);              /* copy 0-terminal */
+		allocator_type::deallocate(*this, content, length); /* delete content */
+		content = buffer;
+		length = actual_size;
+	}
+
+	/* alloc and copy len elements from str  */
+	void alloc_copy(const char_type* str, size_type start, size_type end)
+	{
+		if (!str || start >= end) return;
+		different_type len = end - start;
+		char_type* buffer = alloc_memory(len);   /* may throw */
+		util::copy(buffer, str+start, len);      /* copy src to new allocated */
+		buffer[len] = char_type(0);
+		content = buffer;
+		length = len;
+	}
+
+	/* alloc fill */
+	void alloc_fill(char_type c, size_type n)
+	{
+		if (n > 0)
+		{
+			char_type* buffer = alloc_memory(n);
+			util::fill(buffer, c, n);
+			buffer[n] = char_type(0);
+			content = buffer;
+			length = n;
+		}
+	}
+
+	/* replace content[start, end) with str[0, len) */
+	void realloc_replace(size_type start, size_type end, const char_type* str, size_type len)
+	{
+		different_type replace_len = end - start;           /* maybe zero */
+		size_type actual_len = length + len - replace_len;
+		if (actual_len >= alloc_size)
+		{
+			/* memory not enough */
+			char_type * buffer = alloc_memory(actual_len);
+			util::copy(buffer, content, start);                                 /* copy head   */
+			util::copy(buffer + start, str, len);                               /* copy middle */
+			util::copy(buffer + start + len , content + end, length - end + 1); /* copy tail with 0-terminal */
+			allocator_type::deallocate(*this, content, length); /* delete content */
+			content = buffer;
+			length = actual_len;
+			return;
+		}
+		/* memory enough */
+		util::move(content + start + len, content + end, length - end + 1); /* move to tail with 0-terminal */
+		util::copy(content + start, str, len);                              /* copy to middle */
+		length = actual_len;
+	}
+
+	/* forward find count */
+	template<ptr::diff_t Count>
+	CCDK_FORCEINLINE constexpr size_type find_impl(mpl::false_, char_type ch) const noexcept
+	{
+		ptr::diff_t c = 0;
+		for (size_type i = 0; i < length; ++i) { if (content[i] == ch && ++c ==Count) return i; } return npos;
+	}
+
+	/* backward find count */
+	template<ptr::diff_t Count>
+	CCDK_FORCEINLINE constexpr size_type find_impl(mpl::true_, char_type ch) const noexcept
+	{
+		ptr::diff_t c = 0;
+		for (size_type i = length-1; i >=0; --i) { if (content[i] == ch && --c == Count) return i; } return npos;
+	}
 
 public:
 
 	/* default and nullptr not alloc memory */
-	CCDK_FORCEINLINE constexpr basic_string() noexcept : content{} {}
-	CCDK_FORCEINLINE constexpr basic_string(ptr::nullptr_t) noexcept : content{ nullptr }{}
+	CCDK_FORCEINLINE constexpr basic_string() noexcept : content{ nullptr }, length{ 0 }, alloc_size{ 0 } {}
+	CCDK_FORCEINLINE constexpr basic_string(ptr::nullptr_t) noexcept : content{ nullptr }, length{ 0 }, alloc_size{ 0 } {}
 
 	/* fill */
-	CCDK_FORCEINLINE basic_string(size_type n, char_type c = char_type(0))
-		: content{ n,c } {}
+	CCDK_FORCEINLINE basic_string(size_type n, char_type c = char_type(0)) { alloc_fill(c, n); }
 
 	/* c-style string copy */
-	CCDK_FORCEINLINE basic_string(char_type const* str) 
-		: content{ str, traits_type::length(str) } {}
-
-	CCDK_FORCEINLINE basic_string(char_type const* str, size_type len) 
-		: content{ str, len } {}
+	CCDK_FORCEINLINE basic_string(char_type const* str) :basic_string() { alloc_copy(str, 0, traits_type::length(str)); }
+	CCDK_FORCEINLINE basic_string(char_type const* str, size_type len) { alloc_copy(str, 0, len);  }
 	
 	/* copy */
-	CCDK_FORCEINLINE  basic_string(basic_string const& other) : content{ other.content } {}
-
-	CCDK_FORCEINLINE  basic_string(basic_string const& other, Size start, Size end)
-		: content{ &other.content[start], end - start } {}
-
+	CCDK_FORCEINLINE  basic_string(basic_string const& other) { alloc_copy(other.content, 0,other.length); }
+	CCDK_FORCEINLINE  basic_string(basic_string const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE  basic_string(basic_string<Char, Size2, Alloc2> const& other)
-		: content{ other.content } {}
-
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2> const& other) { alloc_copy(other.content,0, other.length); }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE  basic_string(basic_string<Char, Size2, Alloc2> const& other, Size start, Size end)
-		: content{ &other.content[start], end - start } {}
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2> const& other, Size start, Size end) { ccdk_assert( end <= other.length); alloc_copy(other.content, start, end); }
 
 	/* move */
-	CCDK_FORCEINLINE  basic_string(basic_string&& other) noexcept : content{ util::move(other.content) } {}
-
+	CCDK_FORCEINLINE  basic_string(basic_string&& other) noexcept :content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE  basic_string(basic_string<Char, Size2, Alloc2>&& other) noexcept
-		: content{ util::move(other.content) } {}
+	CCDK_FORCEINLINE  basic_string(basic_string<Char, Alloc2, Size2>&& other) noexcept : content{ other.content }, length{ other.length }, alloc_size{ other.alloc_size } { other.content = nullptr; other.length = 0; other.alloc_size = 0; }
 
 	/* swap */
-	CCDK_FORCEINLINE constexpr void swap(basic_string& other) noexcept { 
-		content.swap(other.content);
-	}
+	CCDK_FORCEINLINE constexpr void swap(basic_string& other) noexcept {  mpl::swap(content, other.content); mpl::swap(length, other.length); mpl::swap(alloc_size, other.alloc_size); }
 
-	/* copy assign */
-	CCDK_FORCEINLINE constexpr basic_string& operator=(char_type const* str) { 
-		content.assign(str, traits_type::length(str)); return *this;
-	}
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string const& other) { 
-		content = other.content; return *this;
-	}
+	/* copy assign, avoid self assign */
+	CCDK_FORCEINLINE constexpr basic_string& operator=(char_type const* str) { if (str != content) { basic_string{ str }.swap(*this); } return *this; }
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string const& other) { ccdk_if_not_this(other) { basic_string{ other }.swap(*this); } return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Size2, Alloc2> const& other) {
-		content = other.content; return *this;
-	}
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2> const& other) { basic_string{ other }.swap(*this); return *this; }
 
-	/* move assign */
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string&& other) {
-		content = util::move(other.content); return *this;
-	}
+	/* move assign, avoid self assign*/
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string&& other) { ccdk_if_not_this(other) { basic_string{ util::move(other) }.swap(*this); }  return *this; }
 	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2>&& other) {
-		content = util::move(other.content); return *this;
-	}
+	CCDK_FORCEINLINE constexpr basic_string& operator=(basic_string<Char, Alloc2, Size2>&& other) { basic_string{ util::move(other) }.swap(*this); return *this; }
 
 	/* assign */
 	CCDK_FORCEINLINE constexpr basic_string& assign(char_type const* str) { basic_string{ str }.swap(*this); return *this; }

@@ -854,7 +854,6 @@
     <ClInclude Include="text\encoding\iso8859_1.h" />
     <ClInclude Include="text\encoding\unicode.h" />
     <ClInclude Include="text\char_traits.h" />
-    <ClInclude Include="text\string.h" />
     <ClInclude Include="text\string_literial.h">
       <Filter>mpl\fusion</Filter>
     </ClInclude>
@@ -869,5 +868,7 @@
     <ClInclude Include="mpl\type_traits\is_byte.h" />
     <ClInclude Include="algorithm\distance.h" />
     <ClInclude Include="algorithm\algorithm_mudole.h" />
+    <ClInclude Include="text\string_old.h" />
+    <ClInclude Include="text\string.h" />
   </ItemGroup>
 </Project>
