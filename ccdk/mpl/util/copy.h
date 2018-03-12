@@ -23,7 +23,7 @@ CCDK_FORCEINLINE void copy(T& dest, const T2& src)
 
 /* trivial-type array copy*/
 template<
-	typename T, , typename T2,
+	typename T, typename T2,
 	ptr::size_t D,  ptr::size_t S,
 	typename = check_t< can_do_memcpy<T,T2>> >
 CCDK_FORCEINLINE void copy(T(&dest)[D], const T2(&src)[S]) noexcept
@@ -53,7 +53,7 @@ namespace ut_impl
 		typename Dest = iterator_value_t<It>,
 		typename Source = iterator_value_t<It2>
 	>
-	CCDK_FORCEINLINE It copy_range_impl(It tbegin, It2 fbegin, It2 fend, false_)
+	CCDK_FORCEINLINE It copy_range_impl(It tbegin, It2 fbegin, It2 fend, opt_lv2)
 		noexcept(has_nothrow_assigner_v<Dest, Source>)
 	{
 		for (; fbegin != fend; ++fbegin, ++tbegin) *tbegin = *fbegin;
@@ -61,7 +61,7 @@ namespace ut_impl
 	}
 
 	template<typename It, typename It2>
-	CCDK_FORCEINLINE It* copy_range_impl(It* tbegin, It2* fbegin, It2* fend, true_) noexcept {
+	CCDK_FORCEINLINE It* copy_range_impl(It* tbegin, It2* fbegin, It2* fend, opt_lv3) noexcept {
 		return memcpy(tbegin, fbegin, fend - fbegin); 
 	}
 
@@ -70,7 +70,7 @@ namespace ut_impl
 		typename Dest = iterator_value_t<It>,
 		typename Source = iterator_value_t<It2>
 	>
-	CCDK_FORCEINLINE It copy_n_impl(It dest, It2 src, ptr::size_t n, false_)
+	CCDK_FORCEINLINE It copy_n_impl(It dest, It2 src, ptr::size_t n, opt_lv2)
 		noexcept(has_nothrow_assigner_v<Dest, Source>)
 	{
 		for (ptr::size_t i = 0; i < n; ++i, ++dest, ++src) *dest = src;
@@ -78,7 +78,7 @@ namespace ut_impl
 	}
 
 	template<typename It, typename It2>
-	CCDK_FORCEINLINE It* copy_n_impl(It* dest, It2* src, ptr::size_t n, true_) noexcept {
+	CCDK_FORCEINLINE It* copy_n_impl(It* dest, It2* src, ptr::size_t n, opt_lv3) noexcept {
 		return memcpy(dest, src, n); 
 	}
 }
@@ -93,7 +93,7 @@ template<
 CCDK_FORCEINLINE void copy_range(It tbegin, It2 fbegin, It2 fend)
 	noexcept( has_nothrow_assigner_v<Dest,Source>)
 {
-	return ut_impl::copy_range_impl(tbegin, fbegin, fend, can_do_memcpy_c<It, It2>);
+	return ut_impl::copy_range_impl(tbegin, fbegin, fend, copy_opt_level_c<It, It2>);
 }
 
 
@@ -106,7 +106,7 @@ template<
 CCDK_FORCEINLINE void copy_n(It dest, It2 src, ptr::size_t n)
 	noexcept(has_nothrow_assigner_v<Dest, Source>)
 {
-	return ut_impl::copy_n_impl(dest, src, n, can_do_memcpy_c<It, It2>);
+	return ut_impl::copy_n_impl(dest, src, n, copy_opt_level_c<It, It2>);
 }
 
 ccdk_namespace_mpl_util_end

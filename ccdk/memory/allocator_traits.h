@@ -39,7 +39,7 @@ public:
 	typedef typename get_size_type<Alloc>::type size_type;
 	typedef typename get_diff_type<Alloc>::type different_type;
 	template<typename P>
-	using rebind = Alloc::template rebind<P>;
+	using rebind = typename Alloc::template rebind<P>;
 
 	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) 
 	{

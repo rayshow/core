@@ -60,7 +60,7 @@ public:
 	reference_type operator*() const noexcept { return *pointer; }
 
 	/* index */
-	reference_type operator[](different_type index) const noexcept { return pointer[index]; }
+	reference_type operator[](difference_type index) const noexcept { return pointer[index]; }
 };
 
 
@@ -72,6 +72,7 @@ public:
 	typedef T                                     value_type;
 	typedef T*                                    pointer_type;
 	typedef T&                                    reference_type;
+	typedef typename base_type::difference_type   difference_type;
 
 	using base_type::operator+;
 	using base_type::operator-;
@@ -83,7 +84,7 @@ public:
 	using base_type::operator[]; /* const version */
 
 	 /* non-const version */
-	reference_type operator[](different_type index) noexcept { return pointer[index]; }
+	reference_type operator[](difference_type index) noexcept { return pointer[index]; }
 
 	/* non-const version */
 	reference_type operator*() noexcept { return *pointer; }

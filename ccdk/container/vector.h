@@ -12,6 +12,7 @@
 #include<ccdk/mpl/units/ratio.h>
 #include<ccdk/container/filter/filter_view.h>
 #include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator_traits.h>
 #include<ccdk/algorithm/distance.h>
 
 ccdk_namespace_ct_start
@@ -24,15 +25,15 @@ template<
 	typename Alloc = mem::simple_new_allocator<T>,        
 	typename InceaseRatio = units::ratio<2,1>             /* 2.0X incease ratio*/
 >
-class vector : protected Alloc 
+class vector : protected Alloc
 {
 public:
 	typedef vector		 this_type;
 	typedef T			 value_type;
 	typedef Size		 size_type;
-	typedef Alloc		 allocator_type;
 	typedef ptr::diff_t  different_type;
 	typedef InceaseRatio incease_ratio;
+	typedef mem::allocator_traits<Alloc> allocate_type;
 
 	/* iterator */
 	typedef T*                         iterator_type;
@@ -40,7 +41,7 @@ public:
 	typedef reverse_iterator<T*>       reverse_iterator_type;
 	typedef reverse_iterator<const T*> const_reverse_iterator_type;
 	
-	template<typename T, typename Size2, typename Alloc2, typename Ratio2>
+	template<typename T2, typename Size2, typename Alloc2, typename Ratio2>
 	friend class vector;
 
 private:
@@ -61,7 +62,10 @@ public:
 	}
 
 	/* copy range */
-	template<typename InputIt>
+	template<
+		typename InputIt,
+		typename = check_t< is_iterator<InputIt>> 
+	>
 	CCDK_FORCEINLINE explicit vector(InputIt begin, InputIt end)
 	{
 		ptr::size_t n = alg::distance(begin, end);
@@ -75,8 +79,8 @@ public:
 	}
 
 	/* template copy */
-	template<typename Size2, typename Alloc2, typename Ratio2>
-	CCDK_FORCEINLINE vector(vector<T, Size2, Alloc2, Ratio2> const& other) {
+	template<typename Size2, typename Alloc2, typename Ratio2 >
+	CCDK_FORCEINLINE explicit vector(vector<T, Size2, Alloc2, Ratio2> const& other) {
 		if (other.len > 0) allocate_copy(other.len, other.content);
 	}
 
@@ -94,42 +98,47 @@ public:
 	}
 
 	/* swap */
-	CCDK_FORCEINLINE swap(vector& other) noexcept {
+	CCDK_FORCEINLINE void swap(vector& other) noexcept {
 		util::swap(content, other.content);
 		util::swap(len, other.len);
 		util::swap(cap, other.cap);
 	}
 
 	/* assign  nullptr, first destruct objects */
-	CCDK_FORCEINLINE operator=(ptr::nullptr_t) noexcept { 
+	CCDK_FORCEINLINE this_type& operator=(ptr::nullptr_t) noexcept { 
 		util::destruct_n(content, len);
 		len = 0; 
+		return *this;
 	}
 
 	/* copy assign */
-	CCDK_FORCEINLINE operator=(vector const& other) {
+	CCDK_FORCEINLINE this_type& operator=(vector const& other) {
 		ccdk_if_not_this(other) { 
 			if ( other.len <= cap) range_copy(other.content, other.len);
 			else  vector{ other }.swap(*this);
+			return *this;
 		}	
 	}
 
 	/* template copy assign */
 	template<typename Size2, typename Alloc2, typename Ratio2>
-	CCDK_FORCEINLINE operator=(vector<T, Size2, Alloc2, Ratio2> const& other) {
+	CCDK_FORCEINLINE this_type& operator=(vector<T, Size2, Alloc2, Ratio2> const& other) {
 		if (other.len <= cap) range_copy(other.content, other.len);
 		else  vector{ other }.swap(*this);
+		return *this;
 	}
 
 	/* move assign */
-	CCDK_FORCEINLINE operator=(vector && other) {
+	CCDK_FORCEINLINE this_type& operator=(vector && other) {
 		ccdk_if_not_this(other) { vector{ util::move(other) }.swap(*this); }
+		return *this;
 	}
 
 	/* template move assign */
 	template<typename Size2, typename Alloc2, typename Ratio2>
-	CCDK_FORCEINLINE operator=(vector<T, Size2, Alloc2, Ratio2> && other) {
+	CCDK_FORCEINLINE this_type& operator=(vector<T, Size2, Alloc2, Ratio2> && other) {
 		ccdk_if_not_this(other) { vector{ util::move(other) }.swap(*this); }
+		return *this;
 	}
 
 	/* assign nullptr */
@@ -149,6 +158,7 @@ public:
 	}
 
 	/* copy n*/
+	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& assign(InputIt begin, ptr::size_t n)
 	{
 		if (n <= cap) {
@@ -160,6 +170,7 @@ public:
 	}
 
 	/* copy range */
+	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& assign(InputIt begin, InputIt end)
 	{
 		return assign(begin, alg::distance(begin, end));
@@ -244,13 +255,13 @@ public:
 	CCDK_FORCEINLINE this_type& push_back(T&& t) { return emplace_back(util::move(t)); }
 
 	/* copy-construct [begin, begin+n) to back */
-	template<InputIt>
+	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& push_back(InputIt begin, ptr::size_t n) {
 		return insert_impl(len, len + n, begin);
 	}
 
 	/* copy-construct [begin, begin+n) to back */
-	template<InputIt>
+	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& push_back(InputIt begin,InputIt end) {
 		return push_back(begin, alg::distance(begin, end));
 	}
@@ -261,6 +272,7 @@ public:
 	}
 
 	/* move-range-back */
+	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& move_back(InputIt begin, InputIt end) {
 		return *this;
 	}
@@ -340,16 +352,16 @@ private:
 	{
 		size_type actual_size = incease_ratio::multiply(n);
 		if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};
+		return actual_size;
 	}
 
 	/* alloc n elements */
 	CCDK_FORCEINLINE T* allocate_cap(size_type n) {
-		T* memory = allocate(n);
-		if (!memory) throw std::bad_cast{}
+		T* memory = allocate_type::allocate(*this,n);
+		if (!memory) throw std::bad_cast{};
 		return memory;
 	}
 
-	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_len(size_type n)
 	{
 		size_type capcity = precompute_cap(n);
@@ -358,11 +370,10 @@ private:
 		cap = capcity;
 	}
 
-	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v)
 	{
 		allocate_len(n);
-		construct_fill_n(content, v, n);
+		util::construct_fill_n(content, v, n);
 	}
 
 
@@ -370,7 +381,7 @@ private:
 	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin)
 	{
 		allocate_len(n);
-		construct_copy_n(content, begin, n);
+		util::construct_copy_n(content, begin, n);
 	}
 
 

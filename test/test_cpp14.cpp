@@ -80,6 +80,8 @@ int main()
 	//printf("%d", sizeof(derive));
 
 	printf(" %d ", is_iterator<tsfinae>::value);
+
+	std::vector<int>;
 	
 	
 	//TestHasTrivialConstructor<int, int>();

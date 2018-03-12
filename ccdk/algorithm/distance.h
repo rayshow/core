@@ -20,7 +20,7 @@ namespace alg_impl
 	}
 
 	template<typename InputIt>
-	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, random_category) noexcept
+	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, random_iterator_category) noexcept
 	{
 		return end - begin;
 	}

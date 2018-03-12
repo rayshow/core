@@ -45,7 +45,7 @@ struct ratio
 	static constexpr double value = double(N) / double(D);
 
 	template<typename T>
-	static constexpr T multiply(T const& t) { return value * double(t); }
+	static constexpr T multiply(T const& t) { return (T)(value * double(t)); }
 
 	template< typename Other>
 	struct add
