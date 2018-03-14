@@ -6,7 +6,7 @@
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/remove_ref.h>
 #include<ccdk/mpl/type_traits/remove_const.h>
-#include<ccdk/mpl/type_traits/is_pod.h>
+#include<ccdk/mpl/type_traits/is_trivial.h>
 #include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/util/addressof.h>
 
@@ -59,7 +59,7 @@ void move(T& dest, T2&& src)
 /* pod-type array*/
 template<
 	typename T, ptr::size_t D, ptr::size_t S,
-	typename = check_t< is_pod<T>>
+	typename = check_t< is_trivial<T>>
 >
 void move(T(&dest)[D], T(&&src)[S])
 {
@@ -68,7 +68,7 @@ void move(T(&dest)[D], T(&&src)[S])
 
 /* pod-type array*/
 template<typename T, ptr::size_t D, ptr::size_t S,
-	typename = check_t< not_<is_pod<T>>>,          /* T is not pod  */
+	typename = check_t< not_<is_trivial<T>>>,          /* T is not pod  */
 	typename = check_t< has_move_assigner<T>>      /* and has move asssigner */
 >
 void move(T(&dest)[D], T(&&src)[S])

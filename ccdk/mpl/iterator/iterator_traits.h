@@ -8,6 +8,7 @@
 #include<ccdk/mpl/type_traits/is_trivial.h>
 #include<ccdk/mpl/type_traits/is_byte.h>
 #include<ccdk/mpl/type_traits/is_base_of.h>
+#include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
 
 
@@ -35,7 +36,19 @@ struct iterator_traits<T*>
 	typedef T const&    const_reference_type;
 	typedef ptr::diff_t difference_type;
 	typedef ptr::size_t size_type;
-	typedef random_iterator_category categroy;
+	typedef random_iterator_category category;
+};
+
+template<typename T>
+struct iterator_traits<T const*>
+{
+	typedef T           value_type;
+	typedef T *          pointer_type;
+	typedef T&          reference_type;
+	typedef T const&    const_reference_type;
+	typedef ptr::diff_t difference_type;
+	typedef ptr::size_t size_type;
+	typedef random_iterator_category category;
 };
 
 /* get value_type from iterator  */

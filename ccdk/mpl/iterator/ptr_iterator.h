@@ -9,7 +9,7 @@ template<typename T>
 struct reverse_iterator<const T*>
 {
 public:
-	typedef reverse_iterator   this_type;
+	typedef reverse_iterator		 this_type;
 	typedef const T                  value_type;
 	typedef T const*                 pointer_type;
 	typedef T const&                 reference_type;
@@ -17,11 +17,11 @@ public:
 	typedef ptr::diff_t              difference_type;
 	typedef ptr::size_t              size_type;
 	typedef random_iterator_category categroy;
-private:
-	const T*    pointer;
-public:
+
+	 T*    pointer;
+
 	/* constructor */
-	constexpr reverse_iterator(pointer_type p) noexcept : pointer{ p } {}
+	constexpr reverse_iterator(T* p) noexcept : pointer{ p } {}
 
 	/* copy constructor */
 	constexpr reverse_iterator(this_type const& other) noexcept : pointer{ other.pointer } {}
@@ -61,14 +61,24 @@ public:
 
 	/* index */
 	reference_type operator[](difference_type index) const noexcept { return pointer[index]; }
+
+	/* cmp */
+	bool operator==(this_type const& other) const noexcept {
+		return pointer == other.pointer;
+	}
+
+	/* cmp */
+	bool operator!=(this_type const& other) const noexcept {
+		return pointer != other.pointer;
+	}
 };
 
 
-template<typename T,typename Container>
-struct reverse_iterator<T*,Container>: reverse_iterator<T*, Container>
+template<typename T>
+struct reverse_iterator<T*>: public reverse_iterator<const T*>
 {
 public:
-	typedef reverse_iterator<const T*, Container> base_type;
+	typedef reverse_iterator<const T*>            base_type;
 	typedef T                                     value_type;
 	typedef T*                                    pointer_type;
 	typedef T&                                    reference_type;
@@ -82,12 +92,14 @@ public:
 	using base_type::operator-=;
 	using base_type::operator*;  /* const version */
 	using base_type::operator[]; /* const version */
-
-	 /* non-const version */
-	reference_type operator[](difference_type index) noexcept { return pointer[index]; }
+	using base_type::operator==;
+	using base_type::base_type;
 
 	/* non-const version */
-	reference_type operator*() noexcept { return *pointer; }
+	reference_type operator[](difference_type index) noexcept { return this->pointer[index]; }
+
+	/* non-const version */
+	reference_type operator*() noexcept { return *this->pointer; }
 };
 
 

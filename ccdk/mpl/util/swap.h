@@ -43,7 +43,7 @@ ccdk_namespace_mpl_util_start
 		struct has_swap_impl
 		{
 			template<typename P1, typename P2,
-				typename = decltype(declval<P1>().swap(declval<P2>()))>
+				typename = decltype(makeval<P1>().swap(makeval<P2>()))>
 				constexpr static bool sfinae(int) { return true; }
 
 			template<typename P1, typename P2>

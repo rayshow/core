@@ -2,7 +2,9 @@
 
 #include<ccdk/preprocessor/seq_foreach_tuple.h>
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/function/function_fwd.h>
+#include<ccdk/mpl/util/forward.h>
 
 ccdk_namespace_mpl_fn_start
 

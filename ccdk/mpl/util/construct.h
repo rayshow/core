@@ -23,14 +23,14 @@ template<
 	CCDK_FORCEINLINE static void construct(It it, Args&& ... args)
 {
 	DebugFunctionName();
-	//new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
+	new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
 }
 
 /* truely pointer, directly construct on it */
 template<typename T, typename... Args>
-CCDK_FORCEINLINE static void construct(void* memory, Args&& ... args)
+CCDK_FORCEINLINE static void construct(const void* memory, Args&& ... args)
 {
-	new(memory) T(util::forward<Args>(args)...);
+	new( const_cast<void*>( memory)) T(util::forward<Args>(args)...);
 }
 
 namespace ut_impl
@@ -85,11 +85,10 @@ namespace ut_impl
 		typename = check_t< has_constructor<Dest, Source>>
 	>
 	ForwardIt construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv1)
-	noexcept(has_nothrow_constructor_v<Dest, Source>)
 	{
 		DebugValue(" construct_copy_n iterator copy");
-		const InputIt = fbegin;
-		const ForwardIt it2 = tbegin;
+		InputIt it= fbegin;
+		ForwardIt it2 = tbegin;
 		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest >(it, *it2); }
 		catch (...) { destruct_range(tbegin, it2); throw; }
 		return it2;
@@ -143,7 +142,7 @@ namespace ut_impl
 	>
 	ForwardIt construct_move_range_impl(ForwardIt tbegin, InputIt fbegin, InputIt fend, opt_lv2) noexcept {
 		DebugValue(" construct_move_range noexcept copy");
-		for (; it != fend; ++tbegin, ++fbegin) *tbegin = *fbegin;
+		for (; fbegin != fend; ++tbegin, ++fbegin) *tbegin = *fbegin;
 		return tbegin;
 	}
 
@@ -216,7 +215,7 @@ namespace ut_impl
 	>
 	ForwardIt construct_fill_range_impl(ForwardIt begin, ForwardIt end, T const& t, opt_lv2) noexcept {
 		DebugValue(" uninitalized-range easy fill");
-		for (; begin != end; ++it) *begin = t; return begin;
+		for (; begin != end; ++begin) *begin = t; return begin;
 	}
 
 
@@ -270,7 +269,7 @@ namespace ut_impl
 	CCDK_FORCEINLINE T* construct_n_impl(T* begin, ptr::size_t n, true_, T2 const& t)
 		noexcept(has_nothrow_constructor_v<T,T2>)
 	{
-		return util::construct_fill_n(begin, t, n);
+		return construct_fill_n_impl(begin, t, n, fill_opt_level_c<T, T2>);
 	}
 
 	/* more then one arg, iterate over to construct  */

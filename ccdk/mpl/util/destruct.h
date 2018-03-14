@@ -30,13 +30,16 @@ namespace ut_impl
 
 	/* is pod, no need destructor */
 	template<typename InputIt>
-	CCDK_FORCEINLINE static void destruct_n_impl(InputIt begin, ptr::size_t n, true_) noexcept {}
+	CCDK_FORCEINLINE static void destruct_n_impl(InputIt begin, ptr::size_t n, true_) noexcept {
+		DebugValue("trivial destruct-n");
+	}
 
 	/* non-pod */
 	template<typename InputIt, typename Source = iterator_value_t<InputIt> >
 	CCDK_FORCEINLINE static void destruct_n_impl(InputIt begin, ptr::size_t n, false_) noexcept
 	{
-		for (; begin != end; ++begin) { (*begin).~Source(); }
+		DebugValue("iterator destruct-n");
+		for (ptr::size_t c = 0; c<n; ++c,++begin) { (*begin).~Source(); }
 	}
 }
 
@@ -51,7 +54,7 @@ CCDK_FORCEINLINE static void destruct_range(InputIt begin, InputIt end) noexcept
 template<typename InputIt, typename Source = iterator_value_t<InputIt> >
 CCDK_FORCEINLINE static void destruct_n(InputIt begin, ptr::size_t n) noexcept
 {
-	ut_impl::destruct_n_impl(begin, end, typename has_trivial_destructor<Source>::type{});
+	ut_impl::destruct_n_impl(begin, n, typename has_trivial_destructor<Source>::type{});
 }
 
 ccdk_namespace_mpl_util_end

@@ -25,18 +25,21 @@ CCDK_FORCEINLINE void copy(T& dest, const T2& src)
 template<
 	typename T, typename T2,
 	ptr::size_t D,  ptr::size_t S,
-	typename = check_t< can_do_memcpy<T,T2>> >
+	typename = check_t< and_< is_trivial<T>, is_trivial<T2>> >
+>
 CCDK_FORCEINLINE void copy(T(&dest)[D], const T2(&src)[S]) noexcept
 {
 	static constexpr ptr::size_t Min = min_val<ptr::size_t, D, S>;
 	memcpy((void*)addressof(dest), (void*)addressof(src), sizeof(T)*Min);
 }
 
+
+
 /* non-trivial-type array copy*/
 template<
 	typename T, typename T2,
 	ptr::size_t D, ptr::size_t S,
-	typename = check_t< not_<can_do_memcpy<T,T2>>>,  /* T is not trivial  */
+	typename = check_t< not_< and_< is_trivial<T>,is_trivial<T2>>>>, /*  */
 	typename = check_t< has_copy_assigner<T>> >      /* and has copy asssigner */
 CCDK_FORCEINLINE void copy(T(&dest)[D], const T2(&src)[S])
 	noexcept(has_nothrow_assigner_v<T, T2>)

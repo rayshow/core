@@ -46,7 +46,7 @@ class destructor_maythrow
 public:
 	destructor_maythrow() { throw int{}; }
 
-	~destructor_maythrow() throw(int) { throw int{}; }
+	~destructor_maythrow()  { /*throw int{};*/ }
 };
 
 

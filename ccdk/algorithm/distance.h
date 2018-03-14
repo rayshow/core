@@ -10,7 +10,6 @@ using namespace mpl;
 
 namespace alg_impl
 {
-	
 	template<typename InputIt>
 	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, input_iterator_category) noexcept
 	{
