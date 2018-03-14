@@ -3,7 +3,6 @@
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/mpl/base/compile_check.h>
 
-
 ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
@@ -15,30 +14,38 @@ struct slist_node
 	slist_node<T>* next;
 };
 
-template<typename T>
+/* single list, only length and head */
+template<typename T, typename Size = uint32>
 class slist
 {
 public:
 	typedef slist                this_type;
 	typedef slist                type;
+
+	/* common */
 	typedef T                    value_type;
 	typedef T*                   pointer_type;
 	typedef T const*             const_pointer_type;
 	typedef T&                   reference_type;
 	typedef T const&             const_reference_type;
+	typedef Size                 size_type;
+	typedef ptr::diff_t          difference_type;
+
+	/* node */
 	typedef slist_node<T>        node_type;
 	typedef slist_node<T>*       node_pointer_type;
 	typedef slist_node<T> const* const_node_pointer_type;
 	typedef slist_node<T> &      node_reference_type;
 	typedef slist_node<T> const& const_node_reference_type;
+
 private:
-	slist_node<T>* head;
-	slist_node<T>* tail;
-	ptr::size_t    length;
+	node_pointer_type head;
+	node_pointer_type tail;
+	size_type         len;
 public:
 	/*default */
-	constexpr slist() = default;
-	constexpr slist(ptr::nullptr_t) noexcept : head{ nullptr }, tail{ nullptr }, length{ 0 } {}
+	constexpr slist() noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
+	constexpr slist(ptr::nullptr_t) noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
 
 	/*value */
 	constexpr slist()

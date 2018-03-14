@@ -1,7 +1,6 @@
 
 #include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
-#include<ccdk/mpl/type_traits/has_swap.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<memory>
 #include<vector>

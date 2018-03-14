@@ -8,7 +8,6 @@
 #include<ccdk/mpl/util/fill.h>
 #include<ccdk/container/filter/filter_view.h>
 
-
 ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;

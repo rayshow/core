@@ -158,11 +158,12 @@ namespace ut_impl
 		typename InputIt, typename ForwardIt,
 		typename Source = iterator_value_t<InputIt>,
 		typename Dest = iterator_value_t<ForwardIt>,
-		typename = check_t< has_constructor<Dest, add_rref<Source> >>
+		typename = check_t< has_constructor<Dest, Source >>
 	>
 	ForwardIt construct_move_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv1) noexcept {
 		DebugValue(" construct_move_n  it move");
 		for (ptr::size_t c = 0; c<n; ++c, ++tbegin, ++fbegin) construct<Dest>(tbegin, util::move(*fbegin));
+		return tbegin;
 	}
 
 	/* trivial copy */
@@ -180,7 +181,7 @@ namespace ut_impl
 
 	/* is byte pointer type, use memcpy-optimize */
 	template< typename T1, typename T2 >
-	CCDK_FORCEINLINE T1* construct_move_n_impl(T1* dest, T2* src, ptr::size_t n, true_) noexcept
+	CCDK_FORCEINLINE T1* construct_move_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept
 	{
 		DebugValue(" construct_move_n memcpy copy");
 		return memcpy(dest, src, n);

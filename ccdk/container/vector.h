@@ -250,9 +250,11 @@ public:
 	}
 
 	/* inplace construct with P, Args... */
-	template<typename P, typename ... Args>
+	template<
+		typename P, typename ... Args
+	>
 	CCDK_FORCEINLINE this_type& emplace_back(P&& p, Args&& ... args){
-		if (len == cap) { realloc_move(len); }
+		if (len == cap) { reallocate_move(); }
 		util::construct<T>(content + len++, util::forward<P>(p),
 			util::forward<Args>(args)...);
 		return *this;
@@ -428,12 +430,15 @@ private:
 		util::construct_move_n(memory + pos + n, content + pos, len - pos);
 	}
 
-	void realloc_move(size_type n) {
-		size_type new_cap = prealloc_size(len);
-		T* memory = alloc_cap(new_cap);
+	/* allocate a new memory, if success 
+	   move [content, content+n) to this memory, free old content
+	*/
+	void reallocate_move() {
+		size_type new_cap = precompute_cap(len);
+		T* memory = allocate_cap(new_cap);
 		util::construct_move_n(memory, content, len);
 		util::destruct_n(content, len);
-		deallocate(content);
+		allocate_type::deallocate(*this, content, cap);
 		content = memory;
 		cap = new_cap;
 	}
@@ -454,10 +459,10 @@ private:
 			T* memory = allocate_cap(new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_copy_n(memory + start, begin, n), /* may throw */
-				deallocate(memory)
+				allocate_type::deallocate(*this,memory,new_cap)
 			);
 			split_copy(memory, start, n);
-			deallocate(content);
+			allocate_type::deallocate(content);
 			content = memory;
 			cap = new_cap;
 		}
@@ -483,14 +488,14 @@ private:
 		size_type new_len = len + n;
 		if (new_len > cap)
 		{
-			size_type new_cap = prealloc_size(new_len);
+			size_type new_cap = precompute_cap(new_len);
 			T* memory = allocate_cap(new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_n<T>(memory + start, n, util::forward<Args>(args)...),
-				deallocate(memory)
+				allocate_type::deallocate(*this, memory, new_cap)
 			);
 			split_copy(memory, start, n);
-			deallocate(content);
+			allocate_type::deallocate(*this, content, cap);
 			content = memory;
 			cap = new_cap;
 		}

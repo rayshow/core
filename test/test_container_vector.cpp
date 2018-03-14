@@ -13,18 +13,16 @@ struct no_trivial {
 	~no_trivial() { DebugValue("no_trivial destruct"); }
 };
 
-template<typename T1, typename T2>
-struct has_swap
-{
-	template<typename P1, typename P2,
-		typename = decltype(makeval<P1>().swap(makeval<P2>()))>
-		constexpr static bool sfinae(int) { return true; }
+struct implace_test {
+	int a;
+	float b;
 
-	template<typename P1, typename P2>
-	constexpr static bool sfinae(...) { return false; }
-
-	constexpr static bool value = sfinae<T1, T2>(0);
+	implace_test() :a{}, b{} { DebugValue("no-parameter constructor "); }
+	implace_test(int a, float b) :a{ a }, b{ b } {
+		DebugValue("parameter constructor ");
+	}
 };
+
 
 int main()
 {
@@ -182,7 +180,14 @@ int main()
 	}
 	DebugNewTitle("implace back")
 	{
-
+		vector<implace_test> vec{ 4 };
+		vec.emplace_back(2, 3.5f);
+		vec.emplace_back(3, 4.5f);
+		vec.emplace_back(4, 5.5f);
+		for (auto& it : vec)
+		{
+			DebugValue(it.a, it.b);
+		}
 	}
 
 

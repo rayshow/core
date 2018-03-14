@@ -5,20 +5,17 @@
 
 ccdk_namespace_mpl_util_start
 
-//T&& forward string literial will become char array ref
-//  int literial will become int&
+/* T&& forward string literial will become char array ref
+   int literial will become int&
+ */
 template<typename T> 
-CCDK_FORCEINLINE constexpr 
-T&& forward(remove_ref_t<T>& inT) noexcept 
-{ 
-	return static_cast<T&&>(inT); 
+CCDK_FORCEINLINE constexpr T&& forward(remove_ref_t<T>& t) noexcept { 
+	return static_cast<T&&>(t); 
 }
 
 template<typename T> 
-CCDK_FORCEINLINE constexpr 
-T&& forward(remove_ref_t<T>&& inT) noexcept 
-{ 
-	return static_cast<T&&>(inT); 
+CCDK_FORCEINLINE constexpr T&& forward(remove_ref_t<T>&& t) noexcept { 
+	return static_cast<T&&>(t); 
 }
 
 ccdk_namespace_mpl_util_end
