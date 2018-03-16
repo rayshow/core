@@ -292,8 +292,9 @@ public:
 	/* inplace-construct at pos( [0,len] ) */
 	template< typename P, typename... Args>
 	CCDK_FORCEINLINE this_type& emplace(size_type pos, P&& t, Args&&... args){
-		ccdk_assert(pos < len);
-		if (pos <= len) { emplace_impl(pos, util::forward<Args>(args)...); }
+		ccdk_assert(pos <= len); 
+		if (pos <= len) { emplace_impl(pos, pos+1, util::forward<Args>(args)...); }
+		return *this;
 	}
 
 	/* insert */
@@ -504,7 +505,7 @@ private:
 			util::construct_move_n(content + max_end, content + max_end - n, n);
 			if (end<len) util::move_n(content + end, content + start, len - end);
 			util::destruct_n(content + start, fn::min(end, len) - start);
-			util::construct_n(content + start, n, util::forward<Args>(args)...);
+			util::construct_n<T>(content + start, n, util::forward<Args>(args)...);
 		}
 		len = new_len;
 	}

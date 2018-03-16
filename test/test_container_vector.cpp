@@ -189,7 +189,19 @@ int main()
 			DebugValue(it.a, it.b);
 		}
 	}
-
+	DebugNewTitle("insert ");
+	{
+		vector<int> ivec1(4, 1);
+		DebugValue(ivec1.size());
+		DebugValue(ivec1.capacity());
+		int c = 1;
+		for (auto& i : ivec1) { i = c++; }
+		for (auto& i : ivec1) { DebugValue(i); }
+		ivec1.insert(0, -1);
+		ivec1.insert(2, -1);
+		ivec1.insert(ivec1.size(), -1);
+		for (auto& i : ivec1) { DebugValue(i); }
+	}
 
 	getchar();
 	return 0;

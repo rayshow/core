@@ -184,7 +184,7 @@ namespace ut_impl
 	CCDK_FORCEINLINE T1* construct_move_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept
 	{
 		DebugValue(" construct_move_n memcpy copy");
-		return memcpy(dest, src, n);
+		return static_cast<T1*>( memcpy(dest, src, n) );
 	}
 
 
@@ -278,7 +278,8 @@ namespace ut_impl
 	CCDK_FORCEINLINE T* construct_n_impl(T* begin, ptr::size_t n, false_, Args&&... args)
 		noexcept(has_nothrow_constructor_v<T, Args...>)
 	{
-		for (int i = 0; i < n; ++i) { construct<T>(begin + i, util::forward<Args>(args)...); }
+		for (int i = 0; i < n; ++i, ++begin) { construct<T>(begin, util::forward<Args>(args)...); }
+		return begin;
 	}
 }
 
@@ -364,10 +365,10 @@ CCDK_FORCEINLINE ForwardIt construct_move_n(ForwardIt tbegin, InputIt fbegin, pt
 
 /* inplace construct in [ (T*)memory, (T*)memory+n) with args... */
 template<typename T, typename... Args>
-CCDK_FORCEINLINE static void construct_n(void* memory, ptr::size_t n, Args&& ... args)
+CCDK_FORCEINLINE static T* construct_n(void* memory, ptr::size_t n, Args&& ... args)
 {
-	if (n == 0) return;
-	return ut_impl::construct_n_impl(static_cast<T>(memory), n,
+	if (n == 0) return static_cast<T*>(memory);
+	return ut_impl::construct_n_impl(static_cast<remove_cv_t<T>*>(memory), n,
 		bool_c<sizeof...(Args) == 1>, util::forward<Args>(args)...);
 }
 
