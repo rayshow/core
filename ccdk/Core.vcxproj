@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="algorithm\advance.h" />
     <ClInclude Include="algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
     <ClInclude Include="algorithm\distance.h" />

@@ -11,16 +11,14 @@ using namespace mpl;
 namespace alg_impl
 {
 	template<typename InputIt>
-	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, input_iterator_category) noexcept
-	{
+	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, input_iterator_category) noexcept{
 		ptr::size_t count = 0;
 		for (; begin != end; ++begin, ++count);
 		return count;
 	}
 
-	template<typename InputIt>
-	CCDK_FORCEINLINE ptr::size_t distance_impl(InputIt begin, InputIt end, random_iterator_category) noexcept
-	{
+	template<typename RandomIt>
+	CCDK_FORCEINLINE ptr::size_t distance_impl(RandomIt begin, RandomIt end, random_iterator_category) noexcept{
 		return end - begin;
 	}
 }

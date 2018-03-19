@@ -381,8 +381,7 @@ public:
 		typename Iterator,
 		typename = check_t<is_pointer_iterator<T, Iterator> > // exclude comflict with size_type
 	>
-	CCDK_FORCEINLINE this_type& insert(Iterator it, std::initializer_list<T> const& lst)
-	{
+	CCDK_FORCEINLINE this_type& insert(Iterator it, std::initializer_list<T> const& lst){
 		return insert(it - content, lst.begin(), lst.size());
 	}
 
@@ -418,8 +417,7 @@ public:
 	}
 
 	/* clear, destruct all objects */
-	CCDK_FORCEINLINE this_type& clear()
-	{
+	CCDK_FORCEINLINE this_type& clear(){
 		util::destruct_n(content, len);
 		len = 0;
 		return *this;
@@ -445,7 +443,6 @@ private:
 	}
 
 	/* copy from [begin, begin+n) to content[0, n), destruct old objects  */
-	template<typename T>
 	CCDK_FORCEINLINE void range_fill(T const& t, size_type n) {
 		destruct_content();
 		util::construct_fill_n(content, t, n);
@@ -465,8 +462,7 @@ private:
 	}
 
 	/* pre-compute allocate size */
-	CCDK_FORCEINLINE size_type precompute_cap(size_type n)
-	{
+	CCDK_FORCEINLINE size_type precompute_cap(size_type n) {
 		size_type actual_size = incease_ratio::multiply(n);
 		if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};
 		return actual_size;
@@ -477,23 +473,20 @@ private:
 		return allocate_type::allocate(*this,n);
 	}
 
-	CCDK_FORCEINLINE void allocate_len(size_type n)
-	{
+	CCDK_FORCEINLINE void allocate_len(size_type n) {
 		size_type capcity = precompute_cap(n);
 		content = allocate_cap(capcity);
 		len = n;
 		cap = capcity;
 	}
 
-	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v )
-	{
+	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v ) {
 		allocate_len(n);
 		util::construct_fill_n(content, v, n);
 	}
 
 	template<typename InputIt>
-	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin)
-	{
+	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin){
 		allocate_len(n);
 		util::construct_copy_n(content, begin, n);
 	}
@@ -502,8 +495,7 @@ private:
 	/*  split copy content[0, pos) to memory[0,pos),
 		content[pos, len) to memory[pos+n, len+n)
 	*/
-	CCDK_FORCEINLINE void split_copy(T* memory, size_type pos, size_type n) noexcept
-	{
+	CCDK_FORCEINLINE void split_copy(T* memory, size_type pos, size_type n) noexcept{
 		util::construct_move_n(memory, content, pos);
 		util::construct_move_n(memory + pos + n, content + pos, len - pos);
 	}
@@ -526,14 +518,12 @@ private:
 		else move content[start, len) backward
 	*/
 	template<typename InputIt>
-	this_type& insert_impl(size_type start, size_type end, InputIt begin)
-	{
+	this_type& insert_impl(size_type start, size_type end, InputIt begin) {
 		ccdk_assert(end > start && start <= len);
 		if (end <= start || start > len) return *this;
 		size_type n = end - start;
 		size_type new_len = len + n;
-		if (new_len > cap)
-		{
+		if (new_len > cap) {
 			size_type new_cap = precompute_cap(new_len);
 			T* memory = allocate_cap(new_cap);
 			ccdk_safe_cleanup_if_exception(
@@ -544,8 +534,7 @@ private:
 			allocate_type::deallocate(*this, content,cap);
 			content = memory;
 			cap = new_cap;
-		}
-		else {
+		} else {
 			size_type max_end = fn::max(end, len);
 			util::construct_move_n(content + max_end, content + max_end - n, n);
 			if (end<len) util::move_n(content + end, content + start, len - end);
@@ -561,13 +550,11 @@ private:
 	else move content[start, len) backward
 	*/
 	template<typename... Args>
-	void emplace_impl(size_type start, size_type end, Args&&... args)
-	{
+	void emplace_impl(size_type start, size_type end, Args&&... args) {
 		if (end <= start || start > len) return;
 		size_type n = end - start;
 		size_type new_len = len + n;
-		if (new_len > cap)
-		{
+		if (new_len > cap){
 			size_type new_cap = precompute_cap(new_len);
 			T* memory = allocate_cap(new_cap);
 			ccdk_safe_cleanup_if_exception(
@@ -578,8 +565,7 @@ private:
 			allocate_type::deallocate(*this, content, cap);
 			content = memory;
 			cap = new_cap;
-		}
-		else {
+		} else {
 			size_type max_end = fn::max(end, len);
 			util::construct_move_n(content + max_end, content + max_end - n, n);
 			if (end<len) util::move_n(content + end, content + start, len - end);

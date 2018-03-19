@@ -12,6 +12,8 @@
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
+#include<ccdk/algorithm/advance.h>
+#include<ccdk/algorithm/distance.h>
 #include<ccdk/container/slist_node.h>
 #include<ccdk/container/container_mudule.h>
 
@@ -54,7 +56,7 @@ private:
 	node_type* head;
 	node_type* tail;
 	size_type  len;
-
+	
 public:
 	/*default */
 	CCDK_FORCEINLINE constexpr slist() noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
@@ -169,8 +171,6 @@ public:
 		len = n;
 	}
 
-
-
 	CCDK_FORCEINLINE iterator_type begin() noexcept {
 		return iterator_type{ head };
 	}
@@ -192,7 +192,12 @@ private:
 	void rvalue_reset() noexcept {
 		head = tail = nullptr;
 		len = 0;
-	} 
+	}
+
+	void destroy_content() {
+		util::destruct_n(begin(), len);
+
+	}
 
 	void link_init_memory(size_type n, node_type* memory) const noexcept {
 		for (size_type i = 0; i < n - 1; ++i) (memory + i)->next = (memory + i + 1);
@@ -211,7 +216,7 @@ private:
 	}
 
 	T* allocate_fill_link(size_type n, T const& t) {
-		node_type* memory = allocate_type::allocate(*this, n);
+		node_type* memor y = allocate_type::allocate(*this, n);
 		util::construct_n<node_type>(memory, n, t);
 		link_init_memory(n, memory);
 		return memory;
@@ -235,8 +240,12 @@ private:
 
 	template<typename ForwardIt>
 	void assign_range(size_type n, ForwardIt begin2) {
+		ptr::size_t copy_len = fn::min(other.len, len);
 		util::destruct_n(begin(), len);
-		tail = util::construct_copy_n(begin(), begin2, fn::min(other.len, len));
+		if (copy_len > 0) {
+			util::construct_copy_n(begin(), begin2, copy_len);
+			tail = util::addressof(*(begin() + copy_len - 1));
+		}
 		if (n > len) tail->next = allocate_copy_link(n - len, begin2 + len);
 		len = n;
 	}
