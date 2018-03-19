@@ -74,7 +74,7 @@ namespace ut_impl
 	template< typename T1, typename T2 >
 	CCDK_FORCEINLINE T1* construct_copy_range_impl(T1* tbegin, T2* fbegin, T2* fend, opt_lv3) noexcept  {
 		DebugValue(" construct_copy_range memcpy copy");
-		return memcpy(tbegin, fbegin, fend - fbegin);
+		return static_cast<T1*>( memcpy(tbegin, fbegin, sizeof(T1)*(fend - fbegin)));
 	}
 
 	/* no-optim construct from iterator count range */
@@ -107,11 +107,11 @@ namespace ut_impl
 		return tbegin;
 	}
 
-	/* is byte pointer type, use memcpy-optimize */
+	/* is pod assign, use memcpy-optimize */
 	template< typename T1, typename T2 >
 	CCDK_FORCEINLINE T1* construct_copy_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept {
 		DebugValue(" construct_copy_n memcpy copy");
-		return static_cast<T1*>(memcpy(dest, src, n));
+		return static_cast<T1*>(memcpy(dest, src, sizeof(T1)*n));
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,11 +146,11 @@ namespace ut_impl
 		return tbegin;
 	}
 
-	/* is byte pointer type, use memcpy-optimize */
+	/* is pod assign, use memcpy-optimize */
 	template< typename T1, typename T2 >
 	CCDK_FORCEINLINE T1* construct_move_range_impl(T1* tbegin, T2* fbegin, T2* fend, opt_lv3) noexcept {
 		DebugValue(" construct_move_range memcpy copy");
-		return memcpy(tbegin, fbegin, fend - fbegin);
+		return static_cast<T1*>( memcpy(tbegin, fbegin, sizeof(T1)*(fend - fbegin)));
 	}
 
 	/* use move construct */
@@ -179,12 +179,12 @@ namespace ut_impl
 		return tbegin;
 	}
 
-	/* is byte pointer type, use memcpy-optimize */
+	/* is trivial assign, use memcpy-optimize */
 	template< typename T1, typename T2 >
 	CCDK_FORCEINLINE T1* construct_move_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept
 	{
 		DebugValue(" construct_move_n memcpy copy");
-		return static_cast<T1*>( memcpy(dest, src, n) );
+		return static_cast<T1*>( memcpy(dest, src, sizeof(T1)*n) );
 	}
 
 
@@ -270,7 +270,7 @@ namespace ut_impl
 	CCDK_FORCEINLINE T* construct_n_impl(T* begin, ptr::size_t n, true_, T2 const& t)
 		noexcept(has_nothrow_constructor_v<T,T2>)
 	{
-		return construct_fill_n_impl(begin, t, n, fill_opt_level_c<T, T2>);
+		return construct_fill_n_impl(begin, t, n, fill_opt_level_c<T*, T2>);
 	}
 
 	/* more then one arg, iterate over to construct  */

@@ -56,10 +56,10 @@ template<typename T>
 using iterator_value_t = typename iterator_traits<T>::value_type;
 
 template<typename T>
-using iterator_categroy_t = typename iterator_traits<T>::category;
+using iterator_category_t = typename iterator_traits<T>::category;
 
 template<typename T>
-constexpr iterator_categroy_t<T> iterator_categroy_c{};
+constexpr iterator_category_t<T> iterator_category_c{};
 
 struct opt_lv1 { typedef opt_lv1 type; };
 struct opt_lv2 :opt_lv1 { typedef opt_lv2 type; };
@@ -104,10 +104,23 @@ constexpr typename fill_opt_level<It, ValueType>::type fill_opt_level_c{};
 template< typename It1, typename It2>
 constexpr typename copy_opt_level<It1, It2>::type copy_opt_level_c{};
 
+
+template< typename T>
+struct is_derived_input_iterator:
+			is_base_of< input_iterator_category, iterator_category_t<T> > {};
+
 /* T is pointer type or T::category exists and category is derive from input_iterator_category */
 template<typename T>
 struct is_iterator : or_< is_pointer<T>,
-		and_< has_inner_categroy<T>, is_base_of< input_iterator_category, T> >> {};
+		and_< has_inner_category<T>, is_derived_input_iterator<T> >> {};
 
+/* ptr iterator */
+template<
+	typename T, 
+	typename It, 
+	typename P = remove_cv_t< remove_pointer_t<It>> 
+>
+struct is_pointer_iterator : 
+		and_< is_same<P,T>, or_ < is_same< It, P*>, is_same<It, P const*> >>{};
 
 ccdk_namespace_mpl_it_end

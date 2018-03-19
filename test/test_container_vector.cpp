@@ -1,5 +1,6 @@
 
 #include<ccdk/container/vector.h>
+//#include<ccdk/container/slist_node.h>
 #include<stdio.h>
 
 using namespace ccdk;
@@ -164,8 +165,9 @@ int main()
 		no_trivial nt;
 		DebugSubTitle("pop no-trivial ");
 		{
-			vector<no_trivial> ivec2(4, nt);
-			ivec2.pop_back();
+			vector<no_trivial> ivec(4, nt);
+			ivec.pop_back();
+			RuntimeAssertTrue(ivec.size()==3);
 		}
 		DebugSubTitle("pop int")
 		{
@@ -173,9 +175,9 @@ int main()
 			int c = 1;
 			for (auto& i : ivec1) { i = c++; }
 			ivec1.pop_back();
-			for (auto& i : ivec1) { DebugValue(i); }
+			RuntimeAssertTrue(ivec1.back() == 3);
 			ivec1.pop_back();
-			for (auto& i : ivec1) { DebugValue(i); }
+			RuntimeAssertTrue(ivec1.back() == 2);
 		}
 	}
 	DebugNewTitle("implace back")
@@ -184,6 +186,7 @@ int main()
 		vec.emplace_back(2, 3.5f);
 		vec.emplace_back(3, 4.5f);
 		vec.emplace_back(4, 5.5f);
+		//vec.emplace_back(5, "cc");
 		for (auto& it : vec)
 		{
 			DebugValue(it.a, it.b);
@@ -191,17 +194,74 @@ int main()
 	}
 	DebugNewTitle("insert ");
 	{
-		vector<int> ivec1(4, 1);
-		DebugValue(ivec1.size());
-		DebugValue(ivec1.capacity());
-		int c = 1;
-		for (auto& i : ivec1) { i = c++; }
-		for (auto& i : ivec1) { DebugValue(i); }
-		ivec1.insert(0, -1);
-		ivec1.insert(2, -1);
-		ivec1.insert(ivec1.size(), -1);
-		for (auto& i : ivec1) { DebugValue(i); }
+		DebugSubTitle("single item");
+		{
+			vector<int> ivec1(4, 1);
+			DebugValue(ivec1.size());
+			DebugValue(ivec1.capacity());
+			int c = 1;
+			for (auto& i : ivec1) { i = c++; }
+			RuntimeAssertTrue(ivec1[3] == 4);
+			ivec1.insert(0, -1);
+			RuntimeAssertTrue(ivec1[0] == -1);
+			ivec1.insert(ivec1.size() - 1, -1);
+			RuntimeAssertTrue(ivec1[ivec1.size() - 2] == -1);
+			ivec1.insert(ivec1.size(), -2);
+			RuntimeAssertTrue(ivec1[ivec1.size() - 1] == -2);
+		
+		}
+		DebugSubTitle("iterator insert");
+		{
+			vector<int> ivec1(4, 1);
+			ivec1.insert(ivec1.end(), -3);
+			RuntimeAssertTrue(ivec1[ivec1.size() - 2] == 1);
+			RuntimeAssertTrue(ivec1[ivec1.size() - 1] == -3);
+		}
+		DebugSubTitle("iterator-range-insert")
+		{
+			vector<int> ivec1(3, 2);
+			vector<int> ivec2(3, 1);
+			ivec1.insert(ivec1.begin() + 1, ivec2.begin(), ivec2.end());
+			RuntimeAssertTrue(ivec1[0] == 2);
+			RuntimeAssertTrue(ivec1[1] == 1);
+			RuntimeAssertTrue(ivec1[3] == 1);
+			RuntimeAssertTrue(ivec1[4] == 2);
+			RuntimeAssertTrue(ivec1.size()== 6);
+		}
+		DebugSubTitle("pos range");
+		{
+			vector<int> ivec1(4, 1);
+			vector<int> ivec2(3, 2);
+			ivec1.insert(1, ivec2.begin(), ivec2.end());
+			RuntimeAssertTrue(ivec1[0] == 1);
+			RuntimeAssertTrue(ivec1[1] == 2);
+			RuntimeAssertTrue(ivec1[3] == 2);
+			RuntimeAssertTrue(ivec1[4] == 1);
+			RuntimeAssertTrue(ivec1.size() == 7);
+			ivec1.insert(0, { -1,-1 });
+			RuntimeAssertTrue(ivec1[0] == -1);
+			RuntimeAssertTrue(ivec1.size() == 9);
+		}
+		
 	}
+	DebugNewTitle("erase");
+	{
+		vector<int> ivec1(5, 1);
+		for (int i = 0; i < ivec1.size(); ++i) ivec1[i] = i;
+		ivec1.erase(1, 3);
+		RuntimeAssertTrue(ivec1[0] == 0);
+		RuntimeAssertTrue(ivec1[1] == 3);
+		RuntimeAssertTrue(ivec1.size() == 3);
+		ivec1.erase(ivec1.begin());
+		RuntimeAssertTrue(ivec1.empty());
+	}
+	DebugNewTitle("clear");
+	{
+		vector<int> ivec1(5, 1);
+		ivec1.clear();
+		RuntimeAssertTrue(ivec1.empty());
+	}
+	
 
 	getchar();
 	return 0;

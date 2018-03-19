@@ -1,10 +1,11 @@
 #pragma once
 
-#include<ccdk/container/container_mudule.h>
+
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
+#include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/util/fill.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/copy.h>
@@ -14,6 +15,7 @@
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/algorithm/distance.h>
+#include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
 
@@ -22,7 +24,7 @@ using namespace ccdk::mpl;
 template<
 	typename T,
 	typename InceaseRatio = units::ratio<15, 10>,             /* 1.5X incease ratio*/
-	typename Size = uint32,                              
+	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T>
 >
 class vector : protected Alloc
@@ -63,10 +65,9 @@ public:
 		:content{ nullptr }, len{ 0 }, cap{ 0 } {}
 
 	/* fill*/
-	CCDK_FORCEINLINE explicit vector(size_type n, T const& t = T())
-	{
+	CCDK_FORCEINLINE explicit vector(size_type n, T const& t = T()){
 		ccdk_assert(n > 0);
-		if(n>0) allocate_fill(n, t);
+		if (n > 0) allocate_fill(n, t);
 	}
 
 	/* copy range */
@@ -74,20 +75,17 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>>
 	>
-		CCDK_FORCEINLINE explicit vector(InputIt begin, ptr::size_t n)
-	{
+	CCDK_FORCEINLINE vector(InputIt begin, ptr::size_t n){
 		ccdk_assert(n > 0);
 		if (n>0) allocate_copy(n, begin);
 	}
-
 
 	/* copy range */
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>> 
 	>
-	CCDK_FORCEINLINE explicit vector(InputIt begin, InputIt end)
-	{
+	CCDK_FORCEINLINE vector(InputIt begin, InputIt end){
 		ptr::size_t n = alg::distance(begin, end);
 		ccdk_assert(n > 0);
 		if(n>0) allocate_copy(n, begin);
@@ -197,34 +195,34 @@ public:
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator_type begin() noexcept{ 
-		ccdk_assert(content);  return content; 
+		return content;
 	}
 	CCDK_FORCEINLINE const_iterator_type cbegin() const noexcept {
-		ccdk_assert(content);  return content;
+		return content;
 	}
 	CCDK_FORCEINLINE reverse_iterator_type rbegin() noexcept {
 		ccdk_assert(content);  
-		return reverse_iterator_type{content+len-1};
+		return {content+len-1};
 	}
 	CCDK_FORCEINLINE const_reverse_iterator_type crbegin() const noexcept {
 		ccdk_assert(content);  
-		return const_reverse_iterator_type{ content + len-1 };
+		return { content + len-1 };
 	}
 	CCDK_FORCEINLINE iterator_type end() noexcept {
-		ccdk_assert(content && len>0); 
-		return content+ len;
+		return content + len ;
 	}
 	CCDK_FORCEINLINE const_iterator_type cend() const noexcept {
-		ccdk_assert(content && len > 0); 
 		return content + len;
 	}
+
 	CCDK_FORCEINLINE reverse_iterator_type rend() noexcept {
 		ccdk_assert(content&& len > 0); 
-		return reverse_iterator_type{ content -1 };
+		return { content -1 };
 	}
+
 	CCDK_FORCEINLINE const_reverse_iterator_type crend() const noexcept {
 		ccdk_assert(content&& len > 0);  
-		return const_reverse_iterator_type{ content-1 };
+		return { content-1 };
 	}
 
 	/* access */
@@ -251,7 +249,8 @@ public:
 
 	/* inplace construct with P, Args... */
 	template<
-		typename P, typename ... Args
+		typename P, typename ... Args,
+		typename  = check_t< has_constructor< T, P, Args...>>
 	>
 	CCDK_FORCEINLINE this_type& emplace_back(P&& p, Args&& ... args){
 		if (len == cap) { reallocate_move(); }
@@ -290,18 +289,48 @@ public:
 	}
 
 	/* inplace-construct at pos( [0,len] ) */
-	template< typename P, typename... Args>
-	CCDK_FORCEINLINE this_type& emplace(size_type pos, P&& t, Args&&... args){
-		ccdk_assert(pos <= len); 
-		if (pos <= len) { emplace_impl(pos, pos+1, util::forward<Args>(args)...); }
+	template< 
+		typename P, typename... Args,
+		typename = check_t< has_constructor<T, P, Args...>>
+	>
+	CCDK_FORCEINLINE this_type& emplace(size_type pos, P&& p, Args&&... args) {
+		ccdk_assert(pos <= len);
+		if (pos <= len) { emplace_impl(pos, pos + 1, util::forward<P>(p), util::forward<Args>(args)...); }
 		return *this;
 	}
 
-	/* insert */
-	CCDK_FORCEINLINE this_type& insert(size_type pos, T const& t) { return emplace(pos, t); }
+	/* inplace-construct at pos( [0,len] ) */
+	template<
+		typename Iterator,
+		typename P,  typename... Args,
+		typename = check_t<is_pointer_iterator<T, Iterator> >, // exclude comflict with size_type
+		typename = check_t< has_constructor<T, P, Args...>>
+	>
+	CCDK_FORCEINLINE this_type& emplace(Iterator it, P&& p, Args&&... args) {
+		return emplace(it - content, util::forward<P>(p), util::forward<Args>(args)...);
+	}
 
+	/* insert, pos copy */
+	CCDK_FORCEINLINE this_type& insert(size_type pos, T const& t) { return emplace(pos, t);  }
+
+	/* insert, iterator copy*/
+	template<
+		typename Iterator,
+		typename = check_t<is_pointer_iterator<T, Iterator> > // exclude comflict with size_type
+	>
+	CCDK_FORCEINLINE this_type& insert(Iterator it, T const& t){  return emplace(it - content, t); }
+
+	/* insert, pos move */
 	CCDK_FORCEINLINE this_type& insert(size_type pos, T&& t) { return emplace(pos, util::move(t)); }
 
+	/* insert, iterator move*/
+	template<
+		typename Iterator, 
+		typename = check_t<is_pointer_iterator<T,Iterator> > // exclude comflict with size_type
+	>
+	CCDK_FORCEINLINE this_type& insert(Iterator it, T&& t) { return emplace(it - content, util::move(t)); }
+
+	/* insert, pos item-count*/
 	template<
 		typename InputIt,
 		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>> 
@@ -310,6 +339,18 @@ public:
 		return insert_impl(pos, pos + n, begin);
 	}
 
+	/* insert, iterator item-count*/
+	template<
+		typename Iterator,
+		typename InputIt,
+		typename = check_t<is_pointer_iterator<T, Iterator> >, // exclude comflict with size_type
+		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>> 
+	>
+	CCDK_FORCEINLINE this_type& insert(Iterator it, InputIt begin, size_type n) {
+		return insert_impl(it -content, it - content + n, begin);
+	}
+
+	/* insert, pos range */
 	template<
 		typename InputIt, 
 		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>> 
@@ -318,14 +359,35 @@ public:
 		return insert(pos, begin, alg::distance(begin, end));
 	}
 
+	/* insert, iterator range */
+	template<
+		typename Iterator,
+		typename InputIt,
+		typename = check_t<is_pointer_iterator<T, Iterator> >, // exclude comflict with size_type
+		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>>
+	>
+		CCDK_FORCEINLINE this_type& insert(Iterator it, InputIt begin, InputIt end) {
+		return insert( it - content, begin, alg::distance(begin, end));
+	}
+
+	/* insert, pos initialize_list */
 	CCDK_FORCEINLINE this_type& insert(size_type pos, std::initializer_list<T> const& lst)
 	{
 		return insert(pos, lst.begin(), lst.size());
 	}
 
-	/* erase */
-	CCDK_FORCEINLINE this_type& erase(size_type start, size_type end)
+	/* insert, iterator initialize_list */
+	template<
+		typename Iterator,
+		typename = check_t<is_pointer_iterator<T, Iterator> > // exclude comflict with size_type
+	>
+	CCDK_FORCEINLINE this_type& insert(Iterator it, std::initializer_list<T> const& lst)
 	{
+		return insert(it - content, lst.begin(), lst.size());
+	}
+
+	/* erase */
+	CCDK_FORCEINLINE this_type& erase(size_type start, size_type end) {
 		ccdk_assert(start < end && end <= len);
 		size_type n = end - start;
 		if (n>0 && end <= len) {
@@ -336,15 +398,32 @@ public:
 		return *this;
 	}
 
+	/* erase [start, len)*/
+	CCDK_FORCEINLINE this_type& erase(size_type start) { return erase(start, len); }
+
+	/* erase iterator [begin, end())*/
+	template<
+		typename Iterator,
+		typename = check_t<is_pointer_iterator<T, Iterator> > // exclude comflict with size_type
+	>
+	CCDK_FORCEINLINE this_type& erase(Iterator begin) { return erase(begin-content, len); }
+
+	/* erase iterator [begin, end())*/
+	template<
+		typename Iterator,
+		typename = check_t<is_pointer_iterator<T, Iterator> > // exclude comflict with size_type
+	>
+	CCDK_FORCEINLINE this_type& erase(Iterator begin, Iterator end) {
+		return erase(begin - content, end-content); 
+	}
+
 	/* clear, destruct all objects */
 	CCDK_FORCEINLINE this_type& clear()
 	{
-		util::destruct(content, len);
+		util::destruct_n(content, len);
 		len = 0;
+		return *this;
 	}
-
-	/* erase [begin, end) */
-	
 
 private:
 	/* reset but not destruct memory */
@@ -395,9 +474,7 @@ private:
 
 	/* alloc n elements */
 	CCDK_FORCEINLINE T* allocate_cap(size_type n) {
-		T* memory = allocate_type::allocate(*this,n);
-		if (!memory) throw std::bad_cast{};
-		return memory;
+		return allocate_type::allocate(*this,n);
 	}
 
 	CCDK_FORCEINLINE void allocate_len(size_type n)
@@ -449,21 +526,22 @@ private:
 		else move content[start, len) backward
 	*/
 	template<typename InputIt>
-	void insert_impl(size_type start, size_type end, InputIt begin)
+	this_type& insert_impl(size_type start, size_type end, InputIt begin)
 	{
-		if (end <= start || start > len) return;
+		ccdk_assert(end > start && start <= len);
+		if (end <= start || start > len) return *this;
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap)
 		{
-			size_type new_cap = prealloc_size(new_len);
+			size_type new_cap = precompute_cap(new_len);
 			T* memory = allocate_cap(new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_copy_n(memory + start, begin, n), /* may throw */
 				allocate_type::deallocate(*this,memory,new_cap)
 			);
 			split_copy(memory, start, n);
-			allocate_type::deallocate(content);
+			allocate_type::deallocate(*this, content,cap);
 			content = memory;
 			cap = new_cap;
 		}
@@ -475,6 +553,7 @@ private:
 			util::construct_copy_n(content + start, begin, n);
 		}
 		len = new_len;
+		return *this;
 	}
 
 	/* if capacity is not enough, realloc big enough memory to hold emplace construct data,

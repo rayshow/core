@@ -870,5 +870,6 @@
     <ClInclude Include="algorithm\algorithm_mudole.h" />
     <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\string.h" />
+    <ClInclude Include="container\slist_node.h" />
   </ItemGroup>
 </Project>

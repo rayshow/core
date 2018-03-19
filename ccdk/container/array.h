@@ -16,18 +16,16 @@ template<typename T, uint32 N>
 class array
 {
 public:
-	typedef T                                          value_type;
-	typedef T*                                         pointer_type;
-	typedef T const*                                   const_pointer_type;
-	typedef T&						                   reference_type;
-	typedef T const&                                   const_reference_type;
-	typedef array                                      this_type;
-	typedef filter_t<T>                                filter_type;
-	typedef filter_view_t<this_type>                   view_type;
-	typedef it::iterator<T*, this_type>                iterator_type;
-	typedef it::const_iterator<T*, this_type>		   const_iterator_type;
-	typedef it::reverse_iterator<T*, this_type>        reverse_iterator_type;
-	typedef it::const_reverse_iterator<T*, this_type>  const_reverse_iterator_type;
+	typedef T                               value_type;
+	typedef T*                              pointer_type;
+	typedef T const*                        const_pointer_type;
+	typedef T&						        reference_type;
+	typedef T const&                        const_reference_type;
+	typedef array                           this_type;
+	typedef filter_t<T>                     filter_type;
+	typedef filter_view_t<this_type>        view_type;
+	typedef it::iterator<T*>                iterator_type;
+	typedef it::reverse_iterator<T*>        reverse_iterator_type;
 private:
 	T       content[N];
 	uint32  length;

@@ -21,20 +21,14 @@ struct forward_iterator_category : input_iterator_category {};
 struct biward_iterator_category : forward_iterator_category {};
 
 /* random iterator satisfies: comparable, subscriptable, jumpable */
-struct random_iterator_category : forward_iterator_category {};
-
+struct random_iterator_category : biward_iterator_category {};
 
 template<typename... Args>
 class iterator;
 
 template<typename... Args>
-class const_iterator;
-
-template<typename... Args>
 class reverse_iterator;
 
-template<typename... Args>
-class const_reverse_iterator;
 
 
 

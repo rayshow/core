@@ -28,7 +28,7 @@ namespace alg_impl
 template<typename It>
 CCDK_FORCEINLINE ptr::size_t distance(It begin, It end) noexcept
 {
-	return alg_impl::distance_impl(begin, end, iterator_categroy_c<It>);
+	return alg_impl::distance_impl(begin, end, iterator_category_c<It>);
 }
 
 ccdk_namespace_alg_end
