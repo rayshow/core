@@ -2,6 +2,7 @@
 //#include<ccdk/container/slist.h>
 #include<ccdk/container/vector.h>
 #include<stdio.h>
+#include<list>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -34,6 +35,7 @@ int main()
 	int* c = util::ut_impl::construct_copy_n_impl(b, a, 2, opt_lv2{});
 	DebugValue(c - b);
 
+	std::list<int>;
 
 
 	getchar();

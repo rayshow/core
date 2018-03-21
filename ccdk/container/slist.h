@@ -196,10 +196,20 @@ private:
 
 	void destroy_content() {
 		util::destruct_n(begin(), len);
-
+		node_type* it = head;
+		node_type* next = nullptr;
+		while (it) {
+			ptr::size_t count = 1;
+			for (; it && it->next - it == sizeof(node_type); it = it->next; ++count);
+			next = it->next;
+			allocate_type::deallocate(*this, it, count);
+			it = next;
+		}
+		head = tail = nullptr;
+		len = 0;
 	}
 
-	void link_init_memory(size_type n, node_type* memory) const noexcept {
+	void link_block_memory(size_type n, node_type* memory) const noexcept {
 		for (size_type i = 0; i < n - 1; ++i) (memory + i)->next = (memory + i + 1);
 	}
 
@@ -210,7 +220,7 @@ private:
 		if (n > 0) {
 			memory = allocate_type::allocate(*this, n);
 			util::construct_copy_n(memory, begin, n);
-			link_init_memory(n, memory);
+			link_block_memory(n, memory);
 		}
 		return memory;
 	}
