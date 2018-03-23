@@ -78,6 +78,7 @@
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\filter\filter_view.h" />
     <ClInclude Include="container\slist.h" />
+    <ClInclude Include="memory\list_allocate_adapter.h" />
     <ClInclude Include="container\slist_node.h" />
     <ClInclude Include="container\vector.h" />
     <ClInclude Include="debug_type.hpp" />

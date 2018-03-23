@@ -1,6 +1,7 @@
 
 //#include<ccdk/container/slist.h>
 #include<ccdk/container/vector.h>
+#include<ccdk/memory/list_allocate_adapter.h>
 #include<stdio.h>
 #include<list>
 
@@ -25,6 +26,11 @@ struct implace_test {
 	}
 };
 
+struct node {
+	int a;
+	node* next;
+};
+
 
 int main()
 {
@@ -35,8 +41,8 @@ int main()
 	int* c = util::ut_impl::construct_copy_n_impl(b, a, 2, opt_lv2{});
 	DebugValue(c - b);
 
-	std::list<int>;
-
+	int v = 0;
+	DebugValue(v = mem::has_valid_next<node>::value);
 
 	getchar();
 	return 0;

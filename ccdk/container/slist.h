@@ -9,8 +9,9 @@
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/iterator_fwd.h>
+#include<ccdk/mpl/units/ratio.h>
 #include<ccdk/memory/simple_new_allocator.h>
-#include<ccdk/memory/allocator_traits.h>
+#include<ccdk/memory/list_allocate_adapter.h>
 
 #include<ccdk/algorithm/advance.h>
 #include<ccdk/algorithm/distance.h>
@@ -21,13 +22,20 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-/* single list, only length and head */
+/* circle lazy single list:
+   delete/pop node will not free/delete its memory, but link to tail->next to keep a cache
+		and avoid frequency new/delete
+   push/insert node will first utilize cached memory after tail
+   shrink_to_fit will remain len * InceaseRatio nodes, free cap - len * InceaseRatio nodes
+   shrink_to_len will remain len nodes, free the other cap - len nodes
+*/
 template<
 	typename T, 
 	typename Size = uint32,
+	typename InceaseRatio = units::ratio<15, 10>,     /* preallocate 0.5  more times node space */
 	typename Alloc = mem::simple_new_allocator< T >,
 	typename Node = slist_node<T>
-	>
+>
 class slist: protected Alloc::template rebind<Node>
 {
 public:
@@ -43,7 +51,7 @@ public:
 	typedef T const&             const_reference_type;
 	typedef Size                 size_type;
 	typedef ptr::diff_t          difference_type;
-	typedef mem::allocator_traits< typename Alloc::template rebind<Node> > allocate_type;
+	typedef mem::list_allocate_adapter< typename Alloc::template rebind<Node>> allocate_type;
 
 	/*iterator*/
 	typedef iterator< node_type>       iterator_type;
@@ -53,17 +61,20 @@ public:
 	friend class slist;
 
 private:
-	node_type* head;
-	node_type* tail;
-	size_type  len;
+	node_type* head; /* first useful node of list, use for push_front/ pop_front */
+	node_type* tail; /* last  useful node of list, use for push_back  */
+	size_type  len;  /* length of [head, tail] */
+	size_type  cap;  /* keep cap - len nodes as cache to avoid allocate  */
 	
 public:
 	/*default */
-	CCDK_FORCEINLINE constexpr slist() noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
-	CCDK_FORCEINLINE constexpr slist(ptr::nullptr_t) noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
+	CCDK_FORCEINLINE constexpr slist() noexcept 
+		: head{ nullptr }, tail{ nullptr }, len{ 0 }, cap{ 0 } {}
+	CCDK_FORCEINLINE constexpr slist(ptr::nullptr_t) noexcept 
+		: head{ nullptr }, tail{ nullptr }, len{ 0 }, cap{ 0 } {}
 
 	/* fill n */
-	CCDK_FORCEINLINE constexpr slist(size_type n, T const& t = T()) { allocate_fill(n, t); }
+	CCDK_FORCEINLINE slist(size_type n, T const& t = T()) { allocate_fill(n, t); }
 
 	/* copy range [begin, begin+n)*/
 	template<
@@ -226,7 +237,7 @@ private:
 	}
 
 	T* allocate_fill_link(size_type n, T const& t) {
-		node_type* memor y = allocate_type::allocate(*this, n);
+		node_type* memory = allocate_type::allocate(*this, n);
 		util::construct_n<node_type>(memory, n, t);
 		link_init_memory(n, memory);
 		return memory;
@@ -236,6 +247,7 @@ private:
 		head = memory;
 		tail = tail;
 		len = n;
+		cap = n;
 	}
 
 

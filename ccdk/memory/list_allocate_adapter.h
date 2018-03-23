@@ -1,0 +1,111 @@
+#pragma once
+
+#include<ccdk/mpl/base/compile_check.h>
+#include<ccdk/mpl/function/operator.h>
+#include<ccdk/mpl/type_traits/declval.h>
+
+#include<ccdk/memory/memory_module.h>
+#include<ccdk/memory/allocator_traits.h>
+
+ccdk_namespace_memory_start
+
+using namespace ccdk::mpl;
+
+
+/* test whether T.next is valid */
+template<typename T>
+struct has_attribute_next
+{
+	template<typename P, typename = decltype( makeval<P>().next )>
+	static constexpr bool sfinae(int) { return true; }
+
+	template<typename P>
+	static constexpr bool sfinae(...) { return false; }
+
+	constexpr static bool value = sfinae<T>(0);
+};
+
+/* test whether T.next is T*  */
+template<typename T>
+struct next_to_same_type :is_same< T*, decltype(makeval<T>().next)> {};
+
+template<typename T>
+struct has_valid_next: 
+	and_< bool_<has_attribute_next<T>::value>, 
+		  next_to_same_type<T> > {};
+
+/*		list adaptor of allocator: try to minimize memory fragment
+	always allocate/deallocate continuous memory.
+		when allocate, if allocate n * sizeof(T)  failed , 
+	try allocate small frag memory like (n-1) * sizeof(T) ... sizeof(T)
+		when deallocate, try detech continuous x * sizeof(T) memory and 
+	recycle
+*/
+template<typename Alloc>
+class list_allocate_adapter
+{
+public:
+	typedef allocator_traits<Alloc> allocator;
+	typedef typename allocator::value_type value_type;
+
+	template<typename U>
+	using rebind = list_allocate_adapter<U>;
+
+	/* value_type.next must be valid */
+	template<typename = check_t< has_valid_next<value_type>>>
+	static value_type* allocate(Alloc const& alloc, ptr::size_t n)
+	{
+		ccdk_assert(n > 0);
+		if (n == 0) return nullptr;
+
+		ptr::size_t not_allocated_size = n;
+		ptr::size_t current_allocate_size = n;
+		value_type* head = nullptr;
+		value_type* tail = nullptr;
+		while (not_allocated_size >0 ) {
+			value_type* memory = nullptr;
+			try {
+				memory = allocator::allocate(alloc, current_allocate_size);
+			} catch (...) {
+				// allocate failed, try smaller size
+				--current_allocate_size;
+				memory = nullptr;
+			}
+			if (memory) {
+				tail = memory + current_allocate_size - 1;
+				tail->next = head;
+				head = memory;
+				not_allocated_size -= current_allocate_size;
+				current_allocate_size = fn::min(current_allocate_size, not_allocated_size);
+			}
+		}
+
+		if (not_allocated_size > 0) {
+			deallocate(alloc, head, n - not_allocated_size);
+			throw std::bad_alloc{};    //no enough memory to alloc
+		}
+		return head;
+	}
+
+	/* value_type.next must be valid */
+	template<typename = check_t< has_valid_next<value_type>>>
+	static void deallocate(Alloc const& alloc, value_type* pointer, ptr::size_t n) noexcept {
+		ccdk_assert(pointer && n > 0);
+		if (!pointer || n == 0) return;
+
+		ptr::size_t deallocated_size = 0;	
+		while (pointer) {
+			ptr::size_t continous_len = 1;
+			value_type* head = pointer;
+			for (; pointer->next && pointer->next == pointer + 1; ++pointer, ++continous_len);
+			pointer = pointer->next;
+			allocator::deallocate(alloc, head, continous_len);
+			deallocated_size += continous_len;
+		}
+		ccdk_assert(deallocated_size == n);
+	}
+};
+
+
+
+ccdk_namespace_memory_end

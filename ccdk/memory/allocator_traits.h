@@ -55,7 +55,7 @@ public:
 	CCDK_FORCEINLINE static void deallocate(allocator_type& alloc, pointer& p, size_type n) 
 	{
 		sizeof(*p); /* check imcomplete type */
-		if(p!=nullptr) alloc.deallocate(p,n); 
+		if(p) alloc.deallocate(p,n); 
 		p = nullptr;
 	}
 

@@ -872,5 +872,6 @@
     <ClInclude Include="text\string.h" />
     <ClInclude Include="container\slist_node.h" />
     <ClInclude Include="algorithm\advance.h" />
+    <ClInclude Include="memory\list_allocate_adapter.h" />
   </ItemGroup>
 </Project>

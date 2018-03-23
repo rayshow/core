@@ -32,7 +32,8 @@ private:
 
 	/* copy compile time c-array to content */
 	template<uint32... indice>
-	CCDK_FORCEINLINE constexpr array(T const* arr, mpl::val_pack<uint32, indice...>, uint32 inLength) : content{ arr[indice]... }, length{ inLength } {}
+	CCDK_FORCEINLINE constexpr array(T const* arr, mpl::val_pack<uint32, indice...>, uint32 inLength)
+		: content{ arr[indice]... }, length{ inLength } {}
 
 public:
 	CCDK_FORCEINLINE constexpr array() : length(0) {}
