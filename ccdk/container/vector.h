@@ -34,7 +34,7 @@ public:
 	typedef T			 value_type;
 	typedef Size		 size_type;
 	typedef ptr::diff_t  different_type;
-	typedef InceaseRatio incease_ratio;
+	typedef InceaseRatio increase_ratio;
 	typedef mem::allocator_traits<Alloc> allocate_type;
 
 	/* iterator */
@@ -189,7 +189,9 @@ public:
 
 	/* attribute*/
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
-	CCDK_FORCEINLINE size_type max_size() const noexcept { return size_type(-1); }
+	CCDK_FORCEINLINE size_type max_size() const noexcept { 
+		return allocate_type::max_allocate_size();
+	}
 	CCDK_FORCEINLINE size_type capacity() const noexcept { return cap; }
 	CCDK_FORCEINLINE bool empty() const noexcept { return len == 0; }
 
@@ -449,63 +451,60 @@ private:
 		len = n;
 	}
 
-	/* if n> cap create new memory and copy, else just copy  */
+	/*
+		if content big enough to hold n elements, just copy [begin, begin+n) to it
+		else allocate new big enough memory and swap with it
+	*/
 	template<typename InputIt>
 	CCDK_FORCEINLINE void copy_or_allocate_copy(InputIt begin, size_type n) {
 		if (n <= cap) range_copy(begin, n);
 		else vector{ begin, n }.swap(*this);
 	}
 
+	/*
+		if content big enough to hold n elements, just fill it
+		else allocate new big enough memory and swap with it
+	*/
 	CCDK_FORCEINLINE void fill_or_allocate_fill(T const& t, size_type n) {
 		if (n <= cap) range_fill(t, n); 
 		else vector{ n,t }.swap(*this); 
 	}
 
-	/* pre-compute allocate size */
-	CCDK_FORCEINLINE size_type precompute_cap(size_type n) {
-		size_type actual_size = incease_ratio::multiply(n);
-		if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};
-		return actual_size;
-	}
-
-	/* alloc n elements */
-	CCDK_FORCEINLINE T* allocate_cap(size_type n) {
-		return allocate_type::allocate(*this,n);
-	}
-
-	CCDK_FORCEINLINE void allocate_len(size_type n) {
-		size_type capcity = precompute_cap(n);
-		content = allocate_cap(capcity);
-		len = n;
-		cap = capcity;
-	}
-
+	/*
+		allocate n*increase size memory to content,
+		then fill [begin, begin+n) with v
+	*/
 	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v ) {
-		allocate_len(n);
+		ccdk_increase_allocate3(n,content, cap, len);
 		util::construct_fill_n(content, v, n);
 	}
 
+	/*
+		allocate n*increase size memory to content, 
+		then copy[begin, begin+n) to [content, content+n)
+	*/
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin){
-		allocate_len(n);
+		ccdk_increase_allocate3(n, content, cap, len);
 		util::construct_copy_n(content, begin, n);
 	}
 
 
-	/*  split copy content[0, pos) to memory[0,pos),
-		content[pos, len) to memory[pos+n, len+n)
+	/*  
+		split copy [content, content+pos) to [content,content+pos),
+		[content+pos, content+len) to [memory+pos+n, memory+len+n)
 	*/
 	CCDK_FORCEINLINE void split_copy(T* memory, size_type pos, size_type n) noexcept{
 		util::construct_move_n(memory, content, pos);
 		util::construct_move_n(memory + pos + n, content + pos, len - pos);
 	}
 
-	/* allocate a new memory, if success 
-	   move [content, content+n) to this memory, free old content
+	/*
+		allocate a new memory, if success 
+		move [content, content+n) to this [memory, memory+n), free old content
 	*/
 	void reallocate_move() {
-		size_type new_cap = precompute_cap(len);
-		T* memory = allocate_cap(new_cap);
+		ccdk_increase_allocate2(len, T* memory, size_type new_cap);
 		util::construct_move_n(memory, content, len);
 		util::destruct_n(content, len);
 		allocate_type::deallocate(*this, content, cap);
@@ -513,9 +512,11 @@ private:
 		cap = new_cap;
 	}
 
-	/* if capacity is not enough, realloc big enough memory to hold insert data,
-		memory[start, end) stay empty for external data.
-		else move content[start, len) backward
+	/* 
+		if capacity is not big enough, realloc big enough memory to 
+		hold old data and insert data, [memory+start, memory+end) stay
+		empty for insert data.
+		else move [content+start, content+len) backward.
 	*/
 	template<typename InputIt>
 	this_type& insert_impl(size_type start, size_type end, InputIt begin) {
@@ -524,8 +525,7 @@ private:
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap) {
-			size_type new_cap = precompute_cap(new_len);
-			T* memory = allocate_cap(new_cap);
+			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_copy_n(memory + start, begin, n), /* may throw */
 				allocate_type::deallocate(*this,memory,new_cap)
@@ -545,9 +545,10 @@ private:
 		return *this;
 	}
 
-	/* if capacity is not enough, realloc big enough memory to hold emplace construct data,
-	memory[start, end) stay empty for external data to copy in.
-	else move content[start, len) backward
+	/* 
+		if capacity is not enough, realloc big enough memory to hold emplace construct data,
+		memory[start, end) stay empty for external data to copy in.
+		else move content[start, len) backward
 	*/
 	template<typename... Args>
 	void emplace_impl(size_type start, size_type end, Args&&... args) {
@@ -555,8 +556,7 @@ private:
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap){
-			size_type new_cap = precompute_cap(new_len);
-			T* memory = allocate_cap(new_cap);
+			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_n<T>(memory + start, n, util::forward<Args>(args)...),
 				allocate_type::deallocate(*this, memory, new_cap)

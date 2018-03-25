@@ -9,40 +9,29 @@ using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::ct;
 
-struct no_trivial {
-	int a = 0;
-
-	no_trivial() { DebugValue("no_trivial construct"); }
-	~no_trivial() { DebugValue("no_trivial destruct"); }
+template<typename T>
+struct slist_node
+{
+	T              data;
+	slist_node<T>* next;
+	explicit slist_node(T const& t) :data{ t }, next{ nullptr } {}
+	explicit slist_node(T&& t) :data{ util::move(t) }, next{ nullptr } {}
 };
 
-struct implace_test {
+struct A {
+
+	A() { DebugValue("default ctor"); }
+	A(int a):a { a } { DebugValue("1 ctor"); }
+
 	int a;
-	float b;
-
-	implace_test() :a{}, b{} { DebugValue("no-parameter constructor "); }
-	implace_test(int a, float b) :a{ a }, b{ b } {
-		DebugValue("parameter constructor ");
-	}
 };
-
-struct node {
-	int a;
-	node* next;
-};
-
 
 int main()
 {
-	int a[] = { 1,2,3,4,5,6,7 };
-	int b[] = { 0,0,0,0,0,0,0 };
-	//int* c= static_cast<int*>(memcpy(b, a, 2))+2;
-	
-	int* c = util::ut_impl::construct_copy_n_impl(b, a, 2, opt_lv2{});
-	DebugValue(c - b);
-
-	int v = 0;
-	DebugValue(v = mem::has_valid_next<node>::value);
+	mem::simple_new_allocator<slist_node<A>> alloc;
+	slist_node<A> *mem = alloc.allocate(4);
+	construct<A>(mem, 1);
+	DebugValue(mem->data.a);
 
 	getchar();
 	return 0;

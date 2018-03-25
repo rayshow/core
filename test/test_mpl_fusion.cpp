@@ -16,11 +16,11 @@
 #include<ccdk/mpl/fusion/varient.h>
 #include<ccdk/type.h>
 #include<ccdk/mpl/fusion/imap.h>
-#include<ccdk/string/string_literial.h>
+#include<ccdk/text/string_literial.h>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
-using namespace ccdk::str;
+using namespace ccdk::txt;
 using namespace ccdk::mpl::literals;
 using namespace ccdk::mpl::fs;
 
@@ -51,6 +51,23 @@ void test_ref(Args&&... args)
 
 int main()
 {
+
+	DebugNewTitle("test pair and tie");
+	{
+		int a = 2;
+		float b = 2.3f;
+		auto pair = make_pair(a,b);
+		int c = 0;
+		float d=0;
+		tie(c, d) = pair;
+		RuntimeAssertTrue(c == 2);
+		RuntimeAssertTrue(d == 2.3f);
+		tie(c,d) = make_pair(1, 3.4f);
+		RuntimeAssertTrue(c == 1);
+		RuntimeAssertTrue(d == 3.4f);
+	}
+	
+
 	DebugNewTitle("any");
 	any any1{ 3 };
 	RuntimeAssertTrue(any1.to<int>() == 3);

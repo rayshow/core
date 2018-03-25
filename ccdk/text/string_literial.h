@@ -28,10 +28,12 @@ using namespace mpl;
 		typedef Char const*											const_pointer_type;
 		typedef Char&												reference_type;
 		typedef Char const&                                         const_reference_type;
-		typedef it::iterator<Char*, string_literial>                iterator;
-		typedef it::const_iterator<Char*, string_literial>          const_iterator;
-		typedef it::reverse_iterator<Char*, string_literial>        reverse_iterator;
-		typedef it::const_reverse_iterator<Char*, string_literial>  const_reverse_iterator;
+
+
+		typedef it::iterator<Char*>                iterator;
+		typedef it::iterator<Char const*>          const_iterator;
+		typedef it::reverse_iterator<Char*>        reverse_iterator;
+		typedef it::reverse_iterator<Char const*>  const_reverse_iterator;
 
 		static constexpr uint32   npos = uint32(-1);
 		static constexpr uint32   max_pos = uint32(-2);

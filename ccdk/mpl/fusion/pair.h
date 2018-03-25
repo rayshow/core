@@ -12,6 +12,20 @@
 
 ccdk_namespace_mpl_fs_start
 
+/* normal pair */
+template<typename First, typename Second>
+struct pair
+{
+	First  first;
+	Second second;
+};
+
+/* make normal pair */
+template<typename T1, typename T2>
+auto make_pair(T1&& t1, T2&& t2) { return pair<T1, T2>{t1, t2}; }
+
+
+
 /* index value pair */
 template<uint32 Key, typename T>
 struct ipair
@@ -44,6 +58,7 @@ struct ipair
 	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
 	CCDK_FORCEINLINE void swap(ipair<Key2, T2>& other) { using namespace util; swap(value, other.value); }
 
+
 };
 
 
@@ -71,6 +86,8 @@ struct irpair
 	T& value;
 
 	CCDK_FORCEINLINE constexpr irpair(T&& u) : value{ u } { }
+
+
 };
 
 
@@ -176,18 +193,28 @@ CCDK_FORCEINLINE void swap(cpair<T1, U1>& lh, cpair<T2, U2>& rh) noexcept { lh.s
 template<typename T1, typename T2, typename U1, typename U2, typename = check_t< is_compatible<T1, T2>>, typename = check_t< is_compatible<U1, U2>> >
 CCDK_FORCEINLINE bool operator==(cpair<T1, U1>& lh, cpair<T2, U2>& rh) noexcept { lh.first() == rh.first() && lh.second() == rh.second(); }
 
-
-/* normal pair */
 template<typename First, typename Second>
-struct pair
+struct rpair
 {
-	First  first;
-	Second second;
+	First&  first;
+	Second& second;
+
+	template<typename T1, typename T2>
+	void operator = (pair<T1, T2> const& p) {
+		DebugValue("copy");
+		first = p.first;
+		second = p.second;
+	}
+
+	template<typename T1, typename T2>
+	void operator = (pair<T1, T2>&& p) {
+		DebugValue("move");
+		first = util::move(p.first);
+		second = util::move(p.second);
+	}
 };
 
-/* make normal pair */
 template<typename T1, typename T2>
-auto make_pair(T1&& t1, T2&& t2) { return pair<T1, T2>{t1, t2}; }
-
+rpair<T1, T2> tie(T1& t1, T2& t2) { return { t1, t2 }; }
 
 ccdk_namespace_mpl_fs_end

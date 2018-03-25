@@ -24,6 +24,23 @@ struct get_diff_type { typedef typename T::different_type type; };
 template<typename T> struct get_diff_type<T, false> { typedef ptr::diff_t type; };
 
 /*
+	allocate memory of n * increase_ratio 
+*/
+#define ccdk_increase_allocate1(n, ct)                                    \
+	size_type actual_size = increase_ratio::multiply(n);                  \
+	if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};    \
+	ct = allocate_type::allocate(*this, actual_size);	                  
+
+#define ccdk_increase_allocate2(n, ct, cp)                                \
+	ccdk_increase_allocate1(n,ct)                                         \
+	cp = actual_size;
+
+#define ccdk_increase_allocate3(n, ct, cp, ln)                            \
+	ccdk_increase_allocate2(n,ct,cp)                                      \
+	ln = n;                                                               
+
+
+/*
 	uniform interface between user and allocator
 */
 template<typename Alloc>
@@ -41,25 +58,24 @@ public:
 	template<typename P>
 	using rebind = typename Alloc::template rebind<P>;
 
-	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) 
-	{
+	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) {
 		if (n == 0) return nullptr;
 		return static_cast<pointer>(alloc.allocate(n)); 
 	}
-	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n, const void* hint)
-	{
+	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n, const void* hint){
 		if (n == 0) return nullptr;
 		return static_cast<pointer>(alloc.allocate(n, hint)); 
 	}
 
-	CCDK_FORCEINLINE static void deallocate(allocator_type& alloc, pointer& p, size_type n) 
-	{
+	CCDK_FORCEINLINE static void deallocate(allocator_type& alloc, pointer& p, size_type n) {
 		sizeof(*p); /* check imcomplete type */
 		if(p) alloc.deallocate(p,n); 
 		p = nullptr;
 	}
 
-	CCDK_FORCEINLINE static constexpr size_type max_allocate_size() noexcept { return size_type(-1) / sizeof(value_type); }
+	CCDK_FORCEINLINE static constexpr size_type max_allocate_size() noexcept { 
+		return size_type(-1) / sizeof(value_type); 
+	}
 };
 
 

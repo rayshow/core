@@ -3,6 +3,7 @@
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/type_traits/declval.h>
+#include<ccdk/mpl/fusion/pair.h>
 
 #include<ccdk/memory/memory_module.h>
 #include<ccdk/memory/allocator_traits.h>
@@ -30,9 +31,19 @@ template<typename T>
 struct next_to_same_type :is_same< T*, decltype(makeval<T>().next)> {};
 
 template<typename T>
-struct has_valid_next: 
-	and_< bool_<has_attribute_next<T>::value>, 
-		  next_to_same_type<T> > {};
+struct has_valid_next :
+	and_< bool_<has_attribute_next<T>::value>,
+	next_to_same_type<T> > {};
+
+#define ccdk_increase_allocate_lst3(n, head,tail,cap)                     \
+	size_type actual_size = increase_ratio::multiply(n);                  \
+	if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};    \
+	tie(head,tail) = allocate_type::allocate(*this, actual_size);         \
+	cap = actual_size;
+
+#define ccdk_increase_allocate_lst4(n, head,tail,cap, len)                \
+	ccdk_increase_allocate_lst3(n,head,tail,cap)                          \
+	len = n;	
 
 /*		list adaptor of allocator: try to minimize memory fragment
 	always allocate/deallocate continuous memory.
@@ -47,13 +58,21 @@ class list_allocate_adapter
 public:
 	typedef allocator_traits<Alloc> allocator;
 	typedef typename allocator::value_type value_type;
+	typedef typename allocator::size_type  size_type;
 
 	template<typename U>
 	using rebind = list_allocate_adapter<U>;
 
+	static auto link_memory(value_type* memory, ptr::size_t n)
+	{
+		for (ptr::size_t i = 0; i < n - 1; ++i) {
+			(memory + i)->next = (memory + i + 1);
+		}
+	}
+
 	/* value_type.next must be valid */
 	template<typename = check_t< has_valid_next<value_type>>>
-	static value_type* allocate(Alloc const& alloc, ptr::size_t n)
+	static auto allocate(Alloc const& alloc, ptr::size_t n)
 	{
 		ccdk_assert(n > 0);
 		if (n == 0) return nullptr;
@@ -68,10 +87,11 @@ public:
 				memory = allocator::allocate(alloc, current_allocate_size);
 			} catch (...) {
 				// allocate failed, try smaller size
-				--current_allocate_size;
+				current_allocate_size = fn::max(1,--current_allocate_size);
 				memory = nullptr;
 			}
 			if (memory) {
+				link_memory(memory, current_allocate_size);
 				tail = memory + current_allocate_size - 1;
 				tail->next = head;
 				head = memory;
@@ -84,7 +104,7 @@ public:
 			deallocate(alloc, head, n - not_allocated_size);
 			throw std::bad_alloc{};    //no enough memory to alloc
 		}
-		return head;
+		return fs::make_pair(head,tail);
 	}
 
 	/* value_type.next must be valid */
@@ -104,6 +124,11 @@ public:
 		}
 		ccdk_assert(deallocated_size == n);
 	}
+
+	CCDK_FORCEINLINE static constexpr size_type max_allocate_size() noexcept {
+		return size_type(-1) / sizeof(value_type);
+	}
+
 };
 
 
