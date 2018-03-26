@@ -22,7 +22,7 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-/* circle lazy single list:
+/* lazy single list:
    delete/pop node will not free/delete its memory, but link to tail->next to keep a cache
 		and avoid frequency new/delete
    push/insert node will first utilize cached memory after tail

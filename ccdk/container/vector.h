@@ -67,7 +67,7 @@ public:
 	/* fill*/
 	CCDK_FORCEINLINE explicit vector(size_type n, T const& t = T()){
 		ccdk_assert(n > 0);
-		if (n > 0) allocate_fill(n, t);
+		allocate_fill(n, t);
 	}
 
 	/* copy range */
@@ -77,7 +77,7 @@ public:
 	>
 	CCDK_FORCEINLINE vector(InputIt begin, ptr::size_t n){
 		ccdk_assert(n > 0);
-		if (n>0) allocate_copy(n, begin);
+		allocate_copy(n, begin);
 	}
 
 	/* copy range */
@@ -88,18 +88,18 @@ public:
 	CCDK_FORCEINLINE vector(InputIt begin, InputIt end){
 		ptr::size_t n = alg::distance(begin, end);
 		ccdk_assert(n > 0);
-		if(n>0) allocate_copy(n, begin);
+		allocate_copy(n, begin);
 	}
 
 	/* copy */
 	CCDK_FORCEINLINE vector(vector const& other) {
-		if (other.len > 0) allocate_copy(other.len, other.content);
+		allocate_copy(other.len, other.content);
 	}
 
 	/* template copy */
 	template<typename Size2, typename Alloc2, typename Ratio2 >
 	CCDK_FORCEINLINE explicit vector(vector<T, Ratio2, Size2, Alloc2> const& other) {
-		if (other.len > 0) allocate_copy(other.len, other.content);
+		allocate_copy(other.len, other.content);
 	}
 
 	/* move */
@@ -475,6 +475,7 @@ private:
 		then fill [begin, begin+n) with v
 	*/
 	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v ) {
+		if (n == 0) return;
 		ccdk_increase_allocate3(n,content, cap, len);
 		util::construct_fill_n(content, v, n);
 	}
@@ -485,6 +486,7 @@ private:
 	*/
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin){
+		if (n == 0) return;
 		ccdk_increase_allocate3(n, content, cap, len);
 		util::construct_copy_n(content, begin, n);
 	}
