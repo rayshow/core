@@ -70,7 +70,7 @@ public:
 		allocate_fill(n, t);
 	}
 
-	/* copy range */
+	/* copy range-n */
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>>
@@ -113,6 +113,11 @@ public:
 	CCDK_FORCEINLINE vector(vector<T, Ratio2, Size2, Alloc2> && other) noexcept
 		: content{ other.content }, len{ other.len }, cap{ other.cap } {
 		other.rvalue_reset();
+	}
+
+	/* initializer list */
+	CCDK_FORCEINLINE vector(std::initializer_list<T> const& lst) noexcept {
+		allocate_copy(lst.size(), lst.begin());
 	}
 
 	/* swap */
@@ -189,11 +194,12 @@ public:
 
 	/* attribute*/
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
+	CCDK_FORCEINLINE size_type capacity() const noexcept { return cap; }
+	CCDK_FORCEINLINE bool empty() const noexcept { return len == 0; }
 	CCDK_FORCEINLINE size_type max_size() const noexcept { 
 		return allocate_type::max_allocate_size();
 	}
-	CCDK_FORCEINLINE size_type capacity() const noexcept { return cap; }
-	CCDK_FORCEINLINE bool empty() const noexcept { return len == 0; }
+	
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator_type begin() noexcept{ 

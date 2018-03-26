@@ -75,6 +75,8 @@
     <ClInclude Include="algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
     <ClInclude Include="algorithm\distance.h" />
+    <ClInclude Include="container\bitset.h" />
+    <ClInclude Include="container\circular_buffer_iterator.h" />
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\filter\filter_view.h" />

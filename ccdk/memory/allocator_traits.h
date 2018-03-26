@@ -26,18 +26,18 @@ template<typename T> struct get_diff_type<T, false> { typedef ptr::diff_t type; 
 /*
 	allocate memory of n * increase_ratio 
 */
-#define ccdk_increase_allocate1(n, ct)                                    \
+#define ccdk_increase_allocate1(n, content)                               \
 	size_type actual_size = increase_ratio::multiply(n);                  \
 	if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};    \
-	ct = allocate_type::allocate(*this, actual_size);	                  
+	content = allocate_type::allocate(*this, actual_size);	                  
 
-#define ccdk_increase_allocate2(n, ct, cp)                                \
-	ccdk_increase_allocate1(n,ct)                                         \
-	cp = actual_size;
+#define ccdk_increase_allocate2(n, content, cap)                          \
+	ccdk_increase_allocate1(n,content)                                    \
+	cap = actual_size;
 
-#define ccdk_increase_allocate3(n, ct, cp, ln)                            \
-	ccdk_increase_allocate2(n,ct,cp)                                      \
-	ln = n;                                                               
+#define ccdk_increase_allocate3(n, content, cap, len)                     \
+	ccdk_increase_allocate2(n,content,cap)                                \
+	len = n;                                                               
 
 
 /*

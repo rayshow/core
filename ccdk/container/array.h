@@ -61,7 +61,7 @@ public:
 	/* attribute */
 	CCDK_FORCEINLINE constexpr uint32 size() const noexcept { return length; }
 	CCDK_FORCEINLINE constexpr uint32 capcity() const noexcept { return N; }
-	CCDK_FORCEINLINE constexpr uint32 max_size() const noexcept { return N; }
+	CCDK_FORCEINLINE constexpr uint32 max_size() const noexcept { return uint32(-1) / sizeof(T); }
 
 	/* expand */
 	CCDK_FORCEINLINE constexpr this_type& fit_capcity() noexcept { length = N; return *this; }

@@ -874,5 +874,7 @@
     <ClInclude Include="algorithm\advance.h" />
     <ClInclude Include="memory\list_allocate_adapter.h" />
     <ClInclude Include="container\circular_buffer.h" />
+    <ClInclude Include="container\circular_buffer_iterator.h" />
+    <ClInclude Include="container\bitset.h" />
   </ItemGroup>
 </Project>
