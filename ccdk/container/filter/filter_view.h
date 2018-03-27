@@ -20,16 +20,21 @@ struct filter_t
 	fn::function<bool(const T&)> pred;
 
 	/* 2-value */
-	CCDK_FORCEINLINE constexpr filter_t(ptr::diff_t inStart, ptr::diff_t inEnd) : start{ inStart }, end{ inEnd }, step{ 1 }, pred{} {}
+	CCDK_FORCEINLINE constexpr filter_t(ptr::diff_t inStart, ptr::diff_t inEnd) 
+		: start{ inStart }, end{ inEnd }, step{ 1 }, pred{} {}
 
 	/* 3-value */
-	CCDK_FORCEINLINE constexpr filter_t(ptr::diff_t inStart, ptr::diff_t inEnd, ptr::diff_t inStep) : start{ inStart }, end{ -1 }, step{ inStep }, pred{} {}
+	CCDK_FORCEINLINE constexpr filter_t(ptr::diff_t inStart, ptr::diff_t inEnd, 
+		ptr::diff_t inStep) : start{ inStart }, end{ -1 }, step{ inStep }, pred{} {}
 
 	/* 4-value */
 	template<typename Fn>
-	CCDK_FORCEINLINE filter_t(ptr::diff_t inStart, ptr::diff_t inEnd, ptr::diff_t inStep, Fn&& fn) : start{ inStart }, end{ -1 }, step{ inStep }, pred{util::forward<Fn>(fn)} {}
+	CCDK_FORCEINLINE filter_t(ptr::diff_t inStart, ptr::diff_t inEnd, ptr::diff_t inStep, Fn&& fn) 
+		: start{ inStart }, end{ -1 }, step{ inStep }, pred{util::forward<Fn>(fn)} {}
 
-	CCDK_FORCEINLINE filter_t(filter_t&& other) : start{ other.start }, end{ other.end }, step{ other.step }, pred{ util::move(other.pred) } {}
+	/* move */
+	CCDK_FORCEINLINE filter_t(filter_t&& other) : start{ other.start }, end{ other.end }, 
+		step{ other.step }, pred{ util::move(other.pred) } {}
 };
 
 template<typename Container>
@@ -56,15 +61,23 @@ struct filter_view_t
 
 	/* container[{start, end, step, pred } ] = v */
 	void operator=(value_type const& v) noexcept{
-		if (filter.pred) { for (uint32 i = filter.start; i < filter.end; i += filter.step) { if (filter.pred(container.at(i))) container.at(i) = v; } }
-		else { for (uint32 i = filter.start; i < filter.end; i += filter.step) { container[i] = v; } }
+		if (filter.pred) { 
+			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+				if (filter.pred(container.at(i))) container.at(i) = v;
+			} 
+		} else {
+			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+				container.at(i) = v; 
+			} 
+		}
 	}
 
 	/* container[{start, end, step, pred } ] = generator */
 	void operator=(fn::function<value_type(value_type)> gen) {
 		if (filter.pred) { 
 			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
-			if (filter.pred(container.at(i))) container.at(i) = gen(container.at(i)); }
+			if (filter.pred(container.at(i))) 
+				container.at(i) = gen(container.at(i)); }
 		}
 		else { 
 			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
