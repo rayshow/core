@@ -20,6 +20,11 @@ template<typename T> struct test_sp<T*>{
 	constexpr static bool value = true;
 };
 
+
+struct test_agg {
+	int a;
+};
+
 int main()
 {
 	int v;
@@ -28,6 +33,8 @@ int main()
 
 	//test_sp<int*>{};
 	//test_sp<const int*>{};
+
+	test_agg{ 1 };
 
 	getchar();
 	return 0;

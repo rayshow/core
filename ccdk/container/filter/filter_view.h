@@ -40,7 +40,8 @@ struct filter_view_t
 	Container&  container;
 	filter_type filter;
 
-	filter_view_t(Container& ct, filter_type&& ft)  : container{ ct }, filter{ util::move(ft) }
+	filter_view_t(Container& ct, filter_type&& ft)  
+		: container{ ct }, filter{ util::move(ft) }
 	{
 		if (filter.start < 0) { filter.start = container.size() + filter.start; }     /* allow negtive start*/
 		if (filter.end < 0) { filter.end = container.size() + 1 + filter.end; }       /* allow negtive end */
@@ -54,11 +55,24 @@ struct filter_view_t
 	
 
 	/* container[{start, end, step, pred } ] = v */
-	void operator=(value_type const& v)
-	{
+	void operator=(value_type const& v) noexcept{
 		if (filter.pred) { for (uint32 i = filter.start; i < filter.end; i += filter.step) { if (filter.pred(container.at(i))) container.at(i) = v; } }
 		else { for (uint32 i = filter.start; i < filter.end; i += filter.step) { container[i] = v; } }
 	}
+
+	/* container[{start, end, step, pred } ] = generator */
+	void operator=(fn::function<value_type(value_type)> gen) {
+		if (filter.pred) { 
+			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+			if (filter.pred(container.at(i))) container.at(i) = gen(container.at(i)); }
+		}
+		else { 
+			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+				container.at(i) = gen(container.at(i));
+			} 
+		}
+	}
+
 
 	/* Container c = container[{start, end, step, pred } ] */
 	void assign_to(Container& ct)

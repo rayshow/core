@@ -26,12 +26,6 @@ struct random_iterator_category : biward_iterator_category {};
 template<typename... Args>
 class iterator;
 
-template<typename... Args>
-class reverse_iterator;
-
-
-
-
 
 
 ccdk_namespace_mpl_it_end

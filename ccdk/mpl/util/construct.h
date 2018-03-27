@@ -330,7 +330,7 @@ template<
 	typename Dest = iterator_value_t<ForwardIt>,
 	typename = check_t< has_constructor<Dest, T>>
 >
-CCDK_FORCEINLINE ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
+CCDK_FORCEINLINE constexpr ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
 	noexcept(has_nothrow_constructor_v<Dest, T>)
 {
 	if (n == 0) return begin;

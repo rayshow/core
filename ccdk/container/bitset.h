@@ -167,7 +167,7 @@ public:
 
 	/* destruct */
 	CCDK_FORCEINLINE ~bitset() {
-		allocate_type::deallocate(content, len);
+		allocate_type::deallocate(content, count_store(len));
 		len = 0;
 	}
 
