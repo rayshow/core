@@ -876,6 +876,10 @@
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\circular_buffer_iterator.h" />
     <ClInclude Include="container\bitset.h" />
+<<<<<<< HEAD
     <ClInclude Include="container\fix_circular_buffer.h" />
+=======
+    <ClInclude Include="mpl\iterator\reverse_iterator.h" />
+>>>>>>> 4f1a8b6905ba13653d040ecd612459bc08c13022
   </ItemGroup>
 </Project>
