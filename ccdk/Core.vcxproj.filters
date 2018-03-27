@@ -876,5 +876,6 @@
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\circular_buffer_iterator.h" />
     <ClInclude Include="container\bitset.h" />
+    <ClInclude Include="container\fix_circular_buffer.h" />
   </ItemGroup>
 </Project>
