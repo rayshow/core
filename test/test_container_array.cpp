@@ -40,7 +40,7 @@ int main()
 	DebugNewTitle("test iterator");
 	{
 		array<int, 10> arr1{ 4, 2 };
-		arr1[{1, -1}] = [](int a) {
+		arr1[{0, -1}] = [](int a) {
 			static int init = 1;
 			return init ++ * a;
 		};   

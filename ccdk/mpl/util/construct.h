@@ -7,9 +7,11 @@
 #include<ccdk/mpl/type_traits/has_deref.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/util/destruct.h>
 #include<ccdk/mpl/util/forward.h>
 #include<ccdk/mpl/util/move.h>
+
 
 ccdk_namespace_mpl_util_start
 
@@ -84,14 +86,14 @@ namespace ut_impl
 		typename Dest = iterator_value_t<ForwardIt>,
 		typename = check_t< has_constructor<Dest, Source>>
 	>
-	ForwardIt construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv1)
+	auto construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv1)
 	{
 		DebugValue(" construct_copy_n iterator copy");
 		InputIt it= fbegin;
 		ForwardIt it2 = tbegin;
 		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest >(it, *it2); }
 		catch (...) { destruct_range(tbegin, it2); throw; }
-		return it2;
+		return fs::make_pair( it2, it);
 	}
 
 	/* trivial assign */
@@ -101,17 +103,18 @@ namespace ut_impl
 		typename Dest = iterator_value_t<ForwardIt>,
 		typename = check_t< has_assigner<Dest, Source>>
 	>
-	ForwardIt construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv2) noexcept {
+	auto construct_copy_n_impl(ForwardIt tbegin, InputIt fbegin, ptr::size_t n, opt_lv2) noexcept {
 		DebugValue(" construct_copy_n noexcept iterator copy");
 		for (ptr::size_t c = 0; c < n; ++c, ++fbegin, ++tbegin) *tbegin = *fbegin;
-		return tbegin;
+		return fs::make_pair(tbegin, fbegin);
 	}
 
-	/* is pod assign, use memcpy-optimize */
+	/* is same size trivial assign, use memcpy-optimize */
 	template< typename T1, typename T2 >
-	CCDK_FORCEINLINE T1* construct_copy_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept {
+	CCDK_FORCEINLINE auto construct_copy_n_impl(T1* dest, T2* src, ptr::size_t n, opt_lv3) noexcept {
 		DebugValue(" construct_copy_n memcpy copy");
-		return static_cast<T1*>(memcpy(dest, src, sizeof(T1)*n));
+		memcpy(dest, src, sizeof(T1)*n);
+		return fs::make_pair(dest + n, src + n);
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,10 +306,10 @@ template<
 	typename Dest = iterator_value_t<ForwardIt>,
 	typename = check_t< has_constructor<Dest, Source>>
 >
-CCDK_FORCEINLINE ForwardIt construct_copy_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n)
-noexcept(has_nothrow_constructor_v<Dest, Source>)
+CCDK_FORCEINLINE auto construct_copy_n(ForwardIt tbegin, InputIt fbegin, ptr::size_t n)
+	noexcept(has_nothrow_constructor_v<Dest, Source>)
 {
-	if (n == 0) return tbegin;
+	if (n == 0) return fs::make_pair( tbegin, fbegin );
 	return ut_impl::construct_copy_n_impl(tbegin, fbegin, n, copy_opt_level_c<InputIt, ForwardIt>);
 }
 

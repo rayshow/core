@@ -876,10 +876,15 @@
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\circular_buffer_iterator.h" />
     <ClInclude Include="container\bitset.h" />
-<<<<<<< HEAD
     <ClInclude Include="container\fix_circular_buffer.h" />
-=======
-    <ClInclude Include="mpl\iterator\reverse_iterator.h" />
->>>>>>> 4f1a8b6905ba13653d040ecd612459bc08c13022
+    <ClInclude Include="container\forward_list.h" />
+    <ClInclude Include="container\multi_map.h" />
+    <ClInclude Include="container\multi_set.h" />
+    <ClInclude Include="container\prority_queue.h" />
+    <ClInclude Include="container\queue.h" />
+    <ClInclude Include="container\blist.h" />
+    <ClInclude Include="container\unordered_map.h" />
+    <ClInclude Include="container\stack.h" />
+    <ClInclude Include="container\unordered_set.h" />
   </ItemGroup>
 </Project>

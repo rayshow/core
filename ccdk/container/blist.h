@@ -45,8 +45,8 @@ public:
 	typedef T const&             const_reference_type;
 	typedef Size                 size_type;
 	typedef ptr::diff_t          difference_type;
-	typedef mem::list_allocate_adapter< typename Alloc::template rebind<Node>> allocate_type;  /* allocate multi node*/
-	typedef mem::allocator_traits< typename Alloc::template rebind<Node> > _1_allocate_type;   /* allocate 1 node */
+
+	typedef mem::allocator_traits< typename Alloc::template rebind<Node> > allocate_type;   
 
 																							   /*iterator*/
 	typedef iterator< node_type>       iterator_type;

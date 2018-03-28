@@ -45,7 +45,8 @@ struct has_valid_next :
 	ccdk_increase_allocate_lst3(n,head,tail,cap)                          \
 	len = n;	
 
-/*		list adaptor of allocator: try to minimize memory fragment
+/*		
+		list adaptor of allocator: try to minimize memory fragment
 	always allocate/deallocate continuous memory.
 		when allocate, if allocate n * sizeof(T)  failed , 
 	try allocate small frag memory like (n-1) * sizeof(T) ... sizeof(T)

@@ -43,11 +43,6 @@ struct iterator< ccdk::ct::slist_node<T> >
 
 	node_type* pointer;
 
-	CCDK_FORCEINLINE  constexpr iterator(node_type* pointer) :pointer{ pointer } {}
-
-	/* copy constructor */
-	CCDK_FORCEINLINE  constexpr iterator(this_type const& other) noexcept : pointer{ other.pointer } {}
-
 	/* ++it */
 	CCDK_FORCEINLINE this_type& operator++() noexcept {
 		pointer = pointer->next; return *this; 
@@ -58,24 +53,29 @@ struct iterator< ccdk::ct::slist_node<T> >
 		return this_type{ pointer->next }; 
 	}
 
+	/* it+=step */
+	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
+		for (ptr::size_t i = 0; i < step && pointer; ++i, pointer = pointer->next);
+		return *this;
+	}
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator+(size_type step) const noexcept {
 		return this_type{ pointer } +=step; 
 	}
 
 	/* const */
-	CCDK_FORCEINLINE reference_type operator*() const noexcept { return pointer->data; }
+	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return pointer->data; }
+	CCDK_FORCEINLINE reference_type operator*() noexcept { return pointer->data; }
 
 	/* index */
-	CCDK_FORCEINLINE reference_type operator[](size_type index) const noexcept {
+	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
+		return *(this_type{ pointer } += step);
+	}
+	CCDK_FORCEINLINE const_reference_type operator[](size_type index) const noexcept {
 		return *(this_type{ pointer } += step);
 	}
 
-	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
-		for (ptr::size_t i = 0; i < step && pointer; ++i, pointer = pointer->next);
-		return *this;
-	}
+	
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
