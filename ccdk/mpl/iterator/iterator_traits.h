@@ -36,19 +36,19 @@ struct iterator_traits<T*>
 	typedef T const&    const_reference_type;
 	typedef ptr::diff_t difference_type;
 	typedef ptr::size_t size_type;
-	typedef random_iterator_category category;
+	typedef random_category category;
 };
 
 template<typename T>
 struct iterator_traits<T const*>
 {
 	typedef T           value_type;
-	typedef T *          pointer_type;
+	typedef T *         pointer_type;
 	typedef T&          reference_type;
 	typedef T const&    const_reference_type;
 	typedef ptr::diff_t difference_type;
 	typedef ptr::size_t size_type;
-	typedef random_iterator_category category;
+	typedef random_category category;
 };
 
 /* get value_type from iterator  */
@@ -107,7 +107,7 @@ constexpr typename copy_opt_level<It1, It2>::type copy_opt_level_c{};
 
 template< typename T>
 struct is_derived_input_iterator:
-			is_base_of< input_iterator_category, iterator_category_t<T> > {};
+			is_base_of< input_category, iterator_category_t<T> > {};
 
 /* T is pointer type or T::category exists and category is derive from input_iterator_category */
 template<typename T>

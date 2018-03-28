@@ -1,6 +1,7 @@
 
 #include<stdio.h>
 #include<ccdk/container/array.h>
+#include<ccdk/mpl/type_traits/has_attribute.h>
 #include<array>
 #include<stdio.h>
 #include<string>
@@ -46,6 +47,7 @@ int main()
 		};   
 
 	}
+	
 
 	
 	getchar();

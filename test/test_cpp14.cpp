@@ -25,16 +25,20 @@ struct test_agg {
 	int a;
 };
 
+template<typename Ret>
+Ret add(Ret a, Ret b) {
+	return a + b;
+}
+
 int main()
 {
-	int v;
-	DebugValue(v = test_sp<int*>::value);
-	DebugValue(v = test_sp<const int*>::value);
+	std::size_t a = -2;
+	std::ptrdiff_t b = -1;
+	bool d = a < b;
+	std::size_t c = a + b;
 
-	//test_sp<int*>{};
-	//test_sp<const int*>{};
-
-	test_agg{ 1 };
+	DebugTypeName<decltype(a + b)>();
+	DebugValue(add<std::ptrdiff_t>(a,b));
 
 	getchar();
 	return 0;

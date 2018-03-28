@@ -32,4 +32,14 @@ using check_in_range = typename enable_if< (index >= min && index < max && min >
 template<uint32 start, uint32 end, uint32 min, uint32 max>
 using check_in_range2 = typename enable_if< (start >= min && end <= max && end >= start && min >= 0), void>::type;
 
+
+template<typename Ret> void radd(Ret a, Ret b) { return a + b; }
+template<typename Ret> void rsub(Ret a, Ret b) { return a - b; }
+template<typename Ret> void rmul(Ret a, Ret b) { return a * b; }
+template<typename Ret> void rdiv(Ret a, Ret b) { return a / b; }
+template<typename Ret> void rneg(Ret a) { return -a; }
+
+
+
+
 ccdk_namespace_mpl_end

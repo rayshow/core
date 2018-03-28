@@ -20,7 +20,7 @@ template<typename T, uint32 N>
 class array
 {
 public:
-	/* */
+	/* common */
 	typedef array                           this_type;
 
 	/* container */
@@ -37,9 +37,9 @@ public:
 
 	/* iterator */
 	typedef it::iterator<T*>                    iterator_type;
-	typedef it::iterator<T*> const              const_iterator_type;
+	typedef const iterator_type                 const_iterator_type;
 	typedef it::reverse_iterator<iterator_type> reverse_iterator_type;
-	typedef it::reverse_iterator<iterator_type> const  const_reverse_iterator_type;
+	typedef const reverse_iterator_type         const_reverse_iterator_type;
 
 	template<typename T2, uint32 N2>
 	friend class array;

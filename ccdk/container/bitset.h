@@ -5,6 +5,8 @@
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/iterator/bit_iterator.h>
+#include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
 
@@ -17,128 +19,6 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-template<typename T>
-struct bit_access {
-	T&     val;
-	uint32 pos;
-
-	CCDK_FORCEINLINE void operator=(bool bit) noexcept {
-		val = (val & ~(1 << pos)) | (bit << pos);
-	}
-
-	CCDK_FORCEINLINE operator bool() { return val & 1 << pos; }
-
-	CCDK_FORCEINLINE T* addressof() noexcept { return &val; }
-
-	CCDK_FORCEINLINE T const * addressof() const noexcept { return &val; }
-};
-
-
-struct bitset_iterator {
-
-	typedef bitset_iterator			 this_type;
-	typedef bool					 value_type;
-	typedef random_category			 category;
-
-	uint8*  pointer;
-	uint32  pos;
-
-	CCDK_FORCEINLINE this_type& operator++() noexcept {
-		++pos;
-		return *this;
-	}
-
-	/* it++ */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
-		return { pointer, pos +1 };
-	}
-
-	/* it+step */
-	CCDK_FORCEINLINE constexpr this_type operator+(ptr::size_t step) const noexcept {
-		return { pointer, pos + step };
-	}
-
-	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator+=(ptr::size_t step) noexcept {
-		pos += step;
-		return *this;
-	}
-
-	/* const */
-	CCDK_FORCEINLINE bool operator*() const noexcept {
-		return pointer[pos / 8] & 1 << (pos % 8);
-	}
-
-	/* index */
-	CCDK_FORCEINLINE bool operator[](ptr::size_t index) const noexcept {
-		ptr::size_t id = index + pos;
-		return pointer[id / 8] & 1 << (id % 8);
-	}
-
-	/* cmp */
-	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return pointer == other.pointer && pos == other.pos;
-	}
-
-	/* cmp */
-	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return pointer != other.pointer || pos != other.pos;
-	}
-};
-
-struct reverse_bitset_iterator {
-
-	typedef reverse_bitset_iterator	 this_type;
-	typedef bool					 value_type;
-	typedef random_category			 category;
-
-	uint8* pointer;
-	int32  pos;
-
-	CCDK_FORCEINLINE this_type& operator++() noexcept {
-		--pos;
-		return *this;
-	}
-
-	/* it++ */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
-		return { pointer, pos - 1 };
-	}
-
-	/* it+step */
-	CCDK_FORCEINLINE constexpr this_type operator+(ptr::size_t step) const noexcept {
-		return { pointer, pos - step };
-	}
-
-	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator+=(ptr::size_t step) noexcept {
-		pos -= step;
-		return *this;
-	}
-
-	/* const */
-	CCDK_FORCEINLINE bool operator*() const noexcept {
-		return pointer[pos / 8] & 1 << (pos % 8);
-	}
-
-	/* index */
-	CCDK_FORCEINLINE bool operator[](ptr::size_t index) const noexcept {
-		ptr::size_t id = index - pos;
-
-		return pointer[id / 8] & 1 << (id % 8);
-	}
-
-	/* cmp */
-	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return pointer == other.pointer && pos == other.pos;
-	}
-
-	/* cmp */
-	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return pointer != other.pointer || pos != other.pos;
-	}
-};
-
 template<
 	typename T = uint8, 
 	typename Size = uint32,
@@ -146,19 +26,32 @@ template<
 class bitset : protected Alloc
 {
 public:
+
+	/* common */
+	typedef bitset this_type;
+
+	/* container */
 	typedef bool                          value_type;
 	typedef T*                            pointer_type;
 	typedef T const*                      const_reference;
-	typedef bit_access<T>                 reference_type;
-	typedef const bit_access<T>           const_reference_type;
+	typedef it::bit_access<T>             reference_type;
+	typedef bool                          const_reference_type;
 	typedef Size                          size_type;
 	typedef int32                         difference_type;
-	typedef mem::allocator_traits<Alloc>  allocate_type;
+	typedef mem::allocator_traits<Alloc>  allocator_type;
 
-	typedef bitset_iterator               iterator_type;
-	typedef const bitset_iterator         const_iterator_type;
-	typedef reverse_bitset_iterator       reverse_iterator_type;
-	typedef const reverse_bitset_iterator const_reverse_iterator_type;
+	/* typedef iterator */
+	typedef iterator<it::bit_random_category,T,Size>    iterator_type;
+	typedef const iterator_type                         const_iterator_type;
+	typedef reverse_iterator<iterator_type>             reverse_iterator_type;
+	typedef const reverse_iterator_type                 const_reverse_iterator_type;
+
+	static constexpr uint32 kStoreBits = sizeof(T)*8;
+
+	/* friend */
+	template<typename T2, typename Size2, typename Alloc2>
+	friend class bitset;
+
 private:
 	pointer_type  content;
 	size_type     len;
@@ -166,18 +59,21 @@ private:
 public:
 
 	/* destruct */
-	CCDK_FORCEINLINE ~bitset() {
-		allocate_type::deallocate(content, count_store(len));
-		len = 0;
-	}
+	CCDK_FORCEINLINE ~bitset() { destruct(); len = 0; }
 
-	/* default */
+	/* default, lazy */
 	CCDK_FORCEINLINE constexpr bitset() :content{ nullptr }, len{ 0 } {}
 	CCDK_FORCEINLINE constexpr bitset(ptr::nullptr_t) : content{ nullptr }, len{ 0 } {}
 
 	/* fill byte*/
-	CCDK_FORCEINLINE bitset(size_type n, bool value = false) {
+	CCDK_FORCEINLINE explicit bitset(size_type n, bool value = false) {
 		allocate_fill(n, value);
+	}
+
+	/* initial from constexpr string */
+	template<typename Char, ptr::size_t N>
+	CCDK_FORCEINLINE explicit bitset(Char (&str)[N]) {
+		allocate_init_from_string(str, N-1);
 	}
 	
 	/* range-n copy */
@@ -197,7 +93,7 @@ public:
 
 	/* copy */
 	CCDK_FORCEINLINE bitset(bitset const& other):
-		content{ allocate_type::allocate(*this, count_store(other.len)) },
+		content{ allocator_type::allocate(*this, count_store(other.len)) },
 		len{other.len} {
 		memcpy(content, other.content, count_store(other.len));
 	}
@@ -216,9 +112,9 @@ public:
 
 	/* copy assign */
 	CCDK_FORCEINLINE this_type& operator=(bitset const& other) {
-		ptr::size_t other_store = count_store(other.len);
-		if( count_store(len) < other_store ){
-			this->~bitset();
+		ptr::size_t other_store = store_size(other.len);
+		if( store_size(len) < other_store ){
+			this->destruct();
 			content = allocate_n(other.len);
 			len = other.len;
 		}
@@ -227,14 +123,34 @@ public:
 
 	/* move assign */
 	CCDK_FORCEINLINE this_type& operator=(bitset && other) noexcept {
-		this->~bitset();
+		this->destruct();
 		rvalue_set(other);
 		other.rvalue_reset();
 	}
 
 	CCDK_FORCEINLINE this_type& operator=(bool v) {
 		uint8 mask = v ? 0x11111111 : 0x00000000;
-		memset(content, mask, count_store(len));
+		memset(content, mask, store_size(len));
+	}
+
+	
+	CCDK_FORCEINLINE this_type& assign(size_type n, bool v) {
+		if (n > capcity()) {
+			this->destruct();
+			allocator_type::allocate(*this, store_size(n));
+		}
+		uint8 mask = v ? 0b11111111 : 0b00000000;
+		memset(content, mask, store_size(len));
+	}
+
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, ptr::size_t n) {
+		assign_copy(beginIt, n);
+	}
+
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
+		assign_copy(beginIt, alg::distance(beginIt, endIt));
 	}
 
 	/* iterator */
@@ -257,33 +173,53 @@ public:
 
 	/* attribute */
 	CCDK_FORCEINLINE size_type size() { return len; }
-	CCDK_FORCEINLINE size_type max_size() { return uint32(-1) / sizeof(T); }
+	CCDK_FORCEINLINE size_type capcity() { return store_size() * kStoreBits; }
+	CCDK_FORCEINLINE size_type max_size() { return size_type(-1) / sizeof(T); }
 
 	/* access */
 	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
 		ccdk_assert(index < len);
-		return { content, index };
+		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
 	}
 	CCDK_FORCEINLINE const_reference_type operator[](size_type index) const noexcept{
 		ccdk_assert(index < len);
-		return { content, index };
+		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
 	}
 	CCDK_FORCEINLINE reference_type at(size_type index) noexcept {
 		ccdk_assert(index < len);
-		return { content, index };
+		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
 	}
 	CCDK_FORCEINLINE const_reference_type at(size_type index) const noexcept {
 		ccdk_assert(index < len);
-		return { content, index };
+		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
 	}
 	CCDK_FORCEINLINE reference_type back()  noexcept {
-		ccdk_assert(index < len);
-		return { content, len - 1 };
+		return { content[len / kStoreBits], 1 << (len % kStoreBits) };
 	}
 
 	CCDK_FORCEINLINE const_reference_type back() const noexcept {
-		ccdk_assert(index < len);
-		return { content, len-1 };
+		return { content[len / kStoreBits], 1 << (len % kStoreBits) };
+	}
+
+	CCDK_FORCEINLINE this_type& pop_back() noexcept {
+		if (len > 0) --len;
+	}
+
+	CCDK_FORCEINLINE this_type& push_back(bool v) noexcept {
+		if (len == capcity()) {
+			this->destruct();
+			content = allocator_type::allocate(*this, store_size(len + 1));
+		}
+		++len;
+		back() = v;
+	}
+
+	CCDK_FORCEINLINE this_type& insert(bool v) noexcept {
+		if (len == capcity()) {
+			this->destruct();
+			content = allocator_type::allocate(*this, store_size(len + 1));
+		}
+		util::move_n()
 	}
 
 private:
@@ -298,12 +234,16 @@ private:
 		len = n;
 	}
 
-	CCDK_FORCEINLINE size_type count_store(size_type n) const noexcept {
+	CCDK_FORCEINLINE size_type store_size(size_type n) const noexcept {
 		return (n + sizeof(T) - 1) / sizeof(T);
 	}
 
 	CCDK_FORCEINLINE T* allocate_n(size_type n) {
-		return allocate_type::allocate(*this, count_store(n));
+		return allocator_type::allocate(*this, count_store(n));
+	}
+
+	CCDK_FORCEINLINE void destruct() {
+		allocator_type::deallocate(content, count_store(len));
 	}
 
 	CCDK_FORCEINLINE void allocate_fill(size_type n, bool val) {
@@ -322,6 +262,26 @@ private:
 		util::copy_n(begin(), beginIt, n);
 		len = n;
 		content = memory;
+	}
+
+	template<typename Char>
+	CCDK_FORCEINLINE void allocate_init_from_string(Char const* str, ptr::size_t n) {
+		if (!str || n == 0) return;
+		content = allocate_n(n);
+		len = n;
+		for (ptr::size_t i = 0; i < n; ++i) {
+			this->at(i) = str[i];
+		}
+	}
+
+	template<typename InputIt>
+	CCDK_FORCEINLINE void assign_copy(InputIt beginIt, size_type n) {
+		if (n > capcity()) {
+			this->destruct();
+			content = allocator_type::allocate(*this, store_size(n));
+		}
+		util::copy_n(begin(), beginIt, n);
+		len = n;
 	}
 
 };

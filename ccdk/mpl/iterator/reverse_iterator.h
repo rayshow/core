@@ -5,8 +5,8 @@
 ccdk_namespace_mpl_it_start
 
 template<typename It>
-struct reverse_iterator {
-
+struct reverse_iterator 
+{
 	typedef reverse_iterator this_type;
 	typedef reverse_iterator type;
 
@@ -29,6 +29,14 @@ struct reverse_iterator {
 	/* deref */
 	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return *it; }
 	CCDK_FORCEINLINE reference_type operator*() noexcept { return *it; }
+
+	CCDK_FORCEINLINE bool operator==(this_type const& other) {
+		return it == other.it;
+	}
+
+	CCDK_FORCEINLINE bool operator!=(this_type const& other) {
+		return it == other.it;
+	}
 };
 
 

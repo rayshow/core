@@ -11,21 +11,21 @@ using namespace mpl;
 namespace alg_impl
 {
 	template<typename InputIt>
-	InputIt advance_impl(InputIt begin, ptr::diff_t n , input_iterator_category) noexcept{
+	InputIt advance_impl(InputIt begin, ptr::diff_t n , input_category) noexcept{
 		ccdk_assert(n > 0);
 		if (n > 0) for (ptr::diff_t i = 0; i < n; ++i, ++begin);
 		return begin;
 	}
 
 	template<typename BiwardIt>
-	BiwardIt advance_impl(BiwardIt begin, ptr::diff_t n , biward_iterator_category) noexcept {
+	BiwardIt advance_impl(BiwardIt begin, ptr::diff_t n , biward_category) noexcept {
 		if (n > 0) for (ptr::diff_t i = 0; i < n;++i, ++begin);
 		else if (n < 0) for (ptr::diff_t i = n; i < 0; ++i, --begin);
 		return begin;
 	}
 
 	template<typename RandomIt>
-	CCDK_FORCEINLINE RandomIt advance_impl(RandomIt begin, ptr::diff_t n, random_iterator_category) noexcept{
+	CCDK_FORCEINLINE RandomIt advance_impl(RandomIt begin, ptr::diff_t n, random_category) noexcept{
 		return begin+n;
 	}
 }

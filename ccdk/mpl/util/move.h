@@ -96,4 +96,6 @@ CCDK_FORCEINLINE void move_n(T* dest, const T* src, ptr::size_t n)
 	else if (dest < src) { for (ptr::size_t i = 0; i < n; ++i) { *(dest + i) = fmove(*(src + i)); } }
 }
 
+
+
 ccdk_namespace_mpl_util_end

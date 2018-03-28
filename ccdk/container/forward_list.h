@@ -5,6 +5,7 @@
 #include<ccdk/mpl/util/destruct.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/swap.h>
+#include<ccdk/mpl/util/move.h>
 
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
@@ -133,6 +134,22 @@ public:
 		other.rvalue_reset();
 	}
 
+	/* range-n assign */
+	CCDK_FORCEINLINE this_type& assign(size_type n, T const& t = T()) {
+		assign_fill(n, t);
+	}
+
+	/* range-n assign */
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
+		assign_copy(beginIt, alg::distance(beginIt, endIt));
+	}
+
+	/* range-n assign */
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, size_type n) {
+		assign_copy(beginIt, n);
+	}
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator_type begin() noexcept { return { head };}
@@ -140,6 +157,45 @@ public:
 
 	CCDK_FORCEINLINE const_iterator_type cbegin() const noexcept { return{ head }; }
 	CCDK_FORCEINLINE const_iterator_type cend() const noexcept { return{ nullptr }; }
+
+	/* attribute */
+	CCDK_FORCEINLINE size_type size() const noexcept { return len;}
+	CCDK_FORCEINLINE size_type max_size() const noexcept { 
+		return allocator_type::max_allocate_size();  
+	}
+
+	/* access */
+	CCDK_FORCEINLINE reference_type front() noexcept { return *head; }
+	CCDK_FORCEINLINE const_reference_type front() const noexcept { return *head; }
+	
+	/* operation */
+	CCDK_FORCEINLINE this_type& pop_front() noexcept {
+		util::destruct<T>(head);
+		allocator_type::deallocate(*this, head, 1);
+		head = head->next;
+		--len;
+		return *this;
+	}
+
+	/* remove head */
+	CCDK_FORCEINLINE this_type& push_front(T const& t) noexcept {
+		node_type* memory = allocator_type::allocate(*this, 1);
+		util::construct<T>(memory, t);
+		memory->next = head;
+		head = memory;
+		++len;
+		return *this;
+	}
+
+	/* push to head */
+	CCDK_FORCEINLINE this_type& push_front(T && t) noexcept {
+		node_type* memory = allocator_type::allocate(*this, 1);
+		util::construct<T>(memory, util::move(t));
+		memory->next = head;
+		head = memory;
+		++len;
+		return *this;
+	}
 
 private:
 
@@ -177,6 +233,19 @@ private:
 			util::construct_copy_n(begin(), beginIt, n);
 		}
 		len = n;
+	}
+
+	CCDK_FORCEINLINE void assign_fill(size_type n, T const& t) {
+		if (n == 0) return;
+		util::destruct_n(begin(), len);
+		if (n > len) {
+			auto last_it = util::construct_fill_n(begin(), t, len-1);
+			ccdk_assert(last_it.pointer != nullptr);
+			last_it.pointer->next = allocator_type::allocate(n - len);
+			util::construct_fill_n(last_it, t, n - len + 1);
+		} else {
+			util::construct_fill_n(begin(), beginIt, n);
+		}
 	}
 };
 

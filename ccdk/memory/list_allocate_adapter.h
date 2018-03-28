@@ -1,8 +1,10 @@
 #pragma once
 
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/type_traits/declval.h>
+#include<ccdk/mpl/type_traits/has_attribute_next.h>
+#include<ccdk/mpl/function/operator.h>
+
 #include<ccdk/mpl/fusion/pair.h>
 
 #include<ccdk/memory/memory_module.h>
@@ -11,29 +13,6 @@
 ccdk_namespace_memory_start
 
 using namespace ccdk::mpl;
-
-
-/* test whether T.next is valid */
-template<typename T>
-struct has_attribute_next
-{
-	template<typename P, typename = decltype( makeval<P>().next )>
-	static constexpr bool sfinae(int) { return true; }
-
-	template<typename P>
-	static constexpr bool sfinae(...) { return false; }
-
-	constexpr static bool value = sfinae<T>(0);
-};
-
-/* test whether T.next is T*  */
-template<typename T>
-struct next_to_same_type :is_same< T*, decltype(makeval<T>().next)> {};
-
-template<typename T>
-struct has_valid_next :
-	and_< bool_<has_attribute_next<T>::value>,
-	next_to_same_type<T> > {};
 
 #define ccdk_increase_allocate_lst3(n, head,tail,cap)                     \
 	size_type actual_size = increase_ratio::multiply(n);                  \
@@ -72,7 +51,7 @@ public:
 	}
 
 	/* value_type.next must be valid */
-	template<typename = check_t< has_valid_next<value_type>>>
+	template<typename = check_t< has_attribute_next<value_type>>>
 	static auto allocate(Alloc const& alloc, ptr::size_t n)
 	{
 		ccdk_assert(n > 0);
@@ -109,7 +88,7 @@ public:
 	}
 
 	/* value_type.next must be valid */
-	template<typename = check_t< has_valid_next<value_type>>>
+	template<typename = check_t< has_attribute_next<value_type>>>
 	static void deallocate(Alloc const& alloc, value_type* pointer, ptr::size_t n) noexcept {
 		ccdk_assert(pointer && n > 0);
 		if (!pointer || n == 0) return;
