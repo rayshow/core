@@ -214,12 +214,40 @@ public:
 		back() = v;
 	}
 
-	CCDK_FORCEINLINE this_type& insert(bool v) noexcept {
+	CCDK_FORCEINLINE this_type& insert(size_type pos, bool v) noexcept {
+		ccdk_assert(pos >= 0 && pos <= len);
 		if (len == capcity()) {
 			this->destruct();
 			content = allocator_type::allocate(*this, store_size(len + 1));
 		}
-		util::move_n()
+		for (int i = len-1; i > pos; ++i) {
+			*(begin() + i + 1) = *(begin() + i);
+		}
+		*(begin() + i) = v;
+		++len;
+	}
+
+	CCDK_FORCEINLINE this_type& erase(size_type ibegin, size_type iend) noexcept {
+		ccdk_assert(ibegin >= 0 && iend > ibegin && iend <= len);
+		size_type j = ibegin;
+		for (size_type i = iend - 1; i < len; ++i, ++j)
+			*(begin() + j) = *(begin() + i);
+		len -= (iend - ibegin);
+	}
+
+	CCDK_FORCEINLINE this_type& erase(size_type pos) noexcept {
+		return erase(pos, pos + 1);
+	}
+
+	CCDK_FORCEINLINE this_type& erase(const_iterator_type begin, const_iterator_type end) noexcept {
+		iterator_type it2 = begin;
+		for (iterator_type it = end; it != end(); ++it, ++it2)
+			*it2 = *it;
+		len -= alg::distance(begin, end);
+	}
+
+	CCDK_FORCEINLINE this_type& erase(const_iterator_type pos) noexcept {
+		return erase(pos, pos+1);
 	}
 
 private:

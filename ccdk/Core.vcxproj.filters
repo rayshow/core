@@ -892,5 +892,6 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
     <ClInclude Include="mpl\type_traits\has_attribute.h" />
+    <ClInclude Include="container\fix_bitset.h" />
   </ItemGroup>
 </Project>
