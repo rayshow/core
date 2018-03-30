@@ -2,7 +2,7 @@
 
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/declval.h>
-#include<ccdk/mpl/type_traits/has_attribute_next.h>
+#include<ccdk/mpl/type_traits/has_attribute.h>
 #include<ccdk/mpl/function/operator.h>
 
 #include<ccdk/mpl/fusion/pair.h>
@@ -13,6 +13,9 @@
 ccdk_namespace_memory_start
 
 using namespace ccdk::mpl;
+
+template<typename T>
+struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
 
 #define ccdk_increase_allocate_lst3(n, head,tail,cap)                     \
 	size_type actual_size = increase_ratio::multiply(n);                  \
@@ -43,12 +46,21 @@ public:
 	template<typename U>
 	using rebind = list_allocate_adapter<U>;
 
-	static auto link_memory(value_type* memory, ptr::size_t n)
-	{
+	/* single list */
+	static auto link_memory(value_type* memory, ptr::size_t n, false_) noexcept{
 		for (ptr::size_t i = 0; i < n - 1; ++i) {
 			(memory + i)->next = (memory + i + 1);
 		}
 	}
+
+	/* double list */
+	static auto link_memory(value_type* memory, ptr::size_t n, true_) noexcept {
+		for (ptr::size_t i = 0; i < n - 1; ++i) {
+			(memory + i)->next = (memory + i + 1);
+			(memory + i + 1)->prev = (memory + i);
+		}
+	}
+
 
 	/* value_type.next must be valid */
 	template<typename = check_t< has_attribute_next<value_type>>>
@@ -71,7 +83,7 @@ public:
 				memory = nullptr;
 			}
 			if (memory) {
-				link_memory(memory, current_allocate_size);
+				link_memory(memory, current_allocate_size, is_biward_node<value_type>{});
 				tail = memory + current_allocate_size - 1;
 				tail->next = head;
 				head = memory;

@@ -22,7 +22,8 @@ using namespace ccdk::mpl;
 template<
 	typename T = uint8, 
 	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator<T>>
+	typename Alloc = mem::simple_new_allocator<T>
+>
 class bitset : protected Alloc
 {
 public:
