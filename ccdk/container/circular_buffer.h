@@ -9,13 +9,13 @@
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/iterator_fwd.h>
+#include<ccdk/mpl/iterator/round_index_iterator.h>
 #include<ccdk/mpl/units/ratio.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
 #include<ccdk/algorithm/advance.h>
 #include<ccdk/algorithm/distance.h>
-#include<ccdk/container/circular_buffer_iterator.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
@@ -46,8 +46,8 @@ public:
 	typedef mem::allocator_traits< Alloc > allocate_type;   
 
 	/* iterator */
-	typedef circular_buffer_iterator<T,Size>          iterator_type;
-	typedef reverse_circular_buffer_iterator<T, Size> reverse_iterator_type;
+	typedef iterator<round_index_category, T>         iterator_type;
+	typedef reverse_iterator<iterator_type>           reverse_iterator_type;
 	typedef const iterator_type                       const_iterator_type ;
 	typedef const reverse_iterator_type               const_reverse_iterator_type;
 

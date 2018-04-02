@@ -524,7 +524,6 @@
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
     <ClInclude Include="container\filter\filter_view.h" />
-    <ClInclude Include="container\slist.h" />
     <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\allocator_traits.h" />
@@ -550,10 +549,8 @@
     <ClInclude Include="algorithm\advance.h" />
     <ClInclude Include="memory\list_allocate_adapter.h" />
     <ClInclude Include="container\circular_buffer.h" />
-    <ClInclude Include="container\circular_buffer_iterator.h" />
     <ClInclude Include="container\bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
-    <ClInclude Include="container\forward_list.h" />
     <ClInclude Include="container\multi_map.h" />
     <ClInclude Include="container\multi_set.h" />
     <ClInclude Include="container\blist.h" />
@@ -893,5 +890,8 @@
     <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
     <ClInclude Include="mpl\type_traits\has_attribute.h" />
     <ClInclude Include="container\fix_bitset.h" />
+    <ClInclude Include="memory\block_list_allocate_adapter.h" />
+    <ClInclude Include="container\lazy_slist.h" />
+    <ClInclude Include="container\slist.h" />
   </ItemGroup>
 </Project>

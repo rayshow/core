@@ -16,10 +16,12 @@ using namespace ccdk;
 
 int main()
 {
-	char* mem = static_cast<char*>(::operator new(8));
-	//::operator delete(mem, 4);
-	int64 size = *(int*)(mem - 8);
-	::operator delete(mem , 4);
 	getchar();
+	void* memory = ::operator new(1024 * 1024 * 1024);
+	printf("after alloc");
+	getchar();
+	::operator delete(memory);
+	getchar();
+
 	return 0;
 }

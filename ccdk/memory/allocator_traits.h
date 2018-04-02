@@ -39,7 +39,6 @@ template<typename T> struct get_diff_type<T, false> { typedef ptr::diff_t type; 
 	ccdk_increase_allocate2(n,content,cap)                                \
 	len = n;                                                               
 
-
 /*
 	uniform interface between user and allocator
 */
