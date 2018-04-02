@@ -893,5 +893,8 @@
     <ClInclude Include="memory\block_list_allocate_adapter.h" />
     <ClInclude Include="container\lazy_slist.h" />
     <ClInclude Include="container\slist.h" />
+    <ClInclude Include="container\impl\hash_table.h" />
+    <ClInclude Include="container\impl\list_node.h" />
+    <ClInclude Include="container\impl\rb_tree.h" />
   </ItemGroup>
 </Project>

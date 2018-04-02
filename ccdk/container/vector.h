@@ -81,10 +81,7 @@ public:
 	}
 
 	/* copy range */
-	template<
-		typename InputIt,
-		typename = check_t< is_iterator<InputIt>> 
-	>
+	template< typename InputIt, typename = check_t< is_iterator<InputIt>>  >
 	CCDK_FORCEINLINE vector(InputIt begin, InputIt end){
 		ptr::size_t n = alg::distance(begin, end);
 		ccdk_assert(n > 0);

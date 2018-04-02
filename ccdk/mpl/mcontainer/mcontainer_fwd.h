@@ -2,15 +2,9 @@
 
 #include<ccdk/mpl/base/type_.h>
 #include<ccdk/mpl/mpl_module.h>
+#include<ccdk/mpl/iterator/iterator_fwd.h>
 
 ccdk_namespace_mpl_start
-
-/* mconainter category */
-struct forward_category { };
-struct bidirection_categroy : public forward_category {};
-struct random_category : bidirection_categroy {};
-
-
 /* container */
 template<typename... Args> struct arg_pack;
 

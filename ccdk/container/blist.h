@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/fill.h>
@@ -19,7 +18,7 @@
 
 #include<ccdk/algorithm/advance.h>
 #include<ccdk/algorithm/distance.h>
-#include<ccdk/container/list_node.h>
+#include<ccdk/container/impl/list_node.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start

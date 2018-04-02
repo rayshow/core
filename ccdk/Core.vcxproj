@@ -85,6 +85,9 @@
     <ClInclude Include="container\filter\filter_view.h" />
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
+    <ClInclude Include="container\impl\hash_table.h" />
+    <ClInclude Include="container\impl\list_node.h" />
+    <ClInclude Include="container\impl\rb_tree.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\list_node.h" />
     <ClInclude Include="container\multi_map.h" />

@@ -17,7 +17,7 @@ struct iterator<T*>
 	typedef T const&                 const_reference_type;
 	typedef ptr::diff_t              difference_type;
 	typedef ptr::size_t              size_type;
-	typedef random_iterator_category category;
+	typedef random_category category;
 
 	T*    pointer;
 
