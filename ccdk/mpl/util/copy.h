@@ -76,7 +76,7 @@ namespace ut_impl
 	CCDK_FORCEINLINE It copy_n_impl(It dest, It2 src, ptr::size_t n, opt_lv2)
 		noexcept(has_nothrow_assigner_v<Dest, Source>)
 	{
-		for (ptr::size_t i = 0; i < n; ++i, ++dest, ++src) *dest = src;
+		for (ptr::size_t i = 0; i < n; ++i, ++dest, ++src) *dest = *src;
 		return dest;
 	}
 
@@ -106,9 +106,10 @@ template<
 	typename Source = iterator_value_t<It>,
 	typename Dest = iterator_value_t<It2>,
 	typename = check_t< has_assigner<Dest, Source>>>
-CCDK_FORCEINLINE void copy_n(It dest, It2 src, ptr::size_t n)
+CCDK_FORCEINLINE auto copy_n(It dest, It2 src, ptr::size_t n)
 	noexcept(has_nothrow_assigner_v<Dest, Source>)
 {
+	if (n == 0) return dest;
 	return ut_impl::copy_n_impl(dest, src, n, copy_opt_level_c<It, It2>);
 }
 

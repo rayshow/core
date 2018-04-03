@@ -129,7 +129,7 @@ namespace ccdk {
 	template<typename T, typename P>
 	inline void DebugValue(T&& t, P&& p)
 	{
-		std::cout << " *** " << t << p << std::endl;
+		std::cout << " *** " << t <<"  "<< p << std::endl;
 	}
 
 	template<typename T>

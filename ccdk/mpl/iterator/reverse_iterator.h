@@ -35,7 +35,7 @@ struct reverse_iterator
 	}
 
 	CCDK_FORCEINLINE bool operator!=(this_type const& other) {
-		return it == other.it;
+		return it != other.it;
 	}
 };
 
