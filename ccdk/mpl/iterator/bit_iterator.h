@@ -59,19 +59,19 @@ struct iterator< bit_random_category, T, Size >
 	/* it++ */
 	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
 		ccdk_assert(offset < len);
-		return { pointer, pos + 1 };
+		return { base, offset + 1, len };
 	}
 
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator+(size_type step) const noexcept {
 		ccdk_assert(offset+step <= len);
-		return { pointer, pos + step };
+		return { base, offset + step, len };
 	}
 
 	/* it+=step */
 	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
 		ccdk_assert(offset + step <= len);
-		pos += step;
+		offset += step;
 		return *this;
 	}
 

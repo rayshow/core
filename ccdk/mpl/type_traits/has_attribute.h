@@ -20,6 +20,6 @@ template<typename T>
 struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
 
 template<typename T>
-struct is_biward_node<T> is_biward_node_c {};
+constexpr is_biward_node<T> is_biward_node_c {};
 
 ccdk_namespace_mpl_end

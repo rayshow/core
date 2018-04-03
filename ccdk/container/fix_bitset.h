@@ -19,7 +19,7 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-#define RECURSIVE_TYPEDEF(Type) typedef typename fit_size_impl<Bytes,Type, Bytes <=sizeof(Type)>::type type
+#define RECURSIVE_TYPEDEF(Type) using type =  typename fit_bytes<Bytes,Type, Bytes <=sizeof(Type)>::type
 
 /* fit bytes with a inner basic type  */
 template<uint32 Bytes, typename T = uint8 , bool Fit = (Bytes<= sizeof(T)) > struct fit_bytes;
@@ -30,23 +30,44 @@ template<uint32 Bytes> struct fit_bytes<Bytes, uint32, false> { RECURSIVE_TYPEDE
 template<uint32 Bytes> struct fit_bytes<Bytes, uint64, false>:fit_bytes<Bytes, uint8, true> {  };
 
 
+template<typename T, typename Char>
+constexpr T parse_int(const Char* str, uint32 pos, uint32 max)
+{
+	uint32 begin = pos * 16;
+	if (begin >= max) return 0;
+	uint32 end =  begin + 16;
+	end = max < end ? max : end;
+	T val = 0;
+	for (uint32 i = begin; i < end; ++i) {
+		val = (val << 1) | (str[i] - '0');
+	}
+	return val;
+}
+
+struct constexpr_string_ctor {};
+constexpr constexpr_string_ctor constexpr_string_ctor_c{};
+
 template< uint32 NBit >
 class fix_bitset 
 {
 public:
 	/* common */
-	using this_type = fix_bitset;
+	static constexpr uint32 Bytes = (NBit + 7) / 8;
+	using this_type   = fix_bitset;
+	using array_type  = typename fit_bytes<Bytes>::type;
+	using single_type = remove_dim_t<array_type>;
+	static constexpr uint32 N = sizeof(array_type) / sizeof(single_type);
+
 
 	/* container */
-	static constexpr uint32 Bytes = (NBit + 7) / 8;
-	using value_type           = typename fit_bytes<Bytes>::type;
+	using value_type           = single_type;
 	using pointer_type         = value_type*;
 	using const_pointer_type   = value_type const*;
 	using reference_type       = it::bit_access<value_type>;
 	using const_reference_type = bool;
 	using size_type            = uint32;
 	using difference_type      = ptr::diff_t;
-	static constexpr uint32 Size = sizeof(value_type) / sizeof(remove_dim_t<value_type>);
+	
 
 	/* typedef iterator */
 	using iterator_type               = iterator<it::bit_random_category, value_type, size_type>;
@@ -58,37 +79,54 @@ public:
 	template<uint32 NBit2> friend class fix_bitset;
 
 private:
-	value_type content;
+	value_type content[N];
 
-	CCDK_FORCEINLINE uint8 bit_mask(bool v) { return v ? 0b11111111 : 0b00000000; }
+	/* aux compile-time fill-ctor */
+	template<value_type... Args>
+	CCDK_FORCEINLINE constexpr fix_bitset(mpl::val_pack<value_type, Args...>) 
+		noexcept : content{ Args... } {}
+
+	/* aux compile-time fill from constexpr-string */
+	template<typename Char, value_type... Args>
+	CCDK_FORCEINLINE constexpr fix_bitset(const Char* str, uint32 L, mpl::val_pack<uint32, Args...>)
+		noexcept : content{ parse_int<value_type,Char>(str, Args, L)... } {
+	}
 
 public:
-	/* default */
-	CCDK_FORCEINLINE constexpr fix_bitset() noexcept = default;
+	/* constexpr default */
+	CCDK_FORCEINLINE constexpr fix_bitset() noexcept : content{ 0 } {}
 
-	/* fill byte*/
-	CCDK_FORCEINLINE explicit fix_bitset(bool value) noexcept {
-		memset(util::addressof(content), bit_mask(value), Bytes);
+	/* compile time fill */
+	template<bool v>
+	CCDK_FORCEINLINE constexpr fix_bitset(mpl::bool_<v>) noexcept
+		:fix_bitset(mpl::dup_to_val_pack_c<N,value_type,v?0:-1>) {}
+
+	/* compile time fill from constexpr string, exclude end '\0' */
+	template<typename Char, ptr::size_t L>
+	CCDK_FORCEINLINE constexpr explicit fix_bitset(constexpr_string_ctor,Char(&str)[L]) noexcept
+		: fix_bitset(str, mpl::min_val<uint32, NBit,L-1>, mpl::make_indice_c<N> ){}
+
+	/* runtime fill */
+	CCDK_FORCEINLINE explicit fix_bitset(bool v) noexcept {
+		memset(util::addressof(content), v ? 0b11111111 : 0b00000000, Bytes);
 	} 
 
-	/* constexpr initial from constexpr string, exclude end '\0' */
-	template<typename Char, ptr::size_t N>
-	CCDK_FORCEINLINE constexpr explicit fix_bitset(Char(&str)[N]) noexcept {
-		if (N > 1) { for (ptr::size_t i = 0; i < N-1; ++i) {
-			this->at(i) = str[i] - Char('0'); 
-		} }
+	/* runtime string */
+	template<typename Char>
+	CCDK_FORCEINLINE explicit fix_bitset(Char const* str) noexcept {
+		memset(util::addressof(content), 0 ? 0b11111111 : 0b00000000, Bytes);
 	}
 
 	/* range-n copy */
-	template<typename InputIt, typename = check< is_iterator<InputIt>> >
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE constexpr fix_bitset(InputIt beginIt, size_type n) noexcept {
 		if (n > 0) { util::copy_n(begin(), beginIt, n); }
 	}
 
 	/* range copy */
-	template<typename InputIt, typename = check< is_iterator<InputIt>> >
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE constexpr fix_bitset(InputIt beginIt, InputIt endIt) noexcept {
-		if (n > 0) { util::copy_n(begin(), beginIt, alg::distance(beginIt, endIt)); }
+		util::copy_n(begin(), beginIt, alg::distance(beginIt, endIt));
 	}
 
 	/* copy */
@@ -173,6 +211,8 @@ public:
 		ccdk_assert(index < len);
 		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
 	}
+
+
 	CCDK_FORCEINLINE reference_type back()  noexcept {
 		return { content[len / kStoreBits], 1 << (len % kStoreBits) };
 	}
@@ -201,7 +241,7 @@ private:
 		content = nullptr;
 	}
 
-	CCDK_FORCEINLINE void rvalue_set(T* inContent, size_type n) noexcept {
+	CCDK_FORCEINLINE void rvalue_set(value_type* inContent, size_type n) noexcept {
 		content = inContent;
 		len = n;
 	}
@@ -210,7 +250,7 @@ private:
 		return (n + sizeof(T) - 1) / sizeof(T);
 	}
 
-	CCDK_FORCEINLINE T* allocate_n(size_type n) {
+	CCDK_FORCEINLINE value_type* allocate_n(size_type n) {
 		return allocator_type::allocate(*this, count_store(n));
 	}
 

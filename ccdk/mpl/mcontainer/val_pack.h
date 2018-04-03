@@ -10,7 +10,7 @@ ccdk_namespace_mpl_start
 template<typename T>
 struct val_pack<T>
 {
-	typedef forward_category     category;
+	typedef mforward_category    category;
 	typedef val_pack             type;
 	typedef val_pack             begin;
 	typedef val_pack             end;
@@ -50,7 +50,7 @@ struct val_pack<T>
 template<typename T, T first, T... args>
 struct val_pack <T,first,args...>
 { 
-	typedef forward_category            category;
+	typedef mforward_category           category;
 	typedef val_pack                    type; 
 	typedef val_pack                    begin;
 	typedef val_pack<T>                 end;
@@ -106,13 +106,28 @@ namespace mpl_impl
 	struct make_val_pack_impl;
 
 	template<typename T, T Cur, T End, T... args>
-	struct make_val_pack_impl<T,Cur,End, val_pack<T, args...>> : make_val_pack_impl< T, Cur + 1, End, val_pack<T,args...,Cur> >
+	struct make_val_pack_impl<T,Cur,End, val_pack<T, args...>> 
+			: make_val_pack_impl< T, Cur + 1, End, val_pack<T,args...,Cur> >
 	{
 		static_assert(Cur < End, "Cur need small then End");
 	};
 
 	template<typename T, T End, T... args>
 	struct make_val_pack_impl<T, End, End, val_pack<T,args...>>
+	{
+		typedef val_pack<T, args...> type;
+	};
+
+
+	template<uint32 N, typename T, T v, typename Pack>
+	struct dup_val_pack_impl;
+
+	template<uint32 N, typename T, T v, T... args>
+	struct dup_val_pack_impl<N, T, v, val_pack<T,args...>>
+			: dup_val_pack_impl< N-1, T, v, val_pack<T,v,args...> > {};
+
+	template<typename T, T v, T... args>
+	struct dup_val_pack_impl<0, T, v, val_pack<T, args...>>
 	{
 		typedef val_pack<T, args...> type;
 	};
@@ -132,5 +147,18 @@ using make_indice_from = typename make_val_pack< uint32, Start, End>::type;
 template<uint32 End, uint32 IgnoreStart, uint32 IgnoreEnd>
 using make_indice_ignore = merge_t< make_indice<IgnoreStart>, make_indice_from<IgnoreEnd, End> >;
 
+/* make indice_c */
+template<uint32 End> constexpr make_indice<End> make_indice_c{};
+template<uint32 Start, uint32 End> 
+constexpr make_indice_from<Start, End> make_indice_from_c{};
+template<uint32 End, uint32 IgnoreStart, uint32 IgnoreEnd>
+constexpr make_indice_ignore<End, IgnoreStart, IgnoreEnd> make_indice_ignore_c{};
+
+
+/* duplicate n time of value */
+template<uint32 N, typename T, T v>
+using dup_to_val_pack  = typename mpl_impl::dup_val_pack_impl<N, T, v, val_pack<T>>::type;
+template<uint32 N, typename T, T v>
+constexpr dup_to_val_pack<N,T,v> dup_to_val_pack_c{};
 
 ccdk_namespace_mpl_end
