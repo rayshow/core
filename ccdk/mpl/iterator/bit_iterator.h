@@ -19,7 +19,7 @@ struct bit_access {
 	CCDK_FORCEINLINE void operator=(bit_access const& other) {
 		val = (val & ~mask) | other.masked_value();
 	}
-	 
+	
 	CCDK_FORCEINLINE void operator=(bool bit) noexcept { 
 		val = (val & ~ mask) | mask;
 	}
@@ -73,18 +73,26 @@ struct iterator< bit_random_category, T, Size >
 	}
 
 	CCDK_FORCEINLINE this_type& operator--() noexcept {
-		T dec = (1 & mask) << kShiftCount;
 		pos -= 1 & mask;
-		mask = (mask >> 1) | dec;
+		mask = (mask >> 1) | ((1 & mask) << kShiftCount);
 		return *this;
 	}
 
 
 	/* it++ */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
-		T acc = (kTopMask & mask) >> kShiftCount;
-		return { base, pos + acc, (mask << 1) | acc };
+	CCDK_FORCEINLINE constexpr this_type operator++(int) noexcept {
+		this_type ret { base, pos, mask };
+		this->operator++();
+		return ret;
 	}
+
+	/* it-- */
+	CCDK_FORCEINLINE constexpr this_type operator--(int) noexcept {
+		this_type ret{ base, pos, mask };
+		this->operator--();
+		return ret;
+	}
+
 
 	/* it+=step */
 	CCDK_FORCEINLINE this_type& operator+=(difference_type step) noexcept {
