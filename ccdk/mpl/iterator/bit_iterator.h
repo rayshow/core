@@ -39,11 +39,7 @@ struct bit_access {
 	CCDK_FORCEINLINE T const * addressof() const noexcept { return &val; }
 };
 
-template<uint32 Size> struct shift_bit;
-template<> struct shift_bit<8> :mpl::uint32_<3> {};
-template<> struct shift_bit<16> :mpl::uint32_<4> {};
-template<> struct shift_bit<32> :mpl::uint32_<5> {};
-template<> struct shift_bit<64> :mpl::uint32_<6> {};
+
 
 template<typename T,typename  Size>
 struct iterator< bit_random_category, T, Size >
@@ -59,22 +55,22 @@ struct iterator< bit_random_category, T, Size >
 	typedef random_category		 category;
 	static constexpr uint32 kStoreBits = sizeof(T)*8;
 	static constexpr uint32 kShiftCount = kStoreBits -1;
-	static constexpr T kTopMask = 1 << kShiftCount;
+	static constexpr T kTopMask = T(1) << kShiftCount;
 
 	pointer_type      base;
 	size_type         pos;
 	remove_const_t<T> mask;
 
 	CCDK_FORCEINLINE this_type& operator++() noexcept {
-		T acc = (kTopMask & mask) >> kShiftCount;
+		T acc = rshr<T>( kTopMask & mask, kShiftCount);
 		pos += acc;
-		mask = (mask << 1) | acc;
+		mask = rshl<T>(mask,1) | acc;
 		return *this;
 	}
 
 	CCDK_FORCEINLINE this_type& operator--() noexcept {
 		pos -= 1 & mask;
-		mask = (mask >> 1) | ((1 & mask) << kShiftCount);
+		mask = (mask >> T(1)) | rshl<T>(T(1) & mask, kShiftCount);
 		return *this;
 	}
 
@@ -121,9 +117,9 @@ struct iterator< bit_random_category, T, Size >
 		difference_type diff = rsub<difference_type>(pos, other.pos) * kStoreBits;
 		T cp_mask = mask;
 		if (cp_mask < other.mask) while (cp_mask != other.mask) {
-			cp_mask <<= 1; --diff;
+			cp_mask <<= T(1); --diff;
 		}else if(cp_mask > other.mask) while(cp_mask!=other.mask){ 
-			cp_mask >>= 1; ++diff;
+			cp_mask >>= T(1); ++diff;
 		}
 		return diff;
 	}

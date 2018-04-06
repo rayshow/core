@@ -130,6 +130,7 @@
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
     <ClInclude Include="mpl\base\compare_.h" />
+    <ClInclude Include="mpl\base\compatible_op.h" />
     <ClInclude Include="mpl\base\compile_check.h" />
     <ClInclude Include="mpl\base\choose.h" />
     <ClInclude Include="mpl\base\derive_if.h" />

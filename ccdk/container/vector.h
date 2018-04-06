@@ -197,7 +197,6 @@ public:
 		return allocate_type::max_allocate_size();
 	}
 	
-
 	/* iterator */
 	CCDK_FORCEINLINE iterator_type begin() noexcept{ 
 		return content;

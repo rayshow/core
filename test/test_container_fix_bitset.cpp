@@ -24,7 +24,7 @@ int main()
 	{
 		constexpr fix_bitset<15>  bit15;
 		constexpr fix_bitset<33>  bit33{ mpl::false_c };
-		constexpr fix_bitset<11>  bit11{ constexpr_string_ctor_c, "10101010101010101" };
+		constexpr fix_bitset<11>  bit11{ from_string_literial_c, "10101010101010101" };
 		constexpr fix_bitset<11> bit112{ bit11 };
 		bit15.debug();
 		bit33.debug();
@@ -147,13 +147,160 @@ int main()
 		RuntimeAssertTrue(!any.none());
 		RuntimeAssertTrue(!any.all());
 	}
-	DebugNewTitle("shift right");
+	DebugNewTitle("test shl");
 	{
-		fix_bitset<33> bit33{ "100000011000000110000001100000010" };
-		bit33.debug();
-
+		fix_bitset<66> shl{ "11111111011111111111011111111111101111111111101111111" };
+		shl.debug();
+		shl <<= 1;
+		shl.debug();
+		shl <<= 9;
+		shl.debug();
+		shl <<= 19;
+		shl.debug();
+		shl <<= 17;
+		shl.debug();
+		shl <<= 17;
+		shl.debug();
 	}
+	DebugNewTitle("test shr");
+	{
+		fix_bitset<66> shr{ "11111111011111111111011111111111101111111111101111111" };
+		shr.debug();
+		shr >>= 1;
+		shr.debug();
+		shr >>= 9;
+		shr.debug();
+		shr >>= 19;
+		shr.debug();
+		shr >>= 17;
+		shr.debug();
+		shr >>= 17;
+		shr.debug();
+	}
+	DebugNewTitle("test bit op");
+	{
+		fix_bitset<66> l{ "11111111011111111111011110000111101111111111101111111" };
+		fix_bitset<66> r{ "00000100101010101001100000000000011111111111111111111" };
+		l.debug();
+		r.debug();
+		(l | r).debug();
+		(l & r).debug();
+		(l ^ r).debug();
+		l.flip().debug();
+	}
+	
 
 	getchar();
 	return 0;
 }
+
+/*
+DebugNewTitle("shift right");
+{
+DebugSubTitle("test store in 8");
+{
+fix_bitset<7> bita{ "1001" };
+fix_bitset<7> bitb{ "100001" };
+fix_bitset<7> bitc{ "1000001" };
+bita.debug();
+bita.debug_iterator();
+bita.debug_const_iterator();
+bita.debug_reverse_iterator();
+bita.debug_const_reverse_iterator();
+bitb.debug();
+bitb.debug_iterator();
+bitb.debug_const_iterator();
+bitb.debug_reverse_iterator();
+bitb.debug_const_reverse_iterator();
+bitc.debug();
+bitc.debug_iterator();
+bitc.debug_const_iterator();
+bitc.debug_reverse_iterator();
+bitc.debug_const_reverse_iterator();
+}
+DebugSubTitle("test store in 16");
+{
+fix_bitset<9> bita{ "100001" };
+fix_bitset<9> bitb{ "1000001" };
+fix_bitset<9> bitc{ "10000001" };
+bita.debug();
+bita.debug_iterator();
+bita.debug_const_iterator();
+bita.debug_reverse_iterator();
+bita.debug_const_reverse_iterator();
+bitb.debug();
+bitb.debug_iterator();
+bitb.debug_const_iterator();
+bitb.debug_reverse_iterator();
+bitb.debug_const_reverse_iterator();
+bitc.debug();
+bitc.debug_iterator();
+bitc.debug_const_iterator();
+bitc.debug_reverse_iterator();
+bitc.debug_const_reverse_iterator();
+}
+DebugSubTitle("test store in 32");
+{
+fix_bitset<17> bita{ "10000011000001" };
+fix_bitset<17> bitb{ "1000000110000001" };
+fix_bitset<17> bitc{ "100000001100000001" };
+bita.debug();
+bita.debug_iterator();
+bita.debug_const_iterator();
+bita.debug_reverse_iterator();
+bita.debug_const_reverse_iterator();
+bitb.debug();
+bitb.debug_iterator();
+bitb.debug_const_iterator();
+bitb.debug_reverse_iterator();
+bitb.debug_const_reverse_iterator();
+bitc.debug();
+bitc.debug_iterator();
+bitc.debug_const_iterator();
+bitc.debug_reverse_iterator();
+bitc.debug_const_reverse_iterator();
+}
+DebugSubTitle("test store in 64");
+{
+fix_bitset<33> bita{ "1000001100000110000011000001" };
+fix_bitset<33> bitb{ "10000001100000011000000110000001" };
+fix_bitset<33> bitc{ "100000001100000001100000001100000001" };
+bita.debug();
+bita.debug_iterator();
+bita.debug_const_iterator();
+bita.debug_reverse_iterator();
+bita.debug_const_reverse_iterator();
+bitb.debug();
+bitb.debug_iterator();
+bitb.debug_const_iterator();
+bitb.debug_reverse_iterator();
+bitb.debug_const_reverse_iterator();
+bitc.debug();
+bitc.debug_iterator();
+bitc.debug_const_iterator();
+bitc.debug_reverse_iterator();
+bitc.debug_const_reverse_iterator();
+}
+DebugSubTitle("test store in multi-8");
+{
+fix_bitset<73> bita{ "1000001100000110000011000001100000110000011000001100001" };
+fix_bitset<73> bitb{ "100000110000011000001100000110000011000001100000110000011000001" };
+fix_bitset<73> bitc{ "100000011000000110000001100000011000000110000001100000011000000110000001" };
+bita.debug();
+bita.debug_iterator();
+bita.debug_const_iterator();
+bita.debug_reverse_iterator();
+bita.debug_const_reverse_iterator();
+bitb.debug();
+bitb.debug_iterator();
+bitb.debug_const_iterator();
+bitb.debug_reverse_iterator();
+bitb.debug_const_reverse_iterator();
+bitc.debug();
+bitc.debug_iterator();
+bitc.debug_const_iterator();
+bitc.debug_reverse_iterator();
+bitc.debug_const_reverse_iterator();
+}
+}
+*/

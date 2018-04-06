@@ -5,15 +5,20 @@ INCLUDELIB kernel32.lib
 
 .MODEL flat,stdcall  
 
-ExitProcess PROTO,
-	dwExitCode:DWORD
+ExitProcess PROTO, dwFlag:dword
 
 .data
+sum DWORD 0
 .code
 main PROC
-	mov eax, 10000h
-	mov ebx, 40000h
-	push 0h
-	call ExitProcess
+	mov eax, 1
+	mov ebx, 20
+	add ebx, eax
+	mov sum, ebx
+	nop
+	invoke ExitProcess,0
 main ENDP
+
+
+
 END main

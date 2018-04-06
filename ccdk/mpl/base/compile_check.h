@@ -33,11 +33,7 @@ template<uint32 start, uint32 end, uint32 min, uint32 max>
 using check_in_range2 = typename enable_if< (start >= min && end <= max && end >= start && min >= 0), void>::type;
 
 
-template<typename Ret> Ret radd(Ret a, Ret b) { return a + b; }
-template<typename Ret> Ret rsub(Ret a, Ret b) { return a - b; }
-template<typename Ret> Ret rmul(Ret a, Ret b) { return a * b; }
-template<typename Ret> Ret rdiv(Ret a, Ret b) { return a / b; }
-template<typename Ret> Ret rneg(Ret a) { return -a; }
+
 
 
 

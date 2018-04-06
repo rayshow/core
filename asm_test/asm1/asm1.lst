@@ -1,0 +1,70 @@
+Microsoft (R) Macro Assembler Version 14.13.26129.0	    04/05/18 16:50:14
+Add and Subtract (AddSub.asm				     Page 1 - 1
+
+
+				TITLE Add and Subtract (AddSub.asm)
+
+
+				INCLUDELIB kernel32.lib
+
+				.MODEL flat,stdcall  
+
+				ExitProcess PROTO, dwFlag:dword
+
+ 00000000			.data
+ 00000000 00000000		sum DWORD 0
+ 00000000			.code
+ 00000000			main PROC
+ 00000000  B8 00000001			mov eax, 1
+ 00000005  BB 00000014			mov ebx, 20
+ 0000000A  03 D8			add ebx, eax
+ 0000000C  89 1D 00000000 R		mov sum, ebx
+ 00000012  90				nop
+					invoke ExitProcess,0
+ 00000013  6A 00	   *	    push   +000000000h
+ 00000015  E8 00000000 E   *	    call   ExitProcess
+ 0000001A			main ENDP
+
+
+
+				END main
+Microsoft (R) Macro Assembler Version 14.13.26129.0	    04/05/18 16:50:14
+Add and Subtract (AddSub.asm				     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000001A Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001A Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+sum  . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors
