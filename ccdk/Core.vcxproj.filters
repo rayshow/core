@@ -897,5 +897,6 @@
     <ClInclude Include="container\impl\list_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
     <ClInclude Include="mpl\base\compatible_op.h" />
+    <ClInclude Include="mpl\fusion\local_object.h" />
   </ItemGroup>
 </Project>

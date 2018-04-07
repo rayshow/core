@@ -164,6 +164,7 @@
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
+    <ClInclude Include="mpl\fusion\local_object.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\range.h" />
