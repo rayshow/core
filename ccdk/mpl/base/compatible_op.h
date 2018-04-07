@@ -29,8 +29,14 @@ namespace base_impl {
 template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret shl_type(Ret v) noexcept {
 	return v << Ret(base_impl::shift_bit_mpl<sizeof(T) * 8>::value);
 }
+
 template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret shr_type(Ret v) noexcept {
 	return v >> Ret(base_impl::shift_bit_mpl<sizeof(T) * 8>::value);
+}
+
+template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret keep_low(Ret v) noexcept {
+	Ret shl = sizeof(T) * 8 - base_impl::shift_bit_mpl<sizeof(T) * 8>::value;
+	return (v << shl) >> shl;
 }
 
 template<uint32 bits, typename Ret> CCDK_FORCEINLINE constexpr Ret shl_bits(Ret v) noexcept {

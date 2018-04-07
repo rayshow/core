@@ -3,6 +3,7 @@
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/base/logic_.h>
+#include<ccdk/mpl/base/compatible_op.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/iterator/bit_iterator.h>
@@ -35,7 +36,7 @@ public:
 	using increase_ratio = InceaseRatio;
 
 	/* container */
-	using value_type           = bool;
+	using value_type           = T;
 	using pointer_type         = T*;
 	using const_pointer_type   = T const*;
 	using reference_type       = it::bit_access<T>;
@@ -102,17 +103,15 @@ public:
 
 	/* copy */
 	CCDK_FORCEINLINE bitset(bitset const& other){
-		content = allocator_type::allocate(*this, other.count());
-		len = other.size();
+		local_allocate_n(other.len);
 		memcpy(content, other.content, other.bytes());
 	}
 
 	/* template copy */
 	template<typename Size2, typename T2, typename Alloc2>
 	CCDK_FORCEINLINE bitset(bitset<T2, Size2, Alloc2> const& other) {
-		len = other.size();
-		content = allocator_type::allocate(*this, other.bytes() / sizeof(T));
-		memcpy(content, other.content, other.byte());
+		local_allocate_n(other.len);
+		memcpy(content, other.content, other.bytes());
 	}
 
 	/* move */
@@ -134,40 +133,56 @@ public:
 		util::swap(len, other.len);
 	}
 
-	/* copy assign */
+	/*  assign copy */
 	CCDK_FORCEINLINE this_type& operator=(bitset const& other) {
-		
-		if( other.count() > count() ){
-			// reallocate 
-			this->destruct();
-			content = allocate_n(other.len);
-		}
-		memcpy(content, other.content, other.bytes());
-		memset(content, 0, bytes())
-		len = other.len;
+		assign_copy(other.content, other.len);
+	}
+
+	/* template assign copy   */
+	template<typename T2, typename Size2, typename Ratio2, typename Alloc2>
+	CCDK_FORCEINLINE this_type& operator=(bitset<T2,Size2,Ratio2,Alloc2> const& other) {
+		assign_copy(other.content, other.len);
 	}
 
 	/* move assign */
 	CCDK_FORCEINLINE this_type& operator=(bitset && other) noexcept {
-		this->destruct();
-		rvalue_set(other.content, other.len);
+		this->deallocate();
+		rvalue_set(other.content, other.len, other.cap);
+		other.rvalue_reset();
+	}
+
+	/* move assign */
+	template<typename Size2, typename Ratio2>
+	CCDK_FORCEINLINE this_type& operator=(bitset<T,Size2,Ratio2,Alloc> && other) noexcept {
+		this->deallocate();
+		rvalue_set(other.content, other.len, other.cap);
 		other.rvalue_reset();
 	}
 
 	/* assign fill */
 	CCDK_FORCEINLINE this_type& operator=(bool v) noexcept {
-		memset(content, v ? 0b11111111 : 0b00000000, sizeof(T)*count_store(len));
+		memset(content, v ? 0b11111111 : 0b00000000, bytes());
+		clear_ext_bits();
 	}
 
 	/* fit size n and fill */
 	CCDK_FORCEINLINE this_type& assign(size_type n, bool v) {
-		
+		if (n > cap) {
+			this->deallocate();
+			this->local_allocate_n(n);
+		}
+		else { len = n; }
+		memset(content, v ? 0b11111111 : 0b00000000, bytes());
+		clear_ext_bits();
 	}
 
 	/* from start to endd fill v*/
-	CCDK_FORCEINLINE this_type& assign(size_type start, size_type end, bool v)
-	{
-
+	CCDK_FORCEINLINE this_type& assign(size_type istart, size_type iend, bool v) {
+		ccdk_assert(start < end && end <= cap);
+		auto end = begin() + iend;
+		for (auto it = begin() + istart; it != end; ++it) {
+			*it = v;
+		}
 	}
 
 
@@ -182,63 +197,77 @@ public:
 	}
 
 	/* iterator */
-	CCDK_FORCEINLINE iterator_type begin() 
-		noexcept { return { content, 0 }; }
-	CCDK_FORCEINLINE iterator_type end() 
-		noexcept { return { content, len }; }
-	CCDK_FORCEINLINE const_iterator_type cbegin() 
-		const noexcept { return { content, 0 }; }
-	CCDK_FORCEINLINE const_iterator_type cend() 
-		const noexcept { return { content, len }; }
-	CCDK_FORCEINLINE reverse_iterator_type rbegin() 
-		noexcept { return { content, len-1 };}
-	CCDK_FORCEINLINE reverse_iterator_type rend() 
-		noexcept { return { content, -1 }; }
-	CCDK_FORCEINLINE const_reverse_iterator_type crbegin() 
-		const noexcept { return { content, len-1 }; }
-	CCDK_FORCEINLINE const_reverse_iterator_type crend() 
-		const noexcept { return { content, -1 }; }
+	CCDK_FORCEINLINE iterator_type begin() noexcept {
+		return { content, 0, 1 };
+	}
+	CCDK_FORCEINLINE iterator_type end() noexcept {
+		return { content, count()-1, cshl<T>(1, keep_low<T,T>(len)) };
+	}
+	CCDK_FORCEINLINE constexpr const_iterator_type cbegin() const noexcept {
+		return { content, 0, 1 };
+	}
+	CCDK_FORCEINLINE constexpr const_iterator_type cend() const noexcept {
+		return { content, count() - 1, cshl<T>(1, keep_low<T,T>(len)) };
+	}
+	CCDK_FORCEINLINE reverse_iterator_type rbegin() noexcept {
+		return { --end() };
+	}
+	CCDK_FORCEINLINE reverse_iterator_type rend() noexcept {
+		return { --begin() };
+	}
+	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crbegin() const noexcept {
+		return { end()-1 };
+	}
+	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crend() const noexcept {
+		return { begin()-1 };
+	}
 
 	/* attribute */
-	CCDK_FORCEINLINE size_type size() { return len; }
-	CCDK_FORCEINLINE size_type count() { return count_store(len); }
-	CCDK_FORCEINLINE size_type byte() { return count() * sizeof(T); }
-	CCDK_FORCEINLINE size_type capcity() { return count() * kStoreBits; }
-	CCDK_FORCEINLINE size_type max_size() { return size_type(-1) / sizeof(T); }
+	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
+	CCDK_FORCEINLINE size_type capcity() const noexcept { return cap; }
+	CCDK_FORCEINLINE size_type max_size() const noexcept { return size_type(-1) / sizeof(T); }
 
-	/* access */
+	/* index */
 	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
 		ccdk_assert(index < len);
-		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
+		return { content[index / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
-	CCDK_FORCEINLINE const_reference_type operator[](size_type index) const noexcept{
+
+	/* const index, return bool */
+	CCDK_FORCEINLINE constexpr const_reference_type operator[](size_type index) const noexcept {
 		ccdk_assert(index < len);
-		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
+		return content[index / kStoreBits] & cshl<value_type>(1, index % kStoreBits);
 	}
 	CCDK_FORCEINLINE reference_type at(size_type index) noexcept {
 		ccdk_assert(index < len);
-		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
+		return { content[index / kStoreBits], cshl<value_type>(1,index%kStoreBits) };
 	}
-	CCDK_FORCEINLINE const_reference_type at(size_type index) const noexcept {
+	CCDK_FORCEINLINE constexpr const_reference_type at(size_type index) const noexcept {
 		ccdk_assert(index < len);
-		return { content[index / kStoreBits], 1 << (index % kStoreBits) };
-	}
-	CCDK_FORCEINLINE reference_type back()  noexcept {
-		return { content[len / kStoreBits], 1 << (len % kStoreBits) };
+		return content[index / kStoreBits] & cshl<value_type>(1, (index % kStoreBits));
 	}
 
-	CCDK_FORCEINLINE const_reference_type back() const noexcept {
-		return { content[len / kStoreBits], 1 << (len % kStoreBits) };
+	/* last bit reference */
+	CCDK_FORCEINLINE reference_type back()  noexcept {
+		return { content[len / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
+	}
+
+	/* last bit value */
+	CCDK_FORCEINLINE constexpr const_reference_type back() const noexcept {
+		return { content[len / kStoreBits], cshl<value_type>(1, NBit % kStoreBits) };
 	}
 
 	CCDK_FORCEINLINE this_type& pop_back() noexcept {
-		if (len > 0) --len;
+		if (len > 0) {
+			back() = false;
+			--len;
+		}
 	}
 
 	CCDK_FORCEINLINE this_type& push_back(bool v) noexcept {
-		if (len == capcity()) {
-			this->destruct();
-			content = allocator_type::allocate(*this, store_size(len + 1));
+		if (len == cap) {
+			this->deallocate();
+			local_reallocate_copy(len);
 		}
 		++len;
 		back() = v;
@@ -284,72 +313,110 @@ private:
 
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
 		len = 0;
+		cap = 0;
 		content = nullptr;
 	}
 
-	CCDK_FORCEINLINE void rvalue_set(T* inContent, size_type n) noexcept {
+	CCDK_FORCEINLINE void rvalue_set(T* inContent, size_type n, size_type c) noexcept {
 		content = inContent;
+		len = n;
+		cap = c;
+	}
+
+	CCDK_FORCEINLINE void deallocate() {
+		allocator_type::deallocate(content, count());
+	}
+
+	/* count of used elements */
+	CCDK_FORCEINLINE size_type count() const noexcept { 
+		return shr_type<T, size_type>(len); 
+	}
+
+	/* bytes of used elements */
+	CCDK_FORCEINLINE size_type bytes() const noexcept { 
+		return shr_type<uint8, size_type>(len); 
+	}
+
+	/* not used bytes of storage */
+	CCDK_FORCEINLINE size_type ext_bytes() const noexcept { 
+		return shr_type<uint8, size_type>(cap) - bytes(); 
+	}
+
+	/* clear last used element's not used bits */
+	CCDK_FORCEINLINE size_type clear_ext_bits() noexcept {
+		if (content) {
+			size_type ext_bits = shl_type<T, size_type>(count()) - len;
+			T mask{ 0 };
+			while (ext_bits--) mask |= cshl<T>(1, ext_bits);
+			content[count() - 1] & = ~mask;
+		}
+	}
+
+	CCDK_FORCEINLINE void local_allocate_n(size_type n) {
+		ccdk_increase_allocate3(count_store(n), content, cap, len);
+		cap = shl_type<T, size_type>(cap);
 		len = n;
 	}
 
-	CCDK_FORCEINLINE size_type count_store(size_type n) const noexcept {
-		return (n + sizeof(T) - 1) / sizeof(T);
-	}
-
-	CCDK_FORCEINLINE T* allocate_n(size_type n) {
-		return allocator_type::allocate(*this, count_store(n));
-	}
-
-	CCDK_FORCEINLINE void destruct() {
-		allocator_type::deallocate(content, count_store(len));
+	CCDK_FORCEINLINE void clear_ext_bit_and_storage() noexcept {
+		clear_ext_bits();                           /* clear last T' ext bits */
+		memset(content + bytes(), 0, ext_bytes());  /* clear ext storage */
 	}
 
 	CCDK_FORCEINLINE void allocate_fill(size_type n, bool val) {
 		if (n > 0) {
-			ccdk_increase_allocate3(count_store(n), content, cap, len);
-			cap <<= 3;
-			len <<= 3;
+			local_allocate_n(n);
+			memset(content, val ? 0b11111111 : 0b00000000, bytes());
+			clear_ext_bit_and_storage();
 		}
 	}
 
 	template<typename T2>
-	CCDK_FORCEINLINE T* reallocate_copy(size_type count, T const* other) {
-		if (count > 0) {
+	CCDK_FORCEINLINE void local_reallocate_copy(size_type n) {
+		if (n > 0) {
 			T* memory{ nullptr };
-			ccdk_increase_allocate1(count, memory);
-			memcpy(memory, content, count / sizeof(T));
+			size_type new_len, new_cap;
+			ccdk_increase_allocate3( shr_type<T,size_type>(n), memory, new_cap, new_len);
+			new_len = n;
+			new_cap = shl_type<T, size_type>(new_cap);
+			memcpy(memory, content, bytes());
+			this->deallocate();
+			len = new_len;
+			cap = new_cap;
 		}
 	}
 
 
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt beginIt) {
-		if (n == 0) return;
-		T* memory = allocate_n(n);
-		util::copy_n(begin(), beginIt, n);
-		len = n;
-		content = memory;
+		if (n > 0) {
+			local_allocate_n(b);
+			util::copy_n(begin(), beginIt, n);
+			clear_ext_bit_and_storage();
+		}
 	}
 
 	template<typename Char>
 	CCDK_FORCEINLINE void allocate_init_from_string(Char const* str, ptr::size_t n) {
 		if (!str || n == 0) return;
-		content = allocate_n(n);
-		len = n;
+		local_allocate_n(n);
 		for (ptr::size_t i = 0; i < n; ++i) {
 			ccdk_assert(str[i] == Char('0') || str[i] == Char('1'));
 			this->at(i) =  bool(str[i]-Char('0'));
 		}
+		clear_ext_bit_and_storage();
 	}
 
-	template<typename InputIt>
-	CCDK_FORCEINLINE void assign_copy(InputIt beginIt, size_type n) {
-		if (n > capcity()) {
-			this->destruct();
-			content = allocator_type::allocate(*this, store_size(n));
+	template<typename T2>
+	CCDK_FORCEINLINE void assign_copy(T2* memory, size_type n) {
+		if (n > count()) {
+			// reallocate 
+			this->deallocate();
+			local_allocate_n(n);
 		}
-		util::copy_n(begin(), beginIt, n);
-		len = n;
+		else { len = n; }
+		memcpy(content, memory, bytes());               /* copy content */
+		memset(content + bytes(), 0, ext_bytes());      /* clear other */
 	}
 
 };

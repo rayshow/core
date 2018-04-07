@@ -3,6 +3,7 @@
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/base/logic_.h>
+#include<ccdk/mpl/base/compatible_op.h>
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/iterator/bit_iterator.h>
@@ -38,7 +39,7 @@ constexpr T parse_int(const Char* str, uint32 pos, uint32 max) {
 	end = max < end ? max : end;
 	T val = 0;
 	for (uint32 i = begin; i < end; ++i) {
-		val = rbitor<T>( val << T(1), str[i] - '0');
+		val = cbitor<T>( val << T(1), str[i] - '0');
 	}
 	return val;
 }
@@ -128,10 +129,10 @@ public:
 		ptr::size_t len = (ptr::size_t)fn::min(NBit, strlen(str));
 		for (uint32 i = 0; i < N; ++i) {
 			for (uint32 j = 0; j < kStoreBits; ++j) {
-				uint32 pos = ( i << shift_bit<kStoreBits>::value ) + j;
+				uint32 pos = shl_bits<kStoreBits,uint32>(i) + j;
 				if (pos >= len) return;
 				ccdk_assert(str[pos] - '0' == 1 || str[pos] - '0' == 0);
-				content[i] |= rshl<value_type>( (str[pos] - '0'),  j);
+				content[i] |= cshl<value_type>( (str[pos] - '0'),  j);
 			}
 		}
 	}
@@ -226,31 +227,31 @@ public:
 	/* index */
 	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
 		ccdk_assert(index < NBit);
-		return { content[index / kStoreBits], rshl<value_type>(1, index % kStoreBits) };
+		return { content[index / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* const index, return bool */
 	CCDK_FORCEINLINE constexpr const_reference_type operator[](size_type index) const noexcept {
-		ccdk_assert(index < len);
-		return content[index / kStoreBits] & rshl<value_type>(1, index % kStoreBits);
+		ccdk_assert(index < NBit);
+		return content[index / kStoreBits] & cshl<value_type>(1, index % kStoreBits);
 	}
 	CCDK_FORCEINLINE reference_type at(size_type index) noexcept {
 		ccdk_assert(index < NBit );
-		return { content[index / kStoreBits], rshl<value_type>(1,index%kStoreBits) };
+		return { content[index / kStoreBits], cshl<value_type>(1,index%kStoreBits) };
 	}
 	CCDK_FORCEINLINE constexpr const_reference_type at(size_type index) const noexcept {
 		ccdk_assert(index < NBit);
-		return content[index / kStoreBits] & rshl<value_type>(1,(index % kStoreBits));
+		return content[index / kStoreBits] & cshl<value_type>(1,(index % kStoreBits));
 	}
 
 	/* last bit reference */
 	CCDK_FORCEINLINE reference_type back()  noexcept {
-		return { content[len / kStoreBits], rshl<value_type>(1, index % kStoreBits) };
+		return { content[len / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* last bit value */
 	CCDK_FORCEINLINE constexpr const_reference_type back() const noexcept {
-		return { content[len / kStoreBits], rshl<value_type>(1, NBit % kStoreBits) };
+		return { content[len / kStoreBits], cshl<value_type>(1, NBit % kStoreBits) };
 	}
 
 	CCDK_FORCEINLINE constexpr size_type count_one() {
