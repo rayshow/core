@@ -22,7 +22,7 @@ struct pair
 
 /* make normal pair */
 template<typename T1, typename T2>
-auto make_pair(T1&& t1, T2&& t2) { return pair<T1, T2>{t1, t2}; }
+auto make_pair(T1&& t1, T2&& t2) { return pair<remove_ref_t<T1>, remove_ref_t<T2>>{t1, t2}; }
 
 
 

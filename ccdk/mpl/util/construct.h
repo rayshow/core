@@ -20,11 +20,10 @@ template<
 	typename T,
 	typename It,
 	typename = check_t< not_< is_pointer<It>>>,
-	typename = check_t< has_deref<It>>,
+	typename = check_t< has_deref<It, T>>,
 	typename... Args>
 	CCDK_FORCEINLINE static void construct(It it, Args&& ... args)
 {
-	DebugFunctionName();
 	new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
 }
 

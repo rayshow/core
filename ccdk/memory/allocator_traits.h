@@ -58,7 +58,7 @@ public:
 	using rebind = typename Alloc::template rebind<P>;
 
 	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) {
-		if (n == 0) return nullptr;
+		ccdk_assert(n > 0);
 		return static_cast<pointer>(alloc.allocate(n)); 
 	}
 	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n, const void* hint){

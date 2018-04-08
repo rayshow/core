@@ -28,6 +28,8 @@ struct A {
 
 int main()
 {
+	std::list<int> lst;
+
 	mem::simple_new_allocator<slist_node<A>> alloc;
 	slist_node<A> *mem = alloc.allocate(4);
 	construct<A>(mem, 1);

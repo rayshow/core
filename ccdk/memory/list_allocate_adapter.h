@@ -4,9 +4,7 @@
 #include<ccdk/mpl/type_traits/declval.h>
 #include<ccdk/mpl/type_traits/has_attribute.h>
 #include<ccdk/mpl/function/operator.h>
-
 #include<ccdk/mpl/fusion/pair.h>
-
 #include<ccdk/memory/memory_module.h>
 #include<ccdk/memory/allocator_traits.h>
 
@@ -27,14 +25,6 @@ struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
 	ccdk_increase_allocate_lst3(n,head,tail,cap)                          \
 	len = n;	
 
-/*
-list adaptor of allocator: try to minimize memory fragment
-always allocate/deallocate continuous memory.
-when allocate, if allocate n * sizeof(T)  failed ,
-try allocate small frag memory like (n-1) * sizeof(T) ... sizeof(T)
-when deallocate, try detech continuous x * sizeof(T) memory and
-recycle
-*/
 template<typename Alloc>
 class list_allocate_adapter
 {
@@ -48,12 +38,12 @@ public:
 	using rebind = list_allocate_adapter<U>;
 
 	/* forward list node */
-	static auto __allocate(Alloc const& alloc, ptr::size_t n, false_) {
+	static auto __allocate(Alloc const& alloc, size_type n, mpl::false_) {
 
 		node_type *head, *tail;
 		head = upstream_allocator::allocate(alloc, 1);
 		tail = head;
-		for (int i = 0; i < n - 1; ++i) {
+		for (uint32 i = 0; i < n - 1; ++i) {
 			tail->next = upstream_allocator::allocate(alloc, 1);
 			tail = tail->next;
 		}
@@ -62,13 +52,13 @@ public:
 	}
 
 	/* forward list node */
-	static auto __allocate(Alloc const& alloc, ptr::size_t n, true_) {
+	static auto __allocate(Alloc & alloc, size_type n, mpl::true_) {
 
 		node_type *head, *tail, *mid;
-		head = allocator::allocate(alloc, 1);
+		head = upstream_allocator::allocate(alloc, 1);
 		head->prev = nullptr;
 		tail = head;
-		for (int i = 0; i < n - 1; ++i) {
+		for (uint32 i = 0; i < n - 1; ++i) {
 			mid = upstream_allocator::allocate(alloc, 1);
 			tail->next = mid;
 			mid->prev = tail;
@@ -80,10 +70,10 @@ public:
 
 	/* value_type.next must be valid */
 	template<typename = check_t< is_forward_node<node_type>>>
-	static auto allocate(Alloc const& alloc, ptr::size_t n)
+	static auto allocate(Alloc & alloc, size_type n)
 	{
 		ccdk_assert(n > 0);
-		if (n == 0) return nullptr;
+		if (n == 0) return fs::pair<value_type*, value_type*>{};
 		return __allocate(alloc, n, is_biward_node_c<node_type>);
 	}
 
@@ -92,15 +82,16 @@ public:
 
 	/* value_type.next must be valid */
 	template<typename = check_t< is_forward_node<node_type>>>
-	static auto deallocate(Alloc const& alloc, node_type* pointer, ptr::size_t n) noexcept {
-		ccdk_assert(pointer && n > 0);
-		if (!pointer || n == 0) return;
-		node_type* curr = pointer;
-		for (int i = 0; i < n; ++i) {
-			pointer = pointer->next;
-			upstream_allocator::deallocate(alloc, curr, 1);
+	static auto deallocate(Alloc &alloc, node_type* pointer, size_type n) noexcept {
+		if (pointer && n > 0) {
+			node_type* curr = pointer;
+			for (uint32 i = 0; i < n; ++i) {
+				node_type* next = pointer->next;
+				upstream_allocator::deallocate(alloc, curr, 1);
+				pointer = next;
+			}
+			reset_prev(pointer, is_biward_node_c<node_type>);
 		}
-		reset_prev(pointer, is_biward_node_c<node_type>) 
 		return pointer;
 	}
 

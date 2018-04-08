@@ -35,21 +35,22 @@ struct iterator< biward_category, Node >
 		pointer = pointer->prev; return *this;
 	}
 
-
 	/* it++ */
 	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
 		return { pointer->next };
 	}
 
 	/* it-- */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
+	CCDK_FORCEINLINE constexpr this_type operator--(int) const noexcept {
 		return { pointer->prev };
 	}
 
 	/* it+=step */
 	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
-		for (ptr::size_t i = 0; i < step; ++i, pointer = pointer->next)
+		while (step--) {
+			pointer = pointer->next;
 			ccdk_assert(pointer);
+		}
 		return *this;
 	}
 	/* it+step */
@@ -59,8 +60,10 @@ struct iterator< biward_category, Node >
 
 	/* it-=step */
 	CCDK_FORCEINLINE this_type& operator-=(size_type step) noexcept {
-		for (ptr::size_t i = 0; i < step; ++i, pointer = pointer->prev)
+		while (step--) {
+			pointer = pointer->prev;
 			ccdk_assert(pointer);
+		}
 		return *this;
 	}
 	/* it-step */
@@ -68,9 +71,13 @@ struct iterator< biward_category, Node >
 		return this_type{ pointer } -= step;
 	}
 
-	/* const */
-	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return pointer->data; }
-	CCDK_FORCEINLINE reference_type operator*() noexcept { return pointer->data; }
+	/* dereference */
+	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return pointer->value; }
+	CCDK_FORCEINLINE reference_type operator*() noexcept { return pointer->value; }
+
+	/* member */
+	CCDK_FORCEINLINE const_pointer_type operator->() const noexcept { return pointer; }
+	CCDK_FORCEINLINE pointer_type operator->() noexcept { return pointer; }
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {

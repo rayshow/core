@@ -37,7 +37,7 @@ namespace mpl_impl
 template<>
 struct arg_pack<>
 {
-	typedef random_category   category;
+	typedef mrandom_category  category;
 	typedef arg_pack          type;
 
 	/* attribute */
@@ -65,7 +65,7 @@ struct arg_pack<>
 template<typename T, typename... Args> 
 struct arg_pack<T, Args...>
 {
-	typedef random_category      category;
+	typedef mrandom_category     category;
 	typedef arg_pack             type;
 
 	/*iterator*/

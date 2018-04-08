@@ -96,6 +96,7 @@
     <ClInclude Include="container\unordered_map.h" />
     <ClInclude Include="container\unordered_set.h" />
     <ClInclude Include="memory\block_list_allocate_adapter.h" />
+    <ClInclude Include="memory\debug_leak_allocator.h" />
     <ClInclude Include="memory\list_allocate_adapter.h" />
     <ClInclude Include="container\vector.h" />
     <ClInclude Include="debug_type.hpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
     <ClInclude Include="memory\allocator_traits.h" />
+    <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="mpl\base\apply_.h" />
@@ -164,7 +166,7 @@
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
-    <ClInclude Include="mpl\fusion\local_object.h" />
+    <ClInclude Include="mpl\fusion\local_obj.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\range.h" />

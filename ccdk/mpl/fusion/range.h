@@ -15,7 +15,10 @@ struct range
 
 	CCDK_FORCEINLINE bool valid() { return end < start; }
 
-	CCDK_FORCEINLINE void swap(range & other) {  util::swap(start, other.start); util::swap(end, other.end); }
+	CCDK_FORCEINLINE void swap(range & other) {
+		util::swap(start, other.start);
+		util::swap(end, other.end);
+	}
 
 };
 
