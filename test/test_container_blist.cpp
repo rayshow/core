@@ -92,8 +92,14 @@ int main()
 		lst1.assign(lst3.begin(), lst3.size());
 		RuntimeAssertTrue(lst1.back() == 3 && lst1.size() == 25);
 	}
+	DebugNewTitle("initialize / front /back");
+	{
+		const blist<int> lst1{ { 1,2,3,4,5,6,7 } };
+		RuntimeAssertTrue(lst1.front() == 1);
+		RuntimeAssertTrue(lst1.back() == 7);
+		lst1.cdebug("test cit:");
+	}
 
-	int *a = new int;
 	_CrtDumpMemoryLeaks();
 	getchar();
 	return 0;

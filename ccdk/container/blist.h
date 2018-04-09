@@ -34,22 +34,22 @@ public:
 	/* common */
 	using this_type = blist;
 	using node_type = Node;
-	
+
 	/* container */
-	using value_type      = T;
-	using pointer         = T*;
-	using const_ponter    = T const*;
-	using reference       = T&;
+	using value_type = T;
+	using pointer = T * ;
+	using const_ponter = T const*;
+	using reference = T & ;
 	using const_reference = T const&;
-	using size_type       = Size;
-	using difference      = ptr::diff_t;
-	using allocator_type  = mem::list_allocate_adapter<
+	using size_type = Size;
+	using difference = ptr::diff_t;
+	using allocator_type = mem::list_allocate_adapter<
 		typename Alloc::template rebind<Node>>;
 
 	/* iterator */
-	using iterator               = it::iterator<biward_category, Node>;
-	using const_iterator         = const iterator;
-	using reverse_iterator       = it::reverse_iterator<iterator> ;
+	using iterator = it::iterator<biward_category, Node>;
+	using const_iterator = const iterator;
+	using reverse_iterator = it::reverse_iterator<iterator>;
 	using const_reverse_iterator = const reverse_iterator;
 
 	template<typename T2, typename Size2, typename Alloc2, typename Node2>
@@ -80,13 +80,13 @@ public:
 
 	//  range-n ctor
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE explicit blist(InputIt beginIt, size_type n) {
+	CCDK_FORCEINLINE blist(InputIt beginIt, size_type n) {
 		allocate_copy(beginIt, n);
 	}
 
 	//  range ctor
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE explicit blist(InputIt beginIt, InputIt endIt) {
+	CCDK_FORCEINLINE blist(InputIt beginIt, InputIt endIt) {
 		allocate_copy(beginIt, alg::distance(beginIt, endIt));
 	}
 
@@ -97,8 +97,14 @@ public:
 
 	// template copy ctor, node_type can  be different but T must be same
 	template<typename Size2, typename Node2>
-	CCDK_FORCEINLINE blist(blist<T,Size2,Alloc,Node2> const& other) {
+	CCDK_FORCEINLINE blist(blist<T, Size2, Alloc, Node2> const& other) {
 		allocate_copy(other.begin(), other.size());
+	}
+
+	// sim initialize_list 
+	template<uint32 N>
+	CCDK_FORCEINLINE explicit blist(T const (&arr)[N]) {
+		allocate_copy(arr, N);
 	}
 
 	// move ctor
@@ -444,10 +450,17 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////
-	public:
+public:
 	void debug(char const* title) {
 		std::cout << title << " :";
 		for (auto it = this->begin(); it != end(); ++it) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
+	void cdebug(char const* title) const {
+		std::cout << title << " :";
+		for (auto it = this->cbegin(); it != cend(); ++it) {
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
