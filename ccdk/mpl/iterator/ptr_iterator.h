@@ -8,62 +8,79 @@ ccdk_namespace_mpl_it_start
 template<typename T>
 struct iterator<T*>
 {
-	typedef iterator         		 this_type;
+	using this_type = iterator;
 
-	typedef T						 value_type;
-	typedef T *						 pointer_type;
-	typedef T const*                 const_pointer_type;
-	typedef T &						 reference_type;
-	typedef T const&                 const_reference_type;
-	typedef ptr::diff_t              difference_type;
-	typedef ptr::size_t              size_type;
-	typedef random_category category;
+	using value_type      = T;
+	using pointer         = T*;
+	using const_pointer   = T const*;
+	using reference       = T&;
+	using const_reference = T const&;
+	using difference_type = ptr::diff_t;
+	using size_type       = ptr::size_t ;
+	using category        = random_category;
 
-	T*    pointer;
+	T*    content;
 
 	/* ++it */
-	CCDK_FORCEINLINE this_type& operator++() noexcept { ++pointer; return *this; }
-
+	CCDK_FORCEINLINE this_type& operator++() noexcept { ++content; return *this; }
 	/* --it */
-	CCDK_FORCEINLINE this_type& operator--() noexcept { --pointer; return *this; }
+	CCDK_FORCEINLINE this_type& operator--() noexcept { --content; return *this; }
 
 	/* it++ */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept { return { pointer+1 }; }
+	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept { 
+		return { content +1 }; 
+	}
 
 	/* it-- */
-	CCDK_FORCEINLINE constexpr this_type operator--(int) const noexcept { return { pointer-1 }; }
+	CCDK_FORCEINLINE constexpr this_type operator--(int) const noexcept {
+		return { content -1 };
+	}
 
 	/* it+step */
-	CCDK_FORCEINLINE constexpr this_type operator+(size_type n) const noexcept { return this_type{ pointer + n }; }
+	CCDK_FORCEINLINE constexpr this_type operator+(size_type n) const noexcept {
+		return this_type{ content + n }; 
+	}
 
 	/* it-step */
-	CCDK_FORCEINLINE constexpr this_type operator-(size_type n) const noexcept { return this_type{ pointer - n }; }
+	CCDK_FORCEINLINE constexpr this_type operator-(size_type n) const noexcept {
+		return this_type{ content - n };
+	}
 
 	/* it1 - it2 */
-	CCDK_FORCEINLINE constexpr difference_type operator-(this_type const& other) { return pointer - other.pointer; }
+	CCDK_FORCEINLINE constexpr difference_type operator-(this_type const& other) {
+		return content - other.content;
+	}
 
 	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator+=(size_type n) noexcept { return pointer += n; return *this; }
+	CCDK_FORCEINLINE this_type& operator+=(size_type n) noexcept { 
+		return content += n; return *this;
+	}
 
 	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator-=(size_type n) noexcept { return pointer -= n; return *this; }
+	CCDK_FORCEINLINE this_type& operator-=(size_type n) noexcept {
+		return content -= n; return *this;
+	}
 
 	/* deref */
-	CCDK_FORCEINLINE reference_type operator*()  noexcept { return *pointer; }
-	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return *pointer; }
+	CCDK_FORCEINLINE reference operator*()  noexcept { return *content; }
+	CCDK_FORCEINLINE const_reference operator*() const noexcept { return *content; }
 
 	/* index */
-	CCDK_FORCEINLINE reference_type operator[](difference_type index)  noexcept { return pointer[index]; }
-	CCDK_FORCEINLINE const_reference_type operator[](difference_type index) const noexcept { return pointer[index]; }
+	CCDK_FORCEINLINE reference operator[](difference_type index) noexcept {
+		return content[index];
+	}
+	CCDK_FORCEINLINE const_reference operator[](difference_type index) const noexcept {
+		return content[index];
+	}
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return pointer == other.pointer;
+		return content == other.content;
 	}
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return pointer != other.pointer;
+		return content != other.content;
 	}
 };
 

@@ -24,7 +24,7 @@ public:
 
 	// implace ctor
 	template<typename... Args>
-	CCDK_FORCEINLINE local_obj(Args&&... args) 
+	CCDK_FORCEINLINE constexpr local_obj(Args&&... args) 
 		noexcept(has_nothrow_constructor_v<T,Args...>) 
 		: bytes{ 0 }  {
 		construct(util::forward<Args>(args)...);

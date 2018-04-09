@@ -24,14 +24,14 @@ template<
 	typename = check_t< not_< is_pointer<It>>>,
 	typename = check_t< has_deref<It, T>>,
 	typename... Args>
-	CCDK_FORCEINLINE static void construct(It it, Args&& ... args)
+	CCDK_FORCEINLINE constexpr static void construct(It it, Args&& ... args)
 {
 	new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
 }
 
 /* truely pointer, directly construct on it */
 template<typename T, typename... Args>
-CCDK_FORCEINLINE static void construct(const void* memory, Args&& ... args)
+CCDK_FORCEINLINE constexpr static void construct(const void* memory, Args&& ... args)
 {
 	new( const_cast<void*>( memory)) T(util::forward<Args>(args)...);
 }
@@ -240,6 +240,8 @@ namespace ut_impl
 	ForwardIt construct_fill_n_impl(ForwardIt begin, T const& t, ptr::size_t n, opt_lv1)
 	{
 		DebugValue(" uninitalized-n iterator fill");
+		DebugTypeName<ForwardIt>();
+		DebugTypeName<T>();
 		ForwardIt it = begin;
 		try { for (ptr::size_t c = 0; c < n; ++c, ++it)  construct< Dest >(it, t); }
 		catch (...) { destruct_range(begin, it); throw; }
@@ -334,7 +336,7 @@ template<
 	typename Dest = iterator_value_t<ForwardIt>,
 	typename = check_t< has_constructor<Dest, T>>
 >
-CCDK_FORCEINLINE constexpr ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
+CCDK_FORCEINLINE ForwardIt construct_fill_n(ForwardIt begin, T const& t, ptr::size_t n )
 	noexcept(has_nothrow_constructor_v<Dest, T>)
 {
 	if (n == 0) return begin;

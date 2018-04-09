@@ -300,7 +300,7 @@ public:
 		return emplace(pos, util::move(t));
 	}
 
-	CCDK_FORCEINLINE iterator erase(const_iterator it) {
+	CCDK_FORCEINLINE iterator erase(const_iterator it) noexcept {
 		ccdk_assert(it != end());
 		if (len > 0) {
 		    node_type* to_erase = const_cast<node_type*>(it.data());
@@ -315,7 +315,7 @@ public:
 		return { head.address() };
 	}
 
-	CCDK_FORCEINLINE iterator erase(const_iterator beginIt, const_iterator endIt) {
+	CCDK_FORCEINLINE iterator erase(const_iterator beginIt, const_iterator endIt) noexcept {
 		node_type* beginPtr = const_cast<node_type*>(beginIt.data());
 		node_type* endPtr = const_cast<node_type*>(endIt.data());
 		size_type n = alg::distance(beginIt, endIt);
@@ -327,6 +327,10 @@ public:
 		allocator_type::deallocate(*this, beginPtr, n);
 		len -= n;
 		return { endPtr };
+	}
+
+	CCDK_FORCEINLINE this_type& clear() noexcept { 
+		erase(begin(), end()); return *this; 
 	}
 
 private:

@@ -95,10 +95,10 @@ struct iterator< biward_category, Node >
 	CCDK_FORCEINLINE const_pointer operator->() const noexcept { return content; }
 	CCDK_FORCEINLINE pointer operator->() noexcept { return content; }
 
+	/* cast to const version */
 	CCDK_FORCEINLINE operator iterator<biward_category, const Node>() const noexcept {
 		return { content };
 	}
-
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {

@@ -7,7 +7,7 @@ ccdk_namespace_mpl_it_start
 template<typename It>
 struct reverse_iterator 
 {
-	using this_type = reverse_iterator;
+	using this_type       = reverse_iterator;
 	using value_type      = typename It::value_type;
 	using pointer         = typename It::pointer;
 	using const_pointer   = typename It::const_pointer;
