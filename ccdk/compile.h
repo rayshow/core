@@ -164,6 +164,16 @@
 #pragma warning(disable:4514 4710 4505)
 #endif
 
+#if defined(CCDK_COMPILER_MSVC) && (defined(DEBUG) || defined(_DEBUG))
+//#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#define ccdk_open_leak_check()                         \
+	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG); \
+	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;                  \
+	_CrtSetDbgFlag(tmpFlag);
+#else
+#define ccdk_open_leak_check()
+#endif
+
 
 
 

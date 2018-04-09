@@ -77,20 +77,16 @@ public:
 		return __allocate(alloc, n, is_biward_node_c<node_type>);
 	}
 
-	static auto reset_prev(node_type* pointer, false_) {};
-	static auto reset_prev(node_type* pointer, true_) { pointer->prev = nullptr; };
-
 	/* value_type.next must be valid */
 	template<typename = check_t< is_forward_node<node_type>>>
 	static auto deallocate(Alloc &alloc, node_type* pointer, size_type n) noexcept {
 		if (pointer && n > 0) {
-			node_type* curr = pointer;
 			for (uint32 i = 0; i < n; ++i) {
+				ccdk_assert(pointer);
 				node_type* next = pointer->next;
-				upstream_allocator::deallocate(alloc, curr, 1);
+				upstream_allocator::deallocate(alloc, pointer, 1);
 				pointer = next;
 			}
-			reset_prev(pointer, is_biward_node_c<node_type>);
 		}
 		return pointer;
 	}

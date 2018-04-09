@@ -127,33 +127,32 @@ public:
 		tmp = other.head->next;
 		other.head->next = head->next;
 		tmp->prev = head.address();
-		head->next = tmp;
 		head->next->prev = other.head.address();
-
-
+		head->next = tmp;
 		tmp = other.head->prev;
 		other.head->prev = head->prev;
 		tmp->next = head.address();
+		head->prev->next = other.head.address();
 		head->prev = tmp;
 		util::swap(len, other.len);
 	}
 
 	// copy assign 
 	CCDK_FORCEINLINE this_type& operator=(blist const& other) {
-		return copy_range(other.begin(), other.size());
+		return copy_range(other.cbegin(), other.size());
 	}
 
 
 	// template copy assign 
 	template<typename Size2, typename Node2>
 	CCDK_FORCEINLINE this_type& operator=(blist<T, Size2, Alloc, Node2> const& other) {
-		return copy_range(other.begin(), other.size());
+		return copy_range(other.cbegin(), other.size());
 	}
 
 	// move assign 
 	CCDK_FORCEINLINE this_type& operator=(blist && other) {
 		this->~blist();
-		this->rvalue_set(other.head, other.len);
+		this->rvalue_set(other.head.address(), other.len);
 		other.rvalue_reset();
 		return *this;
 	}
@@ -192,9 +191,14 @@ public:
 		return allocate_type::max_allocate_size();
 	}
 
-	/* access */
+	// access front
 	CCDK_FORCEINLINE reference front() noexcept { ccdk_assert(len > 0); return head->next->value; }
 	CCDK_FORCEINLINE const_reference front() const noexcept { ccdk_assert(len > 0); return head->next->value; }
+
+	// access back
+	CCDK_FORCEINLINE reference back() noexcept { ccdk_assert(len > 0); return head->prev->value; }
+	CCDK_FORCEINLINE const_reference back() const noexcept { ccdk_assert(len > 0); return head->prev->value; }
+
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator begin() noexcept { return { head->next }; }
@@ -320,7 +324,10 @@ private:
 
 	// set to another list
 	CCDK_FORCEINLINE void rvalue_set(node_type* other_head, size_type n) noexcept {
-		head = other_head;
+		head->next = other_head->next;
+		head->prev = other_head->prev;
+		head->next->prev = head.address();
+		head->prev->next = head.address();
 		len = n;
 	}
 
@@ -391,22 +398,23 @@ private:
 		auto pair = allocator_type::allocate(*this, n);  //TODO. allocate memory
 		node_type* tail = head->prev;
 		tail->next = pair.first;
-		pair.first->prev = next;
-		pair.second->next = head->address();
+		pair.first->prev = tail;
+		pair.second->next = head.address();
 		head->prev = pair.second;
 	}
 
 	// release n-tail node
 	CCDK_FORCEINLINE void release_n(size_type n) {
-		node_type* it = head->prev;
-		while (n--) {
+		node_type* it = head.address();
+		size_type count = n;
+		while (count--) {
 			it = it->prev;
-			ccdk_assert(it != head->address());
+			ccdk_assert(it != head.address());
 		}
 		node_type* rls_head = it->next;
-		ccdk_assert(allocator_type::deallocate(*this, rls_head, n) == head->address()); 
-		it->next = head->address();
-		head->prev = it;
+		it->prev->next = head.address();
+		head->prev = it->prev;
+		ccdk_assert(allocator_type::deallocate(*this, it, n) == head.address());
 	}
 
 	// copy range
@@ -415,7 +423,7 @@ private:
 		if (n > 0) {
 			destruct_content();
 			if (n > len) append_n(n - len);
-			if (n < len) release_n(len - n);
+			else if (n < len) release_n(len - n);
 			util::construct_copy_n( begin(), beginIt, n);   //may throw if copy-ctor 
 			len = n;
 		}
@@ -423,11 +431,10 @@ private:
 	}
 
 	// copy range
-	template<typename InputIt>
 	CCDK_FORCEINLINE this_type& fill_range(T const& t, size_type n) {
 		if (n > 0) {
 			destruct_content();
-			if (n > len) append_n(len - n);
+			if (n > len) append_n(n - len);
 			if (n < len) release_n(len - n);
 			util::construct_fill_n( begin(), t, n);   //may throw if copy-ctor 
 			len = n;

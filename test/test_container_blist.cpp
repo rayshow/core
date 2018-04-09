@@ -1,23 +1,7 @@
 #include<ccdk/container/blist.h>
-
 using namespace ccdk;
 using namespace ccdk::ct;
-
-//! ~ * - + T 
-	namespace operator_detail                                                    
-	{                                                                            
-		template<typename T, typename Ret>                                       
-		struct has_deref_impl                                         
-		{                                                                        
-			template<typename U, typename P,                                     
-			typename = decltype(makeval<P>() = * declval<U>())>             
-			static constexpr bool sfinae(int) { return true; }                   
-			template<typename U, typename P>                                    
-			static constexpr bool sfinae(...) { return false; }                  
-			static constexpr bool value = sfinae<T, Ret>(0);                     
-		};                                                                       
-	}                                                                            
-
+                                                                        
 int main()
 {
 	DebugNewTitle("test constructor ");
@@ -63,8 +47,54 @@ int main()
 		RuntimeAssertTrue(lst1.front() == 2);
 		RuntimeAssertTrue(lst2.front() == 1);
 	}
+	DebugNewTitle("copy assign");
+	{
+		blist<int> lst1{ 20, 1 };
+		blist<int> lst2{ 10, 2 };
+		blist<int> lst3{ 30, 3 };
+		blist<int, uint16> lst4{ 10, 2 };
+		blist<int, uint16> lst5{ 30, 3 };
+		lst2 = lst1;
+		lst3 = lst1;
+		lst4 = lst1;
+		lst5 = lst1;
+		RuntimeAssertTrue(lst2.back() == 1 && lst2.size()==20);
+		RuntimeAssertTrue(lst3.back() == 1 && lst3.size() == 20);
+		RuntimeAssertTrue(lst4.back() == 1 && lst2.size() == 20);
+		RuntimeAssertTrue(lst5.back() == 1 && lst3.size() == 20);
+	}
+	DebugNewTitle("move assign");
+	{
+		blist<int> lst1{ 20, 1 };
+		blist<int> lst2{ 10, 2 };
+		blist<int> lst3{ 30, 3 };
+		lst2 = util::move(lst1);
+		lst3 = util::move(lst2);
+		RuntimeAssertTrue(lst3.back() == 1 && lst3.size() == 20);
+	}
+	DebugNewTitle("assign fill");
+	{
+		blist<int> lst1{ 20, 1 };
+		lst1.assign(20, 2);
+		RuntimeAssertTrue(lst1.back() == 2 && lst1.size() == 20);
+		lst1.assign(10, 3);
+		RuntimeAssertTrue(lst1.back() == 3 && lst1.size() == 10);
+		lst1.assign(30, 4);
+		RuntimeAssertTrue(lst1.back() == 4 && lst1.size() == 30);
+	}
+	DebugNewTitle("assign range");
+	{
+		blist<int> lst1{ 20, 1 };
+		blist<int> lst2{ 10, 2 };
+		blist<int> lst3{ 25, 3 };
+		lst1.assign(lst2.begin(), lst2.size());
+		RuntimeAssertTrue(lst1.back() == 2 && lst1.size() == 10);
+		lst1.assign(lst3.begin(), lst3.size());
+		RuntimeAssertTrue(lst1.back() == 3 && lst1.size() == 25);
+	}
 
-
+	int *a = new int;
+	_CrtDumpMemoryLeaks();
 	getchar();
 	return 0;
 }
