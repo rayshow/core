@@ -48,7 +48,7 @@ public:
 
 	/* iterator */
 	using iterator = it::iterator<biward_category, Node>;
-	using const_iterator = const iterator;
+	using const_iterator = it::iterator<biward_category, const Node>;
 	using reverse_iterator = it::reverse_iterator<iterator>;
 	using const_reverse_iterator = const reverse_iterator;
 
