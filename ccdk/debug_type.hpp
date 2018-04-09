@@ -181,6 +181,10 @@ namespace ccdk {
 			return a;
 		}
 
+		operator int() {
+			return v;
+		}
+
 		int v;
 	};
 	struct test_constexpr_t

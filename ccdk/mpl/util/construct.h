@@ -15,6 +15,8 @@
 
 ccdk_namespace_mpl_util_start
 
+//TODO: construct add pod assign
+
 /* is proxy class(like iterator), try dereference It and get real address */
 template<
 	typename T,
@@ -90,7 +92,7 @@ namespace ut_impl
 		DebugValue(" construct_copy_n iterator copy");
 		InputIt it= fbegin;
 		ForwardIt it2 = tbegin;
-		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest >(it, *it2); }
+		try { for (ptr::size_t c = 0; c<n; ++c, ++it, ++it2) construct< Dest >(it2, *it); }
 		catch (...) { destruct_range(tbegin, it2); throw; }
 		return fs::make_pair( it2, it);
 	}

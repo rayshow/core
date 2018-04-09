@@ -54,7 +54,7 @@ public:
 	static constexpr uint32 kStoreBits = sizeof(T)*8;
 
 	/* friend */
-	template<typename T2, typename Size2, typename Alloc2>
+	template<typename T2, typename Size2, typename Ratio2, typename Alloc2>
 	friend class bitset;
 
 private:

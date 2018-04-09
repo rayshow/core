@@ -1,0 +1,45 @@
+﻿  test_container_blist.cpp
+d:\git\core\ccdk\debug_type.hpp(189): warning C4521: “ccdk::test_copy_t”: 指定了多个复制构造函数
+d:\git\core\ccdk\debug_type.hpp(189): warning C4522: “ccdk::test_copy_t”: 指定了多个赋值运算符
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) &&>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) &&>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) &>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) &>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...)>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...)>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) const &>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) const &>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) const &&>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) const &&>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) const>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) const>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile &>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile &>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile &&>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile &&>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile const &>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile const &>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile const &&>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile const &&>”的声明
+d:\git\core\ccdk\mpl\type_traits\is_function.h(33): error C2953: “ccdk::mpl::is_function<Ret(Args...) volatile const>”: 类模板已经定义
+  d:\git\core\ccdk\mpl\type_traits\is_function.h(33): note: 参见“ccdk::mpl::is_function<Ret(Args...) volatile const>”的声明
+d:\git\core\ccdk\debug_type.hpp(298): warning C4521: “ccdk::test_copy_assign_t<int>”: 指定了多个复制构造函数
+  d:\git\core\ccdk\container\impl\list_node.h(20): note: 参见对正在编译的 类 模板 实例化 "ccdk::test_copy_assign_t<int>" 的引用
+  d:\git\core\ccdk\mpl\fusion\local_obj.h(19): note: 参见对正在编译的 类 模板 实例化 "ccdk::ct::biward_node<T>" 的引用
+          with
+          [
+              T=ccdk::test_copy_assign_t<int>
+          ]
+  d:\git\core\ccdk\container\blist.h(59): note: 参见对正在编译的 类 模板 实例化 "ccdk::mpl::fs::local_obj<Node>" 的引用
+          with
+          [
+              Node=ccdk::ct::biward_node<ccdk::test_copy_assign_t<int>>
+          ]
+  d:\git\core\test\test_container_blist.cpp(13): note: 参见对正在编译的 类 模板 实例化 "ccdk::ct::blist<ccdk::test_copy_assign_t<int>,ccdk::uint32,ccdk::mem::simple_new_allocator<T>,ccdk::ct::biward_node<T>>" 的引用
+          with
+          [
+              T=ccdk::test_copy_assign_t<int>
+          ]
+d:\git\core\ccdk\debug_type.hpp(298): warning C4522: “ccdk::test_copy_assign_t<int>”: 指定了多个赋值运算符

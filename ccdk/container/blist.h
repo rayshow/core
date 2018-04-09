@@ -36,21 +36,21 @@ public:
 	using node_type = Node;
 
 	/* container */
-	using value_type = T;
-	using pointer = T * ;
-	using const_ponter = T const*;
-	using reference = T & ;
+	using value_type      = T;
+	using pointer         = T *;
+	using const_ponter    = T const*;
+	using reference       = T &;
 	using const_reference = T const&;
-	using size_type = Size;
-	using difference = ptr::diff_t;
-	using allocator_type = mem::list_allocate_adapter<
+	using size_type       = Size;
+	using difference      = ptr::diff_t;
+	using allocator_type  = mem::list_allocate_adapter<
 		typename Alloc::template rebind<Node>>;
 
 	/* iterator */
-	using iterator = it::iterator<biward_category, Node>;
-	using const_iterator = it::iterator<biward_category, const Node>;
-	using reverse_iterator = it::reverse_iterator<iterator>;
-	using const_reverse_iterator = const reverse_iterator;
+	using iterator               = it::iterator<biward_category, Node>;
+	using const_iterator         = it::iterator<biward_category, const Node>;
+	using reverse_iterator       = it::reverse_iterator<iterator>;
+	using const_reverse_iterator = it::reverse_iterator<const_iterator>;
 
 	template<typename T2, typename Size2, typename Alloc2, typename Node2>
 	friend class blist;
@@ -187,7 +187,7 @@ public:
 	// range assign 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
 	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
-		return copy_range(beginIt, alg::distance(beginIt,endIt) );
+		return copy_range(beginIt, alg::distance(beginIt, endIt) );
 	}
 
 	/* attribute */
@@ -211,29 +211,33 @@ public:
 	CCDK_FORCEINLINE iterator end() noexcept { return { head.address() }; }
 	CCDK_FORCEINLINE const_iterator cbegin() const noexcept { return { head->next }; }
 	CCDK_FORCEINLINE const_iterator cend() const noexcept { return { head.address() }; }
-	CCDK_FORCEINLINE iterator rbegin() noexcept { return { head->prev }; }
-	CCDK_FORCEINLINE iterator rend() noexcept { return { head->address() }; }
-	CCDK_FORCEINLINE const_iterator crbegin() const noexcept { return { head->prev }; }
-	CCDK_FORCEINLINE const_iterator crend() const noexcept { return { head.address() }; }
+	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept { return { head->prev }; }
+	CCDK_FORCEINLINE reverse_iterator rend() noexcept { return { head.address() }; }
+	CCDK_FORCEINLINE const_reverse_iterator crbegin() const noexcept { return { head->prev }; }
+	CCDK_FORCEINLINE const_reverse_iterator crend() const noexcept { return { head.address() }; }
 
 	// pop back
 	CCDK_FORCEINLINE this_type& pop_back() noexcept {
 		if (len > 0) {
 			node_type* last = head->prev;
-			last->prev->next = head->address();
+			last->prev->next = head.address();
 			head->prev = last->prev;
-			allocator_type::deallocate(prev, 1);
+			allocator_type::deallocate(*this, last, 1);
+			--len;
 		}
+		return *this;
 	}
 
 	// pop back
 	CCDK_FORCEINLINE this_type& pop_front() noexcept {
 		if (len > 0) {
 			node_type* first = head->next;
-			first->next->prev = head->address();
+			first->next->prev = head.address();
 			head->next = first->next;
-			allocator_type::deallocate(first, 1);
+			allocator_type::deallocate(*this, first, 1);
+			--len;
 		}
+		return *this;
 	}
 
 	// emplace back elements aq2	
@@ -243,8 +247,9 @@ public:
 		head->prev->next = node;
 		node->prev = head->prev;
 		head->prev = node;
-		node->next = head->address();
+		node->next = head.address();
 		++len;
+		return *this;
 	}
 
 	CCDK_FORCEINLINE this_type& push_back(T const& t) {
@@ -262,8 +267,9 @@ public:
 		head->next->prev = node;
 		node->next = head->next;
 		head->next = node;
-		node->prev = head->address();
+		node->prev = head.address();
 		++len;
+		return *this;
 	}
 
 	CCDK_FORCEINLINE this_type& push_front(T const& t) {
@@ -276,13 +282,14 @@ public:
 
 	template<typename... Args>
 	CCDK_FORCEINLINE this_type& emplace(const_iterator it, Args&&... args) {
-		const node_type* next_to_insert = it.pointer;
+	    node_type* next_to_insert = const_cast<node_type*>(it.data());
 		node_type* node = new_node(util::forward<Args>(args)...);
 		next_to_insert->prev->next = node;
 		node->prev = next_to_insert->prev;
 		node->next = next_to_insert;
 		next_to_insert->prev = node;
 		++len;
+		return *this;
 	}
 
 	CCDK_FORCEINLINE this_type& insert(const_iterator it,T const& t) {
@@ -294,30 +301,32 @@ public:
 	}
 
 	CCDK_FORCEINLINE iterator erase(const_iterator it) {
+		ccdk_assert(it != end());
 		if (len > 0) {
-			const node_type* to_erase = it.pointer;
+		    node_type* to_erase = const_cast<node_type*>(it.data());
+			node_type* next = to_erase->next;
 			to_erase->prev->next = to_erase->next;
-			to_erase->next->prev = to_erase->prev;
-			it->pointer = node->next;
+			next->prev = to_erase->prev;
 			util::destruct<T>(to_erase);
-			allocator_type::deallocate(*this, to_erase);
-			return { head->next };
+			allocator_type::deallocate(*this, to_erase,1);
+			--len;
+			return { next };
 		}
-		return { head->address() };
+		return { head.address() };
 	}
 
 	CCDK_FORCEINLINE iterator erase(const_iterator beginIt, const_iterator endIt) {
-		node_type* beginPtr = beginIt.pointer;
-		node_type* endPtr = endIt.pointer;
+		node_type* beginPtr = const_cast<node_type*>(beginIt.data());
+		node_type* endPtr = const_cast<node_type*>(endIt.data());
 		size_type n = alg::distance(beginIt, endIt);
 		ccdk_assert(n <= len);
 		node_type* before = beginPtr->prev;
 		before->next = endPtr;
 		endPtr->prev = before;
-		util::destruct_range<T>(beginIt, endIt);
+		util::destruct_range(beginIt, endIt);
 		allocator_type::deallocate(*this, beginPtr, n);
 		len -= n;
-		return endIt;
+		return { endPtr };
 	}
 
 private:
@@ -362,9 +371,9 @@ private:
 	// construct one node
 	template<typename... Args>
 	CCDK_FORCEINLINE node_type* new_node(Args&&... args) {
-		node_type* node = allocate_type::allocate(*this, 1);
-		util::construct<T>(node, util::forward<Args>(args)...);
-		return node;
+		auto range = allocator_type::allocate(*this, 1);
+		util::construct<T>(range.first, util::forward<Args>(args)...);
+		return range.first;
 	}
 
 	// allocate n elements and fill with t
@@ -461,6 +470,13 @@ public:
 	void cdebug(char const* title) const {
 		std::cout << title << " :";
 		for (auto it = this->cbegin(); it != cend(); ++it) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
+	void crdebug(char const* title) const {
+		std::cout << title << " :";
+		for (auto it = this->crbegin(); it != crend(); ++it) {
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;

@@ -7,18 +7,20 @@ ccdk_namespace_mpl_it_start
 template<typename It>
 struct reverse_iterator 
 {
-	typedef reverse_iterator this_type;
-	typedef reverse_iterator type;
-
-	typedef typename It::value_type	          value_type;
-	typedef typename It::pointer_type	      pointer_type;
-	typedef typename It::reference_type	      reference_type;
-	typedef typename It::const_reference_type const_reference_type;
-	typedef typename It::size_type	          size_type;
-	typedef typename It::difference_type      difference_type;
-	typedef typename It::category	          category;
+	using this_type = reverse_iterator;
+	using value_type      = typename It::value_type;
+	using pointer         = typename It::pointer;
+	using const_pointer   = typename It::const_pointer;
+	using reference       = typename It::reference;
+	using const_reference = typename It::const_reference;
+	using size_type       = typename It::size_type;
+	using difference_type = typename It::difference_type;
+	using category        = typename It::category;
 
 	It it;
+
+	CCDK_FORCEINLINE decltype(auto) data() noexcept { return it->data(); }
+	CCDK_FORCEINLINE decltype(auto) data() const noexcept { return it->data(); }
 
 	/* move */
 	CCDK_FORCEINLINE this_type& operator++() noexcept { --it; return *this; }
@@ -27,8 +29,8 @@ struct reverse_iterator
 	CCDK_FORCEINLINE this_type& operator+=(size_type n) noexcept { it -= n; return *this; }
 
 	/* deref */
-	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return *it; }
-	CCDK_FORCEINLINE reference_type operator*() noexcept { return *it; }
+	CCDK_FORCEINLINE decltype(auto) operator*() const noexcept { return *it; }
+	CCDK_FORCEINLINE decltype(auto) operator*() noexcept { return *it; }
 
 	CCDK_FORCEINLINE bool operator==(this_type const& other) {
 		return it == other.it;
@@ -39,5 +41,15 @@ struct reverse_iterator
 	}
 };
 
+
+template<typename It>
+CCDK_FORCEINLINE bool operator==(reverse_iterator<It> const& lhs, It const& rhs) noexcept {
+	return lhs.it == rhs;
+}
+
+template<typename It>
+CCDK_FORCEINLINE bool operator==(It const& lhs, reverse_iterator<It> const& rhs) noexcept {
+	return rhs.it == lhs;
+}
 
 ccdk_namespace_mpl_it_end
