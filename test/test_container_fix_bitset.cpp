@@ -77,8 +77,11 @@ int main()
 	DebugNewTitle("iterator fill");
 	{
 		fix_bitset<11> bit11{ "1101010101010101" };
+		bit11.debug();
+		bit11.debug_all();
 		fix_bitset<8> bit8{ bit11.begin(), bit11.end() };
 		bit8.debug();
+		
 	}
 	DebugNewTitle("iterator ");
 	{
