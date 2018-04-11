@@ -18,37 +18,40 @@ ccdk_namespace_mpl_it_start
 template<typename It>
 struct iterator_traits
 {
-	typedef typename It::value_type value_type;
-	typedef value_type*             pointer_type;
-	typedef value_type&             reference_type;
-	typedef value_type const&       const_reference_type;
-	typedef typename It::size_type  size_type;
-	typedef typename It::difference_type difference_type;
-	typedef typename It::category   category;
+	using value_type      = typename It::value_type ;
+	using pointer         = typename It::pointer;
+	using const_pointer   = typename It::const_pointer;
+	using reference       = typename It::reference;
+	using const_reference = typename It::const_reference;
+	using size_type       = typename It::size_type  ;
+	using difference_type = typename It::difference_type ;
+	using category        = typename It::category;
 };
 
 template<typename T>
 struct iterator_traits<T*>
 {
-	typedef T           value_type;
-	typedef T*          pointer_type;
-	typedef T&          reference_type;
-	typedef T const&    const_reference_type;
-	typedef ptr::diff_t difference_type;
-	typedef ptr::size_t size_type;
-	typedef random_category category;
+	using value_type      = T;
+	using pointer         = T*;
+	using const_pointer   = T const*;
+	using reference       = T&;
+	using const_reference = T const&;
+	using difference_type = ptr::diff_t;
+	using size_type       = ptr::size_t;
+	using category        = random_category;
 };
 
 template<typename T>
 struct iterator_traits<T const*>
 {
-	typedef T           value_type;
-	typedef T *         pointer_type;
-	typedef T&          reference_type;
-	typedef T const&    const_reference_type;
-	typedef ptr::diff_t difference_type;
-	typedef ptr::size_t size_type;
-	typedef random_category category;
+	using value_type      = T;
+	using pointer         = T const*;
+	using const_pointer   = T const*;
+	using reference       = T const& ;
+	using const_reference = T const&;
+	using difference_type = ptr::diff_t;
+	using size_type       = ptr::size_t;
+	using category        = random_category;
 };
 
 /* get value_type from iterator  */

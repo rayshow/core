@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/iterator/iterator_fwd.h>
+#include<ccdk/mpl/iterator/iterator_traits.h>
 
 ccdk_namespace_mpl_it_start
 
@@ -8,14 +9,15 @@ template<typename It>
 struct reverse_iterator 
 {
 	using this_type       = reverse_iterator;
-	using value_type      = typename It::value_type;
-	using pointer         = typename It::pointer;
-	using const_pointer   = typename It::const_pointer;
-	using reference       = typename It::reference;
-	using const_reference = typename It::const_reference;
-	using size_type       = typename It::size_type;
-	using difference_type = typename It::difference_type;
-	using category        = typename It::category;
+	using traits_type     = iterator_traits<It>;
+	using value_type      = typename traits_type::value_type;
+	using pointer         = typename traits_type::pointer;
+	using const_pointer   = typename traits_type::const_pointer;
+	using reference       = typename traits_type::reference;
+	using const_reference = typename traits_type::const_reference;
+	using size_type       = typename traits_type::size_type;
+	using difference_type = typename traits_type::difference_type;
+	using category        = typename traits_type::category;
 
 	It it;
 

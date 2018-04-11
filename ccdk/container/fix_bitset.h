@@ -20,7 +20,6 @@ ccdk_namespace_ct_start
 using namespace ccdk::mpl;
 
 #define RECURSIVE_TYPEDEF(Type) using type =  typename fit_bytes<Bytes,Type, Bytes <=sizeof(Type)>::type
-
 /* fit bytes with a inner basic type  */
 template<uint32 Bytes, typename T = uint8 , bool Fit = (Bytes<= sizeof(T)) > struct fit_bytes;
 template<uint32 Bytes, typename T> struct fit_bytes<Bytes, T, true> { typedef T type[ (Bytes+ sizeof(T)-1) / sizeof(T)];  };
@@ -28,7 +27,6 @@ template<uint32 Bytes> struct fit_bytes<Bytes, uint8, false>  { RECURSIVE_TYPEDE
 template<uint32 Bytes> struct fit_bytes<Bytes, uint16, false> { RECURSIVE_TYPEDEF(uint32); };
 template<uint32 Bytes> struct fit_bytes<Bytes, uint32, false> { RECURSIVE_TYPEDEF(uint64); };
 template<uint32 Bytes> struct fit_bytes<Bytes, uint64, false>:fit_bytes<Bytes, uint32, true> {  };
-
 #undef RECURSIVE_TYPEDEF
 
 template<typename T, typename Char>
@@ -65,20 +63,20 @@ public:
 	static constexpr single_type kReverseMask = kOne <<((NBit - 1) % kStoreBits);
 
 	/* container */
-	using value_type           = single_type;
-	using pointer_type         = value_type*;
-	using const_pointer_type   = value_type const*;
-	using reference_type       = it::bit_access<value_type>;
-	using const_reference_type = bool;
-	using size_type            = uint32;
-	using difference_type      = ptr::diff_t;
+	using value_type      = single_type;
+	using pointer         = value_type*;
+	using const_pointer   = value_type const*;
+	using reference       = it::bit_access<value_type>;
+	using const_reference = bool;
+	using size_type       = uint32;
+	using difference_type = ptr::diff_t;
 	
 
 	/* typedef iterator */
-	using iterator_type               = iterator<bit_random_category, value_type, size_type>;
-	using const_iterator_type         = iterator<bit_random_category, const value_type, size_type>;
-	using reverse_iterator_type       = reverse_iterator<iterator_type>;
-	using const_reverse_iterator_type = reverse_iterator<const_iterator_type>;
+	using iterator               = it::iterator<bit_random_category, value_type, size_type>;
+	using const_iterator         = it::iterator<bit_random_category, const value_type, size_type>;
+	using reverse_iterator       = it::reverse_iterator<iterator>;
+	using const_reverse_iterator = it::reverse_iterator<const_iterator>;
 
 	/* friend */
 	template<uint64 NBit2> friend class fix_bitset;
@@ -202,21 +200,21 @@ public:
 	}
 
 	/* iterator */
-	CCDK_FORCEINLINE iterator_type begin()
+	CCDK_FORCEINLINE iterator begin()
 		noexcept { return { content, 0, 1}; }
-	CCDK_FORCEINLINE iterator_type end()
+	CCDK_FORCEINLINE iterator end()
 		noexcept { return { content, kLastOffset, kLastMask }; }
-	CCDK_FORCEINLINE constexpr const_iterator_type cbegin()
+	CCDK_FORCEINLINE constexpr const_iterator cbegin()
 		const noexcept { return { content, 0, 1 }; }
-	CCDK_FORCEINLINE constexpr const_iterator_type cend()
+	CCDK_FORCEINLINE constexpr const_iterator cend()
 		const noexcept { return { content, kLastOffset, kLastMask }; }
-	CCDK_FORCEINLINE reverse_iterator_type rbegin()
+	CCDK_FORCEINLINE reverse_iterator rbegin()
 		noexcept { return { { content, kReverseOffst, kReverseMask } }; }
-	CCDK_FORCEINLINE reverse_iterator_type rend()
+	CCDK_FORCEINLINE reverse_iterator rend()
 		noexcept { return { {content, size_type(-1),kTopMask} }; }
-	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crbegin()
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin()
 		const noexcept { return { { content, kReverseOffst, kReverseMask} }; }
-	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crend()
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crend()
 		const noexcept { return { { content, size_type(-1), kTopMask } }; }
 
 	/* attribute */
@@ -225,32 +223,32 @@ public:
 	CCDK_FORCEINLINE constexpr size_type max_size() { return size_type(-1) / sizeof(value_type); }
 
 	/* index */
-	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
+	CCDK_FORCEINLINE reference operator[](size_type index) noexcept {
 		ccdk_assert(index < NBit);
 		return { content[index / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* const index, return bool */
-	CCDK_FORCEINLINE constexpr const_reference_type operator[](size_type index) const noexcept {
+	CCDK_FORCEINLINE constexpr const_reference operator[](size_type index) const noexcept {
 		ccdk_assert(index < NBit);
 		return content[index / kStoreBits] & cshl<value_type>(1, index % kStoreBits);
 	}
-	CCDK_FORCEINLINE reference_type at(size_type index) noexcept {
+	CCDK_FORCEINLINE reference at(size_type index) noexcept {
 		ccdk_assert(index < NBit );
 		return { content[index / kStoreBits], cshl<value_type>(1,index%kStoreBits) };
 	}
-	CCDK_FORCEINLINE constexpr const_reference_type at(size_type index) const noexcept {
+	CCDK_FORCEINLINE constexpr const_reference at(size_type index) const noexcept {
 		ccdk_assert(index < NBit);
 		return content[index / kStoreBits] & cshl<value_type>(1,(index % kStoreBits));
 	}
 
 	/* last bit reference */
-	CCDK_FORCEINLINE reference_type back()  noexcept {
+	CCDK_FORCEINLINE reference back()  noexcept {
 		return { content[len / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* last bit value */
-	CCDK_FORCEINLINE constexpr const_reference_type back() const noexcept {
+	CCDK_FORCEINLINE constexpr const_reference back() const noexcept {
 		return { content[len / kStoreBits], cshl<value_type>(1, NBit % kStoreBits) };
 	}
 

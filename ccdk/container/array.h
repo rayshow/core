@@ -8,7 +8,8 @@
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/algorithm/distance.h>
-#include<ccdk/container/filter/filter_view.h>
+#include<ccdk/container/filter/range_filter.h>
+#include<ccdk/container/view/range_filter_view.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
@@ -21,8 +22,8 @@ class array
 public:
 	/* common */
 	using this_type   = array;
-	using filter_type = filter_t<T>;
-	using view_type   = filter_view_t<this_type>;
+	using filter_type = range_filter<T>;
+	using view_type   = range_filter_view<this_type>;
 
 	/* container */
 	using value_type      = T;
@@ -187,7 +188,7 @@ public:
 
 	/* filte index */
 	CCDK_FORCEINLINE view_type operator[](filter_type&& filter) { 
-		return view_type{ *this, util::move(filter) }; 
+		return { *this, util::move(filter) }; 
 	}
 
 	/* index */
@@ -260,7 +261,20 @@ public:
 		}
 		std::cout << std::endl;
 	}
-
+	void rdebug(const char* title) noexcept {
+		std::cout << title;
+		for (auto it = rbegin(); it != rend();++it) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
+	void crdebug(const char* title) const noexcept {
+		std::cout << title;
+		for (auto it = crbegin(); it != crend(); ++it) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
 };
 
 ccdk_namespace_ct_end

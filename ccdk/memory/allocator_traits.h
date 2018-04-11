@@ -29,7 +29,7 @@ template<typename T> struct get_diff_type<T, false> { typedef ptr::diff_t type; 
 #define ccdk_increase_allocate1(n, content)                               \
 	size_type actual_size = increase_ratio::multiply(n);                  \
 	if (n == size_type(-1) || actual_size < n) throw std::bad_alloc{};    \
-	content = allocate_type::allocate(*this, actual_size);	                  
+	content = allocator_type::allocate(*this, actual_size);	                  
 
 #define ccdk_increase_allocate2(n, content, cap)                          \
 	ccdk_increase_allocate1(n,content)                                    \

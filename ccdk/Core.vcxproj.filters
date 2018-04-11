@@ -523,7 +523,6 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
-    <ClInclude Include="container\filter\filter_view.h" />
     <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\allocator_traits.h" />
@@ -900,5 +899,8 @@
     <ClInclude Include="mpl\fusion\local_obj.h" />
     <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="memory\debug_leak_allocator.h" />
+    <ClInclude Include="container\view\const_view.h" />
+    <ClInclude Include="container\view\range_filter_view.h" />
+    <ClInclude Include="container\filter\range_filter.h" />
   </ItemGroup>
 </Project>

@@ -22,34 +22,33 @@ ccdk_namespace_ct_start
 using namespace ccdk::mpl;
 
 template<
-	typename T = uint8, 
+	typename T = uint8,
 	typename Size = uint32,
-	typename InceaseRatio = units::ratio<2,1>,   /* pre-allocate 1 times more  */
+	typename InceaseRatio = units::ratio<1,1>,   /* pre-allocate 1 times more  */
 	typename Alloc = mem::simple_new_allocator<T>
 >
 class bitset : protected Alloc
 {
 public:
-
 	/* common */
-	using this_type = bitset;
+	using this_type      = bitset;
 	using increase_ratio = InceaseRatio;
 
 	/* container */
-	using value_type           = T;
-	using pointer_type         = T*;
-	using const_pointer_type   = T const*;
-	using reference_type       = it::bit_access<T>;
-	using const_reference_type = bool;
-	using size_type            = Size;
-	using difference_type      = ptr::diff_t;
-	using allocator_type       = mem::allocator_traits<Alloc>;
+	using value_type      = T;
+	using pointer         = T*;
+	using const_pointer   = T const*;
+	using reference       = it::bit_access<T>;
+	using const_reference = bool;
+	using size_type       = Size;
+	using difference_type = ptr::diff_t;
+	using allocator_type  = mem::allocator_traits<Alloc>;
 
 	/* iterator */
-	using iterator_type               = iterator<bit_random_category, value_type, size_type>;
-	using const_iterator_type         = iterator<bit_random_category, const value_type, size_type>;
-	using reverse_iterator_type       = reverse_iterator<iterator_type>;
-	using const_reverse_iterator_type = reverse_iterator<const_iterator_type>;
+	using iterator               = it::iterator<bit_random_category, value_type, size_type>;
+	using const_iterator         = it::iterator<bit_random_category, const value_type, size_type>;
+	using reverse_iterator       = it::reverse_iterator<iterator>;
+	using const_reverse_iterator = it::reverse_iterator<const_iterator>;
 
 	static constexpr uint32 kStoreBits = sizeof(T)*8;
 
@@ -58,14 +57,14 @@ public:
 	friend class bitset;
 
 private:
-	pointer_type  content;
-	size_type     len;
-	size_type     cap;
+	pointer    content;
+	size_type  len;
+	size_type  cap;
 
 public:
 
 	/* destruct */
-	CCDK_FORCEINLINE ~bitset() { destruct(); len = 0; cap = 0; }
+	CCDK_FORCEINLINE ~bitset() { deallocate(); len = 0; cap = 0; }
 
 	/* default, lazy */
 	CCDK_FORCEINLINE constexpr bitset() :content{ nullptr }, len{ 0 }, cap{ 0 } {}
@@ -197,28 +196,28 @@ public:
 	}
 
 	/* iterator */
-	CCDK_FORCEINLINE iterator_type begin() noexcept {
+	CCDK_FORCEINLINE iterator begin() noexcept {
 		return { content, 0, 1 };
 	}
-	CCDK_FORCEINLINE iterator_type end() noexcept {
+	CCDK_FORCEINLINE iterator end() noexcept {
 		return { content, count()-1, cshl<T>(1, keep_low<T,T>(len)) };
 	}
-	CCDK_FORCEINLINE constexpr const_iterator_type cbegin() const noexcept {
+	CCDK_FORCEINLINE constexpr const_iterator cbegin() const noexcept {
 		return { content, 0, 1 };
 	}
-	CCDK_FORCEINLINE constexpr const_iterator_type cend() const noexcept {
+	CCDK_FORCEINLINE constexpr const_iterator cend() const noexcept {
 		return { content, count() - 1, cshl<T>(1, keep_low<T,T>(len)) };
 	}
-	CCDK_FORCEINLINE reverse_iterator_type rbegin() noexcept {
+	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept {
 		return { --end() };
 	}
-	CCDK_FORCEINLINE reverse_iterator_type rend() noexcept {
+	CCDK_FORCEINLINE reverse_iterator rend() noexcept {
 		return { --begin() };
 	}
-	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crbegin() const noexcept {
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin() const noexcept {
 		return { end()-1 };
 	}
-	CCDK_FORCEINLINE constexpr const_reverse_iterator_type crend() const noexcept {
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crend() const noexcept {
 		return { begin()-1 };
 	}
 
@@ -228,32 +227,29 @@ public:
 	CCDK_FORCEINLINE size_type max_size() const noexcept { return size_type(-1) / sizeof(T); }
 
 	/* index */
-	CCDK_FORCEINLINE reference_type operator[](size_type index) noexcept {
+	CCDK_FORCEINLINE reference operator[](size_type index) noexcept {
 		ccdk_assert(index < len);
 		return { content[index / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* const index, return bool */
-	CCDK_FORCEINLINE constexpr const_reference_type operator[](size_type index) const noexcept {
-		ccdk_assert(index < len);
+	CCDK_FORCEINLINE const_reference operator[](size_type index) const noexcept {
 		return content[index / kStoreBits] & cshl<value_type>(1, index % kStoreBits);
 	}
-	CCDK_FORCEINLINE reference_type at(size_type index) noexcept {
-		ccdk_assert(index < len);
+	CCDK_FORCEINLINE reference at(size_type index) noexcept {
 		return { content[index / kStoreBits], cshl<value_type>(1,index%kStoreBits) };
 	}
-	CCDK_FORCEINLINE constexpr const_reference_type at(size_type index) const noexcept {
-		ccdk_assert(index < len);
+	CCDK_FORCEINLINE const_reference at(size_type index) const noexcept {
 		return content[index / kStoreBits] & cshl<value_type>(1, (index % kStoreBits));
 	}
 
 	/* last bit reference */
-	CCDK_FORCEINLINE reference_type back()  noexcept {
+	CCDK_FORCEINLINE reference back()  noexcept {
 		return { content[len / kStoreBits], cshl<value_type>(1, index % kStoreBits) };
 	}
 
 	/* last bit value */
-	CCDK_FORCEINLINE constexpr const_reference_type back() const noexcept {
+	CCDK_FORCEINLINE constexpr const_reference back() const noexcept {
 		return { content[len / kStoreBits], cshl<value_type>(1, NBit % kStoreBits) };
 	}
 
@@ -298,19 +294,18 @@ public:
 		return erase(pos, pos + 1);
 	}
 
-	CCDK_FORCEINLINE this_type& erase(const_iterator_type begin, const_iterator_type end) noexcept {
-		iterator_type it2 = begin;
-		for (iterator_type it = end; it != end(); ++it, ++it2)
+	CCDK_FORCEINLINE this_type& erase(const_iterator begin, const_iterator end) noexcept {
+		iterator it2 = begin;
+		for (iterator it = end; it != end(); ++it, ++it2)
 			*it2 = *it;
 		len -= alg::distance(begin, end);
 	}
 
-	CCDK_FORCEINLINE this_type& erase(const_iterator_type pos) noexcept {
+	CCDK_FORCEINLINE this_type& erase(const_iterator pos) noexcept {
 		return erase(pos, pos+1);
 	}
 
 private:
-
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
 		len = 0;
 		cap = 0;
@@ -324,50 +319,55 @@ private:
 	}
 
 	CCDK_FORCEINLINE void deallocate() {
-		allocator_type::deallocate(content, count());
+		allocator_type::deallocate(*this, content, count());
 	}
 
 	/* count of used elements */
 	CCDK_FORCEINLINE size_type count() const noexcept { 
-		return shr_type<T, size_type>(len); 
+		return shr_type<T, size_type>(len+kStoreBits); 
 	}
 
 	/* bytes of used elements */
 	CCDK_FORCEINLINE size_type bytes() const noexcept { 
-		return shr_type<uint8, size_type>(len); 
+		return shr_type<T, size_type>(len); 
+	}
+
+	/* used store bytes */
+	CCDK_FORCEINLINE size_type stores() const noexcept {
+		return shr_type<T, size_type>(cap);
 	}
 
 	/* not used bytes of storage */
 	CCDK_FORCEINLINE size_type ext_bytes() const noexcept { 
-		return shr_type<uint8, size_type>(cap) - bytes(); 
+		return  stores() - count();
 	}
 
 	/* clear last used element's not used bits */
-	CCDK_FORCEINLINE size_type clear_ext_bits() noexcept {
+	CCDK_FORCEINLINE void clear_ext_bits() noexcept {
 		if (content) {
-			size_type ext_bits = shl_type<T, size_type>(count()) - len;
-			T mask{ 0 };
+			size_type ext_bits = len - shl_type<T, size_type>(bytes());
+			T mask( 0 );
 			while (ext_bits--) mask |= cshl<T>(1, ext_bits);
-			content[count() - 1] & = ~mask;
+			content[count() - 1] &= mask;
 		}
 	}
 
 	CCDK_FORCEINLINE void local_allocate_n(size_type n) {
-		ccdk_increase_allocate3(count_store(n), content, cap, len);
+		ccdk_increase_allocate3( (shr_type<T,size_type>(n+kStoreBits)), content, cap, len);
 		cap = shl_type<T, size_type>(cap);
 		len = n;
 	}
 
 	CCDK_FORCEINLINE void clear_ext_bit_and_storage() noexcept {
 		clear_ext_bits();                           /* clear last T' ext bits */
-		memset(content + bytes(), 0, ext_bytes());  /* clear ext storage */
+		memset(content + count(), 0, ext_bytes());  /* clear ext storage */
 	}
 
 	CCDK_FORCEINLINE void allocate_fill(size_type n, bool val) {
 		if (n > 0) {
 			local_allocate_n(n);
-			memset(content, val ? 0b11111111 : 0b00000000, bytes());
-			clear_ext_bit_and_storage();
+			memset(content, val ? 0b11111111 : 0b00000000, count());
+			if(val) clear_ext_bit_and_storage();   // true need clear ex-bits
 		}
 	}
 
@@ -376,7 +376,7 @@ private:
 		if (n > 0) {
 			T* memory{ nullptr };
 			size_type new_len, new_cap;
-			ccdk_increase_allocate3( shr_type<T,size_type>(n), memory, new_cap, new_len);
+			ccdk_increase_allocate3( (shr_type<T,size_type>(n)), memory, new_cap, new_len);
 			new_len = n;
 			new_cap = shl_type<T, size_type>(new_cap);
 			memcpy(memory, content, bytes());
@@ -417,6 +417,30 @@ private:
 		else { len = n; }
 		memcpy(content, memory, bytes());               /* copy content */
 		memset(content + bytes(), 0, ext_bytes());      /* clear other */
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//// debug
+public:
+	CCDK_FORCEINLINE void debug_all() const noexcept {
+		char *info = new char[cap + 1]{ 0 };
+		for (int i = 0; i < cap; ++i) {
+			info[i] = this->at(i) ? '1' : '0';
+		}
+
+		DebugValue("fix_bit:", info);
+		delete[] info;
+	}
+
+	CCDK_FORCEINLINE void debug() const noexcept {
+		char *info = new char[len + 1]{ 0 };
+		for (int i = 0; i < len; ++i) {
+			info[i] = this->at(i) ? '1' : '0';
+		}
+
+		DebugValue("fix_bit:", info);
+		delete[] info;
 	}
 
 };

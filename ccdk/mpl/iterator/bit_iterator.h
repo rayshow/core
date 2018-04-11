@@ -21,7 +21,7 @@ struct bit_access {
 	}
 	
 	CCDK_FORCEINLINE void operator=(bool bit) noexcept { 
-		val = (val & ~ mask) | mask;
+		val = (val & ~ mask) | (bit? mask:0);
 	}
 
 	CCDK_FORCEINLINE void flip() noexcept { val = val ^ mask;	}
@@ -44,20 +44,20 @@ struct bit_access {
 template<typename T,typename  Size>
 struct iterator< bit_random_category, T, Size >
 {
-	typedef iterator			 this_type;
-	typedef bool				 value_type;
-	typedef T*                   pointer_type;
-	typedef T const*             const_pointer_type;
-	typedef bit_access<T>        reference_type;
-	typedef bool                 const_reference_type;
-	typedef Size                 size_type;
-	typedef ptr::diff_t          difference_type;
-	typedef random_category		 category;
+	using this_type       = iterator;
+	using value_type      = bool;
+	using pointer         = T*;
+	using const_pointer   = T const*;
+	using reference       = bit_access<T>;
+	using const_reference = bool;
+	using size_type       = Size;
+	using difference_type = ptr::diff_t;
+	using category        = random_category;
 	static constexpr uint32 kStoreBits = sizeof(T)*8;
 	static constexpr uint32 kShiftCount = kStoreBits -1;
 	static constexpr T kTopMask = T(1) << kShiftCount;
 
-	pointer_type      base;
+	pointer           base;
 	size_type         pos;
 	remove_const_t<T> mask;
 
@@ -125,23 +125,23 @@ struct iterator< bit_random_category, T, Size >
 	}
 
 	/* const dereference */
-	CCDK_FORCEINLINE const_reference_type operator*() const noexcept {
+	CCDK_FORCEINLINE const_reference operator*() const noexcept {
 		ccdk_assert(offset < len);
 		return base[pos] & mask;
 	}
 
 	/* dereference */
-	CCDK_FORCEINLINE reference_type operator*() noexcept {
+	CCDK_FORCEINLINE reference operator*() noexcept {
 		return { base[pos], mask };
 	}
 
 	/* const index */
-	CCDK_FORCEINLINE const_reference_type operator[](difference_type index) const noexcept {
+	CCDK_FORCEINLINE const_reference operator[](difference_type index) const noexcept {
 		return *(*this+index);
 	}
 
 	/* index */
-	CCDK_FORCEINLINE reference_type operator[](difference_type index) noexcept {
+	CCDK_FORCEINLINE reference operator[](difference_type index) noexcept {
 		return *(*this+index);
 	}
 
