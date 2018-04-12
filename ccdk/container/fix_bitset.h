@@ -144,7 +144,7 @@ public:
 	/* range copy */
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE fix_bitset(InputIt beginIt, InputIt endIt) noexcept {
-		util::copy_n(begin(), beginIt, alg::distance(beginIt, endIt));
+		util::copy_n(begin(), beginIt, fn::min(NBit, alg::distance(beginIt, endIt)));
 	}
 
 	/* compile copy */
@@ -201,21 +201,21 @@ public:
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator begin()
-		noexcept { return { content, 0, 1}; }
+		noexcept { return { content, 0, 1, N}; }
 	CCDK_FORCEINLINE iterator end()
-		noexcept { return { content, kLastOffset, kLastMask }; }
+		noexcept { return { content, kLastOffset, kLastMask , N }; }
 	CCDK_FORCEINLINE constexpr const_iterator cbegin()
-		const noexcept { return { content, 0, 1 }; }
+		const noexcept { return { content, 0, 1, N }; }
 	CCDK_FORCEINLINE constexpr const_iterator cend()
-		const noexcept { return { content, kLastOffset, kLastMask }; }
+		const noexcept { return { content, kLastOffset, kLastMask , N }; }
 	CCDK_FORCEINLINE reverse_iterator rbegin()
-		noexcept { return { { content, kReverseOffst, kReverseMask } }; }
+		noexcept { return { { content, kReverseOffst, kReverseMask , N } }; }
 	CCDK_FORCEINLINE reverse_iterator rend()
-		noexcept { return { {content, size_type(-1),kTopMask} }; }
+		noexcept { return { {content, size_type(-1),kTopMask, N } }; }
 	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin()
-		const noexcept { return { { content, kReverseOffst, kReverseMask} }; }
+		const noexcept { return { { content, kReverseOffst, kReverseMask, N } }; }
 	CCDK_FORCEINLINE constexpr const_reverse_iterator crend()
-		const noexcept { return { { content, size_type(-1), kTopMask } }; }
+		const noexcept { return { { content, size_type(-1), kTopMask, N } }; }
 
 	/* attribute */
 	CCDK_FORCEINLINE constexpr size_type size() { return NBit; }
@@ -238,7 +238,7 @@ public:
 		return { content[index / kStoreBits], cshl<value_type>(1,index%kStoreBits) };
 	}
 	CCDK_FORCEINLINE constexpr const_reference at(size_type index) const noexcept {
-		ccdk_assert(index < NBit);
+		//ccdk_assert(index < NBit);
 		return content[index / kStoreBits] & cshl<value_type>(1,(index % kStoreBits));
 	}
 
@@ -362,6 +362,16 @@ public:
 	CCDK_FORCEINLINE void debug() const noexcept {
 		char info[NBit + 1]{ 0 };
 		for (int i = 0; i < NBit; ++i) {
+			info[i] = this->at(i) ? '1' : '0';
+		}
+		DebugValue("fix_bit:", info);
+	}
+
+	CCDK_FORCEINLINE void debug_all() const noexcept {
+		constexpr size_type len = shr_type<value_type, size_type>(NBit + kStoreBits);
+		constexpr size_type len2 = shl_type<value_type, size_type>(len);
+		char info[len2+1]{ 0 };
+		for (int i = 0; i < len2; ++i) {
 			info[i] = this->at(i) ? '1' : '0';
 		}
 		DebugValue("fix_bit:", info);

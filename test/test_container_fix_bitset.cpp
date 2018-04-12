@@ -7,12 +7,6 @@ using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::ct;
 
-struct A {
-	int a;
-	constexpr A() :a{} {}
-	constexpr A(A const& other) :a{ other.a } {}
-};
-
 int main()
 {
 	DebugNewTitle("constexpr ctor ");
@@ -72,6 +66,15 @@ int main()
 	DebugNewTitle("iterator fill");
 	{
 		fix_bitset<11> bit11{ "1101010101010101" };
+		bit11.debug();
+		bit11.debug_all();
+		fix_bitset<8> bit8{ bit11.begin(), bit11.end() };
+		bit8.debug();
+		
+	}
+	DebugNewTitle("iterator ");
+	{
+		fix_bitset<11> bit11{ "11101000001" };
 		bit11.debug_iterator();
 		bit11[2] = true;
 		bit11.debug_iterator();

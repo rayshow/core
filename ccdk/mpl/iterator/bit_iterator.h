@@ -60,11 +60,13 @@ struct iterator< bit_random_category, T, Size >
 	pointer           base;
 	size_type         pos;
 	remove_const_t<T> mask;
+	size_type         max;
 
 	CCDK_FORCEINLINE this_type& operator++() noexcept {
 		T acc = cshr<T>( kTopMask & mask, kShiftCount);
 		pos += acc;
 		mask = cshl<T>(mask,1) | acc;
+		
 		return *this;
 	}
 
@@ -104,12 +106,12 @@ struct iterator< bit_random_category, T, Size >
 
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator+(difference_type step) const noexcept {
-		return this_type{ base, pos , mask }+=step;
+		return this_type{ base, pos , mask, max }+=step;
 	}
 
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator-(difference_type step) const noexcept {
-		return this_type{ base, pos , mask }+=-step;
+		return this_type{ base, pos , mask ,max }+=-step;
 	}
 
 	CCDK_FORCEINLINE constexpr difference_type operator-(this_type const& other) const noexcept {
@@ -126,12 +128,13 @@ struct iterator< bit_random_category, T, Size >
 
 	/* const dereference */
 	CCDK_FORCEINLINE const_reference operator*() const noexcept {
-		ccdk_assert(offset < len);
+		ccdk_assert(pos < max);
 		return base[pos] & mask;
 	}
 
 	/* dereference */
 	CCDK_FORCEINLINE reference operator*() noexcept {
+		ccdk_assert(pos < max);
 		return { base[pos], mask };
 	}
 
