@@ -35,8 +35,11 @@ template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret shr_type(Ret v
 }
 
 template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret keep_low(Ret v) noexcept {
-	Ret shl = shl_type<T, T>(1);
-	return v & (shl - 1);
+	return v & (shl_type<T, T>(1) - T(1));
+}
+
+template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret keep_high(Ret v) noexcept {
+	return v & ~(shl_type<T, T>(1) - T(1));
 }
 
 template<uint32 bits, typename Ret> CCDK_FORCEINLINE constexpr Ret shl_bits(Ret v) noexcept {
