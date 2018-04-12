@@ -49,7 +49,6 @@ ccdk_namespace_mpl_fn_start
 	template<uint32 acc, uint32... indice, typename T, typename... Args>
 	struct pack_wph_step< acc, indice_pack<indice...>, T, Args...> : pack_wph_step< acc + T::wild_size, indice_pack<indice..., acc>, Args...> {};
 
-
 	/* filter expr */
 	template<typename T> struct expr_filter : if_ < is_expr<T>, decay_t<T>, expr < value_t<T>>> {};
 	template<typename T> using expr_filter_t = typename expr_filter<T>::type;
@@ -202,7 +201,6 @@ ccdk_namespace_mpl_fn_start
 			static_assert(val_first<char, args...>::value != '0', "number placeholder can't be 0_, need greater then 0");
 			return expr < uint32_ < parse_integer<sizeof...(args)>({ args... }) > > {};
 		}
-
 	}
 
 	constexpr util::create_t< expr > create_expr{};

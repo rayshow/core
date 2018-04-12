@@ -76,6 +76,15 @@ int main()
 		arr1.assign(arr3.begin(), arr3.end());
 		RuntimeAssertTrue(arr1.size() == 6 && arr1[-1] == 6);
 	}
+	DebugNewTitle("debug iterator");
+	{
+		array<int, 10> arr1{ {1,2,3,4,5,6,7} };
+		const array<int, 10> arr2{ { 1,2,3,4,5,6,7 } };
+		RuntimeAssertTrue(arr1.size() == 7);
+		RuntimeAssertTrue(arr1.capcity() == 10);
+		arr1.rdebug("rv:");
+		arr2.crdebug("crv:");
+	}
 	DebugNewTitle("test range index");
 	{
 		array<int, 10> arr1{ 4, 2 };

@@ -4,6 +4,7 @@ using namespace ccdk::ct;
                                                                         
 int main()
 {
+	
 	DebugNewTitle("test constructor ");
 	{
 		blist<int> lst1;
@@ -152,7 +153,6 @@ int main()
 		lst1.erase(lst1.begin(), lst1.end());
 		ccdk_assert(lst1.size() == 0);
 	}
-
 
 	_CrtDumpMemoryLeaks();
 	getchar();

@@ -13,12 +13,8 @@
 
 #include<ccdk/type.h>
 using namespace ccdk;
-
-
 int main()
 {
-	DebugValue(-2 >> 1);
-
 	getchar();
 	return 0;
 }

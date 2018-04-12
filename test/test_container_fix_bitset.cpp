@@ -15,11 +15,6 @@ struct A {
 
 int main()
 {
-	std::bitset<8> bit8;
-
-	constexpr A a{};
-	constexpr A b{ a };
-
 	DebugNewTitle("constexpr ctor ");
 	{
 		constexpr fix_bitset<15>  bit15;
@@ -77,119 +72,124 @@ int main()
 	DebugNewTitle("iterator fill");
 	{
 		fix_bitset<11> bit11{ "1101010101010101" };
+		bit11.debug_iterator();
+		bit11[2] = true;
+		bit11.debug_iterator();
+		bit11[2] = false;
+		bit11.debug_iterator();
 		fix_bitset<8> bit8{ bit11.begin(), bit11.end() };
 		bit8.debug();
 	}
-	DebugNewTitle("iterator ");
-	{
-		fix_bitset<11> bit11{ "11101000001" };
-		bit11.debug_iterator();
-		bit11.debug_const_iterator();
-		bit11.debug_reverse_iterator();
-		bit11.debug_const_reverse_iterator();
-	}
-	DebugNewTitle("const iterator ");
-	{
-		const fix_bitset<11> bit11{ "11011011101000011" };
-		//bit11.debug_iterator();               //error
-		bit11.debug_const_iterator();
-		//bit11.debug_reverse_iterator();       //error
-		bit11.debug_const_reverse_iterator();
-	}
-	DebugNewTitle("iterator op");
-	{
-		fix_bitset<11> bit11{ "11011011101" };
-		RuntimeAssertTrue( (bit11.end() - bit11.begin()) == 11);
-		RuntimeAssertTrue( (bit11.rbegin() + 11 == bit11.rend()));
-		auto it = bit11.begin();
-		RuntimeAssertTrue(*(it) == true);
-		it++; RuntimeAssertTrue(*(it) == true);
-		it++; RuntimeAssertTrue(*(it) == false );
-		auto it2 = bit11.end();
-		it2--; RuntimeAssertTrue(*(it2) == true); 
-		it2--; RuntimeAssertTrue(*(it2) == false); 
-		it2--; RuntimeAssertTrue(*(it2) == true);
-		it2 -= 3; RuntimeAssertTrue(*(it2) == false);
-		it2 -= 3; RuntimeAssertTrue(*(it2) == false);
-		RuntimeAssertTrue(it2[3] == false);
-		RuntimeAssertTrue(it2[-2] == true);	
-	}
-	DebugNewTitle("test set");
-	{
-		fix_bitset<11> bit11{ "11011011101" };
-		bit11[2] = true;
-		bit11.debug();
-		bit11[2].flip();
-		bit11.debug();
-		bit11[2].reset();
-		bit11.debug();
-		bit11[2].set();
-		bit11.debug();
-	}
-	DebugNewTitle("test count");
-	{
-		fix_bitset<11> bit11{ "11011011101" };
-		RuntimeAssertTrue(bit11.count_one() == 8);
-		RuntimeAssertTrue(bit11.count_zero() == 3);
-	}
-	DebugNewTitle("test any all none");
-	{
-		fix_bitset<11> none;
-		fix_bitset<11> all{ true };
-		fix_bitset<11> any{ "00100000000" };
-		RuntimeAssertTrue(none.none());
-		RuntimeAssertTrue(!none.any());
-		RuntimeAssertTrue(!none.all());
-		RuntimeAssertTrue(all.all());
-		RuntimeAssertTrue(all.any());
-		RuntimeAssertTrue(!all.none());
-		RuntimeAssertTrue(any.any());
-		RuntimeAssertTrue(!any.none());
-		RuntimeAssertTrue(!any.all());
-	}
-	DebugNewTitle("test shl");
-	{
-		fix_bitset<66> shl{ "11111111011111111111011111111111101111111111101111111" };
-		shl.debug();
-		shl <<= 1;
-		shl.debug();
-		shl <<= 9;
-		shl.debug();
-		shl <<= 19;
-		shl.debug();
-		shl <<= 17;
-		shl.debug();
-		shl <<= 17;
-		shl.debug();
-	}
-	DebugNewTitle("test shr");
-	{
-		fix_bitset<66> shr{ "11111111011111111111011111111111101111111111101111111" };
-		shr.debug();
-		shr >>= 1;
-		shr.debug();
-		shr >>= 9;
-		shr.debug();
-		shr >>= 19;
-		shr.debug();
-		shr >>= 17;
-		shr.debug();
-		shr >>= 17;
-		shr.debug();
-	}
-	DebugNewTitle("test bit op");
-	{
-		fix_bitset<66> l{ "11111111011111111111011110000111101111111111101111111" };
-		fix_bitset<66> r{ "00000100101010101001100000000000011111111111111111111" };
-		l.debug();
-		r.debug();
-		(l | r).debug();
-		(l & r).debug();
-		(l ^ r).debug();
-		l.flip().debug();
-	}
+	//DebugNewTitle("iterator ");
+	//{
+	//	fix_bitset<11> bit11{ "11101000001" };
+	//	bit11.debug_iterator();
+	//	bit11.debug_const_iterator();
+	//	bit11.debug_reverse_iterator();
+	//	bit11.debug_const_reverse_iterator();
+	//}
+	//DebugNewTitle("const iterator ");
+	//{
+	//	const fix_bitset<11> bit11{ "11011011101000011" };
+	//	//bit11.debug_iterator();               //error
+	//	bit11.debug_const_iterator();
+	//	//bit11.debug_reverse_iterator();       //error
+	//	bit11.debug_const_reverse_iterator();
+	//}
+	//DebugNewTitle("iterator op");
+	//{
+	//	fix_bitset<11> bit11{ "11011011101" };
+	//	RuntimeAssertTrue( (bit11.end() - bit11.begin()) == 11);
+	//	RuntimeAssertTrue( (bit11.rbegin() + 11 == bit11.rend()));
+	//	auto it = bit11.begin();
+	//	RuntimeAssertTrue(*(it) == true);
+	//	it++; RuntimeAssertTrue(*(it) == true);
+	//	it++; RuntimeAssertTrue(*(it) == false );
+	//	auto it2 = bit11.end();
+	//	it2--; RuntimeAssertTrue(*(it2) == true); 
+	//	it2--; RuntimeAssertTrue(*(it2) == false); 
+	//	it2--; RuntimeAssertTrue(*(it2) == true);
+	//	it2 -= 3; RuntimeAssertTrue(*(it2) == false);
+	//	it2 -= 3; RuntimeAssertTrue(*(it2) == false);
+	//	RuntimeAssertTrue(it2[3] == false);
+	//	RuntimeAssertTrue(it2[-2] == true);	
+	//}
+	//DebugNewTitle("test set");
+	//{
+	//	fix_bitset<11> bit11{ "11011011101" };
+	//	bit11[2] = true;
+	//	bit11.debug();
+	//	bit11[2].flip();
+	//	bit11.debug();
+	//	bit11[2].reset();
+	//	bit11.debug();
+	//	bit11[2].set();
+	//	bit11.debug();
+	//}
+	//DebugNewTitle("test count");
+	//{
+	//	fix_bitset<11> bit11{ "11011011101" };
+	//	RuntimeAssertTrue(bit11.count_one() == 8);
+	//	RuntimeAssertTrue(bit11.count_zero() == 3);
+	//}
+	//DebugNewTitle("test any all none");
+	//{
+	//	fix_bitset<11> none;
+	//	fix_bitset<11> all{ true };
+	//	fix_bitset<11> any{ "00100000000" };
+	//	RuntimeAssertTrue(none.none());
+	//	RuntimeAssertTrue(!none.any());
+	//	RuntimeAssertTrue(!none.all());
+	//	RuntimeAssertTrue(all.all());
+	//	RuntimeAssertTrue(all.any());
+	//	RuntimeAssertTrue(!all.none());
+	//	RuntimeAssertTrue(any.any());
+	//	RuntimeAssertTrue(!any.none());
+	//	RuntimeAssertTrue(!any.all());
+	//}
+	//DebugNewTitle("test shl");
+	//{
+	//	fix_bitset<66> shl{ "11111111011111111111011111111111101111111111101111111" };
+	//	shl.debug();
+	//	shl <<= 1;
+	//	shl.debug();
+	//	shl <<= 9;
+	//	shl.debug();
+	//	shl <<= 19;
+	//	shl.debug();
+	//	shl <<= 17;
+	//	shl.debug();
+	//	shl <<= 17;
+	//	shl.debug();
+	//}
+	//DebugNewTitle("test shr");
+	//{
+	//	fix_bitset<66> shr{ "11111111011111111111011111111111101111111111101111111" };
+	//	shr.debug();
+	//	shr >>= 1;
+	//	shr.debug();
+	//	shr >>= 9;
+	//	shr.debug();
+	//	shr >>= 19;
+	//	shr.debug();
+	//	shr >>= 17;
+	//	shr.debug();
+	//	shr >>= 17;
+	//	shr.debug();
+	//}
+	//DebugNewTitle("test bit op");
+	//{
+	//	fix_bitset<66> l{ "11111111011111111111011110000111101111111111101111111" };
+	//	fix_bitset<66> r{ "00000100101010101001100000000000011111111111111111111" };
+	//	l.debug();
+	//	r.debug();
+	//	(l | r).debug();
+	//	(l & r).debug();
+	//	(l ^ r).debug();
+	//	l.flip().debug();
+	//}
 	
-
+	_CrtDumpMemoryLeaks();
 	getchar();
 	return 0;
 }
