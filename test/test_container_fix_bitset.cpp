@@ -7,19 +7,8 @@ using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::ct;
 
-struct A {
-	int a;
-	constexpr A() :a{} {}
-	constexpr A(A const& other) :a{ other.a } {}
-};
-
 int main()
 {
-	std::bitset<8> bit8;
-
-	constexpr A a{};
-	constexpr A b{ a };
-
 	DebugNewTitle("constexpr ctor ");
 	{
 		constexpr fix_bitset<15>  bit15;
