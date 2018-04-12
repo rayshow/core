@@ -66,7 +66,6 @@ struct iterator< bit_random_category, T, Size >
 		T acc = cshr<T>( kTopMask & mask, kShiftCount);
 		pos += acc;
 		mask = cshl<T>(mask,1) | acc;
-		
 		return *this;
 	}
 

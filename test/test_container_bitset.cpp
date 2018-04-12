@@ -10,17 +10,25 @@ using namespace ccdk::ct;
 
 int main()
 {
-	DebugNewTitle("test bitset ctor");
+	uint32 i = 17;
+	using T = uint32;
+	//for (uint32 i = 4; i < 66; ++i)
 	{
-		bitset<> bs1{};
-		bitset<> bs2{};
-		bitset<> bs3{ 10,false };
-		bitset<> bs4{ 10,true };
-		bs3.debug();
-		bs4.debug();
-		bs3.debug_all();
-		bs4.debug_all();
+		DebugNewTitle("test bitset ctor");
+		{
+			std::cout << i << std::endl;
+			bitset<> bs1{};
+			bitset<> bs2{};
+			bitset<T> bs3{ i, false };
+			bitset<T> bs4{ i, true };
+			bs3.debug();
+			bs3.debug_all();
+			bs4.debug();
+			bs4.debug_all();
+			std::cout << std::endl;
+		}
 	}
+
 	DebugNewTitle("test ctor from literal");
 	{
 		bitset<> bs1{ from_string_literial_c, "1111100000101010" };

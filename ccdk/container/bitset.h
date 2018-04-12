@@ -58,9 +58,13 @@ public:
 	friend class bitset;
 
 private:
-	pointer    content;
-	size_type  len;
-	size_type  cap;
+	pointer   content;
+	size_type len;
+	size_type cap;
+
+	size_type total_bytes() const noexcept { return cap >> 3; }
+	size_type used_bytes() const noexcept { return (len + 7) >> 3; }
+	size_type element_count() const noexcept { return shr_type<T, size_type>(cap); }
 
 public:
 
@@ -197,17 +201,18 @@ public:
 
 	/* iterator */
 	CCDK_FORCEINLINE iterator begin() noexcept {
-		return { content, 0, 1, count() };
+		return { content, 0, 1, element_count() };
 	}
 	CCDK_FORCEINLINE iterator end() noexcept {
 		int a = keep_low<T, T>(len);
-		return { content, bytes(), cshl<T>(1, a),count() };
+		return { content, used_bytes(), cshl<T>(1, a), element_count() };
 	}
 	CCDK_FORCEINLINE constexpr const_iterator cbegin() const noexcept {
-		return { content, 0, 1 ,count() };
+		return { content, 0, 1 , element_count() };
 	}
 	CCDK_FORCEINLINE constexpr const_iterator cend() const noexcept {
-		return { content, count() - 1, cshl<T>(1, keep_low<T,T>(len)),count() };
+		uint32  c = element_count();
+		return { content, c-1, cshl<T>(1, keep_low<T,T>(len)), c };
 	}
 	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept {
 		return { --end() };
@@ -320,36 +325,19 @@ private:
 	}
 
 	CCDK_FORCEINLINE void deallocate() {
-		allocator_type::deallocate(*this, content, count());
+		allocator_type::deallocate(*this, content, element_count());
 	}
 
-	/* count of used elements */
-	CCDK_FORCEINLINE size_type count() const noexcept { 
-		return shr_type<T, size_type>(len+ kComplements);
-	}
-
-	/* bytes of used elements */
-	CCDK_FORCEINLINE size_type bytes() const noexcept { 
-		return shr_type<T, size_type>(len); 
-	}
-
-	/* used store bytes */
-	CCDK_FORCEINLINE size_type stores() const noexcept {
-		return shr_type<T, size_type>(cap);
-	}
-
-	/* not used bytes of storage */
-	CCDK_FORCEINLINE size_type ext_bytes() const noexcept { 
-		return  stores() - count();
-	}
 
 	/* clear last used element's not used bits */
-	CCDK_FORCEINLINE void clear_ext_bits() noexcept {
-		if (content) {
-			size_type ext_bits = len - shl_type<T, size_type>(bytes());
-			T mask( 0 );
-			while (ext_bits--) mask |= cshl<T>(1, ext_bits);
-			content[count() - 1] &= mask;
+	CCDK_FORCEINLINE void set_ext_bits() noexcept {
+		if (content && (len & 0x07)) {
+			uint32 last_pos = used_bytes() - 1; 
+			size_type ext_bits = len - (last_pos << 3);
+			ccdk_assert(ext_bits >= 0 && ext_bits < 8);
+			uint8& mask = *((uint8*)content+last_pos);
+			mask = 0;
+			for(uint32 i = 0;i<ext_bits;++i) mask |= cshl<uint8>(1, i);
 		}
 	}
 
@@ -359,18 +347,15 @@ private:
 		len = n;
 	}
 
-	CCDK_FORCEINLINE void clear_ext_bit_and_storage() noexcept {
-		clear_ext_bits();                           /* clear last T' ext bits */
-		uint32 exbits = ext_bytes();
-		if(exbits>0)
-			memset(content + count(), 0, exbits);  /* clear ext storage */
-	}
-
 	CCDK_FORCEINLINE void allocate_fill(size_type n, bool val) {
 		if (n > 0) {
 			local_allocate_n(n);
-			memset(content, val ? 0b11111111 : 0b00000000, count());
-			if(val) clear_ext_bit_and_storage();   // true need clear ex-bits
+			memset(content, val ? 0b11111111 : 0b00000000, used_bytes());
+			if (val) set_ext_bits();
+			if (cap - 8 >= len) {
+				uint32 used = used_bytes();
+				memset((uint8*)content + used, 0, total_bytes() - used);
+			}
 		}
 	}
 
@@ -382,7 +367,7 @@ private:
 			ccdk_increase_allocate3( (shr_type<T,size_type>(n)), memory, new_cap, new_len);
 			new_len = n;
 			new_cap = shl_type<T, size_type>(new_cap);
-			memcpy(memory, content, bytes());
+			memcpy(memory, content, used_bytes());
 			this->deallocate();
 			len = new_len;
 			cap = new_cap;
@@ -394,8 +379,8 @@ private:
 	CCDK_FORCEINLINE void allocate_copy(InputIt beginIt, size_type n) {
 		if (n > 0) {
 			local_allocate_n(n);
+			memset(content, 0, cap >> 3);
 			util::copy_n(begin(), beginIt, n);
-			//clear_ext_bit_and_storage();
 		}
 	}
 
@@ -407,7 +392,7 @@ private:
 			ccdk_assert(str[i] == Char('0') || str[i] == Char('1'));
 			this->at(i) =  bool(str[i]-Char('0'));
 		}
-		clear_ext_bit_and_storage();
+		//clear_ext_bit_and_storage();
 	}
 
 	template<typename T2>
