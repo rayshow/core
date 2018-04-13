@@ -17,11 +17,13 @@ struct bit_access {
 	T   mask;
 
 	CCDK_FORCEINLINE void operator=(bit_access const& other) {
-		val = (val & ~mask) | other.masked_value();
+		if (other) this->set();
+		else this->reset();
 	}
 	
 	CCDK_FORCEINLINE void operator=(bool bit) noexcept { 
-		val = (val & ~ mask) | (bit? mask:0);
+		if (bit) this->set();
+		else this->reset();
 	}
 
 	CCDK_FORCEINLINE void flip() noexcept { val = val ^ mask;	}
@@ -32,7 +34,7 @@ struct bit_access {
 
 	CCDK_FORCEINLINE T masked_value() const noexcept { return val & mask; }
 
-	CCDK_FORCEINLINE operator bool() { return val & mask; }
+	CCDK_FORCEINLINE operator bool() const noexcept { return val & mask; }
 
 	CCDK_FORCEINLINE T* addressof() noexcept { return &val; }
 
@@ -45,6 +47,8 @@ template<typename T,typename  Size>
 struct iterator< bit_random_category, T, Size >
 {
 	using this_type       = iterator;
+	using const_iterator  = iterator< bit_random_category, const T, Size >;
+
 	using value_type      = bool;
 	using pointer         = T*;
 	using const_pointer   = T const*;
@@ -74,7 +78,6 @@ struct iterator< bit_random_category, T, Size >
 		mask = (mask >> T(1)) | cshl<T>(T(1) & mask, kShiftCount);
 		return *this;
 	}
-
 
 	/* it++ */
 	CCDK_FORCEINLINE constexpr this_type operator++(int) noexcept {
@@ -147,6 +150,10 @@ struct iterator< bit_random_category, T, Size >
 		return *(*this+index);
 	}
 
+	CCDK_FORCEINLINE operator const_iterator() const noexcept {
+		return { base, pos, mask, max };
+	}
+
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return base == other.base && mask == other.mask && pos == other.pos;
@@ -158,6 +165,18 @@ struct iterator< bit_random_category, T, Size >
 	}
 };
 
+template<typename T, typename Size>
+CCDK_FORCEINLINE bool operator==(
+	iterator< bit_random_category, const T, Size > const lhs,
+	iterator< bit_random_category,  T, Size > const rhs)noexcept {
+	return lhs.base == rhs.base && lhs.mask == rhs.mask && lhs.pos == rhs.pos;
+}
 
+template<typename T, typename Size>
+CCDK_FORCEINLINE bool operator==(
+	iterator< bit_random_category, T, Size > const lhs,
+	iterator< bit_random_category, const T, Size > const rhs)noexcept {
+	return lhs.base == rhs.base && lhs.mask == rhs.mask && lhs.pos == rhs.pos;
+}
 
 ccdk_namespace_mpl_it_end

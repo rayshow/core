@@ -34,11 +34,11 @@ template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret shr_type(Ret v
 	return v >> Ret(base_impl::shift_bit_mpl<sizeof(T) * 8>::value);
 }
 
-template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret keep_low(Ret v) noexcept {
+template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret mod_type(Ret v) noexcept {
 	return v & (shl_type<T, T>(1) - T(1));
 }
 
-template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret keep_high(Ret v) noexcept {
+template<typename T, typename Ret> CCDK_FORCEINLINE constexpr Ret div_type(Ret v) noexcept {
 	return v & ~(shl_type<T, T>(1) - T(1));
 }
 
