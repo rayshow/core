@@ -35,6 +35,8 @@ int main()
 	construct<A>(mem, 1);
 	DebugValue(mem->data.a);
 
+	std::hash<int>();
+
 	getchar();
 	return 0;
 }

@@ -11,8 +11,6 @@ struct forward_node {
 	forward_node<T> *next;
 };
 
-
-
 template<typename T>
 struct biward_node
 {
@@ -21,9 +19,6 @@ struct biward_node
 	biward_node<T> *prev;
 	biward_node<T> *next;
 };
-
-
-
 ccdk_namespace_ct_end
 
 

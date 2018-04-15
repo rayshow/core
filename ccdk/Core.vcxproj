@@ -71,10 +71,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="algorithm\advance.h" />
-    <ClInclude Include="algorithm\algorithm_mudole.h" />
+    <ClInclude Include="container\algorithm\advance.h" />
+    <ClInclude Include="container\algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
-    <ClInclude Include="algorithm\distance.h" />
+    <ClInclude Include="container\algorithm\distance.h" />
     <ClInclude Include="container\adapter\prority_queue.h" />
     <ClInclude Include="container\adapter\queue.h" />
     <ClInclude Include="container\adapter\stack.h" />
@@ -105,7 +105,7 @@
     <ClInclude Include="filesystem\path.h" />
     <ClInclude Include="filesystem\reader.h" />
     <ClInclude Include="filesystem\writer.h" />
-    <ClInclude Include="log\log.h" />
+    <ClInclude Include="filesystem\log\log.h" />
     <ClInclude Include="math\capsule.h" />
     <ClInclude Include="math\color4.h" />
     <ClInclude Include="math\euler.h" />

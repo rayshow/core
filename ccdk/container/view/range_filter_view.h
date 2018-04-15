@@ -37,11 +37,11 @@ struct range_filter_view
 	/* container[{start, end, step, pred } ] = v */
 	void operator=(value_type const& v) noexcept{
 		if (filter.pred) {  
-			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+			for (int32 i = filter.start; i < filter.end; i += filter.step) {
 				if (filter.pred(container.at(i))) container.at(i) = v;
 			}
 		} else {
-			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+			for (int32 i = filter.start; i < filter.end; i += filter.step) {
 				container.at(i) = v; 
 			} 
 		}
@@ -50,12 +50,12 @@ struct range_filter_view
 	/* container[{start, end, step, pred } ] = generator */
 	void operator=(fn::function<value_type(value_type)> gen) {
 		if (filter.pred) { 
-			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+			for (int32 i = filter.start; i < filter.end; i += filter.step) {
 			if (filter.pred(container.at(i))) 
 				container.at(i) = gen(container.at(i)); }
 		}
 		else { 
-			for (uint32 i = filter.start; i < filter.end; i += filter.step) { 
+			for (int32 i = filter.start; i < filter.end; i += filter.step) { 
 				container.at(i) = gen(container.at(i));
 			} 
 		}

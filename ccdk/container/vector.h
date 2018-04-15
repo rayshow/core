@@ -11,7 +11,7 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/units/ratio.h>
-#include<ccdk/container/filter/filter_view.h>
+#include<ccdk/container/filter/range_filter.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/algorithm/distance.h>

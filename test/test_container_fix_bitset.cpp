@@ -11,9 +11,9 @@ int main()
 {
 	DebugNewTitle("constexpr ctor ");
 	{
-		constexpr fix_bitset<15>  bit15;
-		constexpr fix_bitset<33>  bit33{ mpl::false_c };
-		constexpr fix_bitset<11>  bit11{ from_string_literial_c, "10101010101010101" };
+		constexpr fix_bitset<15> bit15;
+		constexpr fix_bitset<33> bit33{ mpl::false_c };
+		constexpr fix_bitset<11> bit11{ from_string_literial_c, "10101010101010101" };
 		constexpr fix_bitset<11> bit112{ bit11 };
 		bit15.debug();
 		bit33.debug();
