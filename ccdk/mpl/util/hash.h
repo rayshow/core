@@ -6,7 +6,7 @@
 ccdk_namespace_mpl_util_start
 
 
-// FNV-1a hash function for bytes in [_First, _First + _Count)
+// FNV-1a hash function for bytes in [bytes, bytes + n)
 inline ptr::size_t _Hash_bytes(const uint8 *bytes, ptr::size_t n) _NOEXCEPT
 {	
 #if defined(_WIN64)
