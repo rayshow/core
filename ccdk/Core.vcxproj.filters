@@ -59,7 +59,6 @@
   <ItemGroup>
     <ClInclude Include="compile.h" />
     <ClInclude Include="type.h" />
-    <ClInclude Include="log\log.h" />
     <ClInclude Include="filesystem\path.h">
       <Filter>filesystem</Filter>
     </ClInclude>
@@ -541,11 +540,8 @@
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />
     <ClInclude Include="container\vector.h" />
-    <ClInclude Include="algorithm\distance.h" />
-    <ClInclude Include="algorithm\algorithm_mudole.h" />
     <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\string.h" />
-    <ClInclude Include="algorithm\advance.h" />
     <ClInclude Include="memory\list_allocate_adapter.h" />
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\bitset.h" />
@@ -893,14 +889,22 @@
     <ClInclude Include="container\lazy_slist.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\impl\hash_table.h" />
-    <ClInclude Include="container\impl\list_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
     <ClInclude Include="mpl\base\compatible_op.h" />
     <ClInclude Include="mpl\fusion\local_obj.h" />
-    <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="memory\debug_leak_allocator.h" />
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
     <ClInclude Include="container\filter\range_filter.h" />
+    <ClInclude Include="container\algorithm\advance.h" />
+    <ClInclude Include="container\algorithm\algorithm_mudole.h" />
+    <ClInclude Include="container\algorithm\distance.h" />
+    <ClInclude Include="filesystem\log\log.h" />
+    <ClInclude Include="mpl\iterator\bstree_iterator.h" />
+    <ClInclude Include="container\impl\link_node.h" />
+    <ClInclude Include="container\local_vector.h" />
+    <ClInclude Include="memory\local_cache.h" />
+    <ClInclude Include="mpl\fusion\local_arr.h" />
+    <ClInclude Include="memory\semi_local_allocator.h" />
   </ItemGroup>
 </Project>

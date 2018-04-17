@@ -13,7 +13,7 @@
 #include<ccdk/mpl/units/ratio.h>
 
 #include<ccdk/text/char_traits.h>
-#include<ccdk/algorithm/distance.h>
+#include<ccdk/container/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 

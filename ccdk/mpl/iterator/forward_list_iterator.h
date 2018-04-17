@@ -6,57 +6,66 @@
 
 ccdk_namespace_mpl_it_start
 
+
+template<typename T>
+struct is_forward_node : has_attribute_next<T> {};
+
+template<typename T>
+constexpr is_forward_node<T> is_forward_node_c{};
+
+
 template<typename Node>
 struct iterator< forward_category, Node >
 {
-	typedef iterator                  this_type;
-	typedef typename Node::value_type value_type;
-	typedef Node                      node_type;	
-	typedef value_type*               pointer_type;
-	typedef value_type const*         const_pointer_type;
-	typedef value_type&               reference_type;
-	typedef value_type const&         const_reference_type;
-	typedef ptr::diff_t			      difference_type;
-	typedef ptr::size_t			      size_type;
-	typedef forward_category          category;
+	using this_type       = iterator;
+	using value_type      = typename Node::value_type;
+	using node_type       = Node;
+	using node_pointer    = Node * ;
+	using pointer         = value_type * ;
+	using const_pointer   = value_type const*;
+	using reference       = value_type & ;
+	using const_reference = value_type const&;
+	using difference_type = ptr::diff_t;
+	using size_type       = ptr::size_t;
+	using category        = forward_category;
 
-	static_assert(has_attribute_next_v<Node>, "Node need has next data field!");
+	static_assert(is_forward_node<Node>::value, "Node need has left, right, parent field!");
 
-	node_type* pointer;
+	node_pointer content;
 
 	/* ++it */
 	CCDK_FORCEINLINE this_type& operator++() noexcept {
-		pointer = pointer->next; return *this; 
+		content = content->next; return *this;
 	}
 
 	/* it++ */
 	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept { 
-		return { pointer->next }; 
+		return { content->next };
 	}
 
 	/* it+=step */
 	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
-		for (ptr::size_t i = 0; i < step ; ++i, pointer = pointer->next)
-			ccdk_assert(pointer);
+		for (ptr::size_t i = 0; i < step ; ++i, content = content->next)
+			ccdk_assert(content);
 		return *this;
 	}
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator+(size_type step) const noexcept {
-		return this_type{ pointer } +=step; 
+		return this_type{ content } +=step;
 	}
 
 	/* const */
-	CCDK_FORCEINLINE const_reference_type operator*() const noexcept { return pointer->data; }
-	CCDK_FORCEINLINE reference_type operator*() noexcept { return pointer->data; }
+	CCDK_FORCEINLINE const_reference operator*() const noexcept { return content->data; }
+	CCDK_FORCEINLINE reference operator*() noexcept { return content->data; }
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return pointer == other.pointer;
+		return content == content.pointer;
 	}
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return pointer != other.pointer;
+		return content != content.pointer;
 	}
 };
 ccdk_namespace_mpl_it_end

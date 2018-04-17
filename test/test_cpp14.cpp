@@ -10,11 +10,16 @@
 #include<thread>
 #include<vector>
 #include<type_traits>
+#include<unordered_map>
+#include<map>
+#include<bitset>
 
 #include<ccdk/type.h>
 using namespace ccdk;
 int main()
 {
+	std::map<int, int>;
+	std::bitset<19> bs;
 	getchar();
 	return 0;
 }

@@ -20,7 +20,7 @@ private:
 
 public:
 	//default ctor
-	CCDK_FORCEINLINE local_obj() noexcept = default;
+	CCDK_FORCEINLINE constexpr local_obj() noexcept = default;
 
 	// implace ctor
 	template<typename... Args>

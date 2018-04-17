@@ -15,6 +15,16 @@
 
 ccdk_namespace_mpl_it_start
 
+
+template<typename T>
+struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
+
+template<typename T>
+constexpr is_biward_node<T> is_biward_node_c{};
+
+
+
+
 template<typename Node>
 struct iterator< biward_category, Node >
 {
@@ -32,8 +42,7 @@ struct iterator< biward_category, Node >
 	using size_type        = ptr::size_t;
 	using category         = biward_category;
 
-	static_assert(has_attribute_next_v<non_const_node>, "Node need has next data field!");
-	static_assert(has_attribute_prev_v<non_const_node>, "Node need has prev data field!");
+	static_assert(is_biward_node<non_const_node>::value, "Node need has next/front field!");
 
 	node_type* content;
 

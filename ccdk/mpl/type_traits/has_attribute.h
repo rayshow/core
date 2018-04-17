@@ -10,16 +10,13 @@ CCDK_TT_HAS_ATTRIBUTE_DECL1(next);
 // test wheather T().prev is well-formed and is type T*
 CCDK_TT_HAS_ATTRIBUTE_DECL1(prev);
 
-template<typename T>
-struct is_forward_node : has_attribute_next<T> {};
+// test wheather T().parent is well-formed and is type T*
+CCDK_TT_HAS_ATTRIBUTE_DECL1(parent);
 
-template<typename T>
-constexpr is_forward_node<T> is_forward_node_c{};
+// test wheather T().left is well-formed and is type T*
+CCDK_TT_HAS_ATTRIBUTE_DECL1(left);
 
-template<typename T>
-struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
-
-template<typename T>
-constexpr is_biward_node<T> is_biward_node_c {};
+// test wheather T().right is well-formed and is type T*
+CCDK_TT_HAS_ATTRIBUTE_DECL1(right);
 
 ccdk_namespace_mpl_end

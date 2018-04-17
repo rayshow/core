@@ -86,8 +86,9 @@
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="container\impl\hash_table.h" />
-    <ClInclude Include="container\impl\list_node.h" />
+    <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
+    <ClInclude Include="container\local_vector.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\list_node.h" />
     <ClInclude Include="container\multi_map.h" />
@@ -130,6 +131,7 @@
     <ClInclude Include="memory\allocator_traits.h" />
     <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="memory\memory_module.h" />
+    <ClInclude Include="memory\semi_local_allocator.h" />
     <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
+    <ClInclude Include="mpl\fusion\local_arr.h" />
     <ClInclude Include="mpl\fusion\local_obj.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
@@ -175,6 +178,7 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
+    <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="mpl\iterator\bit_iterator.h" />
     <ClInclude Include="mpl\iterator\biward_list_iterator.h" />
     <ClInclude Include="mpl\iterator\iterator_traits.h" />

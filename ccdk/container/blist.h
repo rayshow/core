@@ -13,9 +13,9 @@
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/list_allocate_adapter.h>
-#include<ccdk/algorithm/advance.h>
-#include<ccdk/algorithm/distance.h>
-#include<ccdk/container/impl/list_node.h>
+#include<ccdk/container/algorithm/advance.h>
+#include<ccdk/container/algorithm/distance.h>
+#include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
@@ -43,8 +43,7 @@ public:
 	using const_reference = T const&;
 	using size_type       = Size;
 	using difference      = ptr::diff_t;
-	using allocator_type  = mem::list_allocate_adapter<
-		typename Alloc::template rebind<Node>>;
+	using allocator_type  = mem::list_allocate_adapter<typename Alloc::template rebind<Node>>;
 
 	/* iterator */
 	using iterator               = it::iterator<biward_category, Node>;

@@ -3,7 +3,7 @@
 #define CCDK_PP_BYTE_SHIFT_ATTR(byte) CCDK_PP_BYTE_SHIFT_ATTR_HELPER byte 
 #define CCDK_PP_BYTE_SHIFT_ATTR_HELPER(b7,b6,b5,b4,b3,b2,b1,b0) CCDK_PP_BYTE_SHIFT_ATTR_VALUE##b7##b6##b5##b4##b3##b2##b1##b0
 
-
+// look table
 // (can shift sign, left zero count, right zero count, non-zero bit width) 
 //  00000000 and 00000001 is special
 #define CCDK_PP_BYTE_SHIFT_ATTR_VALUE00000000  1,0,8,0  //shift_right 8 will emit DIV_ZERO_ERROR

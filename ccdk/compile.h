@@ -108,7 +108,7 @@
 #	define CCDK_MS_ALIGN(n)     __declspec(align(n))
 #	define CCDK_GCC_ALIGN(n) 
 #	define CCDK_DLLEXPORT       __declspec(dllexport)    //building as a library
-#	define CCDK_DLLIMPORT	   __declspec(dllimport)     //building with this library
+#	define CCDK_DLLIMPORT	    __declspec(dllimport)     //building with this library
 #	define CCDK_DEPRECATED(version, msg) __declspec(deprecated(msg "please update your code"))
 #	define CCDK_CDECL	        __cdecl			
 #   define CCDK_FASTCALL        __fastcall
