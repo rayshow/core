@@ -11,7 +11,7 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
 
-#include<ccdk/algorithm/distance.h>
+#include<ccdk/container/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 

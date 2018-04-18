@@ -61,10 +61,19 @@ private:
 
 public:
 
+	// destruct holded objects and release allocated memory if any.
+	~local_vector() noexcept {
+		destruct_content();
+		deallocate();
+		content = nullptr;
+		cap = InitSize;
+		len = 0;
+	}
+
 	/* default ctor */
-	local_vector() = default;
+	CCDK_FORCEINLINE local_vector() = default;
 	CCDK_FORCEINLINE local_vector(ptr::nullptr_t) noexcept
-		: local_part{}, heap_part{ nullptr }, content{ nullptr }, 
+		: local_part{}, heap_part{ nullptr }, content{ nullptr },
 		cap{ 0 }, len{ 0 } {}
 
 	// fill n with args
@@ -100,8 +109,8 @@ public:
 
 	// move ctor
 	CCDK_FORCEINLINE local_vector(local_vector && other) noexcept :
-		local_part{}, content{ other.data() }, heap_part{ other.data()},
-		len {n}, cap{ other.size() }
+	local_part{}, content{ other.data() }, heap_part{ other.data() },
+		len{ n }, cap{ other.size() }
 	{
 		//store in stack 
 		if (!heap_part) {
@@ -121,7 +130,7 @@ public:
 	//template move
 	template<size_type N2, typename Ratio2>
 	CCDK_FORCEINLINE local_vector(local_vector<N2, T, Ratio2, Alloc> && other) noexcept:
-		local_part{}, content{ other.data() }, heap_part{ other.data() },
+	local_part{}, content{ other.data() }, heap_part{ other.data() },
 		len{ n }, cap{ other.size() }
 	{
 		//store in stack 
@@ -138,7 +147,7 @@ public:
 			util::swap(heap_part, other.heap_part);
 			content = heap_part;
 		}
-		else if(!heap_part && !other.heap_part){
+		else if (!heap_part && !other.heap_part) {
 			util::swap(local_part, other.local_part);
 			content = local_part.address();
 		}
@@ -160,18 +169,76 @@ public:
 		util::swap(cap, other.cap);
 	}
 
-	CCDK_FORCEINLINE operator=(local_vector const& other) {
-		destruct_content();
-
+	// destroy holded objects, but not release memory
+	CCDK_FORCEINLINE this_type& operator=(ptr::nullptr_t) noexcept {
+		this->~local_vector();
 	}
 
-	CCDK_FORCEINLINE operator=(local_vector && other) {
+	CCDK_FORCEINLINE this_type& operator=(local_vector const& other) {
+		assign_copy(other.begin(), other.size());
+		return *this;
+	}
 
+	template<size_type N2, typename Ratio2, typename Alloc2>
+	CCDK_FORCEINLINE this_type& operator=(local_vector<N2, T, Ratio2, Alloc2> const& other) {
+		assign_copy(other.begin(), other.size());
+		return *this;
+	}
+
+	CCDK_FORCEINLINE this_type& operator=(local_vector && other) {
+		destruct_content();
+		deallocate();
+		if (other.heap_part) {
+			heap_part = other.heap_part;
+			content = heap_part;
+		}
+		else {
+			local_part = other.local_part;
+			content = local_part.address();
+		}
+		len = other.len;
+		cap = other.cap;
+		other.rvalue_reset();
+		return *this;
+	}
+
+	template<size_type N2, typename Ratio2>
+	CCDK_FORCEINLINE this_type& operator=(local_vector<N2, T, Ratio2, Alloc> && other) {
+		destruct_content();
+		deallocate();
+		if (other.heap_part) {
+			heap_part = other.heap_part;
+			content = heap_part;
+		}
+		else {
+			local_part = other.local_part;
+			content = local_part.address();
+		}
+		len = other.len;
+		cap = other.cap;
+		other.rvalue_reset();
+		return *this;
+	}
+
+	template<typename... Args>
+	CCDK_FORCEINLINE this_type& assign(size_type n, Args && ... args) {
+		return assign_fill(n, util::forward<Args>(args)...);
+	}
+
+	template<InputIt>
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, size_type n) {
+		return assign_copy(beginIt, n);
+	}
+
+	template<InputIt>
+	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
+		return assign_copy(beginIt, alg::distance(beginIt, endIt));
 	}
 
 	//attr
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
 	CCDK_FORCEINLINE size_type capcity() const noexcept { return cap; }
+	CCDK_FORCEINLINE bool  empty() const noexcept { return len == 0; }
 	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept { return kMaxSize; }
 
 	//access
@@ -181,6 +248,8 @@ public:
 	CCDK_FORCEINLINE const_reference operator[](size_type idx) const noexcept { return content[idx]; }
 	CCDK_FORCEINLINE reference at(size_type idx) noexcept { return content[idx]; }
 	CCDK_FORCEINLINE const_reference at(size_type idx) const noexcept { return content[idx]; }
+	CCDK_FORCEINLINE reference front()() noexcept { return content[0]; }
+	CCDK_FORCEINLINE reference front() const noexcept { return content[0]; }
 
 	//iterator
 	CCDK_FORCEINLINE iterator begin() noexcept { return content; }
@@ -191,6 +260,46 @@ public:
 	CCDK_FORCEINLINE reverse_iterator rend() noexcept { return {content-1}; }
 	CCDK_FORCEINLINE const_reverse_iterator crbegin() const noexcept { return { content + len - 1 }; }
 	CCDK_FORCEINLINE const_reverse_iterator crend() const noexcept { return { content - 1 }; }
+
+
+	//  pop back element, destruct it 
+	CCDK_FORCEINLINE this_type& pop_back() noexcept {
+		if (len > 0) { util::destruct<T>(content + --len); }
+		return *this;
+	}
+
+	/* inplace construct with P, Args... */
+	template<
+		typename ... Args,
+		typename = check_t< has_constructor< T, Args...>>
+	>
+	CCDK_FORCEINLINE this_type& emplace_back(Args&& ... args) {
+		if (len == cap) { local_reallocate(); }
+		util::construct<T>(content + len++, util::forward<Args>(args)...);
+		return *this;
+	}
+
+	CCDK_FORCEINLINE this_type& push_back(T const& t) {
+		return emplace_back(t);
+	}
+
+	CCDK_FORCEINLINE this_type& push_back(T && t) {
+		return emplace_back(util::move(t));
+	}
+
+	/* inplace-construct at pos( [0,len] ) */
+	template<
+		typename... Args,
+		typename = check_t< has_constructor<T, Args...>>
+	>
+	CCDK_FORCEINLINE this_type& emplace(size_type pos, Args&&... args) {
+		ccdk_assert(pos <= len);
+		if (pos <= len) { 
+			emplace_impl(pos, pos + 1, util::forward<Args>(args)...); 
+		}
+		return *this;
+	}
+
 
 private:
 
@@ -212,23 +321,57 @@ private:
 	}
 
 	template<typename InputIt>
-	CCDK_FORCEINLINE void allocate_copy(InputIt beginIt, size_type n) {
+	CCDK_FORCEINLINE void local_allocate_n(size_type n) {
 		if (n == 0) return;
-		ccdk_increase_allocate3(n, content, cap, len);
-		util::construct_copy_n( heap_part, beginIt, n);
+		ccdk_increase_allocate3(n, heap_part, cap, len);
 		content = heap_part;
 	}
 
 	template<typename InputIt>
-	CCDK_FORCEINLINE void assign_copy(InputIt beginIt, size_type n) {
-		destruct_content();
-		if (n <= cap) {
-			util::construct_copy_n(content, beginIt, n);
-		}
-		else {
+	CCDK_FORCEINLINE void allocate_copy(InputIt beginIt, size_type n) {
+		local_allocate_n(n);
+		util::construct_copy_n(content, beginIt, n);
+	}
 
+	CCDK_FORCEINLINE void reallocate_if_need(size_type n) {
+		if (n > cap) {
+			deallocate();
+			local_allocate_n(n);
 		}
 	}
+
+	CCDK_FORCEINLINE void local_reallocate() {
+		pointer memory;
+		size_type new_cap, new_len;
+		ccdk_increase_allocate3(len, memory, new_cap, new_len);
+		util::construct_move_n(memory, content, len);
+		util::destruct_n(content, len, n);
+		heap_part = memory;
+		len = new_len;
+		cap = new_cap;
+		content = heap_part;
+	}
+
+	template<typename InputIt>
+	CCDK_FORCEINLINE this_type& assign_copy(InputIt beginIt, size_type n) {
+		if (n > 0) {
+			destruct_content();
+			reallocate_if_need(n);
+			util::construct_copy_n(content, beginIt, n);
+		}
+		return *this;
+	}
+
+	template<typename ...Args>
+	CCDK_FORCEINLINE this_type& assign_fill(size_type n, Args&&... args) {
+		if (n > 0) {
+			destruct_content();
+			reallocate_if_need(n);
+			util::construct_n(content, n, util::forward<Args>(args)...);
+		}
+		return *this;
+	}
+
 
 	template<typename InputIt>
 	CCDK_FORCEINLINE void initialize_copy(InputIt beginIt, size_type n) {
@@ -239,6 +382,43 @@ private:
 			util::construct_copy_n(content, beginIt, n);
 		}
 	}
+
+	/*
+		split copy [content, content+pos) to [content,content+pos),
+		[content+pos, content+len) to [memory+pos+n, memory+len+n)
+	*/
+	CCDK_FORCEINLINE void split_move(T* memory, size_type start, size_type end) noexcept {
+		util::construct_move_n(memory, content, pos);
+		util::construct_move_n(memory + end, content + start, len - start);
+	}
+
+	template<typename... Args>
+	CCDK_FORCEINLINE void emplace_impl(size_type start, size_type end, Args&& ... args) {
+		size_type n = end - start;
+		size_type new_len = len + n;
+		if (new_len > cap) {
+			ccdk_increase_allocate2(new_len, pointer memory, size_type new_cap);
+			ccdk_safe_cleanup_if_exception(
+				util::construct_n(memory + start, n, util::forward<Args>(args)...), /* may throw */
+				allocate_type::deallocate(*this, memory, new_cap)
+			);
+			split_move(memory, start, end);
+			util::destruct_n(content, len, n);
+			heap_part = memory;
+			content = memory;
+			cap = new_cap;
+		}
+		else {
+			size_type max_end = fn::max(end, len);
+			util::construct_move_n(content + max_end, content + max_end - n, n);
+			if (end<len) util::move_n(content + end, content + start, len - end);
+			util::destruct_n(content + start, fn::min(end, len) - start);
+			util::construct_copy_n(content + start, begin, n);
+		}
+		len = new_len;
+		return *this;
+	}
+
 };
 
 ccdk_namespace_ct_end
