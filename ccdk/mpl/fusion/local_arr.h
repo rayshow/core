@@ -5,10 +5,13 @@
 #include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/util/forward.h>
+#include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/fusion/local_obj.h>
+#include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 
 ccdk_namespace_mpl_fs_start
 
@@ -17,10 +20,12 @@ using namespace mpl;
 template<typename T, uint32 N>
 class local_arr
 {
+public:
 	constexpr uint32 kElementSize = sizeof(T);
 	constexpr uint32 kTotalSize = kElementSize * N;
+	using size_type = uint32;
 private:
-	int8  content[kTotalSize];
+	int8   content[kTotalSize];
 public:
 	/* default ctor */
 	CCDK_FORCEINLINE constexpr local_arr() noexcept : content{} {}
@@ -28,8 +33,31 @@ public:
 
 	// fill [0, n)
 	template<typename... Args>
-	CCDK_FORCEINLINE local_arr(ptr::size_t n, Args&& ... args) noexcept : content{} {
+	CCDK_FORCEINLINE local_arr(size_type n, Args&& ... args) noexcept : content{} {
 		util::construct_n<T>(content, n, util::forward<Args>(args)...);
+	}
+
+	// copy-n
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
+	CCDK_FORCEINLINE local_arr(InputIt beginIt, size_type n) {
+		util::construct_copy_n(address(), beginIt, n);
+	}
+
+	// copy-range
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
+	CCDK_FORCEINLINE local_arr(InputIt beginIt, InputIt endIt) {
+		util::construct_copy_n(address(), beginIt, it::distance(beginIt,endIt)));
+	}
+
+	// move n 
+	CCDK_FORCEINLINE local_arr(local_arr const& other, size_type n) {
+		util::construct_move_n(address(), other.address(), n);
+	}
+
+	// tempalte move n 
+	template<uint32 N2>
+	CCDK_FORCEINLINE local_arr(local_arr<T,N2> const& other, size_type n) {
+		util::construct_move_n(address(), other.address(), fn::min(N,n) );
 	}
 
 	// swap each element
@@ -40,6 +68,10 @@ public:
 	}
 
 	CCDK_FORCEINLINE void operator=(local_arr const& other) noexcept {
+		memcpy(content, other.construct, kTotalSize);
+	}
+
+	CCDK_FORCEINLINE void operator=(local_arr && other) noexcept {
 		memcpy(content, other.construct, kTotalSize);
 	}
 

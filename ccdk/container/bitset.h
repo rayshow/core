@@ -8,12 +8,12 @@
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/iterator/bit_iterator.h>
 #include<ccdk/mpl/iterator/reverse_iterator.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/units/ratio.h>
 
 #include<ccdk/text/char_traits.h>
-#include<ccdk/container/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 

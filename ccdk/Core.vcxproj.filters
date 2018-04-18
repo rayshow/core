@@ -896,9 +896,7 @@
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
     <ClInclude Include="container\filter\range_filter.h" />
-    <ClInclude Include="container\algorithm\advance.h" />
     <ClInclude Include="container\algorithm\algorithm_mudole.h" />
-    <ClInclude Include="container\algorithm\distance.h" />
     <ClInclude Include="filesystem\log\log.h" />
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="container\impl\link_node.h" />
@@ -906,5 +904,7 @@
     <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="mpl\fusion\local_arr.h" />
     <ClInclude Include="memory\semi_local_allocator.h" />
+    <ClInclude Include="mpl\iterator\algorithm\advance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\distance.h" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/compile_check.h>
+#include<ccdk/mpl/base/compatible_op.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
@@ -287,7 +288,7 @@ public:
 		return emplace_back(util::move(t));
 	}
 
-	/* inplace-construct at pos( [0,len] ) */
+	// inplace-construct at pos( [0,len] ) 
 	template<
 		typename... Args,
 		typename = check_t< has_constructor<T, Args...>>
@@ -300,9 +301,33 @@ public:
 		return *this;
 	}
 
+	//insert a copy of arg
+	CCDK_FORCEINLINE this_type& insert(size_type pos, T const& t = T()) {
+		return emplace(pos, t);
+	}
+
+	//insert move from arg
+	CCDK_FORCEINLINE this_type& insert(size_type pos, T && t) {
+		return emplace(pos, util::forward<T>(t));
+	}
+
+	// erase elements in range [start, end)
+	CCDK_FORCEINLINE this_type& erase(size_type start, size_type end) noexcept {
+		ccdk_assert(end > start && end <= len);
+		size_type move_len = ;
+		size_type tail_len = len - start;
+		size_type n = end - start;
+		size_type _2n = cshr<size_type>(n, 1);
+		if (end < len) {
+			util::move_n(content + start, content + end, len - end);
+		}
+		if (_2n < tail_len) {
+			util::destruct_n(content + end, tail_len - _2n);
+		}
+		len -= n;
+	}
 
 private:
-
 	CCDK_FORCEINLINE void destruct_content() noexcept {
 		if (len > 0) util::destruct_n(content, len);
 	}
@@ -384,7 +409,7 @@ private:
 	}
 
 	/*
-		split copy [content, content+pos) to [content,content+pos),
+		split move [content, content+pos) to [content,content+pos),
 		[content+pos, content+len) to [memory+pos+n, memory+len+n)
 	*/
 	CCDK_FORCEINLINE void split_move(T* memory, size_type start, size_type end) noexcept {
@@ -397,23 +422,30 @@ private:
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap) {
+			//memory not enough, allocate new and copy data to it
 			ccdk_increase_allocate2(new_len, pointer memory, size_type new_cap);
+			//construct with args may throw
 			ccdk_safe_cleanup_if_exception(
-				util::construct_n(memory + start, n, util::forward<Args>(args)...), /* may throw */
+				util::construct_n(memory + start, n, util::forward<Args>(args)...),
 				allocate_type::deallocate(*this, memory, new_cap)
 			);
 			split_move(memory, start, end);
-			util::destruct_n(content, len, n);
 			heap_part = memory;
 			content = memory;
 			cap = new_cap;
 		}
-		else {
-			size_type max_end = fn::max(end, len);
-			util::construct_move_n(content + max_end, content + max_end - n, n);
-			if (end<len) util::move_n(content + end, content + start, len - end);
-			util::destruct_n(content + start, fn::min(end, len) - start);
-			util::construct_copy_n(content + start, begin, n);
+		else {  
+			//insert inner [0, start, end, len)
+			if (end < len) {
+				util::construct_move_n(content + len, content + len - n, n);
+				util::move_n(content + start, content + end, len - end);
+			}
+			// insert like [0, start, len, end) or [0, start=len, end)
+			else if( end != start){
+			
+				util::construct_move_n(content + len, content + end, len - start);
+			}
+			util::construct_n<T>(start_addr, n, util::forward<Args>(args)...);
 		}
 		len = new_len;
 		return *this;

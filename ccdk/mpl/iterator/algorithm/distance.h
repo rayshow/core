@@ -1,12 +1,9 @@
 #pragma once
 
-#include<ccdk/container/algorithm/algorithm_mudole.h>
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
 
-ccdk_namespace_alg_start
-
-using namespace mpl;
+ccdk_namespace_mpl_it_start
 
 namespace alg_impl
 {
@@ -29,4 +26,4 @@ CCDK_FORCEINLINE ptr::size_t distance(It begin, It end) noexcept
 	return alg_impl::distance_impl(begin, end, iterator_category_c<It>);
 }
 
-ccdk_namespace_alg_end
+ccdk_namespace_mpl_it_end

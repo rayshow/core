@@ -71,10 +71,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="container\algorithm\advance.h" />
     <ClInclude Include="container\algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
-    <ClInclude Include="container\algorithm\distance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\advance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="container\adapter\prority_queue.h" />
     <ClInclude Include="container\adapter\queue.h" />
     <ClInclude Include="container\adapter\stack.h" />
