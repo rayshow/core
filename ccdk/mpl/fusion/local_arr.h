@@ -62,9 +62,10 @@ public:
 
 	// swap each element
 	void swap(local_arr& other) {
-		for (uint32 i = 0; i < N; ++i) {
-			util::swap(address()[i], other[i]);
-		}
+		uint8 tmp[kTotalSize];
+		memcpy(tmp, other.content, kTotalSize);
+		memcpy(other.content, content, kTotalSize);
+		memcpy(content, tmp, kTotalSize);
 	}
 
 	CCDK_FORCEINLINE void operator=(local_arr const& other) noexcept {

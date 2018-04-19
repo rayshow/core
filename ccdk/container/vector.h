@@ -1,10 +1,10 @@
 #pragma once
 
-
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/util/fill.h>
 #include<ccdk/mpl/util/move.h>
@@ -14,7 +14,7 @@
 #include<ccdk/container/filter/range_filter.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/container/algorithm/distance.h>
+
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start

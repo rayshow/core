@@ -8,10 +8,9 @@
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/iterator/bit_iterator.h>
 #include<ccdk/mpl/iterator/reverse_iterator.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
-
-#include<ccdk/container/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
@@ -19,8 +18,8 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-#define RECURSIVE_TYPEDEF(Type) using type =  typename fit_bytes<Bytes,Type, Bytes <=sizeof(Type)>::type
 /* fit bytes with a inner basic type  */
+#define RECURSIVE_TYPEDEF(Type) using type =  typename fit_bytes<Bytes,Type, Bytes <=sizeof(Type)>::type
 template<uint32 Bytes, typename T = uint8 , bool Fit = (Bytes<= sizeof(T)) > struct fit_bytes;
 template<uint32 Bytes, typename T> struct fit_bytes<Bytes, T, true> { typedef T type[ (Bytes+ sizeof(T)-1) / sizeof(T)];  };
 template<uint32 Bytes> struct fit_bytes<Bytes, uint8, false>  { RECURSIVE_TYPEDEF(uint16); };
@@ -42,8 +41,6 @@ constexpr T parse_int(const Char* str, uint32 pos, uint32 max) {
 	return val;
 }
 
-
-
 template< uint64 NBit >
 class fix_bitset 
 {
@@ -53,14 +50,14 @@ public:
 	using this_type   = fix_bitset;
 	using array_type  = typename fit_bytes<Bytes>::type;
 	using single_type = remove_dim_t<array_type>;
-	static constexpr uint64 N = sizeof(array_type) / sizeof(single_type);
-	static constexpr single_type kOne = 1;
-	static constexpr single_type kStoreBits = sizeof(single_type) * 8;
-	static constexpr single_type kTopMask = kOne << (kStoreBits - 1);
-	static constexpr single_type kLastOffset = NBit / kStoreBits;
-	static constexpr single_type kLastMask = kOne << (NBit % kStoreBits);
+	static constexpr uint64 N                  = sizeof(array_type) / sizeof(single_type);
+	static constexpr single_type kOne          = 1;
+	static constexpr single_type kStoreBits    = sizeof(single_type) * 8;
+	static constexpr single_type kTopMask      = kOne << (kStoreBits - 1);
+	static constexpr single_type kLastOffset   = NBit / kStoreBits;
+	static constexpr single_type kLastMask     = kOne << (NBit % kStoreBits);
 	static constexpr single_type kReverseOffst = (NBit - 1) / kStoreBits;
-	static constexpr single_type kReverseMask = kOne <<((NBit - 1) % kStoreBits);
+	static constexpr single_type kReverseMask  = kOne <<((NBit - 1) % kStoreBits);
 
 	/* container */
 	using value_type      = single_type;

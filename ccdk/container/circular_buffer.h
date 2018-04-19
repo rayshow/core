@@ -59,6 +59,10 @@ private:
 	size_type    begin;
 	size_type    len;
 	size_type    cap;
+	
+	// help index
+	CCDK_FORCEINLINE void end_index() noexcept { return (begin + len) % cap; }
+	CCDK_FORCEINLINE void back_index() noexcept { return (begin + len - 1) % cap; }
 
 public:
 
@@ -326,28 +330,6 @@ public:
 		return emplace_front(util::move(t));
 	}
 
-	/* inplace-construct at pos( [0,len] ) */
-	template<
-		typename P, typename... Args,
-		typename = check_t< has_constructor<T, P, Args...>>
-	>
-		CCDK_FORCEINLINE this_type& emplace(size_type pos, P&& p, Args&&... args) {
-		ccdk_assert(pos <= len);
-		if (pos <= len) { emplace_impl(pos, pos + 1, util::forward<P>(p), util::forward<Args>(args)...); }
-		return *this;
-	}
-
-	/* inplace-construct at pos( [0,len] ) */
-	template<
-		typename Iterator,
-		typename P, typename... Args,
-		typename = check_t<is_pointer_iterator<T, Iterator> >, // exclude comflict with size_type
-		typename = check_t< has_constructor<T, P, Args...>>
-	>
-		CCDK_FORCEINLINE this_type& emplace(Iterator it, P&& p, Args&&... args) {
-		return emplace(it - content, util::forward<P>(p), util::forward<Args>(args)...);
-	}
-
 private:
 
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
@@ -362,17 +344,6 @@ private:
 		len = inLen;
 		cap = inCap;
 	}
-
-
-	/* index of end  */
-	CCDK_FORCEINLINE void end_index() noexcept {
-		return (begin + len) % cap;
-	}
-
-	CCDK_FORCEINLINE void back_index() noexcept {
-		return (begin + len - 1) % cap;
-	}
-
 
 	/*
 		allocate n*increase size memory to content,
@@ -473,73 +444,6 @@ private:
 		if (n <= cap) range_fill(t, n);
 		else circular_buffer{ n,t }.swap(*this);
 	}
-
-
-	/*
-		if capacity is not big enough, realloc big enough memory to
-		hold old data and insert data, [memory+start, memory+end) stay
-		empty for insert data.
-		else move [content+start, content+len) backward.
-	*/
-	template<typename InputIt>
-	this_type& insert_impl(size_type start, size_type end, InputIt begin) {
-		ccdk_assert(end > start && start <= len);
-		if (end <= start || start > len) return *this;
-		size_type n = end - start;
-		size_type new_len = len + n;
-		if (new_len > cap) {
-			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
-			ccdk_safe_cleanup_if_exception(
-				util::construct_copy_n(memory + start, begin, n), /* may throw */
-				allocate_type::deallocate(*this, memory, new_cap)
-			);
-			split_copy(memory, start, n);
-			allocate_type::deallocate(*this, content, cap);
-			content = memory;
-			cap = new_cap;
-		}
-		else {
-			size_type max_end = fn::max(end, len);
-			util::construct_move_n(content + max_end, content + max_end - n, n);
-			if (end<len) util::move_n(content + end, content + start, len - end);
-			util::destruct_n(content + start, fn::min(end, len) - start);
-			util::construct_copy_n(content + start, begin, n);
-		}
-		len = new_len;
-		return *this;
-	}
-
-	/*
-		if capacity is not enough, realloc big enough memory to hold emplace construct data,
-		memory[start, end) stay empty for external data to copy in.
-		else move content[start, len) backward
-	*/
-	template<typename... Args>
-	void emplace_impl(size_type start, size_type end, Args&&... args) {
-		if (end <= start || start > len) return;
-		size_type n = end - start;
-		size_type new_len = len + n;
-		if (new_len > cap) {
-			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
-			ccdk_safe_cleanup_if_exception(
-				util::construct_n<T>(memory + start, n, util::forward<Args>(args)...),
-				allocate_type::deallocate(*this, memory, new_cap)
-			);
-			split_copy(memory, start, n);
-			allocate_type::deallocate(*this, content, cap);
-			content = memory;
-			cap = new_cap;
-		}
-		else {
-			size_type max_end = fn::max(end, len);
-			util::construct_move_n(content + max_end, content + max_end - n, n);
-			if (end<len) util::move_n(content + end, content + start, len - end);
-			util::destruct_n(content + start, fn::min(end, len) - start);
-			util::construct_n<T>(content + start, n, util::forward<Args>(args)...);
-		}
-		len = new_len;
-	}
-
 };
 
 ccdk_namespace_ct_end

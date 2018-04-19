@@ -24,7 +24,7 @@ using namespace ccdk::mpl;
 
 /* lazy single list:
    delete/pop node will not free/delete its memory, but link to tail->next to keep a cache
-		and avoid frequency new/delete
+	and avoid frequency new/delete
    push/insert node will first utilize cached memory after tail
 */
 template<
