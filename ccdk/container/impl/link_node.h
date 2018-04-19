@@ -1,3 +1,4 @@
+#pragma once
 
 #include<ccdk/container/container_mudule.h>
 
@@ -33,8 +34,8 @@ struct avl_node
 template<typename T>
 struct rb_node
 {
-	using this_type = rb_node;
-	using pointer   = rb_node*;
+	using value_type = T;
+	using pointer    = rb_node*;
 	enum color_t: uint8{ eRed, eBlack};
 
 	T       value;
