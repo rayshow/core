@@ -64,10 +64,20 @@ private:
 	static constexpr map_type mapping{};  //mapping fn
 
 	//handful function
-	link_type& root() noexcept { return head->parent; }
-	link_type& key_of(link_type node) noexcept { return node->value; }
-	link_type& left_most() noexcept { return head->left; }
-	link_type& right_most() noexcept { return head->right; }
+	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
+	CCDK_FORCEINLINE link_type& key_of(link_type node) noexcept { return node->value; }
+	CCDK_FORCEINLINE link_type& left_most() noexcept { return head->left; }
+	CCDK_FORCEINLINE link_type& right_most() noexcept { return head->right; }
+
+	CCDK_FORCEINLINE static pointer min_node(pointer node) noexcept {
+		while (node->left) node = node->left;
+		return node;
+	}
+
+	CCDK_FORCEINLINE static pointer max_node(pointer node) noexcept {
+		while (node->right) node = node->right;
+		return node;
+	}
 
 public:
 
@@ -123,8 +133,37 @@ private:
 		return new_node;
 	}
 
-	//https://www.cnblogs.com/tongy0/p/5460623.html
+	
 	CCDK_FORCEINLINE auto erase_at(link_type node) {
+		node_type to_delete = node;
+		if (node->left) {
+			to_delete = max_node(node->left);
+			node->value = to_delete->value;
+		}
+		else if (node->right) {
+			to_delete = min_node(node->right);
+			node->value = to_delete->value ;
+		}
+		/*
+			there are 4 case of to_delete node
+				case 1: to_delete node has no child and is red, delete delete directly
+				case 2: to_delete node is black and has one red child , delete and use child instead,
+						turn child color to black
+				case 3: to_delete node has no child and is black, have some sub-case:
+					
+					       *  grand-parent( P )
+					     /  \
+		to be delete(D) *    *  sibling( S ) 
+				            /  \
+				           *    * 
+					   sibling left(L) sibling right(R)
+
+					sub-case1 : S black and  P red , switch S and P's color, if L and R is red turn black
+					sub-case2 : S red  and P black , rotate left around S, transform to sub-case3 
+					sub-case3 : S black and P black (and if L R red , turn L R black) turn P red, recursive check from P to root to rebanlance
+		*/
+
+
 
 	}
 

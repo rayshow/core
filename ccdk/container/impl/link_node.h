@@ -22,14 +22,6 @@ struct biward_node
 	biward_node<T> *next;
 };
 
-/* avl tree node */
-template<typename T>
-struct avl_node 
-{
-
-};
-
-
 /* rb tree node */
 template<typename T>
 struct rb_node
@@ -60,21 +52,7 @@ struct rb_node
 		return color == eBlack;
 	}
 
-	CCDK_FORCEINLINE void reverse() {
-		if (color == eRed) color = eBlack;
-		else color = eRed;
-	}
-
 	
-	CCDK_FORCEINLINE static pointer minimum(pointer node) noexcept {
-		while (node->left) node = node->left;
-		return node;
-	}
-
-	CCDK_FORCEINLINE static pointer maximum(pointer node) noexcept {
-		while (node->right) node = node->right;
-		return node;
-	}
 };
 ccdk_namespace_ct_end
 
