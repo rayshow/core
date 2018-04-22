@@ -74,6 +74,7 @@ public:
 	/* de-ctor */
 
 	/* default and nullptr ctor */
+
 	CCDK_FORCEINLINE rb_tree() :len{ 0 }, head{}, cmp{} { init_head(); }
 	CCDK_FORCEINLINE rb_tree(ptr::nullptr_t) 
 		: len{ 0 }, head{}, cmp{} { init_head(); }

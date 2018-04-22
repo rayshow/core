@@ -20,6 +20,7 @@ int main()
 {
 	std::map<int, int>;
 	std::bitset<19> bs;
+	std::multimap<int, int> mm;
 	getchar();
 	return 0;
 }

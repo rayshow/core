@@ -15,7 +15,6 @@
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
-
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
