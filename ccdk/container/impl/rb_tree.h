@@ -108,9 +108,28 @@ public:
 
 	
 	void erase(const_iterator it) {
-
+		/*
+			there are three case to choose delete node:
+			if   prev-value-node exists, swap and delete it instead
+			else next-value-node exists, swap and delete it instead
+			else no left and right child exist,  delete node
+		*/
+		node_type node = it.content;
+		node_type to_delete = node;
+		uint32 pos = 0;    // delete node
+		if (node->left) {
+			to_delete = max_node(node->left);
+			node->value = to_delete->value;
+			pos = 1;    // delete left-biggest-node instead
+		}
+		//use right-next-node instead
+		else if (node->right) {
+			to_delete = min_node(node->right);
+			node->value = to_delete->value;
+			pos = 2;    //delete right-smallest-node instead
+		}
+		erase_at(nodem, pos); //
 	}
-
 
 private:
 
@@ -133,36 +152,60 @@ private:
 		return new_node;
 	}
 
+
+
 	
-	CCDK_FORCEINLINE auto erase_at(link_type node) {
-		node_type to_delete = node;
-		if (node->left) {
-			to_delete = max_node(node->left);
-			node->value = to_delete->value;
-		}
-		else if (node->right) {
-			to_delete = min_node(node->right);
-			node->value = to_delete->value ;
-		}
+	CCDK_FORCEINLINE auto erase_at(link_type node, uint32 pos) {
+		
 		/*
 			there are 4 case of to_delete node
-				case 1: to_delete node has no child and is red, delete delete directly
+				case 1: to_delete node is red, delete directly, and link child( only one child exists )
 				case 2: to_delete node is black and has one red child , delete and use child instead,
 						turn child color to black
-				case 3: to_delete node has no child and is black, have some sub-case:
+				case 3: to_delete node is black and has no child or a black child , have some sub-case:
 					
 					       *  grand-parent( P )
 					     /  \
-		to be delete(D) *    *  sibling( S ) 
-				            /  \
-				           *    * 
-					   sibling left(L) sibling right(R)
+		sibling( S )    *    *  to be delete( node )
+				      /  \  /
+				     *    * * child 
+				 sibling left(L) sibling right(R)
 
-					sub-case1 : S black and  P red , switch S and P's color, if L and R is red turn black
-					sub-case2 : S red  and P black , rotate left around S, transform to sub-case3 
-					sub-case3 : S black and P black (and if L R red , turn L R black) turn P red, recursive check from P to root to rebanlance
+					sub-case 1 : S black and  P red , switch S and P's color, if L and R is red turn black
+					sub-case 2 : S red  and P black , rotate left around S, transform to sub-case3 
+					sub-case 3 : S black and P black (and if L R red , turn L R black) turn P red, recursive check from P to root to rebanlance
 		*/
 
+		// 0 or 1 child exists
+		link_type child = nullptr;
+		if (pos == 1) child = node->left;
+		else if (pos == 2) child = node->right;
+
+		//case 1
+		if (node->is_red()) {
+			if (child) child->parent = node->parent;
+			node->parent = child;
+			destroy_node(node);
+		}
+		else {
+			// case 2
+			if (child && child->is_red()) {
+				child->parent = node->parent;
+				node->parent = child;
+				child->set_black();
+				destroy_node(node);
+			}
+			else {
+				link_type G = node->parent;
+				link_type S = nullptr;
+				if (node == G->left)  S = G->right;
+				else S = G->left;
+				ccdk_assert(S);         // sibling must exists because node is black
+				link_type L = S->left;  // sibling left child
+				link_type R = S->right; // sibling right child
+			}
+
+		}
 
 
 	}
@@ -274,6 +317,7 @@ private:
 				// case 2.2
 				rotate_left(p, gp);
 			}
+			root()->set_black();
 		}// while
 	}
 
@@ -300,10 +344,16 @@ private:
 
 		// grand-pa to parent's right
 		p->right = gp;
+		gp->parent = p;
 		// child-brother to grand-pa's left
 		gp->left = cb;
+		cb->parent = gp;
+
 		// parent's parent pointer to grand-grand-pa
 		p->parent = ggp;
+		if (ggp->left == gp) ggp->left = p;
+		else ggp->right = p;
+		
 		//parent switch to plack
 		p->set_black();
 		//grand-pa switch to red
@@ -334,10 +384,16 @@ private:
 
 		// grand-pa to parent's right
 		p->left = gp;
+		gp->parent = p;
 		// child-brother to grand-pa's left
 		gp->right = cb;
+		cb->parent = gp;
+
 		// parent's parent pointer to grand-grand-pa
 		p->parent = ggp;
+		if (ggp->left == gp) ggp->left = p;
+		else ggp->right = p;
+
 		//parent switch to plack
 		p->set_black();
 		//grand-pa switch to red
