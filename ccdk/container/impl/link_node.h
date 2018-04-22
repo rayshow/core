@@ -41,7 +41,29 @@ struct rb_node
 	pointer parent;     // to parent node
 	pointer left;
 	pointer right;
-	color_t color;      // true:black, false: red
+	color_t color;      // node color
+
+	CCDK_FORCEINLINE void set_red() {
+		color = eRed;
+	}
+
+	CCDK_FORCEINLINE void set_black() {
+		color = eBlack;
+	}
+
+	CCDK_FORCEINLINE bool is_red() {
+		return color == eRed;
+	}
+
+	CCDK_FORCEINLINE bool is_black() {
+		return color == eBlack;
+	}
+
+	CCDK_FORCEINLINE void reverse() {
+		if (color == eRed) color = eBlack;
+		else color = eRed;
+	}
+
 	
 	CCDK_FORCEINLINE static pointer minimum(pointer node) noexcept {
 		while (node->left) node = node->left;
