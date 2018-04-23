@@ -39,10 +39,10 @@ public:
 	typedef mem::list_allocate_adapter< typename Alloc::rebind<Node> > allocator_type;  /* list node block allcate */
 
 	/* iterator */
-	typedef it::iterator< node_type >        iterator_type;
-	typedef const iterator_type              const_iterator_type;
+	typedef it::iterator< node_type >            iterator_type;
+	typedef const iterator_type                  const_iterator_type;
 	typedef it::reverse_iterator<iterator_type>  reverse_iterator_type;
-	typedef const reverse_iterator_type      const_reverse_iterator_type;
+	typedef const reverse_iterator_type          const_reverse_iterator_type;
 
 	template<typename T2, typename Size2, typename Alloc2, typename Node2>
 	friend class slist;

@@ -9,12 +9,12 @@
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/iterator_fwd.h>
 #include<ccdk/mpl/units/ratio.h>
+#include<ccdk/mpl/iterator/algorithm/advance.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/list_allocate_adapter.h>
 
-#include<ccdk/algorithm/advance.h>
-#include<ccdk/algorithm/distance.h>
-#include<ccdk/container/list_node.h>
+#include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start

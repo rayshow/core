@@ -13,6 +13,7 @@
 #include<unordered_map>
 #include<map>
 #include<bitset>
+#include<hash_map>
 
 #include<ccdk/type.h>
 using namespace ccdk;
@@ -21,6 +22,7 @@ int main()
 	std::map<int, int>;
 	std::bitset<19> bs;
 	std::multimap<int, int> mm;
+	std::hash_map<int, int> map;
 	getchar();
 	return 0;
 }
