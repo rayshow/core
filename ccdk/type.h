@@ -33,7 +33,7 @@ namespace ccdk
 	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 
 
-	/* memory releative type / halpful function */
+	/* memory releative type / helpful function */
 	namespace ptr
 	{
 		template<int32 size> struct ptr_traits { static_assert(size != 4 || size != 8, "unkown ptr size."); };

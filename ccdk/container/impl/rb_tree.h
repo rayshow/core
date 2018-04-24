@@ -63,8 +63,6 @@ private:
 	size_type				 len;    // length
 	cmp_type				 cmp;    // cmp fn
 
-	
-
 	//handful function
 	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
 	CCDK_FORCEINLINE link_type& key_of(link_type node) noexcept { return node->value; }
@@ -169,9 +167,8 @@ private:
 				     *    * * child 
 				 sibling child left(L) sibling child right(R)
 					sub-case 1 : S black and  P red , switch S and P's color, if L and R is red turn black
-					sub-case 2 : S red  and P black , rotate left around R, rotate right around R, turn  S red
-					sub-case 3 : S black and P black ,L exists and is red, rotate right around S, turn L black
-					sub-case 4 : S black and P black, S no child ,turn S red, rebalance from P to root
+				    sub-case 2 : S red  and P black  
+					sub-case 3 : S black and P black 
 		*/
 
 		// 0 or 1 child exists
@@ -408,46 +405,45 @@ private:
 	}
 
 
-	CCDK_FORCEINLINE void rotate_left(link_type p, link_type gp) noexcept {
+	CCDK_FORCEINLINE void rotate_left(link_type P, link_type G) noexcept {
 
 		/*
-						  *  grand-grand-pa( ggp )             * ( ggp )
+						  *  grand-grand-pa( GG )              * ( GG )
 						  |                                    |
-						  *  grand-parent( gp )         =>     *  ( p )
+						  *  grand-parent( G )         =>     *  ( p )
 						/   \                                /   \
- parent-brother( pb )  *    *   parent( p )            (gp) *     * ( c )
+  parent-brother( S )  *    *   parent( P )            (G ) *     * ( c )
                           /   \                           /   \
-     child-brother ( cb ) *     *  child(c)         (pb) *     * ( cb )
+     child-brother ( CS ) *     *  child(C)          (P) *     * ( CS )
 
-				orginal: c,p  = red  cb, gp, pb = black
-				new    : c,gp = red  p,  cb, pb = black
+				orginal: C,P  = red  CS, G, S = black
+				new    : C,G  = red  CS, P, S = black
 
 		*/
 
-		//child brother 
-		link_type cb = p->left;
+		//child sibling
+		link_type CS = P->left;
 		//grand-grand-pa
-		link_type ggp = gp->parent;
+		link_type GG = G->parent;
 
 		// grand-pa to parent's right
-		p->left = gp;
-		gp->parent = p;
+		P->left = G;
+		G->parent = P;
 		// child-brother to grand-pa's left
-		gp->right = cb;
-		cb->parent = gp;
+		G->right = C;
+		C->parent = G;
 
 		// parent's parent pointer to grand-grand-pa
-		p->parent = ggp;
-		if (ggp->left == gp) ggp->left = p;
-		else ggp->right = p;
+		P->parent = GG;
+		if (GG->left == G) GG->left = P;
+		else GG->right = P;
 
 		//parent switch to plack
-		p->set_black();
+		P->set_black();
 		//grand-pa switch to red
-		gp->set_red();
+		G->set_red();
 	}
 
-	
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(InputIt begin, size_type n) {
 

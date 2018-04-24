@@ -75,21 +75,27 @@ private:
 	static constexpr CmpFn     cmp_fn{};
 	static constexpr MapKeyFn  map_key_fn{};
 
-	bucket_container buckets;
-	size_type        elements_count;
-	HashFn           hash_fn;
-	uint8            mask_index;
+	bucket_container buckets;      // buckets 
+	size_type        len;          // elements size
+	HashFn           hash_fn;      // hash function obj
+	uint8            mask_index;   // mask with hash result
+
+#if  defined(CCDK_DEBUG)
+	uint32           conflict_count;
+#endif
 
 	// mapping key to bucket index
-	size_type bucket_idx(Key const& key) {
+	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) {
 		return (size_type)hash_fn(key) & (size_type)(kPrimeArray[mask_index] - 1);
 	}
 
 public:
 
 	//default
-	hash_table() : buckets{ kPrimeArray[0], nullptr }, elements_count{ 0 }, hash_fn{}, mask_index{0} {}
-	hash_table(ptr::nullptr_t) : buckets{ kPrimeArray[0], nullptr }, elements_count{ 0 }, mask_index{0} {}
+	CCDK_FORCEINLINE hash_table() 
+		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, hash_fn{}, mask_index{0} {}
+	CCDK_FORCEINLINE hash_table(ptr::nullptr_t) 
+		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 	
 	//construct at key
 	template<bool AllowEqual, typename... Args>
@@ -103,8 +109,10 @@ public:
 		return erase_at(bucket_idx(key));
 	}
 
+	CCDK_FORCEINLINE size_type size() { return len; }
 	CCDK_FORCEINLINE size_type bucket_size() { return buckets.size(); }
 
+//// implements 
 private:
 	// locally construct a T
 	template<typename... Args>
@@ -120,9 +128,9 @@ private:
 		allocator_type::deallocate(*this, 1, node);
 	}
 
-
 	CCDK_FORCEINLINE void erase_at(size_type index) {
 		ccdk_assert(index < bucket_size());
+		//get bucket list head
 		link_type& head = buckets.at(index);
 		if (head) {
 			//the only node
@@ -143,6 +151,9 @@ private:
 		link_type head = buckets.at(index);
 		if (head) {
 			//conflict, try append to list
+#if defined(CCDK_DEBUG)
+			++conflict_count;
+#endif
 			try_append(head, new_node));
 		}
 		else {
