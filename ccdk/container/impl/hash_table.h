@@ -85,9 +85,6 @@ private:
 		return (size_type)hash_fn(key) & (size_type)(kPrimeArray[mask_index] - 1);
 	}
 
-
-
-
 public:
 
 	//default
@@ -105,8 +102,6 @@ public:
 	CCDK_FORCEINLINE this_type& erase(Key const& key) noexcept {
 		return erase_at(bucket_idx(key));
 	}
-
-
 
 	CCDK_FORCEINLINE size_type bucket_size() { return buckets.size(); }
 

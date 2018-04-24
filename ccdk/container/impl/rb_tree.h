@@ -57,11 +57,13 @@ class rb_tree: protected Alloc::rebind< Node >
 	using allocator_type  = mem::allocator_traits< typename Alloc::rebind< Node > >;
 
 private:
+	static constexpr map_type mapping{};  //mapping fn
+
 	fs::local_obj<node_type> head;   // a empty node, pointer to root
 	size_type				 len;    // length
 	cmp_type				 cmp;    // cmp fn
 
-	static constexpr map_type mapping{};  //mapping fn
+	
 
 	//handful function
 	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
@@ -128,7 +130,7 @@ public:
 			node->value = to_delete->value;
 			pos = 2;    //delete right-smallest-node instead
 		}
-		erase_at(nodem, pos); //
+		erase_at(to_delete, pos); //
 	}
 
 private:
@@ -152,32 +154,29 @@ private:
 		return new_node;
 	}
 
-
-
-	
 	CCDK_FORCEINLINE auto erase_at(link_type node, uint32 pos) {
-		
 		/*
 			there are 4 case of to_delete node
 				case 1: to_delete node is red, delete directly, and link child( only one child exists )
 				case 2: to_delete node is black and has one red child , delete and use child instead,
 						turn child color to black
-				case 3: to_delete node is black and has no child or a black child , have some sub-case:
+				case 3: to_delete node is black and has no child , have some sub-case:
 					
-					       *  grand-parent( P )
+					       *  parent( P )
 					     /  \
 		sibling( S )    *    *  to be delete( node )
 				      /  \  /
 				     *    * * child 
-				 sibling left(L) sibling right(R)
-
+				 sibling child left(L) sibling child right(R)
 					sub-case 1 : S black and  P red , switch S and P's color, if L and R is red turn black
-					sub-case 2 : S red  and P black , rotate left around S, transform to sub-case3 
-					sub-case 3 : S black and P black (and if L R red , turn L R black) turn P red, recursive check from P to root to rebanlance
+					sub-case 2 : S red  and P black , rotate left around R, rotate right around R, turn  S red
+					sub-case 3 : S black and P black ,L exists and is red, rotate right around S, turn L black
+					sub-case 4 : S black and P black, S no child ,turn S red, rebalance from P to root
 		*/
 
 		// 0 or 1 child exists
 		link_type child = nullptr;
+
 		if (pos == 1) child = node->left;
 		else if (pos == 2) child = node->right;
 
@@ -195,19 +194,67 @@ private:
 				child->set_black();
 				destroy_node(node);
 			}
+			// case 3
 			else {
-				link_type G = node->parent;
+				link_type P = node->parent;
 				link_type S = nullptr;
-				if (node == G->left)  S = G->right;
-				else S = G->left;
+				bool node_is_left = false;
+				if (node == P->left) {
+					S = P->right;
+					node_is_left = true;
+				}
+				else {
+					S = P->left;
+				}
 				ccdk_assert(S);         // sibling must exists because node is black
 				link_type L = S->left;  // sibling left child
 				link_type R = S->right; // sibling right child
+				//case 3.1 
+				if (S->is_black() && P->is_red()) {
+					S->set_red();
+					P->set_black();
+					if (L) { ccdk_assert(L->is_red()); L->set_black(); }
+					if (R) { ccdk_assert(R->is_red()); R->set_black(); }
+				}
+				//case 3.2 
+				else if (S->is_red() && P->is_black()) {
+					ccdk_assert(L && R && L->is_black() && R->is_black());
+					rotate_left(R, S);
+					ccdk_assert(R->parent == P && R->left == S && S->left == L );
+					rotate_right(R, P);
+					ccdk_assert(R->left == S && R->right == P );
+					L->set_red();
+				}
+				// case 3.3 
+				else if (S->is_black() && P->is_black() && L) {
+					ccdk_assert(L->is_red());
+					rotate_right(S, P);
+					ccdk_assert(S->left == L && S->right == P && P->left == R);
+					L->set_black();
+				}
+				// case 3.4
+				else {
+					ccdk_assert(S->is_black() && P->is_black() && !L && !R);
+					S->set_red();
+					while (P != root()) {
+						link_type G = P->parent;
+						bool P_is_left = P == G->left;
+						link_type PS = P_is_left ? G->right : G->left;  //parent-sibling
+
+						if (PS) {
+							if (P_is_left) rotate_left(PS, G);
+							else rotate_right(PS, G);
+							  
+						}
+						// PS not exists
+						else {
+							P = P->parent;
+						}
+					}
+					root()->set_black();
+				}
 			}
-
 		}
-
-
 	}
 
 

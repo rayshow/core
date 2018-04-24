@@ -62,23 +62,27 @@ private:
 	size_type len;
 	size_type cap;
 
-	/* some help function */
 	CCDK_FORCEINLINE size_type total_bytes() const noexcept { return cap >> 3; }
 	CCDK_FORCEINLINE size_type used_bytes() const noexcept { return (len + 7) >> 3; }
-	CCDK_FORCEINLINE size_type total_count() const noexcept { return shr_type<T, size_type>(cap); }
-	CCDK_FORCEINLINE size_type last_pos() const noexcept {
-		ccdk_assert(len > 0);  return shr_type<T, size_type>(len); 
-	}
-	CCDK_FORCEINLINE size_type last_offset() const noexcept { return mod_type<value_type, size_type>(len); }
-	CCDK_FORCEINLINE value_type last_mask() const noexcept { return cshl<value_type>(1, last_offset()); }
+	CCDK_FORCEINLINE size_type total_count() 
+		const noexcept { return shr_type<T, size_type>(cap); }
+	CCDK_FORCEINLINE size_type last_pos() 
+		const noexcept { ccdk_assert(len > 0);  return shr_type<T, size_type>(len);  }
+	CCDK_FORCEINLINE size_type last_offset() 
+		const noexcept { return mod_type<value_type, size_type>(len); }
+	CCDK_FORCEINLINE value_type last_mask() 
+		const noexcept { return cshl<value_type>(1, last_offset()); }
+
 public:
 
 	/* destruct */
 	CCDK_FORCEINLINE ~bitset() { deallocate(); len = 0; cap = 0; }
 
 	/* default, lazy */
-	CCDK_FORCEINLINE constexpr bitset() :content{ nullptr }, len{ 0 }, cap{ 0 } {}
-	CCDK_FORCEINLINE constexpr bitset(ptr::nullptr_t) : content{ nullptr }, len{ 0 }, cap{ 0 } {}
+	CCDK_FORCEINLINE constexpr bitset() 
+		:content{ nullptr }, len{ 0 }, cap{ 0 } {}
+	CCDK_FORCEINLINE constexpr bitset(ptr::nullptr_t) 
+		: content{ nullptr }, len{ 0 }, cap{ 0 } {}
 
 	/* fill byte*/
 	CCDK_FORCEINLINE explicit bitset(size_type n, bool value = false) {
@@ -87,13 +91,15 @@ public:
 
 	/* initial from constexpr string */
 	template<typename Char, ptr::size_t N>
-	CCDK_FORCEINLINE bitset( from_string_literial, Char (&str)[N]) {
+	CCDK_FORCEINLINE bitset( 
+		from_string_literial, Char (&str)[N]) {
 		allocate_init_from_string(str, N-1);
 	}
 
 	/* initial from constexpr string */
 	template<typename Char, ptr::size_t N>
-	CCDK_FORCEINLINE explicit bitset(from_string_literial, size_type n, Char(&str)[N]) {
+	CCDK_FORCEINLINE explicit bitset(
+		from_string_literial, size_type n, Char(&str)[N]) {
 		allocate_init_from_string(str, fn::min(n, N - 1));
 	}
 
@@ -127,19 +133,23 @@ public:
 	CCDK_FORCEINLINE bitset(bitset<T2, Size2, Alloc2> const& other) {
 		local_allocate_n(other.len);
 		clear_exbyte();
-		memcpy(content, other.content, fn::min( used_bytes(), other.used_bytes()) );
+		memcpy(content, other.content,
+			fn::min( used_bytes(), other.used_bytes()) );
 	}
 
 	/* move */
 	CCDK_FORCEINLINE bitset(bitset && other)  noexcept
-		: content{ other.content }, len{ other.size() }, cap(other.capcity()) {
+		: content{ other.content }, len{ other.size() },
+		cap(other.capcity()) {
 		other.rvalue_reset();
 	}
 
 	/* template move */
 	template<typename Size2, typename Ratio2>
-	CCDK_FORCEINLINE bitset(bitset<T,Size2, Ratio2, Alloc> && other)  noexcept
-		: content{ other.content }, len{ other.size() }, cap(other.capcity()) {
+	CCDK_FORCEINLINE bitset(
+		bitset<T,Size2, Ratio2, Alloc> && other)  noexcept
+		: content{ other.content }, len{ other.size() },
+		cap(other.capcity()) {
 		other.rvalue_reset();
 	}
 
@@ -158,7 +168,8 @@ public:
 
 	/* template assign copy   */
 	template<typename T2, typename Size2, typename Ratio2, typename Alloc2>
-	CCDK_FORCEINLINE this_type& operator=(bitset<T2,Size2,Ratio2,Alloc2> const& other) {
+	CCDK_FORCEINLINE this_type& operator=(
+		bitset<T2,Size2,Ratio2,Alloc2> const& other) {
 		assign_copy_content(other.content, other.len);
 		return *this;
 	}
@@ -172,7 +183,8 @@ public:
 
 	/* move assign */
 	template<typename Size2, typename Ratio2>
-	CCDK_FORCEINLINE this_type& operator=(bitset<T,Size2,Ratio2,Alloc> && other) noexcept {
+	CCDK_FORCEINLINE this_type& operator=(
+		bitset<T,Size2,Ratio2,Alloc> && other) noexcept {
 		this->deallocate();
 		rvalue_set(other.content, other.len, other.cap);
 		other.rvalue_reset();
@@ -240,7 +252,8 @@ public:
 	/* attribute */
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
 	CCDK_FORCEINLINE size_type capcity() const noexcept { return cap; }
-	CCDK_FORCEINLINE size_type max_size() const noexcept { return size_type(-1) / sizeof(T); }
+	CCDK_FORCEINLINE size_type max_size() 
+		const noexcept { return size_type(-1) / sizeof(T); }
 
 	/* index */
 	CCDK_FORCEINLINE reference operator[](size_type index) noexcept {
@@ -360,14 +373,16 @@ private:
 		content = nullptr;
 	}
 
-	CCDK_FORCEINLINE void rvalue_set(T* inContent, size_type n, size_type c) noexcept {
+	CCDK_FORCEINLINE void rvalue_set(T* inContent,
+		size_type n, size_type c) noexcept {
 		content = inContent;
 		len = n;
 		cap = c;
 	}
 
 	CCDK_FORCEINLINE void deallocate() {
-		if(content) allocator_type::deallocate(*this, content, total_count());
+		if(content) allocator_type::deallocate(
+			*this, content, total_count());
 	}
 
 
@@ -384,7 +399,8 @@ private:
 	}
 
 	CCDK_FORCEINLINE void local_allocate_n(size_type n) {
-		ccdk_increase_allocate3( (shr_type<T,size_type>(n+ kComplements)), content, cap, len);
+		ccdk_increase_allocate3( (shr_type<T,size_type>(n+ kComplements)),
+			content, cap, len);
 		cap = shl_type<T, size_type>(cap);
 		len = n;
 	}
