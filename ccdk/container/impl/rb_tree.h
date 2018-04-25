@@ -137,7 +137,7 @@ private:
 		head->left =  head.address();
 		head->right = head.address();
 		head->parent = nullptr;
-		head->color = node_type::kBlack;
+		head->set_black();
 	}
 
 	CCDK_FORCEINLINE link_type create_node(T const& t, link_type parent) {
@@ -152,78 +152,110 @@ private:
 		return new_node;
 	}
 
+	// delete node with single child or no child
 	CCDK_FORCEINLINE auto erase_at(link_type node, uint32 pos) {
 		/*
-			there are 4 case of to_delete node
-				1: to_delete node is red, delete directly, no child exists
+			there are 3 case of to_delete node
+				1: to_delete node is red( no child), delete directly, no child exists
 				2: to_delete node is black and has one red child , delete and use child instead,
 						turn child color to black
 				3: to_delete node is black and has no child , have some sub-case:
 					
-					       *  parent( P )                                * P
-					     /  \                                          /  
-		sibling( S )    *    *  to be delete, no child( node )  ==>   *  S
-				      /  \                                           / \
-				     *    *                                         *   *
-				 sibling child left(L) sibling child right(R)       L   R 
+					       P  parent( P )
+					     /  \ 
+		      Sibling   S    C  delete node's child
+				      /  \ 
+				     L    R
+					  
+					 1) R is Red , RL/RR is Black
+					             
+								 R     P 's color
+							   /   \
+							  S     P   Black 
+							 /	\  /  \
+						    L   RL RR  C
 
-					1) : S black(if child exists must be red) and  P red ( total Black height 1)
-											  * P (Red)
-					                         /  
-		                                     *  S (Black)
-				                            / \
-										   *   *
-				                           L   R  nullptr or red
-							-------------------------------------------------------------   
-							|	(1)    * P (Black)     |    (2)     * S (Red) 
-							|	      /                |          /  \
-							|		 * S (Red)         | L(black)*    P( black)
-							|		                   |
-							|	  if S no child        |       if L exists No R
-							|-----------------------------------------------------------
-							|	(3)       * R (Red)    
-							|	        /  \           
-						    | S(Black) *    * P (Black)
-							|         /
-							|        * L(red or nullptr)
-							|	      
-							|             R exist
-							-----------------------------------------------------------
-				    2) : S red (L,R exists and is black) and P black ( total Black height 2)
-						                      * P (Black)
-					                         /  
-		                                     *  S (Red)
-				                            / \
-										   *   *
-				                           L   R  (Black)
-				                          / \ / \
-										  * * * *  nullptr or Red
-					        
-								turn around S, swap S and P's color  use 1) to adjust P and P'child
-							                
-										   * S( Black)
-										 /  \
-							   L(Black) *    * P ( Red)
-					     		            /
-										   *  R (Black)
-										  / \
-										 Red or nullptr 
-					3) : S black and P black  ( total Black height 2)
-					         (1)  L Red R Nil
-							         * P (Black)             * S (Black)
-					                /                       / \
-		                            *  S (Black)    =>     *   *
-				                  /                       L (Black) P(Black)
-								 *  
-				                L (Red) 
-							 (2)  L Nil R Red (nearly same as (1)) 
-							 (3)  L Red R Red (nearly same as (1))
-							 (4)  L Nil R Nil
-							        * P(Black)
-								   /
-							      *  S(Black)
-							              
-		*/
+					 2) R is Black, P is Red => 
+
+					 2) R is Black, L is Red( LL, LR is Black), S is Black
+					          
+							  P                 L  Black
+							/  \              /  \
+						   L    C           LL     P   orginal
+						 /  \         =>         /  \ 
+						LL	 S             Red  S    C
+						   /  \                / \
+						  LR   R              LR  R
+						                    Black Black
+						 
+
+
+
+
+
+							1) G is red, S black L/R red or black 
+							       
+								     *  G   Red
+								   /  \
+								  * P  * S  Black
+							       	  / \
+								     *   *
+							         L   R
+
+									   1) L/R is black,  G->Black  S-> Red
+									   2) L Black , R unknow
+									          * S black
+											 / \
+									  Red G *   * R unkown
+									       / \
+										 P    L Black
+									   3) L Red 
+										      * L Red
+											 / \
+									G Black *   * S Black 
+									      /  \ / \    R Black
+								P Black	 *   * * RR Black
+								           LL Black
+
+							2) G is Black
+							          1)  S Red , L/R Black , swap S/G color
+									         * S Black
+											/ \
+								  G Red    *   * R Black
+									     /  \
+										*   * L Black
+									  P Black
+									   
+									  2) S black L/R unkown
+									    *  G   Black
+									  /  \
+								     * P  * S  Black
+									     / \
+								Black   L   R  Red
+									       /  \
+										  RL  RR
+										  Black Black
+										 1) L/R Black turn S Red, resursive from G 
+										
+										 2) L Red, R unkown   
+										                * L Black
+										               / \
+										      G Black *   * S Black
+										            /  \ / \    R Black
+										 P Black   *   * * RR Black
+										        LL Black
+
+										 3) L Black, R Red( RL Black RR Black)
+										   
+										   * G Black             R Black
+										 /  \                  /  \
+										* P  * R Black  =>BLK G    RR Black
+										    / \              / \
+								   Red    S   RR Black     P    S  Red
+										 /  \                  / \
+								        L    RL Black         L   RL Black
+										Black                Black
+		*/ 
 
 		// 0 or 1 child exists
 		link_type child = nullptr;
