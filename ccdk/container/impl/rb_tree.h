@@ -118,6 +118,7 @@ public:
 		node_type to_delete = node;
 		uint32 pos = 0;    // delete node
 		if (node->left) {
+			//get pre-node 
 			to_delete = max_node(node->left);
 			node->value = to_delete->value;
 			pos = 1;    // delete left-biggest-node instead
@@ -128,7 +129,7 @@ public:
 			node->value = to_delete->value;
 			pos = 2;    //delete right-smallest-node instead
 		}
-		erase_at(to_delete, pos); //
+		erase_at(to_delete, pos); 
 	}
 
 private:
@@ -152,190 +153,130 @@ private:
 		return new_node;
 	}
 
+	CCDK_FORCEINLINE void destroy_node(link_type node) noexcept {
+		util::destruct<T>(node);
+		allocator_type::deallocate(*this, node, 1);
+	}
+
 	// delete node with single child or no child
-	CCDK_FORCEINLINE auto erase_at(link_type node, uint32 pos) {
+	//   D    : to be delete node
+	//   pos  : 0 mean node has no prev-node or next-node ,
+	//          1 mean use prev-node instead, so may has left child
+	//          2 mean use next-node instead, so may has right child
+	CCDK_FORCEINLINE auto erase_at(link_type D, uint32 pos) {
 		/*
 			there are 3 case of to_delete node
 				1: to_delete node is red( no child), delete directly, no child exists
 				2: to_delete node is black and has one red child , delete and use child instead,
 						turn child color to black
-				3: to_delete node is black and has no child , have some sub-case:
+				3: to_delete node is black and has no child , have some sub-case and recursive :
 					
+					 C on the left
+
 					       P  parent( P )
 					     /  \ 
-		      Sibling   S    C  delete node's child
+		      Sibling   S    C  delete node's child or up-tracking unbalance-branch( S has 1 more Black node than C )
 				      /  \ 
 				     L    R
-					  
-					 1) R is Red , RL/RR is Black
+
+					 1) R is Red => RL/RR is Black
 					             
 								 R     P 's color
 							   /   \
-							  S     P   Black 
+							  S     P   Black
 							 /	\  /  \
 						    L   RL RR  C
 
-					 2) R is Black, P is Red => 
+					 2) R is Black, P is Red =>  S Black, L unkown
+						      L is Black switch P and S's color, end
+							  L is Red 
+					        
+							  S   Black
+							/   \
+						   L     P  Red
+						Black   /  \
+							   R    C 
+						      Black
 
-					 2) R is Black, L is Red( LL, LR is Black), S is Black
-					          
-							  P                 L  Black
-							/  \              /  \
-						   L    C           LL     P   orginal
-						 /  \         =>         /  \ 
-						LL	 S             Red  S    C
-						   /  \                / \
-						  LR   R              LR  R
-						                    Black Black
-						 
+					 3) R is Black, P is Black, S is Red => L is Black
+                               rotate left around P, swap P and S 's color
 
+						   	  S   Black
+							/   \
+						   L     P  Red
+						Black   /  \
+							   R    C 
+						      Black  
+									 
+						now P is un-balance , process as 2) 
 
+					 4) R is Black, P is Black, S is Black, L/R is Black
+					        turn S Red, now  P's parent( stop at root) is un-banlance, goto case 3.
 
-
-
-							1) G is red, S black L/R red or black 
-							       
-								     *  G   Red
-								   /  \
-								  * P  * S  Black
-							       	  / \
-								     *   *
-							         L   R
-
-									   1) L/R is black,  G->Black  S-> Red
-									   2) L Black , R unknow
-									          * S black
-											 / \
-									  Red G *   * R unkown
-									       / \
-										 P    L Black
-									   3) L Red 
-										      * L Red
-											 / \
-									G Black *   * S Black 
-									      /  \ / \    R Black
-								P Black	 *   * * RR Black
-								           LL Black
-
-							2) G is Black
-							          1)  S Red , L/R Black , swap S/G color
-									         * S Black
-											/ \
-								  G Red    *   * R Black
-									     /  \
-										*   * L Black
-									  P Black
-									   
-									  2) S black L/R unkown
-									    *  G   Black
-									  /  \
-								     * P  * S  Black
-									     / \
-								Black   L   R  Red
-									       /  \
-										  RL  RR
-										  Black Black
-										 1) L/R Black turn S Red, resursive from G 
-										
-										 2) L Red, R unkown   
-										                * L Black
-										               / \
-										      G Black *   * S Black
-										            /  \ / \    R Black
-										 P Black   *   * * RR Black
-										        LL Black
-
-										 3) L Black, R Red( RL Black RR Black)
-										   
-										   * G Black             R Black
-										 /  \                  /  \
-										* P  * R Black  =>BLK G    RR Black
-										    / \              / \
-								   Red    S   RR Black     P    S  Red
-										 /  \                  / \
-								        L    RL Black         L   RL Black
-										Black                Black
+					 
 		*/ 
 
-		// 0 or 1 child exists
-		link_type child = nullptr;
+		ccdk_assert(node);
 
-		if (pos == 1) child = node->left;
-		else if (pos == 2) child = node->right;
+		// delete node's child, 0 or 1 child exist
+		link_type C = nullptr;
+		if (pos == 1) C = D->left;
+		else if (pos == 2) C = D->right;
+		
+		// keep parent, branch and color
+		link_type P = D->parent;
+		bool D_is_left = D == P->left;
+		bool D_is_red = D->is_red();
+
+		// delete D
+		destroy_node(D);
 
 		//case 1
-		if (node->is_red()) {
-			if (child) child->parent = node->parent;
-			node->parent = child;
-			destroy_node(node);
+		if (D_is_red) {
+			//D is red leaf, reset P's pointer
+			ccdk_assert(!D->left && !D->right);
+			if (D_is_left) P->left = nullptr;
+			else P->right = nullptr;
 		}
 		else {
+			ccdk_assert(D->is_black());
+
 			// case 2
-			if (child && child->is_red()) {
-				child->parent = node->parent;
-				node->parent = child;
-				child->set_black();
-				destroy_node(node);
+			if (C && C->is_red()) {
+				// D has one red child C, C and P pointer to each other, turn C to Black
+				ccdk_assert(!C->left && !C->right);
+				C->parent = P;
+				if (D_is_left) P->left = C;
+				else P->right = C;
+				C->set_black();
 			}
 			// case 3
 			else {
-				link_type P = node->parent;
-				link_type S = nullptr;
-				bool node_is_left = false;
-				if (node == P->left) {
-					S = P->right;
-					node_is_left = true;
-				}
-				else {
-					S = P->left;
-				}
-				ccdk_assert(S);         // sibling must exists because node is black
-				link_type L = S->left;  // sibling left child
-				link_type R = S->right; // sibling right child
-				//case 3.1 
-				if (S->is_black() && P->is_red()) {
-					S->set_red();
-					P->set_black();
-					if (L) { ccdk_assert(L->is_red()); L->set_black(); }
-					if (R) { ccdk_assert(R->is_red()); R->set_black(); }
-				}
-				//case 3.2 
-				else if (S->is_red() && P->is_black()) {
-					ccdk_assert(L && R && L->is_black() && R->is_black());
-					rotate_left(R, S);
-					ccdk_assert(R->parent == P && R->left == S && S->left == L );
-					rotate_right(R, P);
-					ccdk_assert(R->left == S && R->right == P );
-					L->set_red();
-				}
-				// case 3.3 
-				else if (S->is_black() && P->is_black() && L) {
-					ccdk_assert(L->is_red());
-					rotate_right(S, P);
-					ccdk_assert(S->left == L && S->right == P && P->left == R);
-					L->set_black();
-				}
-				// case 3.4
-				else {
-					ccdk_assert(S->is_black() && P->is_black() && !L && !R);
-					S->set_red();
-					while (P != root()) {
-						link_type G = P->parent;
-						bool P_is_left = P == G->left;
-						link_type PS = P_is_left ? G->right : G->left;  //parent-sibling
+				ccdk_assert(!C);
+				bool C_is_left = D_is_left;
 
-						if (PS) {
-							if (P_is_left) rotate_left(PS, G);
-							else rotate_right(PS, G);
-							  
-						}
-						// PS not exists
-						else {
-							P = P->parent;
+				while (P && P != root())
+				{
+					// sibling of Current process node
+					link_type S = nullptr;
+					if (C_is_left) S = P->right;
+					else S = P->left;
+					ccdk_assert(S);         // sibling must exists because Current process node is Black
+					link_type L = S->left;  // sibling left child
+					link_type R = S->right; // sibling right child
+
+
+
+					//case 3.1 
+					if (R && R->is_red()) {
+						if (C_is_left) {
+							rotate_left(R, S);
 						}
 					}
-					root()->set_black();
+
 				}
+				
+
 			}
 		}
 	}
@@ -451,61 +392,72 @@ private:
 		}// while
 	}
 
-	CCDK_FORCEINLINE void rotate_right(link_type p, link_type gp) noexcept {
+	CCDK_FORCEINLINE void rotate_right(link_type P, link_type G) noexcept {
 
 		/*
-							  *  grand-grand-pa( ggp )             * ( ggp )
-							  |                                    |
-							  *  grand-parent( gp )         =>     *  ( p )
-							/   \                                /   \
-			  parent( p )  *    *   parent-brother( pb )    (c) *     * ( gp )
-						 /   \                                      /   \
-			child ( c ) *     *  child-brother(cb)            (cb) *     * ( pb )
+				GG                GG
+				|                 |
+				G         =>      P
+			  /   \             /   \
+			  P     S          C     G
+			/  \                   /   \
+			C   CS                CS    S
 
-			 orginal: c,p  = red  cb, gp, pb = black
-			 new    : c,gp = red  p,  cb, pb = black
-
+			 GG : grand-grand-pa 
+			 G  : grand-pa
+			 P  : Parent
+			 C  : Child
+			 S  : Parent Sibling
+			 CS : child Sibling
 		*/
+		ccdk_assert(P && G);
+		ccdk_assert(P == G->left);
 
 		//child brother 
-		link_type cb = p->right;
+		link_type CS = P->right;
 		//grand-grand-pa
-		link_type ggp = gp->parent;
+		link_type GG = G->parent;
 
 		// grand-pa to parent's right
-		p->right = gp;
-		gp->parent = p;
-		// child-brother to grand-pa's left
-		gp->left = cb;
-		cb->parent = gp;
+		P->right = G;
+		G->parent = P;
+		// child-sibling to grand-pa's left
+		G->left = CS;
+		if(CS) CS->parent = G;
 
-		// parent's parent pointer to grand-grand-pa
-		p->parent = ggp;
-		if (ggp->left == gp) ggp->left = p;
-		else ggp->right = p;
+		// parent pointer to grand-grand-pa
+		P->parent = GG;
+		if (GG->left == G) GG->left = P;
+		else GG->right = P;
 		
-		//parent switch to plack
-		p->set_black();
+		//parent switch to black
+		P->set_black();
 		//grand-pa switch to red
-		gp->set_red();
+		G->set_red();
 	}
 
 
 	CCDK_FORCEINLINE void rotate_left(link_type P, link_type G) noexcept {
 
+
 		/*
-						  *  grand-grand-pa( GG )              * ( GG )
-						  |                                    |
-						  *  grand-parent( G )         =>     *  ( p )
-						/   \                                /   \
-  parent-brother( S )  *    *   parent( P )            (G ) *     * ( c )
-                          /   \                           /   \
-     child-brother ( CS ) *     *  child(C)          (P) *     * ( CS )
+			  GG                GG
+			  |                 |
+			  G         =>      P
+			/   \             /   \
+			S    P           G     C
+			   /  \         / \     
+			  CS   C       S   CS    
 
-				orginal: C,P  = red  CS, G, S = black
-				new    : C,G  = red  CS, P, S = black
-
+			GG : grand-grand-pa
+			G  : grand-pa
+			P  : Parent
+			C  : Child
+			S  : Parent Sibling
+			CS : child Sibling
 		*/
+		ccdk_assert(P && G);
+		ccdk_assert(P == G->right);
 
 		//child sibling
 		link_type CS = P->left;
@@ -516,8 +468,8 @@ private:
 		P->left = G;
 		G->parent = P;
 		// child-brother to grand-pa's left
-		G->right = C;
-		C->parent = G;
+		G->right = CS;
+		if(CS) CS->parent = G;
 
 		// parent's parent pointer to grand-grand-pa
 		P->parent = GG;
