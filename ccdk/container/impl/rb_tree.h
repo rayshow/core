@@ -155,20 +155,74 @@ private:
 	CCDK_FORCEINLINE auto erase_at(link_type node, uint32 pos) {
 		/*
 			there are 4 case of to_delete node
-				case 1: to_delete node is red, delete directly, and link child( only one child exists )
-				case 2: to_delete node is black and has one red child , delete and use child instead,
+				1: to_delete node is red, delete directly, no child exists
+				2: to_delete node is black and has one red child , delete and use child instead,
 						turn child color to black
-				case 3: to_delete node is black and has no child , have some sub-case:
+				3: to_delete node is black and has no child , have some sub-case:
 					
-					       *  parent( P )
-					     /  \
-		sibling( S )    *    *  to be delete( node )
-				      /  \  /
-				     *    * * child 
-				 sibling child left(L) sibling child right(R)
-					sub-case 1 : S black and  P red , switch S and P's color, if L and R is red turn black
-				    sub-case 2 : S red  and P black  
-					sub-case 3 : S black and P black 
+					       *  parent( P )                                * P
+					     /  \                                          /  
+		sibling( S )    *    *  to be delete, no child( node )  ==>   *  S
+				      /  \                                           / \
+				     *    *                                         *   *
+				 sibling child left(L) sibling child right(R)       L   R 
+
+					1) : S black(if child exists must be red) and  P red ( total Black height 1)
+											  * P (Red)
+					                         /  
+		                                     *  S (Black)
+				                            / \
+										   *   *
+				                           L   R  nullptr or red
+							-------------------------------------------------------------   
+							|	(1)    * P (Black)     |    (2)     * S (Red) 
+							|	      /                |          /  \
+							|		 * S (Red)         | L(black)*    P( black)
+							|		                   |
+							|	  if S no child        |       if L exists No R
+							|-----------------------------------------------------------
+							|	(3)       * R (Red)    
+							|	        /  \           
+						    | S(Black) *    * P (Black)
+							|         /
+							|        * L(red or nullptr)
+							|	      
+							|             R exist
+							-----------------------------------------------------------
+				    2) : S red (L,R exists and is black) and P black ( total Black height 2)
+						                      * P (Black)
+					                         /  
+		                                     *  S (Red)
+				                            / \
+										   *   *
+				                           L   R  (Black)
+				                          / \ / \
+										  * * * *  nullptr or Red
+					        
+								turn around S, swap S and P's color  use 1) to adjust P and P'child
+							                
+										   * S( Black)
+										 /  \
+							   L(Black) *    * P ( Red)
+					     		            /
+										   *  R (Black)
+										  / \
+										 Red or nullptr 
+					3) : S black and P black  ( total Black height 2)
+					         (1)  L Red R Nil
+							         * P (Black)             * S (Black)
+					                /                       / \
+		                            *  S (Black)    =>     *   *
+				                  /                       L (Black) P(Black)
+								 *  
+				                L (Red) 
+							 (2)  L Nil R Red (nearly same as (1)) 
+							 (3)  L Red R Red (nearly same as (1))
+							 (4)  L Nil R Nil
+							        * P(Black)
+								   /
+							      *  S(Black)
+							              
 		*/
 
 		// 0 or 1 child exists
