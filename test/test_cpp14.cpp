@@ -19,10 +19,12 @@
 using namespace ccdk;
 int main()
 {
-	std::map<int, int>;
+	std::map<int, int> a;
 	std::bitset<19> bs;
 	std::multimap<int, int> mm;
 	std::hash_map<int, int> map;
+	a.insert(std::make_pair(1, 1));
+	a.find(1);
 	getchar();
 	return 0;
 }

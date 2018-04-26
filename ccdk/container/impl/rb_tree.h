@@ -17,7 +17,7 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
-// just call util::cmp
+// just call util::KeyCmp
 
 template<typename T>
 struct default_cmp {
@@ -34,8 +34,8 @@ template<
 	typename T,
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T>,
-	typename MapToKey = default_to_key<T>,
-	typename Cmp  = default_cmp<T>,
+	typename MapKeyFn = default_to_key<T>,
+	typename CmpFn  = default_cmp<T>,
 	typename Node = rb_node<T>
 >
 class rb_tree: protected Alloc::rebind< Node >
@@ -44,8 +44,8 @@ class rb_tree: protected Alloc::rebind< Node >
 	using node_type  = Node;
 	using link_type  = node_type *;
 	using key_type   = Key;
-	using cmp_type   = Cmp;
-	using map_type   = MapToKey;
+	using cmp_type   = CmpFn;
+	using map_type   = MapKeyFn;
 
 	/* common */
 	using value_type      = T;
@@ -58,18 +58,46 @@ class rb_tree: protected Alloc::rebind< Node >
 	using allocator_type  = mem::allocator_traits< typename Alloc::rebind< Node > >;
 
 private:
-	static constexpr map_type mapping{};  //mapping fn
+	static constexpr map_type MappingToKey{};  //mapping value to key fn
 
-	fs::local_obj<node_type> head;   // a empty node, pointer to root
-	size_type				 len;    // length
-	cmp_type				 cmp;    // cmp fn
+	fs::local_obj<node_type> head;      // a empty node, pointer to root
+	size_type				 len;       // length
+	cmp_type				 KeyCmp;    // KeyCmp fn
 
 	//handful function
 	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
-	CCDK_FORCEINLINE link_type& key_of(link_type node) noexcept { return node->value; }
+	CCDK_FORCEINLINE key_type& KeyOfLink(link_type node) noexcept { return node->value; }
 	CCDK_FORCEINLINE link_type& left_most() noexcept { return head->left; }
 	CCDK_FORCEINLINE link_type& right_most() noexcept { return head->right; }
 
+public:
+
+	/* de-ctor */
+
+	/* default and nullptr ctor */
+	CCDK_FORCEINLINE rb_tree() 
+		:len{ 0 }, head{}, KeyCmp{} { init_head(); }
+	CCDK_FORCEINLINE rb_tree(ptr::nullptr_t) 
+		: len{ 0 }, head{}, KeyCmp{} { init_head(); }
+
+	/* with KeyCmp */
+	CCDK_FORCEINLINE explicit rb_tree(cmp_type KeyCmp)
+		:len{ 0 }, head{}, KeyCmp{ KeyCmp } { init_head(); }
+
+	// insert one node
+	template<bool AllowEqualKey>
+	void insert(T const& t) { insert_impl(t); }
+
+	// delete one node
+	void erase(const_iterator it) noexcept { erase_impl(it); }
+
+	// find by Key
+	void find(Key const& key) { return find_impl(key); }
+
+
+
+//// implements 
+private:
 	CCDK_FORCEINLINE static pointer min_node(pointer node) noexcept {
 		while (node->left) node = node->left;
 		return node;
@@ -79,61 +107,6 @@ private:
 		while (node->right) node = node->right;
 		return node;
 	}
-
-public:
-
-	/* de-ctor */
-
-	/* default and nullptr ctor */
-
-	CCDK_FORCEINLINE rb_tree() :len{ 0 }, head{}, cmp{} { init_head(); }
-	CCDK_FORCEINLINE rb_tree(ptr::nullptr_t) 
-		: len{ 0 }, head{}, cmp{} { init_head(); }
-
-	/* with cmp */
-	CCDK_FORCEINLINE explicit rb_tree(cmp_type cmp)
-		:len{ 0 }, head{}, cmp{ cmp } { init_head(); }
-
-
-	void insert(T const& t) {
-		link_type parent = head.address();
-		link_type child = root();
-		auto map_to = map_type{};
-		//
-		while (child) {
-			parent = child;
-			child = cmp(mapping(t), key_of(child)) ? left(child) : right(child);
-		}
-		return insert_at(parent, t);
-	}
-
-	
-	void erase(const_iterator it) {
-		/*
-			there are three case to choose delete node:
-			if   prev-value-node exists, swap and delete it instead
-			else next-value-node exists, swap and delete it instead
-			else no left and right child exist,  delete node
-		*/
-		node_type node = it.content;
-		node_type to_delete = node;
-		uint32 pos = 0;    // delete node
-		if (node->left) {
-			//get pre-node 
-			to_delete = max_node(node->left);
-			node->value = to_delete->value;
-			pos = 1;    // delete left-biggest-node instead
-		}
-		//use right-next-node instead
-		else if (node->right) {
-			to_delete = min_node(node->right);
-			node->value = to_delete->value;
-			pos = 2;    //delete right-smallest-node instead
-		}
-		erase_at(to_delete, pos); 
-	}
-
-private:
 
 	CCDK_FORCEINLINE  void init_head() noexcept {
 		head->left =  head.address();
@@ -154,6 +127,7 @@ private:
 		return new_node;
 	}
 
+	// destruct one node and delete memory
 	CCDK_FORCEINLINE void destroy_node(link_type node) noexcept {
 		util::destruct<T>(node);
 		allocator_type::deallocate(*this, node, 1);
@@ -329,31 +303,72 @@ private:
 		}//else case 1
 
 		root()->set_black();
+	}
 
+	CCDK_FORCEINLINE const_iterator find_impl(Key const& key) {
+		link_type node = root();
+		bool find = false;
+		while (node) {
+			key_type& node_key = KeyOfLink(node);
+
+			// key less than node
+			if (KeyCmp(key, node_key)) {
+				node = node->left;
+			}
+			else if (KeyCmp(node_key, key)) {
+				node = node->right;
+			}
+			else {
+				find = true;
+				break;
+			}
+		}
+
+		if (find) return { node };
+		return { head.address() };
+	}
+
+	// do actually erase
+	CCDK_FORCEINLINE void erase_impl(const_iterator it)
+	{
+		/*
+			there are three case to choose delete node:
+			if   prev-value-node exists, swap and delete it instead
+			else next-value-node exists, swap and delete it instead
+			else no left and right child exist,  delete node
+		*/
+		node_type node = it.content;
+		node_type to_delete = node;
+		uint32 pos = 0;    // delete node
+		if (node->left) {
+			//get pre-node 
+			to_delete = max_node(node->left);
+			node->value = to_delete->value;
+			pos = 1;    // delete left-biggest-node instead
+		}
+		//use right-next-node instead
+		else if (node->right) {
+			to_delete = min_node(node->right);
+			node->value = to_delete->value;
+			pos = 2;    //delete right-smallest-node instead
+		}
+		erase_at(to_delete, pos);
 	}
 
 
-	template<bool AllocEqual>
-	CCDK_FORCEINLINE auto insert_at(link_type parent, T const & t) {
-		// compare value with parent node value
-		bool greater = cmp(mapping(t), key_of(node));
-
-		// find equal key and not allow equal key, return false
-		if (!greater && !cmp(key_of(node), mapping(t)) && !AllocEqual ) {
-			return fs::make_pair(parent, false);
-		}
-
+	// do actually insert 
+	CCDK_FORCEINLINE auto insert_at(link_type parent, T const& t) {
 		link_type new_node = create_node(t, parent);
 		//root is empty 
-		if ( parent == head.address()) {
+		if (parent == head.address()) {
 			ccdk_assert(root() == nullptr);
 			root() = new_node;
 			//root is always black
-			new_node->set_black();  
+			new_node->set_black();
 			left_most() = new_node;
 			right_most() = new_node;
 		}
-		// key of t > key of parent, insert to right
+		// key of t > key of parent, insert to left
 		else if (greater) {
 			ccdk_assert(parent->right == nullptr);
 			// insert to right
@@ -364,8 +379,8 @@ private:
 			}
 		}
 		// key of t < key of parent, insert to left
-		else{
-			ccdk_assert(parent->left == nullptr );
+		else {
+			ccdk_assert(parent->left == nullptr);
 			parent->left = new_node;
 			if (parent == left_most()) {
 				left_most() = new_node;
@@ -377,6 +392,51 @@ private:
 		}
 		return fs::make_pair(new_node, true);
 	}
+
+
+	CCDK_FORCEINLINE void insert_impl(T const& t) {
+		link_type parent = head.address();
+		link_type child = root();
+		auto map_to = map_type{};
+		bool insert_at_left = false;
+		while (child) {
+			parent = child;
+
+			//t.key > child.key ?
+			insert_at_left = KeyCmp(MappingToKey(t), KeyOfLink(child));
+			child = insert_at_left ? child->left : child->right;
+		}
+
+		//if allow multi-common-keys, just insert and return 
+		if (AllowEqualKey) {
+			insert_at(parent, t);
+			return;
+		}
+
+		// if insert right, parent need greater than t
+		// else prev-node need greater than t
+		link_type prev_insert = parent;
+		//greater than parent
+		if (insert_at_left) {
+			if (child == left_most()) {
+				insert_at(parent, t);
+
+				return;
+			}
+			else {
+				link_type prev_insert = parent->prev();
+			}
+		}
+
+		// check again, prev node must greater than t
+		if (KeyCmp(KeyOfLink(prev_insert), MappingToKey(t))) {
+			insert_at(parent, t);
+			return;
+		}
+		//here insert failed with not-unique-key
+	}
+
+	
 
 
 	// 

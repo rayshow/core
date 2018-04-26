@@ -72,12 +72,12 @@ class hash_table: public Alloc
 	using diff_type = ptr::diff_t;
 
 private:
-	static constexpr CmpFn     cmp_fn{};
-	static constexpr MapKeyFn  map_key_fn{};
+	static constexpr CmpFn     KeyCmp{};
+	static constexpr MapKeyFn  MappingToKey{};
 
 	bucket_container buckets;      // buckets 
 	size_type        len;          // elements size
-	HashFn           hash_fn;      // hash function obj
+	HashFn           HashFn;       // hash function obj
 	uint8            mask_index;   // mask with hash result
 
 #if  defined(CCDK_DEBUG)
@@ -86,14 +86,16 @@ private:
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) {
-		return (size_type)hash_fn(key) & (size_type)(kPrimeArray[mask_index] - 1);
+		return (size_type)HashFn(key) & (size_type)(kPrimeArray[mask_index] - 1);
 	}
+
+	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) { return MappingToKey(node->value); }
 
 public:
 
 	//default
 	CCDK_FORCEINLINE hash_table() 
-		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, hash_fn{}, mask_index{0} {}
+		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, HashFn{}, mask_index{0} {}
 	CCDK_FORCEINLINE hash_table(ptr::nullptr_t) 
 		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 	
@@ -106,7 +108,7 @@ public:
 	}
 
 	CCDK_FORCEINLINE this_type& erase(Key const& key) noexcept {
-		return erase_at(bucket_idx(key));
+		return erase_at(bucket_idx(key), key);
 	}
 
 	CCDK_FORCEINLINE size_type size() { return len; }
@@ -123,23 +125,38 @@ private:
 	}
 
 	// destruct node and deallocate it's memory
-	CCDK_FORCEINLINE void delete_node(link_type node) noexcept {
+	CCDK_FORCEINLINE void destroy_node(link_type node) noexcept {
 		util::destruct<T>(node);
 		allocator_type::deallocate(*this, 1, node);
 	}
 
-	CCDK_FORCEINLINE void erase_at(size_type index) {
+	CCDK_FORCEINLINE void erase_at(size_type index, Key const& key) {
 		ccdk_assert(index < bucket_size());
 		//get bucket list head
 		link_type& head = buckets.at(index);
 		if (head) {
 			//the only node
 			if (head->next == nullptr) {
-				delete_node(head);
+				destroy_node(head);
 				head = nullptr;
 			}
 			else {
-
+				link_type node = head;
+				link_type prev = nullptr;
+				while (node && KeyCmp( key, KeyOfLink(node) )) {
+					prev = node;
+					node = node->next;
+				}
+				
+				if (node && !KeyCmp(KeyOfLink(node), key)) {
+					if (prev) {
+						prev->next = node->next;
+					}
+					else {
+						head = node->next;
+					}
+				}
+				destroy_node(node);
 			}
 		}
 	}
@@ -166,31 +183,33 @@ private:
 	template<bool AllowEqual>
 	void try_append(link_type head, link_type node) {
 		
-		link_type front = head;
+		link_type prev = nullptr;
 		//gerater than head, move to next
-		while (head != nullptr && cmp(node, head)) {
-			front = head;
+		while (head != nullptr && KeyCmp( KeyOfLink(node), KeyOfLink(head) )) {
+			prev = head;
 			head = head->next;
 		}
 		if (head) {
 			node->next = head;
 		}
-		front->next = node;
+		prev->next = node;
 	}
 
 	CCDK_FORCEINLINE fs::pair<link_type, link_type> find_node(link_type head, link_typo node) noexcept {
-		link_type front = head;
+		link_type prev = nullptr;
 		//gerater than head, move to next
-		while (head != nullptr && cmp(node, head)) {
+		while (head != nullptr && KeyCmp( KeyOfLink(node), KeyOfLink(head) )) {
 			//node is equal with head, destroy node and return 
-			if (cmp(head, node)) {
-				delete_node(node);
-				return;
-			}
-			front = head;
+			prev = head;
 			head = head->next;
 		}
-		return { front, head };
+		return { prev, head };
+	}
+
+
+	CCDK_FORCEINLINE link_type link_low_bound(link_type head, Key const& key) noexcept {
+		link_type prev = nullptr;
+
 	}
 
 };

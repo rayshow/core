@@ -14,7 +14,6 @@
 #include<ccdk/text/text_fwd.h>
 #include<ccdk/text/char_traits.h>
 
-
 ccdk_namespace_text_start
 using namespace mpl;
 using namespace mem;

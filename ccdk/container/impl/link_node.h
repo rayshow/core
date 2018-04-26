@@ -48,10 +48,19 @@ struct rb_node
 		return color == eRed;
 	}
 
-	CCDK_FORCEINLINE bool is_black() {
+	CCDK_FORCEINLINE pointer is_black() {
 		return color == eBlack;
 	}
 
+	// prev value node
+	CCDK_FORCEINLINE pointer prev() {
+		return nullptr;
+	}
+
+	// next value node
+	CCDK_FORCEINLINE pointer next() {
+		return nullptr;
+	}
 	
 };
 ccdk_namespace_ct_end
