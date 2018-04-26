@@ -8,6 +8,7 @@
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/fusion/local_obj.h>
+#include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/container/impl/link_node.h>
@@ -171,41 +172,44 @@ private:
 						turn child color to black
 				3: to_delete node is black and has no child , have some sub-case and recursive :
 					
-					 C on the left
+					 C on the right
 
 					       P  parent( P )
 					     /  \ 
 		      Sibling   S    C  delete node's child or up-tracking unbalance-branch( S has 1 more Black node than C )
 				      /  \ 
-				     L    R
+				     O    I
+				   S's outer child and inner child
 
-					 1) R is Red => RL/RR is Black
+					 1) I is Red => IL/IR is Black, balanced end
 					             
 								 R     P 's color
 							   /   \
 							  S     P   Black
 							 /	\  /  \
-						    L   RL RR  C
+						    L   IL IR  C
 
-					 2) R is Black, P is Red =>  S Black, L unkown
-						      L is Black switch P and S's color, end
-							  L is Red 
+					 2) I is Black(include nullptr), P is Red =>  S Black, O unkown
+						      (1) O is Black(nullptr at some time with I) switch P and S's color,  balanced end
+							  (2) O is Red 
 					        
-							  S   Black
-							/   \
-						   L     P  Red
-						Black   /  \
-							   R    C 
-						      Black
+									  S   Black
+									/   \ 
+								   O     P  Red
+								Black   /  \
+									   I    C
+									  Black Black
 
-					 3) R is Black, P is Black, S is Red => L is Black
+									  balanced end
+
+					 3) I is Black, P is Black, S is Red => O is Black
                                rotate left around P, swap P and S 's color
 
 						   	  S   Black
 							/   \
-						   L     P  Red
+						   O     P  Red
 						Black   /  \
-							   R    C 
+							   I    C 
 						      Black  
 									 
 						now P is un-balance , process as 2) 
@@ -213,7 +217,6 @@ private:
 					 4) R is Black, P is Black, S is Black, L/R is Black
 					        turn S Red, now  P's parent( stop at root) is un-banlance, goto case 3.
 
-					 
 		*/ 
 
 		ccdk_assert(node);
@@ -249,36 +252,84 @@ private:
 				if (D_is_left) P->left = C;
 				else P->right = C;
 				C->set_black();
-			}
-			// case 3
-			else {
+			} else {
 				ccdk_assert(!C);
 				bool C_is_left = D_is_left;
+				link_type I = nullptr;  // innser child of S
+				link_type O = nullptr;  // out child of S
+				void(this_type::*rotate_down)(link_type, link_type) = nullptr;
+				void(this_type::*rotate_up)(link_type, link_type) = nullptr;
+				link_type S = nullptr;
 
-				while (P && P != root())
+				// case 3
+				while (P && P != head->address())
 				{
-					// sibling of Current process node
-					link_type S = nullptr;
-					if (C_is_left) S = P->right;
-					else S = P->left;
-					ccdk_assert(S);         // sibling must exists because Current process node is Black
-					link_type L = S->left;  // sibling left child
-					link_type R = S->right; // sibling right child
-
-
+					if (C_is_left) {
+						S = P->right;
+						ccdk_assert(S);  //S must exists
+						I = S->left;
+						O = S->right;
+						rotate_down = &this_type::rotate_left;
+						rotate_up = &this_type::rotate_right;
+					}
+					else {
+						S = P->left;
+						ccdk_assert(S);  //S must exists
+						I = S->right;
+						O = S->left;
+						rotate_down = &this_type::rotate_right;
+						rotate_up = &this_type::rotate_left;
+					}
+					
 
 					//case 3.1 
-					if (R && R->is_red()) {
-						if (C_is_left) {
-							rotate_left(R, S);
-						}
+					if (I && I->is_red()) {
+						// S is black
+						ccdk_assert(S->is_black());
+						(this->*rotate_up)(I, S);
+						(this->*rotate_down)(I, P);
+						break; //balanced , end
 					}
+					else if(P->is_red()){
+						// I is black, S is black
+						ccdk_assert( S->is_black());
+						//case 3.2.2
+						if (I && I->is_red()) {
+							(this->*rotate_up)(S, P);
+						}
+						//case 3.2.1
+						else {
+							// O is black
+							P->set_black();
+							S->set_red();
+						}
+						break; //balanced , end
+					}
+					// case 3.3
+					else if (S->is_red()) {
+						//I/O is black, P is black, S Red
+						(this->*rotate_up)(S, P);
+						P->set_red();
+						S->set_black();
+						//now S's child is un-balance and P is red, loop while goto 3.2
+					}
+					else {
+						// S/P/I/O/C all Black
+						ccdk_assert(S->is_black());
+						S->set_red();
+						//now P is balance, but P'parent is un-balance, goto case 3
+						C = P;
+						P = P->parent;
+						C_is_left = C == P->left;
+					}
+				}//while
 
-				}
-				
+			}//else case2
 
-			}
-		}
+		}//else case 1
+
+		root()->set_black();
+
 	}
 
 
@@ -480,11 +531,6 @@ private:
 		P->set_black();
 		//grand-pa switch to red
 		G->set_red();
-	}
-
-	template<typename InputIt>
-	CCDK_FORCEINLINE void allocate_copy(InputIt begin, size_type n) {
-
 	}
 };
 

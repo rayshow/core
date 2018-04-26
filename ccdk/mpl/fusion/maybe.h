@@ -18,12 +18,12 @@ template<typename T>
 class maybe
 {
 public:
-	static constexpr uint32 memory_size = max_aligned_storage<0,0, T>::MaxSize;
+	static constexpr uint32 kStorageSize = max_aligned_storage<0,0, T>::MaxSize;
 	typedef maybe              this_type;
 	typedef decay_t<T>         value_type;
 
 private:
-	char  memory[memory_size];
+	char  memory[kStorageSize];
 	bool  initalized;
 
 	template<typename P>
