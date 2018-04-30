@@ -22,9 +22,10 @@ int main()
 	std::map<int, int> a;
 	std::bitset<19> bs;
 	std::multimap<int, int> mm;
-	std::hash_map<int, int> map;
+	std::hash_map<int, int> n;
 	a.insert(std::make_pair(1, 1));
 	a.find(1);
+	n.insert(std::make_pair(1,1) );
 	getchar();
 	return 0;
 }

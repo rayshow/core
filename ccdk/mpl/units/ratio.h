@@ -43,9 +43,21 @@ struct ratio
 	static constexpr int64 den = D / gcd;
 
 	static constexpr double value = double(N) / double(D);
+	
+	static constexpr double reverse() {
+		static_assert(N != 0, "div 0");
+		return double(D) / double(N);
+	}
 
 	template<typename T>
 	static constexpr T multiply(T const& t) { return (T)(value * double(t)); }
+
+	template<typename T>
+	static constexpr T div_as_factor(T const& t){ 
+		static_assert(N != 0, "div 0");
+		constexpr static double factor = double(D) / double(N);
+		return (T)(double(t) * factor);
+	}
 
 	template< typename Other>
 	struct add

@@ -28,12 +28,13 @@ template<
 	typename Alloc = mem::simple_new_allocator< T >,
 	typename Node = biward_node<T>
 >
-class blist : protected Alloc::template rebind<Node>
+class list : protected Alloc::template rebind<Node>
 {
 public:
 	/* common */
-	using this_type = blist;
+	using this_type = list;
 	using node_type = Node;
+	using link_type = Node*;
 
 	/* container */
 	using value_type      = T;
@@ -52,15 +53,15 @@ public:
 	using const_reverse_iterator = it::reverse_iterator<const_iterator>;
 
 	template<typename T2, typename Size2, typename Alloc2, typename Node2>
-	friend class blist;
+	friend class list;
 
 private:
-	fs::local_obj<Node> head;  // locally head, no need alloc
+	fs::local_obj<Node> head;  // locally head, allocate free
 	size_type           len;
 public:
 
 	// destruct this
-	CCDK_FORCEINLINE ~blist() noexcept {
+	CCDK_FORCEINLINE ~list() noexcept {
 		if (len > 0) {
 			destruct_content();
 			deallocate();
@@ -69,67 +70,59 @@ public:
 	}
 
 	// default and nullptr ctor
-	CCDK_FORCEINLINE constexpr blist() 
-		:head{}, len{ 0 } { init_head(); }
-	CCDK_FORCEINLINE constexpr blist(ptr::nullptr_t) 
+	CCDK_FORCEINLINE constexpr list() 
+		: head{}, len{ 0 } { init_head(); }
+	CCDK_FORCEINLINE constexpr list(ptr::nullptr_t) 
 		: head{}, len{ 0 } { init_head(); }
 
 	// fill ctor
-	CCDK_FORCEINLINE explicit blist(size_type n, T const& t = T()) {
+	CCDK_FORCEINLINE explicit list(size_type n, T const& t = T()) {
 		allocate_fill(n, t);
 	}
 
 	//  range-n ctor
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE blist(InputIt beginIt, size_type n) {
+	CCDK_FORCEINLINE list(InputIt beginIt, size_type n) {
+		ccdk_assert( ((difference_type)n) > 0);
 		allocate_copy(beginIt, n);
 	}
 
 	//  range ctor
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE blist(InputIt beginIt, InputIt endIt) {
-		allocate_copy(beginIt, alg::distance(beginIt, endIt));
-	}
+	CCDK_FORCEINLINE list(InputIt begin, InputIt end)
+		: list{ beginIt, it::distance(begin, end) } {}
 
 	// copy ctor
-	CCDK_FORCEINLINE blist(blist const& other) {
-		allocate_copy(other.cbegin(), other.size());
-	}
+	CCDK_FORCEINLINE list(list const& other)
+		: list{ other.cbegin(), other.size() } {}
 
 	// template copy ctor, node_type can  be different but T must be same
 	template<typename Size2, typename Node2>
-	CCDK_FORCEINLINE blist(blist<T, Size2, Alloc, Node2> const& other) {
-		allocate_copy(other.begin(), other.size());
-	}
+	CCDK_FORCEINLINE list(list<T, Size2, Alloc, Node2> const& other)
+		: list{ other.cbegin(), other.size() } {}
 
 	// sim initialize_list 
 	template<uint32 N>
-	CCDK_FORCEINLINE explicit blist(T const (&arr)[N]) {
-		allocate_copy(arr, N);
-	}
+	CCDK_FORCEINLINE explicit list(T const (&arr)[N])
+		: list{ arr, N } {}
 
 	// move ctor
-	CCDK_FORCEINLINE blist(blist && other) noexcept: head{}, len { other.len } {
-		if (len > 0) {
-			head->next = other.head->next;
-			head->prev = other.head->prev;
-			head->next->prev = head.address();
-			head->prev->next = head.address();
-			other.rvalue_reset();
-		}
+	CCDK_FORCEINLINE list(list && other) 
+		noexcept : head{}, len { other.len } {
+		rvalue_set(other.address());
+		other.rvalue_reset();
 	}
 
 	// template move, node_type need be same
 	template<typename Size2>
-	CCDK_FORCEINLINE blist(blist<T, Size2, Alloc, Node> && other)
+	CCDK_FORCEINLINE list(list<T, Size2, Alloc, Node> && other)
 		noexcept: head{}, len{ other.len } {
-		head->next = other.head->next;
-		head->prev = other.head->prev;
+		rvalue_set(other.address());
 		other.rvalue_reset();
 	}
 
 	// swap data
-	CCDK_FORCEINLINE void swap(blist& other) noexcept {
+	CCDK_FORCEINLINE void swap(list& other) noexcept {
 		node_type* tmp;
 		tmp = other.head->next;
 		other.head->next = head->next;
@@ -145,7 +138,7 @@ public:
 	}
 
 	// copy assign 
-	CCDK_FORCEINLINE this_type& operator=(blist const& other) {
+	CCDK_FORCEINLINE this_type& operator=(list const& other) {
 		return copy_range(other.cbegin(), other.size());
 	}
 
@@ -153,14 +146,15 @@ public:
 	// template copy assign 
 	template<typename Size2, typename Node2>
 	CCDK_FORCEINLINE this_type& operator=(
-		blist<T, Size2, Alloc, Node2> const& other) {
+		list<T, Size2, Alloc, Node2> const& other) {
 		return copy_range(other.cbegin(), other.size());
 	}
 
 	// move assign 
-	CCDK_FORCEINLINE this_type& operator=(blist && other) {
-		this->~blist();
-		this->rvalue_set(other.head.address(), other.len);
+	CCDK_FORCEINLINE this_type& operator=(list && other) {
+		this->~list();
+		this->rvalue_set(other.head.address());
+		len = other.len;
 		other.rvalue_reset();
 		return *this;
 	}
@@ -169,8 +163,8 @@ public:
 	// template move assign 
 	template<typename Size2>
 	CCDK_FORCEINLINE this_type& operator=(
-		blist<T, Size2, Alloc, Node> && other) {
-		this->~blist();
+		list<T, Size2, Alloc, Node> && other) {
+		this->~list();
 		this->rvalue_set(other.head, other.len);
 		other.rvalue_reset();
 		return *this;
@@ -353,13 +347,14 @@ private:
 		len = 0;
 	}
 
+	// reset local
+
 	// set to another list
-	CCDK_FORCEINLINE void rvalue_set(node_type* other_head, size_type n) noexcept {
+	CCDK_FORCEINLINE void rvalue_set(node_type* other_head) noexcept {
 		head->next = other_head->next;
 		head->prev = other_head->prev;
 		head->next->prev = head.address();
 		head->prev->next = head.address();
-		len = n;
 	}
 
 	//init head

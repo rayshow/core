@@ -84,11 +84,8 @@ public:
 
 	/* range */
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE constexpr array(InputIt beginIt, InputIt endIt)
-		: len{ fn::min(N, alg::distance(beginIt, endIt)) } {
-		util::destruct_n(content, len);
-		util::construct_copy_n(content, beginIt, len);
-	}
+	CCDK_FORCEINLINE array(InputIt beginIt, InputIt endIt)
+		: array {beginIt, it::distance(endIt)}{}
 
 	/* template copy */
 	template<uint32 N2, uint32 Min = min_c2<uint32, N,N2>::value >

@@ -73,6 +73,7 @@
   <ItemGroup>
     <ClInclude Include="container\algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
+    <ClInclude Include="mpl\function\prediction.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="container\adapter\prority_queue.h" />
@@ -88,7 +89,7 @@
     <ClInclude Include="container\impl\hash_table.h" />
     <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
-    <ClInclude Include="container\local_vector.h" />
+    <ClInclude Include="container\impl\local_vector.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\list_node.h" />
     <ClInclude Include="container\multi_map.h" />

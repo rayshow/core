@@ -8,7 +8,7 @@ ccdk_namespace_ct_start
 template<typename T>
 struct forward_node {
 	using value_type = T;
-	T                value;
+	T                data;
 	forward_node<T> *next;
 };
 
@@ -17,7 +17,7 @@ template<typename T>
 struct biward_node
 {
 	using value_type = T;
-	T               value;
+	T               data;
 	biward_node<T> *prev;
 	biward_node<T> *next;
 };
@@ -30,7 +30,7 @@ struct rb_node
 	using pointer    = rb_node*;
 	enum color_t: uint8{ eRed, eBlack};
 
-	T       value;
+	T       data;
 	pointer parent;     // to parent node
 	pointer left;
 	pointer right;

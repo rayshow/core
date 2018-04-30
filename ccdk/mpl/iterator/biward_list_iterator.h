@@ -22,9 +22,6 @@ struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
 template<typename T>
 constexpr is_biward_node<T> is_biward_node_c{};
 
-
-
-
 template<typename Node>
 struct iterator< biward_category, Node >
 {

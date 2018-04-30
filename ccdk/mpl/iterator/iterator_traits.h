@@ -76,8 +76,7 @@ struct can_do_memset : and_< is_pointer<It1>, is_byte< T1 > > {};
 template<
 	typename It1, typename ValueType,
 	typename T1 = iterator_value_t<It1>>
-	struct fill_opt_level :
-	derive_if< 
+struct fill_opt_level : derive_if< 
 			and_<is_trivial<T1>, has_assigner<T1, ValueType> >,
 			derive_if< can_do_memset<It1, ValueType, T1>, opt_lv3, opt_lv2>,
 			opt_lv1> {};
@@ -95,8 +94,7 @@ template<
 	typename It1, typename It2,
 	typename T1 = iterator_value_t<It1>,
 	typename T2 = iterator_value_t<It2>>
-	struct copy_opt_level :
-	derive_if<
+struct copy_opt_level : derive_if<
 		and_<is_trivial<T1>, is_trivial<T2>, has_assigner<T1, T2> >,
 		derive_if< can_do_memcpy<It1,It2, T1,T2>, opt_lv3, opt_lv2>,
 		opt_lv1> {};

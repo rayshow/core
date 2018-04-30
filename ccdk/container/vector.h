@@ -168,9 +168,9 @@ public:
 	}
 
 	/* copy n*/
-	template<typename InputIt,
-		typename = check_t< is_iterator<InputIt>>
-	>
+	template<
+		typename InputIt,
+		typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE this_type& assign(InputIt begin, ptr::size_t n){
 		copy_or_allocate_copy(begin, n);
 		return *this;
@@ -425,6 +425,44 @@ public:
 		util::destruct_n(content, len);
 		len = 0;
 		return *this;
+	}
+
+	template<uint32 Times = 1, typename Pred>
+	CCDK_FORCEINLINE size_type find_index(Pred const& pred) noexcept {
+		uint32 count = 0;
+		for (size_type i = 0; i < len; ++i)
+			if (pred(content[i])) {
+				if (++count == Times) return i;
+			}
+		return len;
+	}
+
+	// find index satisfy Pred in range [from, size() )
+	template<uint32 Times = 1, typename Pred>
+	CCDK_FORCEINLINE size_type find_index(size_type from, Pred const& pred) const noexcept {
+		ccdk_assert(from < size());
+		uint32 count = 0;
+		for (size_type i = from; i < len; ++i)
+			if (pred(content[i])) {
+				if (++count == Times) return i;
+			}
+		return len;
+	}
+
+	// find index satisfy Pred in range [0, size() )
+	template<uint32 Times = 1, typename Pred>
+	CCDK_FORCEINLINE size_type find_index(Pred const& pred) const noexcept {
+		return find_index<Times>(0, pred);
+	}
+
+	template<uint32 Times = 1, typename Pred>
+	CCDK_FORCEINLINE iterator_type find(Pred const& pred) noexcept {
+		return content + find_index<Times>(pred);
+	}
+	
+	template<uint32 Times = 1, typename Pred>
+	CCDK_FORCEINLINE const_iterator_type find(Pred const& pred) const noexcept {
+		return content + find_index<Times>(pred);
 	}
 
 private:

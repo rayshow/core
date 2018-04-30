@@ -1,12 +1,10 @@
 #pragma once
 
-#include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/mpl/mcontainer/val_pack.h>
-#include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/construct.h>
-#include<ccdk/mpl/function/operator.h>
+#include<ccdk/mpl/iterator/bstree_iterator.h>
+#include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/memory/allocator_traits.h>
@@ -17,7 +15,7 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
-// just call util::KeyCmp
+// just call util::KeyCmpFn
 
 template<typename T>
 struct default_cmp {
@@ -26,11 +24,11 @@ struct default_cmp {
 
 template<typename T>
 struct default_to_key {
-	operator()
 };
 
 template<
 	typename Key,
+	typename MappedType,
 	typename T,
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T>,
@@ -40,12 +38,12 @@ template<
 >
 class rb_tree: protected Alloc::rebind< Node >
 {
-	using this_type  = rb_tree;
-	using node_type  = Node;
-	using link_type  = node_type *;
-	using key_type   = Key;
-	using cmp_type   = CmpFn;
-	using map_type   = MapKeyFn;
+	using this_type   = rb_tree;
+	using node_type   = Node;
+	using link_type   = node_type *;
+	using clink_type  = node_type const*;
+	using key_type    = Key;
+	using mapped_type = MappedType;
 
 	/* common */
 	using value_type      = T;
@@ -57,14 +55,21 @@ class rb_tree: protected Alloc::rebind< Node >
 	using difference_type = ptr::diff_t;
 	using allocator_type  = mem::allocator_traits< typename Alloc::rebind< Node > >;
 
+	//iterator
+	using iterator               = it::iterator< bstree_tag, Node>;
+	using const_iterator         = it::iterator< bstree_tag, const Node>;
+	using reverse_iterator       = it::reverse_iterator< iterator >;
+	using const_reverse_iterator = it::reverse_iterator< const_iterator>;
+
 private:
-	static constexpr map_type MappingToKey{};  //mapping value to key fn
+	static constexpr MapKeyFn MappingKeyFn{};  //mapping value to key fn
+	static constexpr CmpFn    KeyCmpFn{};
 
 	fs::local_obj<node_type> head;      // a empty node, pointer to root
 	size_type				 len;       // length
-	cmp_type				 KeyCmp;    // KeyCmp fn
 
 	//handful function
+	CCDK_FORCEINLINE clink_type end_node() const noexcept { return head.address(); }
 	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
 	CCDK_FORCEINLINE key_type& KeyOfLink(link_type node) noexcept { return node->value; }
 	CCDK_FORCEINLINE link_type& left_most() noexcept { return head->left; }
@@ -76,34 +81,100 @@ public:
 
 	/* default and nullptr ctor */
 	CCDK_FORCEINLINE rb_tree() 
-		:len{ 0 }, head{}, KeyCmp{} { init_head(); }
+		:len{ 0 }, head{} { init_head(); }
 	CCDK_FORCEINLINE rb_tree(ptr::nullptr_t) 
-		: len{ 0 }, head{}, KeyCmp{} { init_head(); }
+		: len{ 0 }, head{} { init_head(); }
 
-	/* with KeyCmp */
-	CCDK_FORCEINLINE explicit rb_tree(cmp_type KeyCmp)
-		:len{ 0 }, head{}, KeyCmp{ KeyCmp } { init_head(); }
 
 	// insert one node
 	template<bool AllowEqualKey>
-	void insert(T const& t) { insert_impl(t); }
+	fs::pair<iterator,bool> insert(T const& t) { insert_impl<AllowEqualKey>(t); }
+
+	// range insert
+	template< bool AllowEqualKey, typename InputIt,
+		typename = check_t< is_iterator<InputIt>> >
+	CCDK_FORCEINLINE void insert(InputIt begin, InputIt end) {
+		for (InputIt it = begin; it != end; ++it) {
+			insert<AllowEqualKey>(*it);
+		}
+	}
+	
+	// range-n insert
+	template< bool AllowEqualKey, typename InputIt,
+		typename = check_t< is_iterator<InputIt>> >
+	CCDK_FORCEINLINE void insert(InputIt begin, size_type n) {
+		for (size_type i = 0; i<n; ++i,++it) {
+			insert<AllowEqualKey>(*it);
+		}
+	}
 
 	// delete one node
 	void erase(const_iterator it) noexcept { erase_impl(it); }
+	void erase(key_type const& key) noexcept { 
+		erase_impl(find(key)); 
+	}
+	void erase(const_iterator begin, const_iterator end) noexcept {
+		for (const_iterator it = begin; it != end; ++it) {
+			erase(it);
+		}
+	}
 
 	// find by Key
 	void find(Key const& key) { return find_impl(key); }
 
+	//iterator
+	CCDK_FORCEINLINE iterator begin() noexcept { 
+		ccdk_assert(len);  return { head->left }; 
+	}
+	CCDK_FORCEINLINE iterator end() noexcept { 
+		ccdk_assert(len);  return { head.address() };
+	}
+	CCDK_FORCEINLINE const_iterator cbegin() const noexcept { 
+		ccdk_assert(len);  return { head->left }; 
+	}
+	CCDK_FORCEINLINE const_iterator cend() const noexcept {
+		ccdk_assert(len);  return { head.address() }; 
+	}
+	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept {
+		ccdk_assert(len);  return { { head->right } };
+	}
+	CCDK_FORCEINLINE reverse_iterator rend() noexcept {
+		ccdk_assert(len);  return { { head.address() } };
+	}
+	CCDK_FORCEINLINE const_reverse_iterator crbegin() const noexcept {
+		ccdk_assert(len);  return { { head->right } };
+	}
+	CCDK_FORCEINLINE const_reverse_iterator crend() const noexcept {
+		ccdk_assert(len);  return { { head.address() } };
+	}
 
+	CCDK_FORCEINLINE const_iterator lower_bound(Key const& key) const noexcept {
+		return { lower_bound_impl(key) };
+	}
+
+	CCDK_FORCEINLINE const_iterator upper_bound(Key const& key) const noexcept {
+		return { equal_range_impl(lower_bound_impl(key), key).first };
+	}
+
+	CCDK_FORCEINLINE fs::pair<const_iterator, const_iterator>
+		equal_range(Key const& key) const noexcept {
+		link_type begin = lower_bound_impl(key);
+		link_type end = equal_range_impl(begin, key).first;
+		return { {begin}, {end} };
+	}
+
+	CCDK_FORCEINLINE size_type count(Key const& key) const noexcept {
+		return equal_range_impl(lower_bound_impl(key), key).second;
+	}
 
 //// implements 
 private:
-	CCDK_FORCEINLINE static pointer min_node(pointer node) noexcept {
+	CCDK_FORCEINLINE static link_type min_node(link_type node) noexcept {
 		while (node->left) node = node->left;
 		return node;
 	}
 
-	CCDK_FORCEINLINE static pointer max_node(pointer node) noexcept {
+	CCDK_FORCEINLINE static link_type max_node(link_type node) noexcept {
 		while (node->right) node = node->right;
 		return node;
 	}
@@ -113,6 +184,40 @@ private:
 		head->right = head.address();
 		head->parent = nullptr;
 		head->set_black();
+	}
+
+	CCDK_FORCEINLINE clink_type lower_bound_impl(key_type const& key) const noexcept {
+		clink_type node = root();
+		bool find = false;
+		while (node) {
+			key_type& node_key = KeyOfLink(node);
+			// key < node_key
+			if (KeyCmpFn(key, node_key)) {
+				node = node->left;
+			}
+			//node_key < key
+			else if (KeyCmpFn(node_key, key)) {
+				node = node->right;
+			}
+			else {
+				find = true;
+				break;
+			}
+		}
+		if (!find) return end_node();
+		return node;
+	}
+
+	CCDK_FORCEINLINE fs::pair<clink_type,size_type>
+		equal_range_impl(clink_type node, key_type const& key) const noexcept {
+		//key >= node
+		ccdk_assert(!KeyCmpFn(key, KeyOfLink(node)) && node);
+		while (node != end_node()) {
+			if (KeyCmpFn(KeyOfLink(node), key)) break;
+			node = node->next();
+			++count;
+		}
+		return { node, count };
 	}
 
 	CCDK_FORCEINLINE link_type create_node(T const& t, link_type parent) {
@@ -254,8 +359,6 @@ private:
 						rotate_down = &this_type::rotate_right;
 						rotate_up = &this_type::rotate_left;
 					}
-					
-
 					//case 3.1 
 					if (I && I->is_red()) {
 						// S is black
@@ -305,29 +408,6 @@ private:
 		root()->set_black();
 	}
 
-	CCDK_FORCEINLINE const_iterator find_impl(Key const& key) {
-		link_type node = root();
-		bool find = false;
-		while (node) {
-			key_type& node_key = KeyOfLink(node);
-
-			// key less than node
-			if (KeyCmp(key, node_key)) {
-				node = node->left;
-			}
-			else if (KeyCmp(node_key, key)) {
-				node = node->right;
-			}
-			else {
-				find = true;
-				break;
-			}
-		}
-
-		if (find) return { node };
-		return { head.address() };
-	}
-
 	// do actually erase
 	CCDK_FORCEINLINE void erase_impl(const_iterator it)
 	{
@@ -337,7 +417,7 @@ private:
 			else next-value-node exists, swap and delete it instead
 			else no left and right child exist,  delete node
 		*/
-		node_type node = it.content;
+		node_type node =  it.content;
 		node_type to_delete = node;
 		uint32 pos = 0;    // delete node
 		if (node->left) {
@@ -357,7 +437,8 @@ private:
 
 
 	// do actually insert 
-	CCDK_FORCEINLINE auto insert_at(link_type parent, T const& t) {
+	CCDK_FORCEINLINE fs::pair<iterator,bool> insert_at(link_type parent, T const& t) 
+	{
 		link_type new_node = create_node(t, parent);
 		//root is empty 
 		if (parent == head.address()) {
@@ -390,27 +471,27 @@ private:
 		if (parent != root()) {
 			rebalance_at(parent, new_node)
 		}
-		return fs::make_pair(new_node, true);
+		return { {new_node}, true };
 	}
 
+	template<bool AllowEqualKey = false>
+	CCDK_FORCEINLINE fs::pair<iterator,bool>
+		insert_impl(T const& t) {
 
-	CCDK_FORCEINLINE void insert_impl(T const& t) {
 		link_type parent = head.address();
 		link_type child = root();
-		auto map_to = map_type{};
 		bool insert_at_left = false;
 		while (child) {
 			parent = child;
 
 			//t.key > child.key ?
-			insert_at_left = KeyCmp(MappingToKey(t), KeyOfLink(child));
+			insert_at_left = KeyCmpFn(MappingKeyFn(t), KeyOfLink(child));
 			child = insert_at_left ? child->left : child->right;
 		}
 
 		//if allow multi-common-keys, just insert and return 
 		if (AllowEqualKey) {
-			insert_at(parent, t);
-			return;
+			return insert_at(parent, t);
 		}
 
 		// if insert right, parent need greater than t
@@ -419,24 +500,20 @@ private:
 		//greater than parent
 		if (insert_at_left) {
 			if (child == left_most()) {
-				insert_at(parent, t);
-
-				return;
+				return insert_at(parent, t);
 			}
 			else {
-				link_type prev_insert = parent->prev();
+				prev_insert = parent->prev();
 			}
 		}
 
 		// check again, prev node must greater than t
-		if (KeyCmp(KeyOfLink(prev_insert), MappingToKey(t))) {
-			insert_at(parent, t);
-			return;
+		if (KeyCmpFn(KeyOfLink(prev_insert), MappingKeyFn(t))) {
+			return insert_at(parent, t);
 		}
 		//here insert failed with not-unique-key
+		return { {prev_insert}, false };
 	}
-
-	
 
 
 	// 
