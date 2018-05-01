@@ -131,7 +131,7 @@ typedef ratio<1000000000000000000LL, 1> exa;
 namespace storage
 {
 	typedef ratio<1, 8LL>  bit;
-	typedef ratio<1>  byte;
+	typedef ratio<1>  byte; 
 	typedef ratio<2>  word;
 	typedef ratio<2>  dword;
 	typedef ratio<1024LL> kb;

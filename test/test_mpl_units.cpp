@@ -9,7 +9,7 @@ using namespace ccdk::mpl;
 using namespace ccdk::mpl::units;
 using namespace ccdk::mpl::msm;
 int main()
-{
+{ 
 	ulength len = 100_m;
 	length<kilo> len2 = 1_km;
 	DebugValue(len);

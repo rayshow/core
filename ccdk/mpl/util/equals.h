@@ -33,53 +33,51 @@ template<typename T1, typename T2>
 static constexpr bool  has_member_equals_v = ut_impl::has_equals_impl<T1, T2>::value;
 
 
-#if defined( CCDK_COMPILER_MSVC ) 
+namespace util_impl {
 
-//no suitable implements found, for msvc-17+ to  to get detail line and file error place
-template< typename T1, typename T2, typename = check_t<false_> >
-CCDK_FORCEINLINE bool equals(T1 const&, typename T2) {}
+	template<
+		typename T1,
+		typename T2,
+		bool = has_equal_v<T1,T2>,
+		bool = has_member_equals_v<T1,T2>
+	>
+		struct equals_impl_t {};
 
-template< typename T1, typename T2, typename = check_t<false_> >
-CCDK_FORCEINLINE bool not_equals(T1 const&, typename T2) {}
+	// T1 == T2 declared
+	template<typename T1, typename T2>
+	struct equals_impl_t<T1, T2, true, false> {
+		CCDK_FORCEINLINE bool operator()(T1 const& t1, T2 const& t2) const noexcept {
+			DebugValue("default equals");
+			return t1 == t2;
+		}
+	};
 
-#elif defined( CCDK_COMPILER_GCC )
+	// T1 == T2 not declared but T1.equals(T2) declare
+	template<typename T1, typename T2>
+	struct equals_impl_t<T1, T2, false, true> {
+		CCDK_FORCEINLINE bool operator()(T1 const& t1, T2 const& t2) const noexcept {
+			DebugValue("member equals");
+			return t1.equals(t2);
+		}
+	};
 
-//no suitable implements found, for gcc  to get detail line and file error place 
-template< typename T1, typename T2>
-CCDK_FORCEINLINE bool equals(T1 const&, typename T2);
-
-template< typename T1, typename T2>
-CCDK_FORCEINLINE bool not_equals(T1 const&, typename T2);
-
-#else //clang or some compiler not found suitable method
-template< typename T1, typename T2>
-CCDK_FORCEINLINE bool equals(T1 const&, typename T2){
-	static_assert(false_::value, "no equal function found hash found");
+	template<typename T1, typename T2>
+	constexpr equals_impl_t<T1,T2> equals_impl{};
 }
-template< typename T1, typename T2>
-CCDK_FORCEINLINE bool not_equals(T1 const&, typename T2) {
-	static_assert(false_::value, "no equal function found hash found");
-}
-#endif
 
-//default call T1 == T2
-template<
-	typename T1,
-	typename T2,
-	typename = check_t< has_equal<T1,T2,bool>>
->
+//judge pair <t1,t2> is equals
+template<typename T1, typename T2>
 CCDK_FORCEINLINE bool equals(T1 const& t1, T2 const& t2) noexcept {
-	return t1 == t2;
+	return util_impl::equals_impl<T1, T2>(t1, t2);
 }
 
-// if == not define and equals defined
-template<
-	typename T1,
-	typename T2,
-	typename = check_t< has_member_equals<T1,T2> >
->
-CCDK_FORCEINLINE bool equals(T1 const& t1, T2 const& t2) noexcept {
-	return t1.equals(t2);
-}
+//for template expression 
+struct equals_t {
+	template<typename T1, typename T2>
+	CCDK_FORCEINLINE bool operator()(T1 const& t1, T2 const& t2) const noexcept {
+		return util_impl::equals_impl<T1, T2>(t1, t2);
+	}
+};
+
 
 ccdk_namespace_mpl_util_end
