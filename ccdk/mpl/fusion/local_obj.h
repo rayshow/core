@@ -30,6 +30,7 @@ public:
 		construct(util::forward<Args>(args)...);
 	}
 
+
 	void swap(local_obj & other)
 	{
 		util::swap(*address(), *other.address());

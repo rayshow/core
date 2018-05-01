@@ -89,7 +89,7 @@
     <ClInclude Include="container\impl\hash_table.h" />
     <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
-    <ClInclude Include="container\impl\local_vector.h" />
+    <ClInclude Include="container\local_vector.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\list_node.h" />
     <ClInclude Include="container\multi_map.h" />
@@ -206,6 +206,7 @@
     <ClInclude Include="mpl\mcontainer\slist_.h" />
     <ClInclude Include="mpl\mcontainer\view\filter_view_.h" />
     <ClInclude Include="mpl\mstate_machine\state_machine.h" />
+    <ClInclude Include="mpl\type_traits\is_volatile.h" />
     <ClInclude Include="mpl\units\units_fwd.h" />
     <ClInclude Include="mpl\units\dimension.h" />
     <ClInclude Include="mpl\units\quantity.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="mpl\util\construct.h" />
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\destruct.h" />
+    <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="text\string.h" />
     <ClInclude Include="text\to_string.h" />

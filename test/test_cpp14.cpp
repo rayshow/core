@@ -26,6 +26,7 @@ int main()
 	a.insert(std::make_pair(1, 1));
 	a.find(1);
 	n.insert(std::make_pair(1,1) );
+	std::hash<int>();
 	getchar();
 	return 0;
 }

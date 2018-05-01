@@ -901,11 +901,13 @@
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="mpl\function\prediction.h" />
-    <ClInclude Include="container\impl\local_vector.h" />
     <ClInclude Include="container\bitset.h" />
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="container\lazy_slist.h" />
+    <ClInclude Include="container\local_vector.h" />
+    <ClInclude Include="mpl\type_traits\is_volatile.h" />
+    <ClInclude Include="mpl\util\equals.h" />
   </ItemGroup>
 </Project>
