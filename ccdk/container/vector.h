@@ -4,6 +4,7 @@
 #include<ccdk/mpl/mcontainer/val_pack.h>
 #include<ccdk/mpl/function/operator.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
+#include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/util/fill.h>
@@ -30,39 +31,39 @@ template<
 class vector : protected Alloc
 {
 public:
-	typedef vector		 this_type;
-	typedef T			 value_type;
-	typedef Size		 size_type;
-	typedef ptr::diff_t  different_type;
-	typedef InceaseRatio increase_ratio;
-	typedef mem::allocator_traits<Alloc> allocate_type;
+	using this_type      = vector;
+	using value_type     = T;
+	using size_type      = Size;
+	using different_type = ptr::diff_t;
+	using increase_ratio = InceaseRatio;
+	using allocator_type = mem::allocator_traits<Alloc> ;
 
 	/* iterator */
-	typedef T*                         iterator_type;
-	typedef T const*                   const_iterator_type;
-	typedef reverse_iterator<T*>       reverse_iterator_type;
-	typedef reverse_iterator<const T*> const_reverse_iterator_type;
+	using iterator               = T*;
+	using const_iterator         = T const*;
+	using reverse_iterator       = it::reverse_iterator<T*>;
+	using const_reverse_iterator = it::reverse_iterator<const T*>;
 	
 	template<typename T2, typename Ratio2, typename Size2, typename Alloc2>
 	friend class vector;
 
 private:
-	T *content;
+	T *       content;
 	size_type len;
 	size_type cap;
 
 public:
 	/* destruct */
 	CCDK_FORCEINLINE ~vector() noexcept {
-		if (content) {
-			if (len > 0)  util::destruct_n(content, len);
-			allocate_type::deallocate(*this, content, cap);
-		}
+		destruct_content();
+		deallocate();
 	}
 
-	/* default */
+	/* default and nullptr */
 	CCDK_FORCEINLINE constexpr vector()
-		:content{ nullptr }, len{ 0 }, cap{ 0 } {}
+		: content{ nullptr }, len{ 0 }, cap{ 0 } {}
+	CCDK_FORCEINLINE constexpr vector(ptr::nullptr_t)
+		: content{ nullptr }, len{ 0 }, cap{ 0 } {}
 
 	/* fill*/
 	CCDK_FORCEINLINE explicit vector(size_type n, T const& t = T()){
@@ -83,7 +84,7 @@ public:
 	/* copy range */
 	template< typename InputIt, typename = check_t< is_iterator<InputIt>>  >
 	CCDK_FORCEINLINE vector(InputIt begin, InputIt end){
-		ptr::size_t n = alg::distance(begin, end);
+		ptr::size_t n = it::distance(begin, end);
 		ccdk_assert(n > 0);
 		allocate_copy(n, begin);
 	}
@@ -112,10 +113,10 @@ public:
 		other.rvalue_reset();
 	}
 
-	/* initializer list */
-	CCDK_FORCEINLINE vector(std::initializer_list<T> const& lst) noexcept {
-		allocate_copy(lst.size(), lst.begin());
-	}
+	///* initializer list */
+	//CCDK_FORCEINLINE vector(std::initializer_list<T> const& lst) noexcept {
+	//	allocate_copy(lst.size(), lst.begin());
+	//}
 
 	/* swap */
 	CCDK_FORCEINLINE void swap(vector& other) noexcept {
@@ -126,8 +127,7 @@ public:
 
 	/* assign  nullptr, first destruct objects */
 	CCDK_FORCEINLINE this_type& operator=(ptr::nullptr_t) noexcept { 
-		destruct_content();
-		return *this;
+		return clear();
 	}
 
 	/* copy assign */
@@ -181,7 +181,7 @@ public:
 		typename = check_t< is_iterator<InputIt>>
 	>
 	CCDK_FORCEINLINE this_type& assign(InputIt begin, InputIt end){
-		return assign(begin, alg::distance(begin, end));
+		return assign(begin, it::distance(begin, end));
 	}
 
 	/* initialize_list */
@@ -193,38 +193,39 @@ public:
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
 	CCDK_FORCEINLINE size_type capacity() const noexcept { return cap; }
 	CCDK_FORCEINLINE bool empty() const noexcept { return len == 0; }
-	CCDK_FORCEINLINE size_type max_size() const noexcept { 
-		return allocate_type::max_allocate_size();
+	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept { 
+		static constexpr size_type kMaxSize = size_type(-1);
+		return kMaxSize;
 	}
 	
 	/* iterator */
-	CCDK_FORCEINLINE iterator_type begin() noexcept{ 
+	CCDK_FORCEINLINE iterator begin() noexcept{ 
 		return content;
 	}
-	CCDK_FORCEINLINE const_iterator_type cbegin() const noexcept {
+	CCDK_FORCEINLINE const_iterator cbegin() const noexcept {
 		return content;
 	}
-	CCDK_FORCEINLINE reverse_iterator_type rbegin() noexcept {
+	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept {
 		ccdk_assert(content);  
 		return {content+len-1};
 	}
-	CCDK_FORCEINLINE const_reverse_iterator_type crbegin() const noexcept {
+	CCDK_FORCEINLINE const_reverse_iterator crbegin() const noexcept {
 		ccdk_assert(content);  
 		return { content + len-1 };
 	}
-	CCDK_FORCEINLINE iterator_type end() noexcept {
+	CCDK_FORCEINLINE iterator end() noexcept {
 		return content + len ;
 	}
-	CCDK_FORCEINLINE const_iterator_type cend() const noexcept {
+	CCDK_FORCEINLINE const_iterator cend() const noexcept {
 		return content + len;
 	}
 
-	CCDK_FORCEINLINE reverse_iterator_type rend() noexcept {
+	CCDK_FORCEINLINE reverse_iterator rend() noexcept {
 		ccdk_assert(content&& len > 0); 
 		return { content -1 };
 	}
 
-	CCDK_FORCEINLINE const_reverse_iterator_type crend() const noexcept {
+	CCDK_FORCEINLINE const_reverse_iterator crend() const noexcept {
 		ccdk_assert(content&& len > 0);  
 		return { content-1 };
 	}
@@ -360,7 +361,7 @@ public:
 		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>> 
 	>
 	CCDK_FORCEINLINE this_type& insert(size_type pos, InputIt begin, InputIt end){
-		return insert(pos, begin, alg::distance(begin, end));
+		return insert(pos, begin, it::distance(begin, end));
 	}
 
 	/* insert, iterator range */
@@ -371,7 +372,7 @@ public:
 		typename = check_t< has_constructor<T, iterator_value_t<InputIt>>>
 	>
 		CCDK_FORCEINLINE this_type& insert(Iterator it, InputIt begin, InputIt end) {
-		return insert( it - content, begin, alg::distance(begin, end));
+		return insert( it - content, begin, it::distance(begin, end));
 	}
 
 	/* insert, pos initialize_list */
@@ -421,11 +422,7 @@ public:
 	}
 
 	/* clear, destruct all objects */
-	CCDK_FORCEINLINE this_type& clear(){
-		util::destruct_n(content, len);
-		len = 0;
-		return *this;
-	}
+	CCDK_FORCEINLINE this_type& clear() { destruct_content(); return *this; }
 
 	template<uint32 Times = 1, typename Pred>
 	CCDK_FORCEINLINE size_type find_index(Pred const& pred) noexcept {
@@ -456,12 +453,12 @@ public:
 	}
 
 	template<uint32 Times = 1, typename Pred>
-	CCDK_FORCEINLINE iterator_type find(Pred const& pred) noexcept {
+	CCDK_FORCEINLINE iterator find(Pred const& pred) noexcept {
 		return content + find_index<Times>(pred);
 	}
 	
 	template<uint32 Times = 1, typename Pred>
-	CCDK_FORCEINLINE const_iterator_type find(Pred const& pred) const noexcept {
+	CCDK_FORCEINLINE const_iterator find(Pred const& pred) const noexcept {
 		return content + find_index<Times>(pred);
 	}
 
@@ -474,6 +471,11 @@ private:
 	/* if len > 0 , destruct objects */
 	CCDK_FORCEINLINE void destruct_content() noexcept {
 		if (len > 0) { util::destruct_n(content, len); len = 0; }
+	}
+
+	CCDK_FORCEINLINE void deallocate() noexcept {
+		ccdk_assert((content && cap > 0) || (!content && cap == 0));
+		if(content) allocator_type::deallocate(*this, content, cap);
 	}
 
 	/* copy from [begin, begin+n) to content[0, n), destruct old objects  */
@@ -536,7 +538,7 @@ private:
 		split copy [content, content+pos) to [content,content+pos),
 		[content+pos, content+len) to [memory+pos+n, memory+len+n)
 	*/
-	CCDK_FORCEINLINE void split_copy(T* memory, size_type pos, size_type n) noexcept{
+	CCDK_FORCEINLINE void split_move(T* memory, size_type pos, size_type n) noexcept{
 		util::construct_move_n(memory, content, pos);
 		util::construct_move_n(memory + pos + n, content + pos, len - pos);
 	}
@@ -548,8 +550,7 @@ private:
 	void reallocate_move() {
 		ccdk_increase_allocate2(len, T* memory, size_type new_cap);
 		util::construct_move_n(memory, content, len);
-		util::destruct_n(content, len);
-		allocate_type::deallocate(*this, content, cap);
+		this->~this_type();
 		content = memory;
 		cap = new_cap;
 	}
@@ -570,10 +571,10 @@ private:
 			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_copy_n(memory + start, begin, n), /* may throw */
-				allocate_type::deallocate(*this,memory,new_cap)
+				allocator_type::deallocate(*this,memory,new_cap)
 			);
-			split_copy(memory, start, n);
-			allocate_type::deallocate(*this, content,cap);
+			split_move(memory, start, n);
+			allocator_type::deallocate(*this, content,cap);
 			content = memory;
 			cap = new_cap;
 		} else {
@@ -601,10 +602,10 @@ private:
 			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_n<T>(memory + start, n, util::forward<Args>(args)...),
-				allocate_type::deallocate(*this, memory, new_cap)
+				allocator_type::deallocate(*this, memory, new_cap)
 			);
-			split_copy(memory, start, n);
-			allocate_type::deallocate(*this, content, cap);
+			split_move(memory, start, n);
+			this->~this_type();
 			content = memory;
 			cap = new_cap;
 		} else {
@@ -616,6 +617,20 @@ private:
 		}
 		len = new_len;
 	}
+
+////////////////////////////////////////////////////////////////////////////////////
+//// debug
+public:
+
+	void debug_all(const char* str) const noexcept {
+		DebugValueItBegin(str);
+		for (uint32 i = 0; i < len; ++i) {
+			DebugValueIt(this->at(i));
+		}
+		DebugValueItEnd();
+	}
+
+
 };
 
 

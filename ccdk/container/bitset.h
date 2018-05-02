@@ -501,7 +501,6 @@ public:
 		for (uint32 i = 0; i < len; ++i) {
 			info[i] = this->at(i) ? '1' : '0';
 		}
-
 		DebugValue("fix_bit:", info);
 		delete[] info;
 	}

@@ -10,7 +10,7 @@ using namespace ccdk::ct;
 struct no_trivial {
 	int a = 0;
 
-	no_trivial() { DebugValue("no_trivial construct"); }
+	no_trivial() noexcept { DebugValue("no_trivial construct"); }
 	~no_trivial() { DebugValue("no_trivial destruct"); }
 };
 
@@ -27,27 +27,29 @@ struct implace_test {
 
 int main()
 {
-	int v = 0;
 	DebugNewTitle("empty constructor");
 	{
 		vector<int> ivec{}; 
 	}
 
 	DebugNewTitle(" fill constructor");
-	DebugSubTitle("fill trivial");
 	{
-		vector<int> ivec(10, 0);
+		DebugSubTitle("fill trivial");
+		{
+			vector<int> ivec(10, 0);
+		}
+
+		DebugSubTitle("fill trivial byte");
+		{
+			vector<char> ivec(10, '0');
+		}
+
+		DebugSubTitle("fill non-trivial");
+		{
+			vector<no_trivial> ivec{ 4 };
+		}
 	}
-		
-	DebugSubTitle("fill trivial byte");
-	{
-		vector<char> ivec(10, '0');
-	}
-		
-	DebugSubTitle("fill trivial");
-	{
-		vector<no_trivial> ivec(4);
-	}
+	
 	DebugNewTitle(" iterator constructor");
 	{
 		vector<int> ivec1(10, 2);
@@ -57,6 +59,8 @@ int main()
 		RuntimeAssertTrue(ivec2.capacity() == 3);
 		RuntimeAssertTrue(ivec3.size() == 3);
 		RuntimeAssertTrue(ivec3.capacity() == 6);
+		ivec2.debug_all("ivec2:");
+		ivec3.debug_all("ivec3:");
 	}
 	DebugNewTitle(" copy constructor");
 	{
@@ -65,6 +69,13 @@ int main()
 		vector<int> ivec3(util::move(ivec1));
 		vector<int, units::ratio<2, 1>> ivec4{ ivec2 };
 		vector<int, units::ratio<2, 1>> ivec5{ util::move(ivec2) };
+		RuntimeAssertTrue(ivec1.empty());
+		RuntimeAssertTrue(ivec2.empty());
+		ivec1.debug_all("ivec1:");
+		ivec2.debug_all("ivec2:");
+		ivec3.debug_all("ivec3:");
+		ivec4.debug_all("ivec4:");
+		ivec5.debug_all("ivec5:");
 	}
 	DebugNewTitle("swap");
 	{
@@ -72,9 +83,13 @@ int main()
 		vector<int> ivec2(10, 2);
 		RuntimeAssertTrue(ivec1[0] == 1);
 		RuntimeAssertTrue(ivec2[0] == 2);
+		ivec1.debug_all("ivec1:");
+		ivec2.debug_all("ivec2:");
 		util::swap(ivec1, ivec2);
 		RuntimeAssertTrue(ivec1[0] == 2);
 		RuntimeAssertTrue(ivec2[0] == 1);
+		ivec1.debug_all("ivec1:");
+		ivec2.debug_all("ivec2:");
 	}
 	DebugNewTitle("copy assign");
 	{
@@ -83,25 +98,30 @@ int main()
 			vector<int> ivec1(10, 1);
 			vector<int> ivec2(10, 2);
 			ivec2 = nullptr;
+			ivec2.debug_all("ivec2:");
 			ivec2 = ivec1;
+			ivec2.debug_all("ivec2:");
 		}
 		DebugSubTitle("template copy only");
 		{
 			vector<int> ivec1(10, 1);
 			vector<int, units::ratio<3,1>> ivec2(10, 2);
 			ivec1 = ivec2;
+			ivec1.debug_all("ivec1:");
 		}
 		DebugSubTitle("allocate copy");
 		{
 			vector<int> ivec1(3, 1);
 			vector<int> ivec2(10, 2);
 			ivec1 = ivec2;
+			ivec1.debug_all("ivec1:");
 		}
 		DebugSubTitle("template allocate only");
 		{
 			vector<int> ivec1(3, 1);
 			vector<int, units::ratio<3, 1>> ivec2(10, 2);
 			ivec1 = ivec2;
+			ivec1.debug_all("ivec1:");
 		}
 	}
 	DebugNewTitle("move assign");
@@ -111,12 +131,14 @@ int main()
 			vector<int> ivec1(10, 1);
 			vector<int> ivec2(10, 2);
 			ivec2 = util::move(ivec1);
+			RuntimeAssertTrue(ivec1.empty());
 		}
 		DebugSubTitle("template move only");
 		{
 			vector<int> ivec1(10, 1);
 			vector<int, units::ratio<3, 1>> ivec2(10, 2);
 			ivec1 = util::move(ivec2);
+			RuntimeAssertTrue(ivec2.empty());
 		}
 	}
 	DebugNewTitle("assign ");
@@ -128,6 +150,7 @@ int main()
 			.assign(ivec2.begin(), ivec2.size())
 			.assign(5,0)
 			.assign({ 1,2,3 });
+		ivec1.debug_all("assign:");
 	}
 	DebugNewTitle("attribute");
 	{
@@ -242,7 +265,6 @@ int main()
 			RuntimeAssertTrue(ivec1[0] == -1);
 			RuntimeAssertTrue(ivec1.size() == 9);
 		}
-		
 	}
 	DebugNewTitle("erase");
 	{
@@ -261,8 +283,15 @@ int main()
 		ivec1.clear();
 		RuntimeAssertTrue(ivec1.empty());
 	}
-	
+	DebugNewTitle("big insert");
+	{
+		vector<int> ivec{2};
+		for (uint32 i = 0; i < 3; ++i) {
+			ivec.insert(i,i);
+		}
+	}
 
+	_CrtDumpMemoryLeaks();
 	getchar();
 	return 0;
 }

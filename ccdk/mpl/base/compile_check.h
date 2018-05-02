@@ -11,8 +11,6 @@ using check = typename enable_if<B, void>::type;
 template<typename T>
 using check_t = check< T::value >;
 
-template<typename T>
-using always_true = mpl::true_;
 
 template<uint32 start, uint32 end>
 using check_range = typename enable_if< (end>start && start >= 0), void > ::type;

@@ -125,6 +125,22 @@ namespace ccdk {
 		std::cout << " *** " << t << std::endl;
 	}
 
+	template<typename T>
+	inline void DebugValueItBegin(T&& t)
+	{
+		std::cout << t << " ";
+	}
+
+	template<typename T>
+	inline void DebugValueIt(T&& t)
+	{
+		std::cout << t <<" ";
+	}
+
+	inline void DebugValueItEnd()
+	{
+		std::cout << std::endl;
+	}
 
 	template<typename T, typename P>
 	inline void DebugValue(T&& t, P&& p)

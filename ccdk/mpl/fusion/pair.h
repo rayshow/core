@@ -18,13 +18,17 @@ struct pair
 {
 	First  first;
 	Second second;
+
+	First& get_first() noexcept { return first; }
+	First const& get_first() const noexcept { return first; }
+
+	First& get_second() noexcept { return second; }
+	First const& get_second() const noexcept { return second; }
 };
 
 /* make normal pair */
 template<typename T1, typename T2>
 auto make_pair(T1&& t1, T2&& t2) { return pair<remove_ref_t<T1>, remove_ref_t<T2>>{t1, t2}; }
-
-
 
 /* index value pair */
 template<uint32 Key, typename T>
@@ -58,7 +62,6 @@ struct ipair
 	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
 	CCDK_FORCEINLINE void swap(ipair<Key2, T2>& other) { using namespace util; swap(value, other.value); }
 
-
 };
 
 
@@ -86,8 +89,6 @@ struct irpair
 	T& value;
 
 	CCDK_FORCEINLINE constexpr irpair(T&& u) : value{ u } { }
-
-
 };
 
 
@@ -216,5 +217,14 @@ struct rpair
 
 template<typename T1, typename T2>
 rpair<T1, T2> tie(T1& t1, T2& t2) { return { t1, t2 }; }
+
+
+struct get_first_t {
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
+		return p.get_first();
+	}
+};
+
 
 ccdk_namespace_mpl_fs_end

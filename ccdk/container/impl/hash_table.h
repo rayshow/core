@@ -4,6 +4,8 @@
 #include<ccdk/mpl/base/compatible_op.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/mpl/util/construct.h>
+#include<ccdk/mpl/util/hash.h>
+#include<ccdk/mpl/util/equals.h>
 #include<ccdk/mpl/function/prediction.h>
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/memory/allocator_traits.h>
@@ -110,11 +112,9 @@ template<
 	typename Key,                                 // key type
 	typename MappedType,                          // mapped type
 	typename T,                                   // compose type
+	typename ExactKeyFn,                          // exact key from T
 	typename MaxLoadFactor = units::ratio<1,2>,   // over 0.5 load factor will rehash 
-	typename HashFn = default_hash<T>,            // hash function obj
-	typename MapKeyFn = default_to_key<T>,        // get key from T function obj
-	typename KeyEqualFn = default_cmp<T>,         // key compare function obj
-	typename Size = uint32,                       // size_type  
+	typename Size = uint32,                       // size_type
 	typename Alloc = mem::simple_new_allocator<T>,
 >
 class hash_table: public Alloc
@@ -141,9 +141,7 @@ class hash_table: public Alloc
 	using const_iterator = hash_iterator<const T, node_type, bucket_container, size_type>;
 
 private:
-	static constexpr KeyEqualFn  KeyEqualFn{};
-	static constexpr MapKeyFn    MappingToKeyFn{};
-	static constexpr HashFn      HashFn{};
+	static constexpr ExactKeyFn    MappingToKeyFn{};
 
 	bucket_container buckets;      // buckets 
 	size_type        len;          // elements size
@@ -155,7 +153,7 @@ private:
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
-		return (size_type)HashFn(key) & (size_type)(kPrimeArray[mask_index] - 1);
+		return (size_type)util::hash(key) & (size_type)(kPrimeArray[mask_index] - 1);
 	}
 
 	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) noexcept { 
@@ -175,7 +173,7 @@ public:
 
 	//default and nullptr ctor
 	CCDK_FORCEINLINE hash_table() 
-		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, HashFn{}, mask_index{0} {}
+		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 	CCDK_FORCEINLINE hash_table(ptr::nullptr_t) 
 		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 
@@ -263,20 +261,23 @@ public:
 	CCDK_FORCEINLINE swap(this_type& other) noexcept {
 		buckets.swap(other.buckets);
 		util::swap(len, other.len);
-		util::swap(HashFn, other.HashFn);
 		util::swap(mask_index, other.mask_index);
 	}
 
 	//emplace construct with args at key
 	template<typename... Args>
 	CCDK_FORCEINLINE auto emplace(Key const& key, Args&&... args) {
-		return emplace_at(  key,
+		return emplace_at( key,
 			new_node(util::forward<Args>(args)...));
 	}
 
 	// insert a element
-	CCDK_FORCEINLINE auto insert(T const& t) { return emplace(MappingToKeyFn(t), t);}
-	CCDK_FORCEINLINE auto insert(T && t) { return emplace(MappingToKeyFn(t), util::forward(t)); }
+	CCDK_FORCEINLINE auto insert(T const& t) { 
+		return emplace(MappingToKeyFn(t), t);
+	}
+	CCDK_FORCEINLINE auto insert(T && t) { 
+		return emplace(MappingToKeyFn(t), util::forward(t)); 
+	}
 	// insert range-n
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>> >
 	CCDK_FORCEINLINE auto insert(InputIt begin, size_type n) {
@@ -422,7 +423,7 @@ private:
 		if (head) {
 			link_type prev = nullptr;
 			link_type node = head;
-			while (node && !KeyEqualFn( key, KeyOfLink(node))) {
+			while (node && !util::equals( key, KeyOfLink(node))) {
 				prev = node;
 				node = node->next;
 			}
@@ -442,7 +443,7 @@ private:
 		link_type head = buckets.at(index);
 		link_type prev = nullptr;
 		link_type it = head;
-		for (; it && !KeyEqualFn(KeyOfLink(it), key); prev = it, it = it->next  );
+		for (; it && !util::equals(KeyOfLink(it), key); prev = it, it = it->next  );
 		if (it == nullptr) prev = nullptr;
 		return { index, prev };
 	}
@@ -451,7 +452,7 @@ private:
 		find_node(Key const& key) noexcept {
 		size_type index = bucket_idx(key);
 		link_type it = buckets.at(index);
-		while (it && !KeyEqualFn(KeyOfLink(it), key)) {
+		while (it && !util::equals(KeyOfLink(it), key)) {
 			it = it->next;
 		}
 		if (!it) index = buckets.size();
@@ -466,11 +467,12 @@ private:
 
 		//need rehash 
 		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
-			rehash(MaxLoadFactor::div_as_factor(bucket_size()) + 1);
+			rehash(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
 		}
 
-		//find key if exist
+		//find key 
 		auto p = find_node(key);
+
 		if (p.second) {
 			return { {buckets, p.first, p.second }, false };
 		}
