@@ -2,6 +2,7 @@
 #include<ccdk/container/vector.h>
 //#include<ccdk/container/slist_node.h>
 #include<stdio.h>
+#include<string>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
@@ -11,13 +12,31 @@ struct no_trivial {
 	int a = 0;
 
 	no_trivial() noexcept { DebugValue("no_trivial construct"); }
+
 	~no_trivial() { DebugValue("no_trivial destruct"); }
 };
 
 struct implace_test {
+public:
 	int a;
 	float b;
 
+	implace_test(implace_test const& t) : a{ t.a }, b{ t.b } {
+		DebugValue("implace_test copy construct");
+	}
+
+	implace_test(implace_test && t) : a{ t.a }, b{ t.b } {
+		DebugValue("implace_test move construct");
+	}
+
+	void operator=(implace_test&& t) {
+		a = t.a;
+		b = t.b;
+		DebugValue("implace_test assign &&");
+	}
+	void operator=(implace_test const&) {
+		DebugValue("implace_test assign const&");
+	}
 	implace_test() :a{}, b{} { DebugValue("no-parameter constructor "); }
 	implace_test(int a, float b) :a{ a }, b{ b } {
 		DebugValue("parameter constructor ");
@@ -25,11 +44,53 @@ struct implace_test {
 };
 
 
+struct leak_test {
+public:
+	int * a;
+
+	~leak_test(){ if (a) delete a; }
+
+	operator int() {
+		return *a;
+	}
+
+
+	leak_test(leak_test const& t) : a{ new int  } {
+		*a = *t.a;
+		DebugValue("implace_test copy construct");
+	}
+
+	leak_test(leak_test && t) : a{ t.a } {
+		t.a = nullptr;
+		DebugValue("implace_test move construct");
+	}
+
+	void operator=(leak_test&& t) {
+		this->~leak_test();
+		a = t.a;
+		t.a = nullptr;
+		DebugValue("implace_test assign &&");
+	}
+	void operator=(leak_test const& t) {
+		*a = *t.a;
+		DebugValue("implace_test assign const&");
+	}
+	leak_test() :a{ new int } { *a = 0; DebugValue("no-parameter constructor "); }
+	leak_test(int b) :a{ new int } {
+		*a = b;
+		DebugValue("parameter constructor ");
+	}
+};
+
+
+
+
 int main()
 {
 	DebugNewTitle("empty constructor");
 	{
 		vector<int> ivec{}; 
+		vector<std::string> svec{};
 	}
 
 	DebugNewTitle(" fill constructor");
@@ -47,6 +108,7 @@ int main()
 		DebugSubTitle("fill non-trivial");
 		{
 			vector<no_trivial> ivec{ 4 };
+			vector<std::string> svec{ 10, "hello" };
 		}
 	}
 	
@@ -56,11 +118,16 @@ int main()
 		vector<int, units::uniform> ivec2(ivec1.begin(), ivec1.begin() + 3);
 		vector<int, units::ratio<2,1>> ivec3(ivec1.begin(), ivec1.begin() + 3);
 		RuntimeAssertTrue(ivec2.size() == 3);
-		RuntimeAssertTrue(ivec2.capacity() == 3);
+		RuntimeAssertTrue(ivec2.capacity() == ivec2.kLeastElements);
 		RuntimeAssertTrue(ivec3.size() == 3);
-		RuntimeAssertTrue(ivec3.capacity() == 6);
+		RuntimeAssertTrue(ivec3.capacity() == ivec3.kLeastElements);
 		ivec2.debug_all("ivec2:");
 		ivec3.debug_all("ivec3:");
+
+		vector<std::string> svec1{ 10, "hello" };
+		vector<std::string, units::ratio<3, 1>> svec2{ svec1.begin(), svec1.end() };
+		svec2.debug_all("string range:");
+
 	}
 	DebugNewTitle(" copy constructor");
 	{
@@ -145,8 +212,7 @@ int main()
 	{
 		vector<int> ivec1(10, 1);
 		vector<int> ivec2(10, 1);
-		ivec1.assign(nullptr)
-			.assign(ivec2.begin(), ivec2.end())
+		ivec1.assign(ivec2.begin(), ivec2.end())
 			.assign(ivec2.begin(), ivec2.size())
 			.assign(5,0)
 			.assign({ 1,2,3 });
@@ -205,10 +271,23 @@ int main()
 	}
 	DebugNewTitle("implace back")
 	{
-		vector<implace_test> vec{ 4 };
-		vec.emplace_back(2, 3.5f);
-		vec.emplace_back(3, 4.5f);
-		vec.emplace_back(4, 5.5f);
+		implace_test a{2,3};
+
+		vector<implace_test> vec{ 4, implace_test{5,6.f} };
+		vec.insert(0, a);
+		for (auto& it : vec)
+		{
+			DebugValue(it.a, it.b);
+		}
+		vec.insert(0, a);
+		for (auto& it : vec)
+		{
+			DebugValue(it.a, it.b);
+		}
+		vec.insert(0, a);
+	/*	for (uint32 i = 0; i < 3; ++i) {
+			vec.emplace_back(i, i+ .5f);
+		}*/
 		//vec.emplace_back(5, "cc");
 		for (auto& it : vec)
 		{
@@ -245,11 +324,13 @@ int main()
 			vector<int> ivec1(3, 2);
 			vector<int> ivec2(3, 1);
 			ivec1.insert(ivec1.begin() + 1, ivec2.begin(), ivec2.end());
+			ivec1.debug_all("after insert:");
 			RuntimeAssertTrue(ivec1[0] == 2);
 			RuntimeAssertTrue(ivec1[1] == 1);
 			RuntimeAssertTrue(ivec1[3] == 1);
 			RuntimeAssertTrue(ivec1[4] == 2);
 			RuntimeAssertTrue(ivec1.size()== 6);
+			
 		}
 		DebugSubTitle("pos range");
 		{
@@ -283,14 +364,43 @@ int main()
 		ivec1.clear();
 		RuntimeAssertTrue(ivec1.empty());
 	}
-	DebugNewTitle("big insert");
+	DebugNewTitle("big push back");
 	{
-		vector<int> ivec{2};
-		for (uint32 i = 0; i < 3; ++i) {
-			ivec.insert(i,i);
-		}
+		vector<leak_test> ivec{};
+		for (uint32 i = 0; i < 9; ++i) {
+			ivec.emplace(0,i);
+			for (auto& i : ivec) {
+				DebugValueIt(*i.a);
+			}
+		} 
+		DebugValue(ivec.size());	
 	}
-
+	/*DebugNewTitle("big push back 2");
+	{
+		vector<std::string> ivec{};
+		char str[10];
+		for (uint32 i = 0; i < 300; ++i) {
+			sprintf_s(str, "%d", i);
+			ivec.emplace(0, str);
+		}
+		DebugValue(ivec.size());
+		ivec.debug_all("big insert");
+	}*/
+	DebugNewTitle("big push back 3");
+	{
+		vector<std::string> ivec{};
+		char str[10];
+		for (uint32 i = 0; i < 20; ++i) {
+			sprintf_s(str, "%d", i);
+			vector<std::string> ivec2{ 2,str };
+			ivec.insert(0, ivec2.begin(), ivec2.end());
+		}
+		DebugValue(ivec.size());
+		ivec.erase(10, 30);
+		DebugValue(ivec.size());
+		ivec.debug_all("big insert");
+	}
+	
 	_CrtDumpMemoryLeaks();
 	getchar();
 	return 0;

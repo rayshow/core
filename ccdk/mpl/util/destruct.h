@@ -54,6 +54,7 @@ CCDK_FORCEINLINE static void destruct_range(InputIt begin, InputIt end) noexcept
 template<typename InputIt, typename Source = iterator_value_t<InputIt> >
 CCDK_FORCEINLINE static void destruct_n(InputIt begin, ptr::size_t n) noexcept
 {
+	if (n == 0) return;
 	ut_impl::destruct_n_impl(begin, n, typename has_trivial_destructor<Source>::type{});
 }
 

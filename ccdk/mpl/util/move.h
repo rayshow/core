@@ -92,8 +92,16 @@ template<typename T,
 CCDK_FORCEINLINE void move_n(T* dest, const T* src, ptr::size_t n)
 {
 	if (ccdk_unlikely(n == 0 || dest == src)) return;
-	if (dest > src) {  for (ptr::size_t i = n - 1; i != 0; --i)  { *(dest + i) = fmove(*(src + i)); }  }
-	else if (dest < src) { for (ptr::size_t i = 0; i < n; ++i) { *(dest + i) = fmove(*(src + i)); } }
+	if (dest > src) {  
+		for (ptr::diff_t i = n - 1; i >= 0; --i)  { 
+			*(dest + i) = fmove(*(src + i));
+		}  
+	}
+	else if (dest < src) { 
+		for (ptr::diff_t i = 0; i < n; ++i) {
+			*(dest + i) = fmove(*(src + i));
+		} 
+	}
 }
 
 

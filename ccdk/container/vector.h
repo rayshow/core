@@ -24,7 +24,7 @@ using namespace ccdk::mpl;
 
 template<
 	typename T,
-	typename InceaseRatio = units::ratio<15, 10>,             /* 1.5X incease ratio*/
+	typename InceaseRatio = units::ratio<2, 1>,             /* 2X incease ratio*/
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T>
 >
@@ -32,11 +32,16 @@ class vector : protected Alloc
 {
 public:
 	using this_type      = vector;
-	using value_type     = T;
-	using size_type      = Size;
-	using different_type = ptr::diff_t;
 	using increase_ratio = InceaseRatio;
-	using allocator_type = mem::allocator_traits<Alloc> ;
+	
+	using value_type = T;
+	using pointer = T * ;
+	using const_pointer = T const*;
+	using reference = T & ;
+	using const_reference = T const&;
+	using size_type = Size;
+	using different_type = ptr::diff_t;
+	using allocator_type = mem::allocator_traits<Alloc>;
 
 	/* iterator */
 	using iterator               = T*;
@@ -46,8 +51,10 @@ public:
 	
 	template<typename T2, typename Ratio2, typename Size2, typename Alloc2>
 	friend class vector;
+	constexpr static uint32 kLeastElements = 10;
 
 private:
+	
 	T *       content;
 	size_type len;
 	size_type cap;
@@ -132,38 +139,37 @@ public:
 
 	/* copy assign */
 	CCDK_FORCEINLINE this_type& operator=(vector const& other) {
-		ccdk_if_not_this(other) { copy_or_allocate_copy(other.content, other.len); }	
+		ccdk_if_not_this(other) { reallocate_copy(other.content, other.len); }	
 		return *this;
 	}
 
 	/* template copy assign */
 	template<typename Size2, typename Alloc2, typename Ratio2>
 	CCDK_FORCEINLINE this_type& operator=(vector<T, Ratio2, Size2, Alloc2> const& other) {
-		copy_or_allocate_copy(other.content, other.len);
+		reallocate_copy(other.content, other.len);
 		return *this;
 	}
 
 	/* move assign */
 	CCDK_FORCEINLINE this_type& operator=(vector && other) {
-		ccdk_if_not_this(other) { vector{ util::move(other) }.swap(*this); }
+		this->~this_type();
+		rvalue_set(other.content, other.len, other.cap);
+		other.rvalue_reset();
 		return *this;
 	}
 
 	/* template move assign */
 	template<typename Size2, typename Alloc2, typename Ratio2>
 	CCDK_FORCEINLINE this_type& operator=(vector<T, Ratio2, Size2, Alloc2> && other) {
-		vector{ util::move(other) }.swap(*this);
+		this->~this_type();
+		rvalue_set(other.content, other.len, other.cap);
+		other.rvalue_reset();
 		return *this;
-	}
-
-	/* assign nullptr */
-	CCDK_FORCEINLINE this_type& assign(ptr::nullptr_t) noexcept { 
-		return (*this = nullptr);
 	}
 
 	/* fill with nxt */
 	CCDK_FORCEINLINE this_type& assign(size_type n, T const& t = T() ) {
-		fill_or_allocate_fill(t, n);
+		reallocate_fill(t, n);
 		return *this;
 	}
 
@@ -172,7 +178,7 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE this_type& assign(InputIt begin, ptr::size_t n){
-		copy_or_allocate_copy(begin, n);
+		reallocate_copy(begin, n);
 		return *this;
 	}
 
@@ -240,8 +246,12 @@ public:
 	CCDK_FORCEINLINE T& front() noexcept { return content[0]; }
 	CCDK_FORCEINLINE T const& front() const noexcept { return content[0]; }
 	
+	// last elements
 	CCDK_FORCEINLINE T& back() noexcept { return content[len-1]; }
 	CCDK_FORCEINLINE T const& back() const noexcept { return content[len-1]; }
+	// last n-th elements 
+	CCDK_FORCEINLINE T& back(size_type n) noexcept { return content[len - 1 - n]; }
+	CCDK_FORCEINLINE T const& back(size_type n) const noexcept{ return content[len - 1 - n]; }
 	
 	CCDK_FORCEINLINE T* data() noexcept { return content; }
 	CCDK_FORCEINLINE T const* data() const noexcept { return content; }
@@ -251,6 +261,17 @@ public:
 		if (len > 0) { util::destruct<T>(content + --len); }
 		return *this;
 	}
+
+	// pop last n-elements 
+	CCDK_FORCEINLINE this_type pop_back(size_type n) noexcept {
+		ccdk_assert(n < len && n>0);
+		if (n > 0 && n < len) { 
+			util::destruct_n(content + len - n, n);
+			len -= n; 
+		}
+		return *this;
+	}
+
 
 	/* inplace construct with P, Args... */
 	template<
@@ -295,24 +316,24 @@ public:
 
 	/* inplace-construct at pos( [0,len] ) */
 	template< 
-		typename P, typename... Args,
-		typename = check_t< has_constructor<T, P, Args...>>
+		typename... Args,
+		typename = check_t< has_constructor<T, Args...>>
 	>
-	CCDK_FORCEINLINE this_type& emplace(size_type pos, P&& p, Args&&... args) {
+	CCDK_FORCEINLINE this_type& emplace(size_type pos, Args&&... args) {
 		ccdk_assert(pos <= len);
-		if (pos <= len) { emplace_impl(pos, pos + 1, util::forward<P>(p), util::forward<Args>(args)...); }
+		if (pos <= len) { emplace_impl(pos, pos + 1, util::forward<Args>(args)...); }
 		return *this;
 	}
 
 	/* inplace-construct at pos( [0,len] ) */
 	template<
 		typename Iterator,
-		typename P,  typename... Args,
+		typename... Args,
 		typename = check_t<is_pointer_iterator<T, Iterator> >, // exclude comflict with size_type
-		typename = check_t< has_constructor<T, P, Args...>>
+		typename = check_t< has_constructor<T, Args...>>
 	>
-	CCDK_FORCEINLINE this_type& emplace(Iterator it, P&& p, Args&&... args) {
-		return emplace(it - content, util::forward<P>(p), util::forward<Args>(args)...);
+	CCDK_FORCEINLINE this_type& emplace(Iterator it, Args&&... args) {
+		return emplace(it - content, util::forward<Args>(args)...);
 	}
 
 	/* insert, pos copy */
@@ -395,8 +416,8 @@ public:
 		ccdk_assert(start < end && end <= len);
 		size_type n = end - start;
 		if (n>0 && end <= len) {
-			util::move_n(content + start, content + end, n);
-			util::destruct_n(content + end, len - end);
+			util::move_n(content + start, content + end, len-end);
+			util::destruct_n(content + len-n, n);
 			len -= n;
 		}
 		return *this;
@@ -463,53 +484,39 @@ public:
 	}
 
 private:
-	/* reset but not destruct memory */
+	// reset but not deallocate memory 
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
 		content = nullptr; len = 0;  cap = 0;
 	}
 
-	/* if len > 0 , destruct objects */
+	// set but not allocate 
+	CCDK_FORCEINLINE void rvalue_set(pointer otherContent,
+		size_type otherLen, size_type otherCap) noexcept {
+		content = otherContent;
+		len = otherLen;
+		cap = otherCap;
+	}
+
+	// if len > 0 , destruct objects 
 	CCDK_FORCEINLINE void destruct_content() noexcept {
 		if (len > 0) { util::destruct_n(content, len); len = 0; }
 	}
 
+	//locally allocate n-elements
+	CCDK_FORCEINLINE void allocate(size_type n) {
+		ccdk_increase_allocate3(n, content, cap, len);
+	}
+
+	//locally reallocate n-elements
+	CCDK_FORCEINLINE void reallocate(size_type n) {
+		this->~this_type();
+		allocate(n);
+	}
+
+	//recycle memory
 	CCDK_FORCEINLINE void deallocate() noexcept {
 		ccdk_assert((content && cap > 0) || (!content && cap == 0));
-		if(content) allocator_type::deallocate(*this, content, cap);
-	}
-
-	/* copy from [begin, begin+n) to content[0, n), destruct old objects  */
-	template<typename InputIt>
-	CCDK_FORCEINLINE void range_copy(InputIt begin, size_type n) {
-		destruct_content();
-		util::construct_copy_n(content, begin, n);
-		len = n;
-	}
-
-	/* copy from [begin, begin+n) to content[0, n), destruct old objects  */
-	CCDK_FORCEINLINE void range_fill(T const& t, size_type n) {
-		destruct_content();
-		util::construct_fill_n(content, t, n);
-		len = n;
-	}
-
-	/*
-		if content big enough to hold n elements, just copy [begin, begin+n) to it
-		else allocate new big enough memory and swap with it
-	*/
-	template<typename InputIt>
-	CCDK_FORCEINLINE void copy_or_allocate_copy(InputIt begin, size_type n) {
-		if (n <= cap) range_copy(begin, n);
-		else vector{ begin, n }.swap(*this);
-	}
-
-	/*
-		if content big enough to hold n elements, just fill it
-		else allocate new big enough memory and swap with it
-	*/
-	CCDK_FORCEINLINE void fill_or_allocate_fill(T const& t, size_type n) {
-		if (n <= cap) range_fill(t, n); 
-		else vector{ n,t }.swap(*this); 
+		if(content && cap>0 ) allocator_type::deallocate(*this, content, cap);
 	}
 
 	/*
@@ -518,7 +525,7 @@ private:
 	*/
 	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& v ) {
 		if (n == 0) return;
-		ccdk_increase_allocate3(n,content, cap, len);
+		allocate(n);
 		util::construct_fill_n(content, v, n);
 	}
 
@@ -529,10 +536,52 @@ private:
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(size_type n, InputIt begin){
 		if (n == 0) return;
-		ccdk_increase_allocate3(n, content, cap, len);
+		allocate(n);
 		util::construct_copy_n(content, begin, n);
 	}
 
+	/*
+		if content big enough to hold n elements, just copy [begin, begin+n) to it
+		else reallocate new big enough memory and copy
+	*/
+	template<typename InputIt>
+	CCDK_FORCEINLINE void reallocate_copy(InputIt begin, size_type n) {
+		if (!content || n > cap) {
+			reallocate(n);
+		}
+		destruct_content();
+		util::construct_copy_n(content, begin, n);
+		len = n;
+	}
+
+	/*
+		if content big enough to hold n elements, just fill it
+		else allocate new big enough memory and fill
+	*/
+	CCDK_FORCEINLINE void reallocate_fill(T const& t, size_type n) {
+		if (!content || n > cap) {
+			reallocate(n);
+		}
+		else {
+			destruct_content();
+		}
+		util::construct_fill_n(content, t, n);
+		len = n;
+	}
+
+	/*
+		allocate a new memory, if success
+		move [content, content+n) to this [memory, memory+n), free old content
+	*/
+	CCDK_FORCEINLINE void reallocate_move() {
+		ccdk_increase_allocate3(len, T* memory,
+			size_type new_cap, size_type new_len);
+		util::construct_move_n(memory, content, len);
+		this->~this_type();
+		content = memory;
+		cap = new_cap;
+		len = new_len;
+	}
 
 	/*  
 		split copy [content, content+pos) to [content,content+pos),
@@ -541,18 +590,6 @@ private:
 	CCDK_FORCEINLINE void split_move(T* memory, size_type pos, size_type n) noexcept{
 		util::construct_move_n(memory, content, pos);
 		util::construct_move_n(memory + pos + n, content + pos, len - pos);
-	}
-
-	/*
-		allocate a new memory, if success 
-		move [content, content+n) to this [memory, memory+n), free old content
-	*/
-	void reallocate_move() {
-		ccdk_increase_allocate2(len, T* memory, size_type new_cap);
-		util::construct_move_n(memory, content, len);
-		this->~this_type();
-		content = memory;
-		cap = new_cap;
 	}
 
 	/* 
@@ -572,16 +609,22 @@ private:
 			ccdk_safe_cleanup_if_exception(
 				util::construct_copy_n(memory + start, begin, n), /* may throw */
 				allocator_type::deallocate(*this,memory,new_cap)
-			);
+			); 
 			split_move(memory, start, n);
-			allocator_type::deallocate(*this, content,cap);
+			this->~this_type();
 			content = memory;
 			cap = new_cap;
 		} else {
-			size_type max_end = fn::max(end, len);
-			util::construct_move_n(content + max_end, content + max_end - n, n);
-			if (end<len) util::move_n(content + end, content + start, len - end);
-			util::destruct_n(content + start, fn::min(end, len) - start);
+			//insert inner [0, start, end, len)
+			if (end < len) {
+				util::construct_move_n(content + len, content + len - n, n);
+				util::move_n(content + end, content + start, len - end);
+			}
+			// insert like [0, start, len, end) or [0, start=len, end)
+			else  {
+				util::construct_move_n(content + len, content + start, len - start);
+			}
+			util::destruct_n(content + start, n);
 			util::construct_copy_n(content + start, begin, n);
 		}
 		len = new_len;
@@ -599,7 +642,7 @@ private:
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap){
-			ccdk_increase_allocate2(new_len, T* memory, size_type new_cap);
+			ccdk_increase_allocate2(new_len,T* memory, size_type new_cap);
 			ccdk_safe_cleanup_if_exception(
 				util::construct_n<T>(memory + start, n, util::forward<Args>(args)...),
 				allocator_type::deallocate(*this, memory, new_cap)
@@ -609,11 +652,17 @@ private:
 			content = memory;
 			cap = new_cap;
 		} else {
-			size_type max_end = fn::max(end, len);
-			util::construct_move_n(content + max_end, content + max_end - n, n);
-			if (end<len) util::move_n(content + end, content + start, len - end);
-			util::destruct_n(content + start, fn::min(end, len) - start);
-			util::construct_n<T>(content + start, n, util::forward<Args>(args)...);
+			//insert inner [0, start, end, len)
+			if (end < len) {
+				util::construct_move_n(content + len, content + len - n, n);
+				util::move_n(content + end, content + start, len - end);
+			}
+			// insert like [0, start, len, end) or [0, start=len, end)
+			else {
+				util::construct_move_n(content + len, content + start, len - start);
+			}
+			util::destruct<T>(content + start);
+			util::construct_n<T>(content+start, n, util::forward<Args>(args)...);
 		}
 		len = new_len;
 	}

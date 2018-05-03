@@ -240,8 +240,6 @@ namespace ut_impl
 	ForwardIt construct_fill_n_impl(ForwardIt begin, T const& t, ptr::size_t n, opt_lv1)
 	{
 		DebugValue(" uninitalized-n iterator fill");
-		DebugTypeName<ForwardIt>();
-		DebugTypeName<T>();
 		ForwardIt it = begin;
 		try { for (ptr::size_t c = 0; c < n; ++c, ++it)  construct< Dest >(it, t); }
 		catch (...) { destruct_range(begin, it); throw; }
