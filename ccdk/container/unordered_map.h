@@ -10,7 +10,6 @@
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/memory/list_allocate_adapter.h>
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/container/impl/hash_table.h>
 
@@ -27,37 +26,31 @@ template<
 	typename HashContainer = hash_table<
 		Key, Value, fs::pair<Key,Value>, MaxLoadFactor, fs::get_first_t, Size, Alloc>
 >
-class unordered_map: HashContainer
+class unordered_map: public HashContainer
 {
 public:
-	using this_type = unordered_map;
-	using super_type = HashContainer;
-	using key_type = typename super_type::key_type;
-	using mapped_type = typename super_type::mapped_type;
-	using value_type = typename super_type::value_type;
-	using pointer = typename super_type::pointer;
-	using const_pointer = typename super_type::const_pointer;
-	using reference = typename super_type::reference;
+	using this_type       = unordered_map;
+	using super_type      = HashContainer;
+	using key_type        = typename super_type::key_type;
+	using mapped_type     = typename super_type::mapped_type;
+	using value_type      = typename super_type::value_type;
+	using pointer         = typename super_type::pointer;
+	using const_pointer   = typename super_type::const_pointer;
+	using reference       = typename super_type::reference;
 	using const_reference = typename super_type::const_reference;
 
 	using iterator = typename super_type::iterator;
 	using const_iterator = typename super_type::const_iterator;
 
 	//defualt and nullptr
-	unordered_map() noexcept :super_type{}  {}
-	unordered_map(ptr::size_t) noexcept : super_type{ nullptr } {}
-
+	using super_type::super_type;
 	using super_type::operator=;
 	using super_type::swap;
 	using super_type::insert;
 	using super_type::erase;
 	using super_type::find;
-	using super_type::lower_bound;
-	using super_type::upper_bound;
-	using super_type::equal_range;
 	using super_type::size;
 	using super_type::empty;
-
 };
 
 ccdk_namespace_ct_end

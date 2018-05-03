@@ -13,30 +13,10 @@
 
 #include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/vector.h>
-#include<ccdk/container/lazy_slist.h>
 
 ccdk_namespace_ct_start
 
 using namespace mpl;
-
-// just call util::cmp
-
-template<typename T>
-struct default_cmp {
-
-};
-
-template<typename T>
-struct default_to_key {
-	
-};
-
-template<typename T>
-struct default_hash {
-	CCDK_FORCEINLINE operator()() {
-		
-	}
-};
 
 constexpr static uint32 kNumPrime = 28;
 constexpr static uint64 kPrimeArray[kNumPrime] =
@@ -61,7 +41,7 @@ template<
 	typename T,
 	typename Node,
 	typename Container,
-	typename Size,
+	typename Size
 >
 struct hash_iterator
 {
@@ -116,17 +96,20 @@ template<
 	typename MaxLoadFactor = units::ratio<1,2>,   // over 0.5 load factor will rehash 
 	typename Size = uint32,                       // size_type
 	typename Alloc = mem::simple_new_allocator<T>,
+	typename Node = forward_node<T>
 >
-class hash_table: public Alloc
+class hash_table: public Alloc::template rebind<Node>
 {
-	using this_type        = hash_table;
-	using key_type         = Key;
-	using node_type        = forward_node<T>;
-	using link_type        = node_type * ;
-	using mapped_type      = MappedType;
-	using bucket_container = vector<link_type, units::ratio<1, 1>, 
-		Size, typename Alloc::rebind<link_type>>;
-	using allocator_type   = allocator_traits<Alloc>;
+public:
+	using this_type = hash_table;
+	using key_type = Key;
+	using node_type = Node;
+	using link_type = node_type * ;
+	using mapped_type = MappedType;
+	using bucket_container = vector<link_type, units::ratio<1,1>, Size,
+		typename Alloc::template rebind<link_type> >;
+	using node_allocator_type = mem::allocator_traits<
+		typename Alloc::template rebind<node_type>>;
 
 	using value_type      = T;
 	using pointer         = T * ;
@@ -258,7 +241,7 @@ public:
 	}
 
 	//swap with other hash table
-	CCDK_FORCEINLINE swap(this_type& other) noexcept {
+	CCDK_FORCEINLINE void swap(this_type& other) noexcept {
 		buckets.swap(other.buckets);
 		util::swap(len, other.len);
 		util::swap(mask_index, other.mask_index);
@@ -276,7 +259,7 @@ public:
 		return emplace(MappingToKeyFn(t), t);
 	}
 	CCDK_FORCEINLINE auto insert(T && t) { 
-		return emplace(MappingToKeyFn(t), util::forward(t)); 
+		return emplace(MappingToKeyFn(t), util::move(t)); 
 	}
 	// insert range-n
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>> >
@@ -312,9 +295,9 @@ public:
 	}
 
 	//erase range
-	CCDK_FORCEINLINE iterator erase(const_iterator begin, const_iterator end) noexcept {
+	iterator erase(const_iterator begin, const_iterator end) noexcept {
 		size_type index = begin.index;
-		for (const_iterator it = begin, it != end; 
+		for (const_iterator it = begin; it != end; 
 			it = { buckets, index, buckets.at(index) } ) {
 			//erase total list_list between [it.node, end)
 			link_type end_node = nullptr;
@@ -326,10 +309,10 @@ public:
 	}
 
 	//erase total list and set all head to null
-	CCDK_FORCEINLINE void clear() noexcept { 
+	void clear() noexcept { 
 		size_type last_index = buckets.size() - 1;
 		for (size_type i = 0; i <= last_index; 
-			i = buckets.find_index(i, fn::not_null))  {
+			i = buckets.find_index(fn::not_null, i))  {
 			erase_list_all(i);
 		}
 		len = 0;
@@ -397,13 +380,13 @@ public:
 //// implements 
 private:
 	CCDK_FORCEINLINE link_type find_head(Key const& key) noexcept {
-		return buckets.at(bucket_idx(key))£»
+		return buckets.at(bucket_idx(key));
 	}
 
 	// locally construct a T
 	template<typename... Args>
 	CCDK_FORCEINLINE link_type new_node(Args&& ... args) {
-		link_type node = allocator_type::allocate(*this, 1);
+		link_type node = node_allocator_type::allocate(*this, 1);
 		util::construct<T>(node, util::forward<Args>(args)...);
 		return node;
 	}
@@ -411,7 +394,7 @@ private:
 	// destruct node and deallocate it's memory
 	CCDK_FORCEINLINE void destroy_node(link_type node) noexcept {
 		util::destruct<T>(node);
-		allocator_type::deallocate(*this, 1, node);
+		node_allocator_type::deallocate(*this, node, 1);
 	}
 
 	//erase node at bucket[index] 
@@ -463,7 +446,7 @@ private:
 	// locally add a T with index
 	template<typename... Args>
 	CCDK_FORCEINLINE fs::pair<iterator, bool> 
-	emplace_at(key const& key, Args&& ... args) {
+	emplace_at(key_type const& key, Args&& ... args) {
 
 		//need rehash 
 		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {

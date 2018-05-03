@@ -44,13 +44,13 @@ struct reverse_iterator
 };
 
 
-template<typename It>
-CCDK_FORCEINLINE bool operator==(reverse_iterator<It> const& lhs, It const& rhs) noexcept {
+template<typename It, typename RawIt = remove_const_t<It>>
+CCDK_FORCEINLINE bool operator==(reverse_iterator<It> const& lhs, RawIt const& rhs) noexcept {
 	return lhs.it == rhs;
 }
 
-template<typename It>
-CCDK_FORCEINLINE bool operator==(It const& lhs, reverse_iterator<It> const& rhs) noexcept {
+template<typename It, typename RawIt = remove_const_t<It>>
+CCDK_FORCEINLINE bool operator==(RawIt const& lhs, reverse_iterator<It> const& rhs) noexcept {
 	return rhs.it == lhs;
 }
 

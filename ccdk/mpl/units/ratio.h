@@ -118,7 +118,7 @@ typedef ratio<1, 1000000> micro;
 typedef ratio<1, 1000> milli;
 typedef ratio<1, 100> centi;
 typedef ratio<1, 10> deci;
-typedef ratio<1, 1> uniform;
+typedef ratio<1, 1> identity;
 typedef ratio<10, 1> deca;
 typedef ratio<100, 1> hecto;
 typedef ratio<1000, 1> kilo;

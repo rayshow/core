@@ -1,6 +1,6 @@
 
 #include<ccdk/container/vector.h>
-//#include<ccdk/container/slist_node.h>
+#include<ccdk/mpl/function/prediction.h>
 #include<stdio.h>
 #include<string>
 
@@ -98,24 +98,26 @@ int main()
 		DebugSubTitle("fill trivial");
 		{
 			vector<int> ivec(10, 0);
+			ivec.debug_all();
 		}
 
 		DebugSubTitle("fill trivial byte");
 		{
 			vector<char> ivec(10, '0');
+			ivec.debug_all();
 		}
 
 		DebugSubTitle("fill non-trivial");
 		{
-			vector<no_trivial> ivec{ 4 };
 			vector<std::string> svec{ 10, "hello" };
+			svec.debug_all();
 		}
 	}
 	
 	DebugNewTitle(" iterator constructor");
 	{
 		vector<int> ivec1(10, 2);
-		vector<int, units::uniform> ivec2(ivec1.begin(), ivec1.begin() + 3);
+		vector<int, units::identity> ivec2(ivec1.begin(), ivec1.begin() + 3);
 		vector<int, units::ratio<2,1>> ivec3(ivec1.begin(), ivec1.begin() + 3);
 		RuntimeAssertTrue(ivec2.size() == 3);
 		RuntimeAssertTrue(ivec2.capacity() == ivec2.kLeastElements);
@@ -124,12 +126,13 @@ int main()
 		ivec2.debug_all("ivec2:");
 		ivec3.debug_all("ivec3:");
 
+
 		vector<std::string> svec1{ 10, "hello" };
 		vector<std::string, units::ratio<3, 1>> svec2{ svec1.begin(), svec1.end() };
 		svec2.debug_all("string range:");
 
 	}
-	DebugNewTitle(" copy constructor");
+	DebugNewTitle(" copy/move constructor");
 	{
 		vector<int> ivec1(10, 2);
 		vector<int> ivec2(ivec1);
@@ -143,6 +146,14 @@ int main()
 		ivec3.debug_all("ivec3:");
 		ivec4.debug_all("ivec4:");
 		ivec5.debug_all("ivec5:");
+	}
+	DebugNewTitle("array constructor");
+	{
+		vector<int> ivec1{ {1,2} };
+		ivec1.debug_all();
+		vector<std::string> svec1{ { "hello", "world" } };
+		svec1.debug_all();
+		RuntimeAssertTrue(svec1.end()-1 == svec1.crbegin() );
 	}
 	DebugNewTitle("swap");
 	{
@@ -217,6 +228,14 @@ int main()
 			.assign(5,0)
 			.assign({ 1,2,3 });
 		ivec1.debug_all("assign:");
+
+		vector<std::string> svec1(10, "world");
+		vector<std::string> svec2(10, "hello");
+		//std::string s = 0;  //error
+		svec1.assign(5, "kit")
+			.assign(svec1.cbegin(), svec1.cend())
+			.assign({ "hello","my ","world" });
+		svec1.debug_all("assign:");
 	}
 	DebugNewTitle("attribute");
 	{
@@ -285,10 +304,6 @@ int main()
 			DebugValue(it.a, it.b);
 		}
 		vec.insert(0, a);
-	/*	for (uint32 i = 0; i < 3; ++i) {
-			vec.emplace_back(i, i+ .5f);
-		}*/
-		//vec.emplace_back(5, "cc");
 		for (auto& it : vec)
 		{
 			DebugValue(it.a, it.b);
@@ -399,6 +414,12 @@ int main()
 		ivec.erase(10, 30);
 		DebugValue(ivec.size());
 		ivec.debug_all("big insert");
+	}
+
+	DebugNewTitle("find nullptr");
+	{
+		vector<int*> pvec{ 5,nullptr };
+		pvec.find_index(fn::not_null);
 	}
 	
 	_CrtDumpMemoryLeaks();
