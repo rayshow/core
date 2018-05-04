@@ -29,7 +29,7 @@ constexpr static uint64 kPrimeArray[kNumPrime] =
 	1610612741UL, 3221225473UL, 4294967291UL
 };
 
-inline constexpr uint64 next_prime_index(uint32 prev_index, uint64 hint) noexcept {
+inline constexpr uint8 next_prime_index(uint8 prev_index, uint64 hint) noexcept {
 	for (uint32 i = prev_index; i < kNumPrime; ++i) {
 		if (kPrimeArray[i] > hint) return i;
 	}
@@ -93,6 +93,7 @@ template<
 	typename MappedType,                          // mapped type
 	typename T,                                   // compose type
 	typename ExactKeyFn,                          // exact key from T
+	typename ExactValueFn,                        // exact value from T
 	typename MaxLoadFactor = units::ratio<1,2>,   // over 0.5 load factor will rehash 
 	typename Size = uint32,                       // size_type
 	typename Alloc = mem::simple_new_allocator<T>,
@@ -125,44 +126,47 @@ public:
 
 private:
 	static constexpr ExactKeyFn    MappingToKeyFn{};
+	static constexpr ExactValueFn  MappingToValue{};
 
 	bucket_container buckets;      // buckets 
 	size_type        len;          // elements size
 	uint8            mask_index;   // mask with hash result
 
-#if  defined(CCDK_PROFILE)
-	uint16           conflict_count;
-#endif
+
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
-		return (size_type)util::hash(key) & (size_type)(kPrimeArray[mask_index] - 1);
+		return (size_type)util::hash(key) % (size_type)(kPrimeArray[mask_index]);
 	}
 
 	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) noexcept { 
-		return MappingToKeyFn(node->value); 
+		return MappingToKeyFn(node->data); 
 	}
 
 	struct mask_initialze_tag{};
 	//with defined bucket size
-	CCDK_FORCEINLINE hash_table(mask_initialze_tag, size_type index)
-		: buckets{ kPrimeArray[index], nullptr },
-		len{ 0 }, mask_index{ kPrimeArray[index] } {}
+	CCDK_FORCEINLINE hash_table(mask_initialze_tag, uint8 index)
+		: buckets{ (size_type)kPrimeArray[index], nullptr },
+		len{ 0 }, mask_index{ index } {}
 
 public:
+
+#if  defined(CCDK_PROFILE)
+	uint16           conflict_count;
+#endif
 
 	//dector
 	CCDK_FORCEINLINE ~hash_table() { if (len) { clear(); mask_index = 0; } }
 
 	//default and nullptr ctor
 	CCDK_FORCEINLINE hash_table() 
-		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
+		: buckets{ (size_type)kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 	CCDK_FORCEINLINE hash_table(ptr::nullptr_t) 
-		: buckets{ kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
+		: buckets{ (size_type)kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 
 	//initialize with defined bucket size
-	CCDK_FORCEINLINE hash_table(size_type bucket_size)
-		: hash_table{ mask_initialze_tag, next_prime_index(0,buckets_size) } {}
+	CCDK_FORCEINLINE hash_table(uint8 prev_index, size_type bucket_size)
+		: hash_table{ mask_initialze_tag{}, next_prime_index(prev_index,bucket_size) } {}
 
 	//range-n-ctor
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
@@ -227,17 +231,17 @@ public:
 	//index 
 	CCDK_FORCEINLINE mapped_type& operator[](key_type const& key){ return at(key); }
 	CCDK_FORCEINLINE mapped_type& at(key_type const& key) {
-		size_type index;
+		size_type index = bucket_idx(key);
 		auto p = find_node_and_prev(key, index);
 		if (p.second) {
 			//find key
-			return p.second->value;
+			return MappingToValue(p.second->data);
 		}
 		//not found insert new one
 		link_type node = new_node();
-		node->next = nullptr;
+		node->next = buckets.at(index);
 		buckets.at(index) = node;
-		return *node;
+		return MappingToValue(node->data);
 	}
 
 	//swap with other hash table
@@ -250,16 +254,15 @@ public:
 	//emplace construct with args at key
 	template<typename... Args>
 	CCDK_FORCEINLINE auto emplace(Key const& key, Args&&... args) {
-		return emplace_at( key,
-			new_node(util::forward<Args>(args)...));
+		return insert_link( key, new_node(util::forward<Args>(args)...));
 	}
 
 	// insert a element
 	CCDK_FORCEINLINE auto insert(T const& t) { 
-		return emplace(MappingToKeyFn(t), t);
+		return emplace_at(MappingToKeyFn(t), t);
 	}
 	CCDK_FORCEINLINE auto insert(T && t) { 
-		return emplace(MappingToKeyFn(t), util::move(t)); 
+		return emplace_at(MappingToKeyFn(t), util::move(t));
 	}
 	// insert range-n
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>> >
@@ -309,10 +312,10 @@ public:
 	}
 
 	//erase total list and set all head to null
-	void clear() noexcept { 
+	void clear() noexcept {
 		size_type last_index = buckets.size() - 1;
-		for (size_type i = 0; i <= last_index; 
-			i = buckets.find_index(fn::not_null, i))  {
+		size_type i = buckets.find_index(fn::not_null, 0);
+		for (; i <= last_index; i = buckets.find_index(fn::not_null, i))  {
 			erase_list_all(i);
 		}
 		len = 0;
@@ -366,12 +369,11 @@ public:
 	//resize bucket container to a large size, and reinsert 
 	CCDK_FORCEINLINE void rehash(size_type new_bucket_size) {
 		if (new_bucket_size < buckets.size()) return;
-		uint32 new_mask_index = next_prime_index(mask_index, new_bucket_size);
-		hash_table tmp{ new_mask_index, kPrimeArray[new_mask_index] };
+		hash_table tmp{ mask_index, new_bucket_size };
 		size_type old_bucket_size = bucket_size();
 		for (size_type i = 0; i < old_bucket_size; ++i) {
 			for (link_type node = buckets.at(i); node; node = node->next) {
-				tmp.emplace(MappingToKeyFn(node->value), util::forward(node->value));
+				tmp.emplace(MappingToKeyFn(node->data), util::move(node->data));
 			}
 		}
 		tmp.swap(*this);
@@ -420,15 +422,13 @@ private:
 		return count;
 	}
 
-	CCDK_FORCEINLINE fs::pair<size_type, link_type> 
-		find_node_and_prev(key_type const& key) noexcept {
-		size_type index = bucket_idx(key);
+	CCDK_FORCEINLINE fs::pair<link_type, link_type>
+		find_node_and_prev(key_type const& key, size_type index) noexcept {
 		link_type head = buckets.at(index);
 		link_type prev = nullptr;
 		link_type it = head;
 		for (; it && !util::equals(KeyOfLink(it), key); prev = it, it = it->next  );
-		if (it == nullptr) prev = nullptr;
-		return { index, prev };
+		return { prev, it };
 	}
 
 	CCDK_FORCEINLINE fs::pair<size_type,link_type>
@@ -438,15 +438,14 @@ private:
 		while (it && !util::equals(KeyOfLink(it), key)) {
 			it = it->next;
 		}
-		if (!it) index = buckets.size();
+		//if (it) index = buckets.size();
 		return { index, it };
 	}
 
-
-	// locally add a T with index
+	// locally add a link from local constructed
 	template<typename... Args>
-	CCDK_FORCEINLINE fs::pair<iterator, bool> 
-	emplace_at(key_type const& key, Args&& ... args) {
+	CCDK_FORCEINLINE fs::pair<iterator, bool>
+		insert_link(key_type const& key, link_type node) {
 
 		//need rehash 
 		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
@@ -455,20 +454,55 @@ private:
 
 		//find key 
 		auto p = find_node(key);
+		if (p.second) {
+			destroy_node(node);
+			return { { buckets, p.first, p.second }, false };
+		}
 
+#if defined(CCDK_PROFILE)
+		if (buckets.at(p.first))
+		{
+			++conflict_count;
+		}
+#endif
+
+		//insert at first
+		node->next = buckets.at(p.first);
+		buckets.at(p.first) = node;
+		++len;
+
+		return { { buckets, p.first, node }, true };
+	}
+	
+	// locally add a Node with args...
+	template<typename... Args>
+	CCDK_FORCEINLINE fs::pair<iterator, bool> 
+		emplace_at(key_type const& key, Args&& ... args) {
+
+		//need rehash 
+		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
+			rehash(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
+		}
+
+		//find key 
+		auto p = find_node(key);
 		if (p.second) {
 			return { {buckets, p.first, p.second }, false };
 		}
 
+#if defined(CCDK_PROFILE)
+		if (buckets.at(p.first))
+		{
+			++conflict_count;
+		}
+#endif
 		// not found, insert at head
 		ccdk_assert(p.first < buckets.size());
 		link_type node = new_node(util::forward<Args>(args)...);
 		node->next = buckets.at(p.first);
 		buckets.at(p.first) = node;
+		++len;
 
-#if defined(CCDK_PROFILE)
-		if (head) { ++conflict_count; }
-#endif
 		return { {buckets, p.first, node }, true };
 	}
 
@@ -482,7 +516,9 @@ private:
 	CCDK_FORCEINLINE void erase_list_all(size_type index) noexcept {
 		link_type head = buckets.at(index);
 		ccdk_assert(head);
-		for (link_type it = head; it; it = it->next) {
+		link_type next = nullptr;
+		for (link_type it = head; it; it = next) {
+			next = it->next;
 			destroy_node(it);
 		}
 		buckets.at(index) = nullptr;

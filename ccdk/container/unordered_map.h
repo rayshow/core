@@ -17,6 +17,14 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
+struct mapping_value_t {
+
+	template<typename Key,typename Value>
+	CCDK_FORCEINLINE Value& operator()(fs::pair<Key, Value>& pair) const noexcept {
+		return pair.get_second();
+	}
+};
+
 template<
 	typename Key,
 	typename Value,
@@ -24,7 +32,10 @@ template<
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<fs::pair<Key,Value>>,
 	typename HashContainer = hash_table<
-		Key, Value, fs::pair<Key,Value>, MaxLoadFactor, fs::get_first_t, Size, Alloc>
+		Key, Value, fs::pair<Key,Value>,
+		fs::get_first_t,
+		fs::get_second_t,
+		MaxLoadFactor,  Size, Alloc>
 >
 class unordered_map: public HashContainer
 {

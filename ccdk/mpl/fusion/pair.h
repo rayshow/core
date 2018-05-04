@@ -224,7 +224,21 @@ struct get_first_t {
 	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
 		return p.get_first();
 	}
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
+		return p.get_first();
+	}
 };
 
+struct get_second_t {
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
+		return p.get_second();
+	}
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
+		return p.get_second();
+	}
+};
 
 ccdk_namespace_mpl_fs_end

@@ -24,6 +24,7 @@ int main()
 	std::multimap<int, int> mm;
 	std::hash_map<int, int> n;
 	a.insert(std::make_pair(1, 1));
+	a[1];
 	a.find(1);
 	n.insert(std::make_pair(1,1) );
 	std::hash<int>();
