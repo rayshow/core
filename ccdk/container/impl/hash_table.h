@@ -132,19 +132,18 @@ private:
 	size_type        len;          // elements size
 	uint8            mask_index;   // mask with hash result
 
-
-
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
 		return (size_type)util::hash(key) % (size_type)(kPrimeArray[mask_index]);
 	}
 
+	// get link_type's key
 	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) noexcept { 
 		return MappingToKeyFn(node->data); 
 	}
 
+	//helper ctor, with defined bucket size
 	struct mask_initialze_tag{};
-	//with defined bucket size
 	CCDK_FORCEINLINE hash_table(mask_initialze_tag, uint8 index)
 		: buckets{ (size_type)kPrimeArray[index], nullptr },
 		len{ 0 }, mask_index{ index } {}
@@ -155,7 +154,7 @@ public:
 	uint16           conflict_count;
 #endif
 
-	//dector
+	//de-ctor
 	CCDK_FORCEINLINE ~hash_table() { if (len) { clear(); mask_index = 0; } }
 
 	//default and nullptr ctor
@@ -194,7 +193,6 @@ public:
 	}
 
 	//TODO, array initialize
-
 	CCDK_FORCEINLINE this_type& operator=(this_type& other) {
 		this->clear();
 		for (size_type i = 0; i < other.bucket_size(); ++i) {

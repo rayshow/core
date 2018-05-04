@@ -14,7 +14,7 @@ int main()
 		}
 
 		DebugValue("conflict:", a.conflict_count);
-		for (int i = 0; i < 90; ++i) {
+		for (int i = 0; i < 92; ++i) {
 			DebugValue(a[i]);
 		}
 	}
