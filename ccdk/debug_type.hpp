@@ -98,11 +98,6 @@ namespace ccdk {
 		}
 	};
 
-
-
-	
-
-
 #if  defined(CCDK_COMPILER_MSVC)
 #define DebugFunctionName()  std::cout << " *** function name: " << __FUNCSIG__ <<std::endl;
 #else
@@ -114,56 +109,88 @@ namespace ccdk {
 #define AssertTrue(v)  static_assert(v, "");
 #define AssertFalse(v) static_assert(!v, "");
 #define RuntimeAssertTrue(v) assert(v)
+
+#if !defined(CCDK_NO_TRACE)
 #define DebugNewTitle(T)  std::cout<<"\n ================ " << T << " ================" << std::endl;
 #define DebugSubTitle(T)  std::cout<<"\n --- " << T << " --- " << std::endl;
+#else
+#define DebugNewTitle(T)
+#define DebugSubTitle(T)
+#endif
 	//#define DebugValue(v)     std::cout<<" *** " << v <<std::endl;
 	//#define DebugTypeName(T) 
 
 	template<typename T>
 	inline void DebugValue(T&& t)
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << " *** " << t << std::endl;
+#endif
 	}
 
 	template<typename T>
 	inline void DebugValueItBegin(T&& t)
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << t << " ";
+#endif
 	}
 
 	template<typename T>
 	inline void DebugValueIt(T&& t)
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << t <<" ";
+#endif
+	}
+
+	template<typename T, typename P>
+	inline void DebugValueIt(T&& t, P&& p)
+	{
+#if !defined(CCDK_NO_TRACE)
+		std::cout << t << " "<<p<<" ";
+#endif
 	}
 
 	inline void DebugValueItEnd()
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << std::endl;
+#endif
 	}
+
+
 
 	template<typename T, typename P>
 	inline void DebugValue(T&& t, P&& p)
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << " *** " << t <<"  "<< p << std::endl;
+#endif
 	}
 
 	template<typename T>
 	inline void DebugTypeName()
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << " *** typename: " << TypeNameHelper<T>{}() << std::endl;
+#endif
 	}
 
 	template<typename T>
 	inline void DebugValueTypeName(T&& v)
 	{
+#if !defined(CCDK_NO_TRACE)
 		DebugTypeName<decltype(v)>();
+#endif
 	}
 
 	template<typename T>
 	inline void DebugTypeAndValue(T&& v)
 	{
+#if !defined(CCDK_NO_TRACE)
 		std::cout << " *** typename: " << TypeNameHelper<decltype(v)>{}() << " -- value: " << v << std::endl;
+#endif
 	}
 
 

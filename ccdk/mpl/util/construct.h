@@ -21,20 +21,28 @@ ccdk_namespace_mpl_util_start
 template<
 	typename T,
 	typename It,
+	typename... Args,
+	typename = check_t< has_constructor<T,Args...>>,
 	typename = check_t< not_< is_pointer<It>>>,
-	typename = check_t< has_deref<It, T>>,
-	typename... Args>
+	typename = check_t< has_deref<It, T>> >
 	CCDK_FORCEINLINE constexpr static void construct(It it, Args&& ... args)
 {
 	new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
 }
 
 /* truely pointer, directly construct on it */
-template<typename T, typename... Args>
+template<
+	typename T, typename... Args,
+	typename = check_t< has_constructor<T, Args...>>
+>
 CCDK_FORCEINLINE constexpr static void construct(const void* memory, Args&& ... args)
 {
 	new( const_cast<void*>( memory)) T(util::forward<Args>(args)...);
 }
+
+/* trivially class*/
+
+
 
 namespace ut_impl
 {

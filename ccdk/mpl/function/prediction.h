@@ -13,7 +13,7 @@ struct not_null_t {
 		typename = check_t< has_equal<T,ptr::nullptr_t,bool> >
 	>
 	CCDK_FORCEINLINE constexpr bool operator()(T const& t) const noexcept {
-		return !(t == nullptr);
+		return t != nullptr;
 	}
 };
 
