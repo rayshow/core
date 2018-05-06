@@ -73,6 +73,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.util", "test\test.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.container.unordered_map", "test\test.container.unordered_map\test.container.unordered_map.vcxproj", "{B532FFE8-4DEA-4DF5-ABD1-51618346C4A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_container_unorder_set", "test\test_container_unorder_set\test_container_unorder_set.vcxproj", "{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -327,6 +329,14 @@ Global
 		{B532FFE8-4DEA-4DF5-ABD1-51618346C4A9}.Release|Win32.Build.0 = Release|Win32
 		{B532FFE8-4DEA-4DF5-ABD1-51618346C4A9}.Release|x64.ActiveCfg = Release|x64
 		{B532FFE8-4DEA-4DF5-ABD1-51618346C4A9}.Release|x64.Build.0 = Release|x64
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Debug|Win32.Build.0 = Debug|Win32
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Debug|x64.ActiveCfg = Debug|x64
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Debug|x64.Build.0 = Debug|x64
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Release|Win32.ActiveCfg = Release|Win32
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Release|Win32.Build.0 = Release|Win32
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Release|x64.ActiveCfg = Release|x64
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -364,6 +374,7 @@ Global
 		{A565336C-AB7C-401F-B4D3-B880CB5B6C99} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 		{50D40CCA-F6A9-472C-98C1-99BBA2E8080B} = {ACD318CE-325F-4554-9875-ADB66601ED5D}
 		{B532FFE8-4DEA-4DF5-ABD1-51618346C4A9} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
+		{E446F259-C2A7-46C8-AEBB-A5CF1D5D9B77} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42D0876B-9FC6-41C9-8F37-E95B46CD3046}

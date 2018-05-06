@@ -909,5 +909,6 @@
     <ClInclude Include="container\local_vector.h" />
     <ClInclude Include="mpl\type_traits\is_volatile.h" />
     <ClInclude Include="mpl\util\equals.h" />
+    <ClInclude Include="mpl\function\identity.h" />
   </ItemGroup>
 </Project>
