@@ -29,7 +29,9 @@ int main() {
 			DebugValueIt(it);
 		}
 		s1.emplace("java");
+		ccdk_assert(s1.exists("world"));
 		s1.erase("world");
+		ccdk_assert(!s1.exists("world"));
 		ccdk_assert(s1.exists("hello"));
 		ccdk_assert(s1.find("c++")!=s1.end());
 		ccdk_assert(s1.clear().empty());

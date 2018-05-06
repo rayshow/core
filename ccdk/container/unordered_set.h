@@ -14,7 +14,7 @@ template<
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T>,
 	typename Container = hash_table<
-		T, T, T, fn::identity_t, fn::identity_t,
+		false, T, T, T, fn::identity_t, fn::identity_t,
 		MaxLoadFactor, Size, Alloc>
 >
 class unordered_set : public Container
@@ -22,6 +22,10 @@ class unordered_set : public Container
 private: 
 	using Container::operator[];
 	using Container::at;
+	using Container::insert_unique;
+	using Container::insert_multiple;
+	using Container::emplace_unique;
+	using Container::emplace_multiple;
 
 public:
 	using this_type  = unordered_set;
@@ -30,8 +34,6 @@ public:
 	using Container::operator=;
 	using Container::assign;
 	using Container::swap;
-	using Container::emplace;
-	using Container::insert;
 	using Container::erase;
 	using Container::clear;
 	using Container::find;

@@ -45,18 +45,18 @@ template<
 >
 struct hash_iterator
 {
-	using this_type          = hash_iterator;
-	using const_this         = hash_iterator<const T, Node, Container, Size>;
-	using link_type          = Node * ;
-	using value_type         = T;
-	using pointer_type       = T *;
-	using const_pointer_type = T const*;
-	using reference          = T & ;
-	using const_reference    = T const&;
-	using size_type          = Size;
-	using difference_type    = ptr::diff_t;
-	using link_range         = fs::pair<link_type, link_type>;
-	using category           = forward_category;
+	using this_type       = hash_iterator;
+	using const_this      = hash_iterator<const T, Node, Container, Size>;
+	using link_type       = Node * ;
+	using value_type      = T;
+	using pointer         = T *;
+	using const_pointer   = T const*;
+	using reference       = T & ;
+	using const_reference = T const&;
+	using size_type       = Size;
+	using difference_type = ptr::diff_t;
+	using link_range      = fs::pair<link_type, link_type>;
+	using category        = forward_category;
 
 	const Container&  buckets;
 	size_type         index;
@@ -114,6 +114,7 @@ CCDK_FORCEINLINE bool operator==(
 }
 
 template<
+	bool AllowEqualKey,
 	typename Key,                                 // key type
 	typename MappedType,                          // mapped type
 	typename T,                                   // compose type
@@ -127,10 +128,10 @@ template<
 class hash_table: protected Alloc::template rebind<Node>
 {
 public:
-	using this_type = hash_table;
-	using key_type = Key;
-	using node_type = Node;
-	using link_type = node_type * ;
+	using this_type   = hash_table;
+	using key_type    = Key;
+	using node_type   = Node;
+	using link_type   = node_type * ;
 	using mapped_type = MappedType;
 	using bucket_container = vector<link_type, units::ratio<1,1>, Size,
 		typename Alloc::template rebind<link_type> >;
@@ -189,50 +190,14 @@ public:
 		: buckets{ (size_type)kPrimeArray[0], nullptr }, len{ 0 }, mask_index{0} {}
 
 	//initialize with defined bucket size
-	CCDK_FORCEINLINE hash_table(uint8 prev_index, size_type bucket_size)
-		: hash_table{ mask_initialze_tag{}, next_prime_index(prev_index,bucket_size) } {}
+	CCDK_FORCEINLINE hash_table( size_type bucket_size )
+		: hash_table{ mask_initialze_tag{}, next_prime_index(0,bucket_size) } {}
 
-	//range-n-ctor
-	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
-	CCDK_FORCEINLINE hash_table(InputIt begin, size_type n)
-		: buckets{}, len{ 0 }, mask_index{ next_prime_index(0, n) } {
-		buckets.assign(kPrimeArray[mask_index], nullptr);
-		insert(begin, n);
-	}
+	//move ctor
+	CCDK_FORCEINLINE hash_table(this_type&& other) noexcept
+		: buckets{ util::move(other.buckets) },
+		len{ other.len }, mask_index{ other.mask_index} { }
 
-	//range-ctor
-	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
-	CCDK_FORCEINLINE hash_table(InputIt begin, InputIt end)
-		:hash_table{ begin, it::distance(begin, end) } {}
-
-	//copy
-	CCDK_FORCEINLINE hash_table(this_type const& other)
-		: hash_table{ other.begin(), other.size() }{}
-	
-	//move
-	CCDK_FORCEINLINE hash_table(hash_table && other) :
-		buckets{ util::move(other.buckets) }, len{ other.len },
-		mask_index{ other.mask_index } {
-		other.len = 0;
-		other.mask_index = 0;
-	}
-
-	// array initialize
-	template<uint32 N>
-	CCDK_FORCEINLINE hash_table(T const (&arr)[N])
-		: hash_table{ mask_initialze_tag{}, 
-		next_prime_index(0, MaxLoadFactor::DivAsFactor(N) ) }
-	{
-		for (uint32 i = 0; i < N; ++i) {
-			insert(arr[i]);
-		}
-	}
-
-	//copy assign
-	CCDK_FORCEINLINE this_type& operator=(this_type& other) {
-		this->clear();
-		other.foreach([](T const& d) { this->insert(d); });
-	}
 
 	//move assign
 	CCDK_FORCEINLINE this_type& operator=(this_type&& other) {
@@ -241,33 +206,6 @@ public:
 		mask_index = other.mask_index;
 		other.len = 0;
 		other.mask_index = 0;
-	}
-
-	// literial array
-	CCDK_FORCEINLINE this_type& operator=(std::initializer_list<T> const& lst) {
-		this->clear();
-		for (auto it = lst.begin(); it != lst.end(); ++it) {
-			insert(*it);
-		}
-		return *this;
-	}
-
-	template<typename InputIt>
-	CCDK_FORCEINLINE this_type& assign(InputIt begin, size_type n) {
-		this->clear();
-		for (size_type i = 0; i < n;++i, ++begin) {
-			insert(*begin);
-		}
-		return *this;
-	}
-
-	template<typename InputIt>
-	CCDK_FORCEINLINE this_type& assign(InputIt begin, InputIt end) {
-		this->clear();
-		for (InputIt it = begin; it != end; ++it) {
-			insert(*it);
-		}
-		return *this;
 	}
 
 	//index 
@@ -293,45 +231,107 @@ public:
 		util::swap(mask_index, other.mask_index);
 	}
 
+
+///////////////////////////////////////////////////////////////////////////////
+////  emplace / insert 
+
 	//emplace construct with args at key
 	template<
 		typename... Args,
 		typename = check_t< has_constructor<T,Args...>>
 	>
-	CCDK_FORCEINLINE auto emplace(Args&&... args) {
+	CCDK_FORCEINLINE auto emplace_unique(Args&&... args) {
 		link_type node = new_node(util::forward<Args>(args)...);
-		return insert_link( KeyOfLink(node),node);
+		return insert_unique_link( KeyOfLink(node),node);
+	}
+
+	template<
+		typename... Args,
+		typename = check_t< has_constructor<T, Args...>>
+	>
+	CCDK_FORCEINLINE auto emplace_multiple(Args&&... args) {
+		link_type node = new_node(util::forward<Args>(args)...);
+		return insert_multiple_link(KeyOfLink(node), node);
 	}
 
 	// insert a element
-	CCDK_FORCEINLINE auto insert(T const& t) { 
+	CCDK_FORCEINLINE auto insert_unique(T const& t) { 
 		return emplace_at(MappingToKeyFn(t), t);
 	}
-	CCDK_FORCEINLINE auto insert(T && t) { 
+
+	// insert a r-value element
+	CCDK_FORCEINLINE auto insert_unique(T && t) { 
 		return emplace_at(MappingToKeyFn(t), util::move(t));
 	}
+
 	// insert range-n
-	template<typename InputIt, typename = check_t<is_iterator<InputIt>> >
-	CCDK_FORCEINLINE auto insert(InputIt begin, size_type n) {
+	template<
+		typename InputIt,
+		typename = check_t<is_iterator<InputIt>> >
+	CCDK_FORCEINLINE auto insert_unique(InputIt begin, size_type n) {
 		for (size_type i = 0; i < n;++i, ++begin) {
-			insert(*begin);
+			insert_unique(*begin);
 		}
 	}
 
 	// insert range
-	template<typename InputIt, typename = check_t<is_iterator<InputIt>> >
-	CCDK_FORCEINLINE auto insert(InputIt begin, InputIt end) {
+	template<
+		typename InputIt, 
+		typename = check_t<is_iterator<InputIt>> >
+	CCDK_FORCEINLINE auto insert_unique(InputIt begin, InputIt end) {
 		for (InputIt it = begin; it != end; ++it) {
-			insert(*it);
+			insert_unique(*it);
 		}
 	}
 
 	//insert initialize_list
-	CCDK_FORCEINLINE auto insert(std::initializer_list<T> const& list) {
+	CCDK_FORCEINLINE auto insert_unique(std::initializer_list<T> const& list) {
 		for (auto it : list) {
-			insert(util::fmove(it));
+			insert_unique(util::fmove(it));
 		}
 	}
+
+	// insert a element
+	CCDK_FORCEINLINE auto insert_multiple(T const& t) {
+		link_type node = new_node(t);
+		return insert_multiple_link(KeyOfLink(node), node);
+	}
+
+	// insert a r-value element
+	CCDK_FORCEINLINE auto insert_multiple(T && t) {
+		link_type node = new_node(util::move(t));
+		return insert_multiple_link(KeyOfLink(node), node);
+	}
+
+	// insert range-n
+	template<
+		typename InputIt,
+		typename = check_t<is_iterator<InputIt>> >
+		CCDK_FORCEINLINE auto insert_multiple(InputIt begin, size_type n) {
+		for (size_type i = 0; i < n; ++i, ++begin) {
+			insert_multiple(*begin);
+		}
+	}
+
+	// insert range
+	template<
+		typename InputIt,
+		typename = check_t<is_iterator<InputIt>> >
+		CCDK_FORCEINLINE auto insert_multiple(InputIt begin, InputIt end) {
+		for (InputIt it = begin; it != end; ++it) {
+			insert_multiple(*it);
+		}
+	}
+
+	//insert initialize_list
+	CCDK_FORCEINLINE auto insert_multiple(std::initializer_list<T> const& list) {
+		for (auto it : list) {
+			insert_multiple(util::fmove(it));
+		}
+	}
+
+///////////////////////////////////////////////////////////////////////////////
+//// erase
 
 	//erase at Key
 	CCDK_FORCEINLINE auto erase(Key const& key) noexcept {
@@ -423,13 +423,30 @@ public:
 	}
 
 	//resize bucket container to a large size, and reinsert 
+	template<bool AllowEqual>
 	CCDK_FORCEINLINE void rehash(size_type new_bucket_size) {
+		if (new_bucket_size < buckets.size()) return;
+		hash_table tmp{ 
+			mask_initialze_tag{},
+			next_prime_index(mask_index, new_bucket_size)
+		};
+		size_type old_bucket_size = bucket_size();
+		for (size_type i = 0; i < old_bucket_size; ++i) {
+			for (link_type node = buckets.at(i); node; node = node->next) {
+				tmp.insert_unique(util::move(node->data));
+			}
+		}
+		tmp.swap(*this);
+	}
+
+	template<>
+	CCDK_FORCEINLINE void rehash<true>(size_type new_bucket_size) {
 		if (new_bucket_size < buckets.size()) return;
 		hash_table tmp{ mask_index, new_bucket_size };
 		size_type old_bucket_size = bucket_size();
 		for (size_type i = 0; i < old_bucket_size; ++i) {
 			for (link_type node = buckets.at(i); node; node = node->next) {
-				tmp.insert(util::move(node->data));
+				tmp.insert_multiple(util::move(node->data));
 			}
 		}
 		tmp.swap(*this);
@@ -501,6 +518,9 @@ private:
 		return count;
 	}
 
+	// find key and it's prev node
+	// if it is the first node, prev == nullptr
+	// if no key found, it == nullptr
 	CCDK_FORCEINLINE fs::pair<link_type, link_type>
 		find_node_and_prev(key_type const& key, size_type index) noexcept {
 		link_type head = buckets.at(index);
@@ -509,7 +529,6 @@ private:
 		for (; it && !util::equals(KeyOfLink(it), key); prev = it, it = it->next  );
 		return { prev, it };
 	}
-
 
 	CCDK_FORCEINLINE fs::pair<size_type,link_type>
 		find_node(Key const& key) const noexcept {
@@ -522,61 +541,85 @@ private:
 		return { index, it };
 	}
 
-	// locally add a link from local constructed
-	template<typename... Args>
-	CCDK_FORCEINLINE fs::pair<iterator, bool>
-		insert_link(key_type const& key, link_type node) {
-
+	// test weather need rehash
+	CCDK_FORCEINLINE void test_rehash()  {
 		//need rehash 
 		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
-			rehash(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
+			rehash<AllowEqualKey>(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
 		}
+	}
+
+
+#if defined(CCDK_PROFILE)
+#define inc_conflict()  ++conflict_count; 
+#else
+#define inc_conflict()
+#endif
+
+	// locally add a link from local constructed node
+	// not allow multi-equal-key node
+	template<typename... Args>
+	CCDK_FORCEINLINE fs::pair<iterator, bool>
+		insert_unique_link(key_type const& key, link_type node) {
+
+		//weather need rehash
+		test_rehash();
 
 		//find key 
 		auto p = find_node(key);
 		if (p.second) {
+			inc_conflict();
 			destroy_node(node);
 			return { { buckets, p.first, p.second }, false };
 		}
-
-#if defined(CCDK_PROFILE)
-		if (buckets.at(p.first))
-		{
-			++conflict_count;
-		}
-#endif
-
 		//insert at first
 		node->next = buckets.at(p.first);
 		buckets.at(p.first) = node;
 		++len;
-
 		return { { buckets, p.first, node }, true };
 	}
-	
-	// locally add a Node with args...
+
+	// locally add a link from local constructed
+	// allow multi-equal-key node
+	template<typename... Args>
+	CCDK_FORCEINLINE fs::pair<iterator, bool>
+	insert_multiple_link(key_type const& key, link_type node) {
+		//weather need rehash
+		test_rehash();
+		//get buckets pos
+		size_type pos = bucket_idx(key);
+		//search key
+		auto p = find_node_and_prev(key, pos);
+		//found key 
+		if (p.second) {
+			node->next = p.second;
+			p.first->next = node;
+			inc_conflict();
+		}
+		else {
+			// not found, insert at head
+			node->next = buckets.at(pos);
+			buckets.at(pos) = node;
+		}
+		// iterator
+		return { { buckets, pos, node }, true };
+	}
+
+	// locally add a Node with args... no order
+	// if key exists avoid a construct
 	template<typename... Args>
 	CCDK_FORCEINLINE fs::pair<iterator, bool> 
-		emplace_at(key_type const& key, Args&& ... args) {
+	emplace_at(key_type const& key, Args&& ... args) {
 
-		//need rehash 
-		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
-			DebugValue("rehash");
-			rehash(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
-		}
+		//weather need rehash
+		test_rehash();
 
 		//find key 
 		auto p = find_node(key);
 		if (p.second) {
+			inc_conflict();
 			return { {buckets, p.first, p.second }, false };
 		}
-
-#if defined(CCDK_PROFILE)
-		if (buckets.at(p.first))
-		{
-			++conflict_count;
-		}
-#endif
 		// not found, insert at head
 		ccdk_assert(p.first < buckets.size());
 		link_type node = new_node(util::forward<Args>(args)...);
@@ -586,6 +629,10 @@ private:
 
 		return { {buckets, p.first, node }, true };
 	}
+
+	
+#undef inc_conflict
+
 
 	CCDK_FORCEINLINE link_type find_prev_node(link_type head, link_type node) noexcept {
 		link_type it = head;
