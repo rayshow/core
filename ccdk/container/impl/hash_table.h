@@ -46,6 +46,7 @@ template<
 struct hash_iterator
 {
 	using this_type          = hash_iterator;
+	using const_this         = hash_iterator<const T, Node, Container, Size>;
 	using link_type          = Node * ;
 	using value_type         = T;
 	using pointer_type       = T *;
@@ -57,9 +58,9 @@ struct hash_iterator
 	using link_range         = fs::pair<link_type, link_type>;
 	using category           = forward_category;
 
-	Container&  buckets;
-	size_type   index;
-	link_type   node;
+	const Container&  buckets;
+	size_type         index;
+	link_type         node;
 
 	this_type operator++(int) noexcept {
 		size_type old_index = index;
@@ -71,22 +72,46 @@ struct hash_iterator
 	//to next node
 	this_type& operator++() noexcept {
 		if (node->next) node = node->next;
-		index = buckets.find_index(fn::not_null);
-		node = index == buckets.size() ?
+		index = buckets.find_index(fn::not_null,index+1);
+		node = (index != buckets.size()) ?
 			buckets.at(index) : nullptr;
 		return *this;
 	}
 
-	CCDK_FORCEINLINE reference operator*() noexcept { return *node;}
-	CCDK_FORCEINLINE const_reference operator*() const noexcept { return *node; }
+	CCDK_FORCEINLINE reference operator*() noexcept { return node->data;}
+	CCDK_FORCEINLINE const_reference operator*() const noexcept { return node->data; }
 
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return index == other.index && node == other.node;
+		return index == other.index && 
+			node == other.node &&
+			buckets.data() == other.buckets.data();
 	}
-	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return index != other.index || node != other.node;
+
+	//convert to const_iterator
+	CCDK_FORCEINLINE operator const_this() const noexcept {
+		return { buckets, index, node };
 	}
 };
+
+// const_iterator == iterator
+template<typename T, typename Node,typename Container,typename Size>
+CCDK_FORCEINLINE bool operator==(
+	hash_iterator<T,Node,Container,Size> const& left,
+	hash_iterator<T const, Node, Container, Size> const& right) {
+	return left.index == right.index &&
+		left.node == right.node &&
+		left.buckets.data() == right.buckets.data();
+}
+
+// iterator == const_iterator
+template<typename T, typename Node, typename Container, typename Size>
+CCDK_FORCEINLINE bool operator==(
+	hash_iterator<T const, Node, Container, Size> const& left,
+	hash_iterator<T, Node, Container, Size> const& right ) {
+	return left.index == right.index &&
+		left.node == right.node &&
+		left.buckets.data() == right.buckets.data();
+}
 
 template<
 	typename Key,                                 // key type
@@ -99,7 +124,7 @@ template<
 	typename Alloc = mem::simple_new_allocator<T>,
 	typename Node = forward_node<T>
 >
-class hash_table: public Alloc::template rebind<Node>
+class hash_table: protected Alloc::template rebind<Node>
 {
 public:
 	using this_type = hash_table;
@@ -131,8 +156,6 @@ private:
 	bucket_container buckets;      // buckets 
 	size_type        len;          // elements size
 	uint8            mask_index;   // mask with hash result
-
-
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
@@ -194,6 +217,15 @@ public:
 	}
 
 	//TODO, array initialize
+	template<uint32 N>
+	CCDK_FORCEINLINE hash_table(T const (&arr)[N])
+		: hash_table{ mask_initialze_tag{}, 
+		next_prime_index(0, MaxLoadFactor::DivAsFactor(N) ) }
+	{
+		for (uint32 i = 0; i < N; ++i) {
+			insert(arr[i]);
+		}
+	}
 
 	CCDK_FORCEINLINE this_type& operator=(this_type& other) {
 		this->clear();
@@ -218,6 +250,7 @@ public:
 		for (size_type i = 0; i < n;++i, ++begin) {
 			insert(*begin);
 		}
+		return *this;
 	}
 
 	template<typename InputIt>
@@ -226,6 +259,7 @@ public:
 		for (InputIt it = begin; it != end; ++it) {
 			insert(*it);
 		}
+		return *this;
 	}
 
 	//index 
@@ -252,7 +286,10 @@ public:
 	}
 
 	//emplace construct with args at key
-	template<typename... Args>
+	template<
+		typename... Args,
+		typename = check_t< has_constructor<T,Args...>>
+	>
 	CCDK_FORCEINLINE auto emplace(Key const& key, Args&&... args) {
 		return insert_link( key, new_node(util::forward<Args>(args)...));
 	}
@@ -277,6 +314,13 @@ public:
 	CCDK_FORCEINLINE auto insert(InputIt begin, InputIt end) {
 		for (InputIt it = begin; it != end; ++it) {
 			insert(*it);
+		}
+	}
+
+	//insert initialize_list
+	CCDK_FORCEINLINE auto insert(std::initializer_list<T> const& list) {
+		for (auto it : list) {
+			insert(util::fmove(it));
 		}
 	}
 
@@ -312,13 +356,14 @@ public:
 	}
 
 	//erase total list and set all head to null
-	void clear() noexcept {
+	this_type& clear() noexcept {
 		size_type last_index = buckets.size() - 1;
 		size_type i = buckets.find_index(fn::not_null, 0);
 		for (; i <= last_index; i = buckets.find_index(fn::not_null, i))  {
 			erase_list_all(i);
 		}
 		len = 0;
+		return *this;
 	}
 
 	//find 
@@ -340,8 +385,8 @@ public:
 
 	// readonly attribute
 	CCDK_FORCEINLINE size_type size() const noexcept { return len; }
-	CCDK_FORCEINLINE bool empty() const noexcept { return len!=0; }
-	CCDK_FORCEINLINE size_type max_size() const noexcept { return buckets.max_size(); }
+	CCDK_FORCEINLINE bool empty() const noexcept { return len==0; }
+	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept { return size_type(-1); }
 	CCDK_FORCEINLINE size_type bucket_size() const noexcept { return buckets.size(); }
 	CCDK_FORCEINLINE float load_factor() const noexcept { 
 		return cdiv<float>(len, bucket_size()); 
@@ -379,6 +424,30 @@ public:
 		tmp.swap(*this);
 	}
 
+////////////////////////////////////////////////////////////////////
+//// transform
+
+	//efficient then iterator
+	template<typename Pred>
+	CCDK_FORCEINLINE void foreach(Pred const& pred) const noexcept {
+		size_type bks = bucket_size();
+		for (size_type i = 0; i < bks; ++i) {
+			for (link_type node = buckets.at(i); node; node = node->next) {
+				pred(node->data.first, node->data.second);
+			}
+		}
+	}
+
+	//efficient than copy iterator-range
+	CCDK_FORCEINLINE this_type clone() const noexcept {
+		this_type ret{};
+		
+		ret.buckets.assign(buckets.size(), nullptr);
+
+	}
+	
+
+
 //// implements 
 private:
 	CCDK_FORCEINLINE link_type find_head(Key const& key) noexcept {
@@ -386,7 +455,10 @@ private:
 	}
 
 	// locally construct a T
-	template<typename... Args>
+	template<
+		typename... Args,
+		typename = check_t< has_constructor<T,Args...>>
+	>
 	CCDK_FORCEINLINE link_type new_node(Args&& ... args) {
 		link_type node = node_allocator_type::allocate(*this, 1);
 		util::construct<T>(node, util::forward<Args>(args)...);
@@ -481,6 +553,7 @@ private:
 
 		//need rehash 
 		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
+			DebugValue("rehash");
 			rehash(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
 		}
 

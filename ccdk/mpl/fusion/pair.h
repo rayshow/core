@@ -19,11 +19,15 @@ struct pair
 	First  first;
 	Second second;
 
-	First& get_first() noexcept { return first; }
-	First const& get_first() const noexcept { return first; }
+	CCDK_FORCEINLINE pair() = default;
+	CCDK_FORCEINLINE pair(First const& first, Second const& second)
+		: first{first}, second{second} {}
 
-	First& get_second() noexcept { return second; }
-	First const& get_second() const noexcept { return second; }
+	CCDK_FORCEINLINE First& get_first() noexcept { return first; }
+	CCDK_FORCEINLINE First const& get_first() const noexcept { return first; }
+
+	CCDK_FORCEINLINE Second& get_second() noexcept { return second; }
+	CCDK_FORCEINLINE Second const& get_second() const noexcept { return second; }
 };
 
 /* make normal pair */
