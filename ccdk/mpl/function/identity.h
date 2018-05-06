@@ -10,6 +10,12 @@ struct identity_t {
 		operator()(T const& t) const noexcept {
 		return t;
 	}
+
+	template<typename T>
+	CCDK_FORCEINLINE constexpr decltype(auto)
+		operator()(T& t) const noexcept {
+		return t;
+	}
 };
 
 constexpr identity_t identity{};

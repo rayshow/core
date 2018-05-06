@@ -80,26 +80,26 @@ int main()
 			}
 		};
 		a.insert({ "hello", 1 });
-		a.emplace("scale", "scale",5);
+		a.emplace("scale",5);
 		a.insert({
 			{"what", 5},
 			{"is", 6}
 		});
 		
-		a.foreach([&](const char* first, int second) {
-			DebugValueIt(first, second);
+		a.foreach([&](fs::pair<const char*,int> const& p) {
+			DebugValueIt(p.first, p.second);
 		});
 
-		ccdk_assert(a.exist("hello"));
+		ccdk_assert(a.exists("hello"));
 		ccdk_assert( 1== a.erase("hello"));
-		ccdk_assert(!a.exist("hello"));
+		ccdk_assert(!a.exists("hello"));
 		ccdk_assert(a.at("java") == 3);
 		ccdk_assert(a["c++"] == 4);
 		ccdk_assert(a.clear().empty());
 	}
 
 	getchar();
-	_CrtDumpMemoryLeaks();
+	ccdk_open_leak_check();
 
 	return 0;
 }

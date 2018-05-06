@@ -143,7 +143,7 @@ public:
 	using reference       = T & ;
 	using const_reference = T const&;
 	using size_type       = Size;
-	using diff_type       = ptr::diff_t;
+	using difference_type = ptr::diff_t;
 	
 	// iterator
 	using iterator       = hash_iterator<T, node_type, bucket_container, size_type>;
@@ -163,7 +163,7 @@ private:
 	}
 
 	// get link_type's key
-	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) noexcept { 
+	CCDK_FORCEINLINE Key const& KeyOfLink(link_type node) const noexcept { 
 		return MappingToKeyFn(node->data); 
 	}
 
@@ -228,21 +228,28 @@ public:
 		}
 	}
 
+	//copy assign
 	CCDK_FORCEINLINE this_type& operator=(this_type& other) {
 		this->clear();
-		for (size_type i = 0; i < other.bucket_size(); ++i) {
-			for (link_type node = buckets.at(i); node; node = node->next) {
-				this->insert(node->value);
-			}
-		}
+		other.foreach([](T const& d) { this->insert(d); });
 	}
 
+	//move assign
 	CCDK_FORCEINLINE this_type& operator=(this_type&& other) {
 		buckets.swap(other.buckets);
 		len = other.len;
 		mask_index = other.mask_index;
 		other.len = 0;
 		other.mask_index = 0;
+	}
+
+	// literial array
+	CCDK_FORCEINLINE this_type& operator=(std::initializer_list<T> const& lst) {
+		this->clear();
+		for (auto it = lst.begin(); it != lst.end(); ++it) {
+			insert(*it);
+		}
+		return *this;
 	}
 
 	template<typename InputIt>
@@ -291,8 +298,9 @@ public:
 		typename... Args,
 		typename = check_t< has_constructor<T,Args...>>
 	>
-	CCDK_FORCEINLINE auto emplace(Key const& key, Args&&... args) {
-		return insert_link( key, new_node(util::forward<Args>(args)...));
+	CCDK_FORCEINLINE auto emplace(Args&&... args) {
+		link_type node = new_node(util::forward<Args>(args)...);
+		return insert_link( KeyOfLink(node),node);
 	}
 
 	// insert a element
@@ -380,8 +388,10 @@ public:
 	}
 
 	// test key exist
-	CCDK_FORCEINLINE bool exist(Key const& key) {
-		return find_node(key).second != nullptr;
+	CCDK_FORCEINLINE bool exists(Key const& key) const {
+		
+		return find_node(key).second  != nullptr;
+		
 	}
 
 	// readonly attribute
@@ -419,7 +429,7 @@ public:
 		size_type old_bucket_size = bucket_size();
 		for (size_type i = 0; i < old_bucket_size; ++i) {
 			for (link_type node = buckets.at(i); node; node = node->next) {
-				tmp.emplace(MappingToKeyFn(node->data), util::move(node->data));
+				tmp.insert(util::move(node->data));
 			}
 		}
 		tmp.swap(*this);
@@ -434,7 +444,7 @@ public:
 		size_type bks = bucket_size();
 		for (size_type i = 0; i < bks; ++i) {
 			for (link_type node = buckets.at(i); node; node = node->next) {
-				pred(node->data.first, node->data.second);
+				pred(node->data);
 			}
 		}
 	}
@@ -442,12 +452,8 @@ public:
 	//efficient than copy iterator-range
 	CCDK_FORCEINLINE this_type clone() const noexcept {
 		this_type ret{};
-		
 		ret.buckets.assign(buckets.size(), nullptr);
-
 	}
-	
-
 
 //// implements 
 private:
@@ -504,8 +510,9 @@ private:
 		return { prev, it };
 	}
 
+
 	CCDK_FORCEINLINE fs::pair<size_type,link_type>
-		find_node(Key const& key) noexcept {
+		find_node(Key const& key) const noexcept {
 		size_type index = bucket_idx(key);
 		link_type it = buckets.at(index);
 		while (it && !util::equals(KeyOfLink(it), key)) {
