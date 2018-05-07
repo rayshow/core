@@ -187,7 +187,7 @@ template<
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<fs::pair<Key, Value>>,
 	typename Container = hash_table<
-	false, Key, Value, fs::pair<Key, Value>,
+	true, Key, Value, fs::pair<Key, Value>,
 	fs::get_first_t, fs::get_second_t,
 	MaxLoadFactor, Size, Alloc>
 >

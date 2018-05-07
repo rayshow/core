@@ -117,6 +117,7 @@ CCDK_FORCEINLINE bool operator==(
 		left.buckets.data() == right.buckets.data();
 }
 
+//TODO add clone
 template<
 	bool AllowEqualKey,
 	typename Key,                                 // key type
@@ -343,7 +344,7 @@ public:
 //// erase
 
 	//erase at Key
-	CCDK_FORCEINLINE auto erase(Key const& key) noexcept {
+	CCDK_FORCEINLINE size_type erase(Key const& key) noexcept {
 		return erase_at(bucket_idx(key), key);
 	}
 
@@ -396,11 +397,23 @@ public:
 		return { buckets, p.first, p.second };
 	}
 
+	//equal range
+	CCDK_FORCEINLINE fs::pair<iterator,iterator>
+		equal_range(Key const& key) noexcept {
+		auto p = find_node(key);
+		link_type last_link = p.second;
+		while (last_link->next && 
+			util::equals(KeyOfLink(last_link->next), key)) {
+			last_link = last_link->next;
+		}
+		iterator last = { buckets, p.first, last_link };
+		return { { buckets, p.first, p.second}, ++last };
+	}
+
+
 	// test key exist
 	CCDK_FORCEINLINE bool exists(Key const& key) const {
-		
 		return find_node(key).second  != nullptr;
-		
 	}
 
 	// readonly attribute
@@ -454,7 +467,10 @@ public:
 	template<>
 	CCDK_FORCEINLINE void rehash<true>(size_type new_bucket_size) {
 		if (new_bucket_size < buckets.size()) return;
-		hash_table tmp{ mask_index, new_bucket_size };
+		hash_table tmp{ 
+			mask_initialze_tag{},
+			next_prime_index(mask_index, new_bucket_size)
+		};
 		size_type old_bucket_size = bucket_size();
 		for (size_type i = 0; i < old_bucket_size; ++i) {
 			for (link_type node = buckets.at(i); node; node = node->next) {
@@ -501,6 +517,7 @@ private:
 	CCDK_FORCEINLINE link_type new_node(Args&& ... args) {
 		link_type node = node_allocator_type::allocate(*this, 1);
 		util::construct<T>(node, util::forward<Args>(args)...);
+		node->next = nullptr;
 		return node;
 	}
 
@@ -524,9 +541,18 @@ private:
 				node = node->next;
 			}
 			if (node) {
-				if (prev) prev->next = node->next;
-				else head = node->next;
-				count = 1;
+				link_type next_node = node->next;
+				if (AllowEqualKey) {
+					while (next_node && util::equals(key, KeyOfLink(next_node))) {
+						link_type to_delete = next_node;
+						next_node = next_node->next;
+						destroy_node(to_delete);
+						++count;
+					}
+				}
+				if (prev) prev->next = next_node;
+				else head = next_node;
+				++count;
 				destroy_node(node);
 			}
 		}
@@ -614,6 +640,7 @@ private:
 			node->next = buckets.at(pos);
 			buckets.at(pos) = node;
 		}
+		++len;
 		// iterator
 		return { { buckets, pos, node }, true };
 	}
@@ -645,9 +672,6 @@ private:
 		node->next = buckets.at(p.first);
 		buckets.at(p.first) = node;
 		++len;
-
-
-
 		return { {buckets, p.first, node }, true };
 	}
 

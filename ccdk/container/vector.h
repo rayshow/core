@@ -22,6 +22,7 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
+//TODO add nullptr-optimize
 template<
 	typename T,
 	typename InceaseRatio = units::ratio<2, 1>,             /* 2X incease ratio*/

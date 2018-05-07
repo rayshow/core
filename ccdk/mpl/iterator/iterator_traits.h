@@ -23,7 +23,7 @@ struct iterator_traits
 	using const_pointer   = typename It::const_pointer;
 	using reference       = typename It::reference;
 	using const_reference = typename It::const_reference;
-	using size_type       = typename It::size_type  ;
+	using size_type       = typename It::size_type;
 	using difference_type = typename It::difference_type ;
 	using category        = typename It::category;
 };
