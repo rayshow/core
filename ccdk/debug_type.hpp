@@ -132,7 +132,7 @@ namespace ccdk {
 	inline void DebugValueItBegin(T&& t)
 	{
 #if !defined(CCDK_NO_TRACE)
-		std::cout << t << " ";
+		std::cout << t << ": ";
 #endif
 	}
 

@@ -29,7 +29,7 @@ struct iterator< forward_category, Node >
 	using size_type       = ptr::size_t;
 	using category        = forward_category;
 
-	static_assert(is_forward_node<Node>::value, "Node need has left, right, parent field!");
+	static_assert(is_forward_node_c<Node>, "Node need has next field!");
 
 	node_pointer content;
 
@@ -49,6 +49,7 @@ struct iterator< forward_category, Node >
 			ccdk_assert(content);
 		return *this;
 	}
+
 	/* it+step */
 	CCDK_FORCEINLINE constexpr this_type operator+(size_type step) const noexcept {
 		return this_type{ content } +=step;
@@ -60,12 +61,12 @@ struct iterator< forward_category, Node >
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
-		return content == content.pointer;
+		return content == content.content;
 	}
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return content != content.pointer;
+		return content != content.content;
 	}
 };
 ccdk_namespace_mpl_it_end

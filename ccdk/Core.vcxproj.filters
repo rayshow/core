@@ -543,8 +543,6 @@
     <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\string.h" />
     <ClInclude Include="memory\list_allocate_adapter.h" />
-    <ClInclude Include="container\multi_map.h" />
-    <ClInclude Include="container\multi_set.h" />
     <ClInclude Include="container\blist.h" />
     <ClInclude Include="container\unordered_map.h" />
     <ClInclude Include="container\unordered_set.h" />
@@ -882,7 +880,6 @@
     <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
     <ClInclude Include="mpl\type_traits\has_attribute.h" />
     <ClInclude Include="memory\block_list_allocate_adapter.h" />
-    <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\impl\hash_table.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
     <ClInclude Include="mpl\base\compatible_op.h" />
@@ -891,7 +888,6 @@
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
     <ClInclude Include="container\filter\range_filter.h" />
-    <ClInclude Include="container\algorithm\algorithm_mudole.h" />
     <ClInclude Include="filesystem\log\log.h" />
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="container\impl\link_node.h" />
@@ -901,14 +897,17 @@
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="mpl\function\prediction.h" />
-    <ClInclude Include="container\bitset.h" />
-    <ClInclude Include="container\circular_buffer.h" />
-    <ClInclude Include="container\fix_bitset.h" />
-    <ClInclude Include="container\fix_circular_buffer.h" />
-    <ClInclude Include="container\lazy_slist.h" />
-    <ClInclude Include="container\local_vector.h" />
     <ClInclude Include="mpl\type_traits\is_volatile.h" />
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\function\identity.h" />
+    <ClInclude Include="container\ext\circular_buffer.h" />
+    <ClInclude Include="container\ext\fix_bitset.h" />
+    <ClInclude Include="container\ext\fix_circular_buffer.h" />
+    <ClInclude Include="container\ext\lazy_slist.h" />
+    <ClInclude Include="container\ext\local_vector.h" />
+    <ClInclude Include="container\map.h" />
+    <ClInclude Include="container\set.h" />
+    <ClInclude Include="container\bitset.h" />
+    <ClInclude Include="container\slist.h" />
   </ItemGroup>
 </Project>

@@ -169,7 +169,8 @@
 #define ccdk_open_leak_check()                         \
 	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG); \
 	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;                  \
-	_CrtSetDbgFlag(tmpFlag);
+	_CrtSetDbgFlag(tmpFlag);                          
+	//_CrtDumpMemoryLeaks();
 #else
 #define ccdk_open_leak_check()
 #endif

@@ -45,15 +45,16 @@ int main()
 		DebugNewTitle("insert");
 		unordered_map<int, int> a{};
 		unordered_map<int, int> b{};
-		for (int i = 0; i < 90; ++i) {
+		constexpr int N = 666;
+		for (int i = 0; i < N; ++i) {
 			a.insert({ i,i+1 });
 		}
 
 		DebugNewTitle("attrite");
-		RuntimeAssertTrue(a.size() == 90);
+		RuntimeAssertTrue(a.size() == N);
 		DebugValue("conflict:", a.conflict_count);
 		DebugValue("loadfactor:", a.load_factor());
-		for (int i = 0; i < 92; ++i) {
+		for (int i = 0; i < N; ++i) {
 			DebugValue(a[i]);
 		}
 		RuntimeAssertTrue(b.empty());

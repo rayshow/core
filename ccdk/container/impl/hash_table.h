@@ -71,15 +71,19 @@ struct hash_iterator
 
 	//to next node
 	this_type& operator++() noexcept {
-		if (node->next) node = node->next;
-		index = buckets.find_index(fn::not_null,index+1);
-		node = (index != buckets.size()) ?
-			buckets.at(index) : nullptr;
+		if (node->next) {
+			node = node->next;
+		}
+		else {
+			index = buckets.find_index(fn::not_null, index + 1);
+			node = (index != buckets.size()) ?
+				buckets.at(index) : nullptr;
+		}
 		return *this;
 	}
 
-	CCDK_FORCEINLINE reference operator*() noexcept { return node->data;}
-	CCDK_FORCEINLINE const_reference operator*() const noexcept { return node->data; }
+	CCDK_FORCEINLINE reference operator*() noexcept { ccdk_assert(node); return node->data; }
+	CCDK_FORCEINLINE const_reference operator*() const noexcept { ccdk_assert(node);  return node->data; }
 
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return index == other.index && 
@@ -160,6 +164,7 @@ private:
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
+		
 		return (size_type)util::hash(key) % (size_type)(kPrimeArray[mask_index]);
 	}
 
@@ -196,16 +201,20 @@ public:
 	//move ctor
 	CCDK_FORCEINLINE hash_table(this_type&& other) noexcept
 		: buckets{ util::move(other.buckets) },
-		len{ other.len }, mask_index{ other.mask_index} { }
-
-
-	//move assign
-	CCDK_FORCEINLINE this_type& operator=(this_type&& other) {
-		buckets.swap(other.buckets);
-		len = other.len;
-		mask_index = other.mask_index;
+		len{ other.len }, mask_index{ other.mask_index} { 
 		other.len = 0;
 		other.mask_index = 0;
+	}
+
+	//move assign, avoid self assign
+	CCDK_FORCEINLINE void assign(this_type&& other) noexcept {
+		ccdk_if_not_this(other) {
+			buckets = util::move(other.buckets);
+			len = other.len;
+			mask_index = other.mask_index;
+			other.len = 0;
+			other.mask_index = 0;
+		}
 	}
 
 	//index 
@@ -437,6 +446,9 @@ public:
 			}
 		}
 		tmp.swap(*this);
+#if defined(CCDK_PROFILE)
+		conflict_count = 0;
+#endif
 	}
 
 	template<>
@@ -450,6 +462,9 @@ public:
 			}
 		}
 		tmp.swap(*this);
+#if defined(CCDK_PROFILE)
+		conflict_count = 0;
+#endif
 	}
 
 ////////////////////////////////////////////////////////////////////
@@ -549,13 +564,6 @@ private:
 		}
 	}
 
-
-#if defined(CCDK_PROFILE)
-#define inc_conflict()  ++conflict_count; 
-#else
-#define inc_conflict()
-#endif
-
 	// locally add a link from local constructed node
 	// not allow multi-equal-key node
 	template<typename... Args>
@@ -568,10 +576,16 @@ private:
 		//find key 
 		auto p = find_node(key);
 		if (p.second) {
-			inc_conflict();
 			destroy_node(node);
 			return { { buckets, p.first, p.second }, false };
 		}
+
+#if defined(CCDK_PROFILE)
+		if (buckets.at(p.first)) {
+			++conflict_count;
+		}
+#endif
+
 		//insert at first
 		node->next = buckets.at(p.first);
 		buckets.at(p.first) = node;
@@ -591,10 +605,9 @@ private:
 		//search key
 		auto p = find_node_and_prev(key, pos);
 		//found key 
-		if (p.second) {
+		if (p.second && p.first) {
 			node->next = p.second;
 			p.first->next = node;
-			inc_conflict();
 		}
 		else {
 			// not found, insert at head
@@ -617,9 +630,15 @@ private:
 		//find key 
 		auto p = find_node(key);
 		if (p.second) {
-			inc_conflict();
 			return { {buckets, p.first, p.second }, false };
 		}
+
+#if defined(CCDK_PROFILE)
+		if (buckets.at(p.first)) {
+			++conflict_count;
+		}
+#endif
+
 		// not found, insert at head
 		ccdk_assert(p.first < buckets.size());
 		link_type node = new_node(util::forward<Args>(args)...);
@@ -627,11 +646,10 @@ private:
 		buckets.at(p.first) = node;
 		++len;
 
+
+
 		return { {buckets, p.first, node }, true };
 	}
-
-	
-#undef inc_conflict
 
 
 	CCDK_FORCEINLINE link_type find_prev_node(link_type head, link_type node) noexcept {

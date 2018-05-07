@@ -17,9 +17,13 @@
 #include<ccdk/type.h>
 using namespace ccdk;
 
+int g;
+
+struct A { int a; };
 
 int main()
 {
-	
+	int a;
+	A ai{};
 	return 0;
 }

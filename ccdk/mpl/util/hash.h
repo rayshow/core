@@ -38,6 +38,7 @@ namespace util_impl {
 	// FNV-1a hash function for bytes in [bytes, bytes + n)
 	inline ptr::size_t hash_bytes(const uint8 *bytes, ptr::size_t n) noexcept
 	{
+		ccdk_assert(bytes != nullptr);
 #if defined(_WIN64)
 		static_assert(sizeof(ptr::size_t) == 8, "This code is for 64-bit size_t.");
 		constexpr ptr::size_t kOffsetBasic = 14695981039346656037ULL;
@@ -66,6 +67,10 @@ namespace util_impl {
 		struct hash_impl_t {
 		CCDK_FORCEINLINE ptr::size_t operator()(T const& t) const noexcept {
 			DebugValue("default hash");
+			if (util::addressof(t) == nullptr) {
+				const std::string* s = reinterpret_cast<const std::string*>(&t);
+				DebugFunctionName();
+			}
 			return hash_bytes(reinterpret_cast<const uint8*>(
 				util::addressof(t)), sizeof(t));
 		}

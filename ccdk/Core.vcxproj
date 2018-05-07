@@ -71,8 +71,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="container\algorithm\algorithm_mudole.h" />
     <ClInclude Include="compile.h" />
+    <ClInclude Include="container\bitset.h" />
+    <ClInclude Include="container\ext\circular_buffer.h" />
+    <ClInclude Include="container\ext\fix_bitset.h" />
+    <ClInclude Include="container\ext\fix_circular_buffer.h" />
+    <ClInclude Include="container\ext\lazy_slist.h" />
+    <ClInclude Include="container\ext\local_vector.h" />
+    <ClInclude Include="container\slist.h" />
+    <ClInclude Include="container\map.h" />
+    <ClInclude Include="container\set.h" />
     <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\prediction.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
@@ -80,22 +88,13 @@
     <ClInclude Include="container\adapter\prority_queue.h" />
     <ClInclude Include="container\adapter\queue.h" />
     <ClInclude Include="container\adapter\stack.h" />
-    <ClInclude Include="container\bitset.h" />
     <ClInclude Include="container\blist.h" />
     <ClInclude Include="container\container_mudule.h" />
-    <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\filter\range_filter.h" />
-    <ClInclude Include="container\fix_bitset.h" />
-    <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="container\impl\hash_table.h" />
     <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
-    <ClInclude Include="container\local_vector.h" />
-    <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\list_node.h" />
-    <ClInclude Include="container\multi_map.h" />
-    <ClInclude Include="container\multi_set.h" />
-    <ClInclude Include="container\lazy_slist.h" />
     <ClInclude Include="container\unordered_map.h" />
     <ClInclude Include="container\unordered_set.h" />
     <ClInclude Include="container\view\const_view.h" />

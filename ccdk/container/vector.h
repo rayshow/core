@@ -483,7 +483,7 @@ public:
 	// find Times-th element index confirm with Pred function from start
 	template<uint32 Times = 1, typename Pred>
 	CCDK_FORCEINLINE size_type find_index(Pred const& pred, size_type start = 0) const noexcept {
-		ccdk_assert(start < size());
+		//ccdk_assert(start < size());
 		uint32 count = 0;
 		for (size_type i = start; i < len; ++i)
 			if (pred(content[i])) {
