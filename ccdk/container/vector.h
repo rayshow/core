@@ -80,8 +80,8 @@ public:
 		allocate(n);
 	}
 
-	// reserve memory and memset it
-	CCDK_FORCEINLINE vector(size_type n, ptr::nullptr_t) : len{ 0 } {
+	// fill with nullptr( actually memset it)
+	CCDK_FORCEINLINE vector(size_type n, ptr::nullptr_t) : len{ n } {
 		allocate(n);
 		memset(content, 0, sizeof(T)*n);
 	}

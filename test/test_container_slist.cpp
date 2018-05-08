@@ -18,12 +18,10 @@ int main()
 		DebugSubTitle("fill ctor");
 		{
 			slist<int> s1{5, 1};
-
 		}
-		
 	}
-	
-	
 	getchar();
+	ccdk_open_leak_check();
+
 	return 0;
 }

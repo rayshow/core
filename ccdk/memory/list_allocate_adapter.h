@@ -42,7 +42,7 @@ public:
 	using rebind = list_allocate_adapter<U>;
 
 	/* forward list node */
-	static auto __allocate(Alloc const& alloc, size_type n, mpl::false_) {
+	static auto __allocate(Alloc& alloc, size_type n, mpl::false_) {
 		node_type *head, *tail;
 		head = upstream_allocator::allocate(alloc, 1);
 		tail = head;

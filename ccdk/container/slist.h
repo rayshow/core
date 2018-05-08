@@ -38,7 +38,7 @@ public:
 	using const_reference = T const&;
 	using size_type       = Size;
 	using difference_type = ptr::diff_t ;
-	using allocator_type = mem::list_allocate_adapter< typename Alloc::template rebind<Node> > ;  /* list node block allcate */
+	using allocator_type  = mem::list_allocate_adapter< typename Alloc::template rebind<Node> > ;  /* list node block allcate */
 
 	/* iterator */
 	using iterator       = it::iterator< forward_category, node_type >;
