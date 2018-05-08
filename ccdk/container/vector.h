@@ -73,10 +73,17 @@ public:
 	CCDK_FORCEINLINE constexpr vector(ptr::nullptr_t)
 		: content{ nullptr }, len{ 0 }, cap{ 0 } {}
 
+
 	// reserve memory but not fill
-	CCDK_FORCEINLINE explicit vector(size_type n) {
+	CCDK_FORCEINLINE explicit vector(size_type n) : len{ 0 } {
 		ccdk_assert(n > 0);
 		allocate(n);
+	}
+
+	// reserve memory and memset it
+	CCDK_FORCEINLINE vector(size_type n, ptr::nullptr_t) : len{ 0 } {
+		allocate(n);
+		memset(content, 0, sizeof(T)*n);
 	}
 
 	// fill ctor
