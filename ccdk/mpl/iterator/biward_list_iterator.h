@@ -26,22 +26,23 @@ template<typename Node>
 struct iterator< biward_category, Node >
 {
 	using this_type        = iterator;
-	using non_const_node   = remove_const_t<Node>;
-	using value_type       = typename non_const_node::value_type ;
-	using condi_value_type = typename derive_if< is_const<Node>,
-							add_const<value_type>, identity<value_type> >::type;
 	using node_type        = Node;
-	using pointer          = condi_value_type *;
+	using link_type        = Node * ;
+	using raw_node         = remove_const_t<Node>;
+	using raw_value_type   = typename raw_node::value_type ;
+	using value_type       = typename derive_if_t< is_const<Node>,
+							add_const<raw_value_type>, identity<raw_value_type> >;
+	using pointer          = value_type *;
 	using const_pointer    = value_type const*;
-	using reference        = condi_value_type &;
+	using reference        = value_type &;
 	using const_reference  = value_type const&;
 	using difference_type  = ptr::diff_t;
 	using size_type        = ptr::size_t;
 	using category         = biward_category;
 
-	static_assert(is_biward_node<non_const_node>::value, "Node need has next/front field!");
+	static_assert(is_biward_node<raw_node>::value, "Node need has next/front field!");
 
-	node_type* content;
+	link_type content;
 
 	//access content
 	CCDK_FORCEINLINE node_type* data() noexcept {return content;}

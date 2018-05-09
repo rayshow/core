@@ -76,11 +76,12 @@
     <ClInclude Include="container\ext\circular_buffer.h" />
     <ClInclude Include="container\ext\fix_bitset.h" />
     <ClInclude Include="container\ext\fix_circular_buffer.h" />
-    <ClInclude Include="container\ext\lazy_slist.h" />
+    <ClInclude Include="container\ext\circular_slist.h" />
     <ClInclude Include="container\ext\local_vector.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\map.h" />
     <ClInclude Include="container\set.h" />
+    <ClInclude Include="memory\temp_cache_adapter.h" />
     <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\prediction.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
@@ -130,7 +131,6 @@
     <ClInclude Include="math\vector4x2.h" />
     <ClInclude Include="math\vector_runtime_support.h" />
     <ClInclude Include="memory\allocator_traits.h" />
-    <ClInclude Include="memory\local_cache.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\semi_local_allocator.h" />
     <ClInclude Include="memory\simple_new_allocator.h" />

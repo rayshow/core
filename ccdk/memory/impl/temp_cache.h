@@ -25,9 +25,6 @@ public:
 	local_cache(ptr::size_t n, Args&& ... args) noexcept : content{} {
 		util::construct_n<T>(content, n, util::forward<Args>(args)...);
 	}
-
-
-
 };
 
 
