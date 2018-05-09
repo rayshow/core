@@ -36,14 +36,16 @@ public:
 	using upstream_allocator = allocator_traits<Alloc>;
 	using value_type         = typename upstream_allocator::value_type;
 	using size_type          = typename upstream_allocator::size_type;
-	using node_type          = value_type;
+	
+	using node_type = value_type;
+	using link_type = value_type * ;
 
 	template<typename U>
 	using rebind = list_allocate_adapter<U>;
 
 	/* forward list node */
-	static auto __allocate(Alloc const& alloc, size_type n, mpl::false_) {
-		node_type *head, *tail;
+	static auto __allocate(Alloc& alloc, size_type n, mpl::false_) {
+		link_type head, tail;
 		head = upstream_allocator::allocate(alloc, 1);
 		tail = head;
 		for (uint32 i = 0; i < n - 1; ++i) {
@@ -57,7 +59,7 @@ public:
 	/* forward list node */
 	static auto __allocate(Alloc & alloc, size_type n, mpl::true_) {
 
-		node_type *head, *tail, *mid;
+		link_type head, tail, mid;
 		head = upstream_allocator::allocate(alloc, 1);
 		head->prev = nullptr;
 		tail = head;
@@ -76,20 +78,18 @@ public:
 	static auto allocate(Alloc & alloc, size_type n)
 	{
 		ccdk_assert(n > 0);
-		if (n == 0) return fs::pair<value_type*, value_type*>{};
+		if (n == 0) return fs::pair<link_type, link_type>{};
 		return __allocate(alloc, n, is_biward_node_c<node_type>);
 	}
 
 	/* value_type.next must be valid */
 	template<typename = check_t< has_attribute_next<node_type>>>
 	static auto deallocate(Alloc &alloc, node_type* pointer, size_type n) noexcept {
-		if (pointer && n > 0) {
-			for (uint32 i = 0; i < n; ++i) {
-				ccdk_assert(pointer);
-				node_type* next = pointer->next;
-				upstream_allocator::deallocate(alloc, pointer, 1);
-				pointer = next;
-			}
+		for (uint32 i = 0; i < n; ++i) {
+			ccdk_assert(pointer);
+			node_type* next = pointer->next;
+			upstream_allocator::deallocate(alloc, pointer, 1);
+			pointer = next;
 		}
 		return pointer;
 	}
