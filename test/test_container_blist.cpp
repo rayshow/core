@@ -1,60 +1,59 @@
-#include<ccdk/container/blist.h>
+#include<ccdk/container/list.h>
 using namespace ccdk;
 using namespace ccdk::ct;
                                                                         
 int main()
 {
-	
 	DebugNewTitle("test constructor ");
 	{
-		blist<int> lst1;
-		blist<test_copy_assign_t<int>> lst2;
-		blist<test_copy_assign_t<int>> lst3{ nullptr };
+		list<int> lst1;
+		list<test_copy_assign_t<int>> lst2;
+		list<test_copy_assign_t<int>> lst3{ nullptr };
 		RuntimeAssertTrue(lst1.empty());
 	}
 	DebugNewTitle("test fill constructor ");
 	{
-		blist<int> lst1{ 20, 1 };
+		list<int> lst1{ 20, 1 };
 		RuntimeAssertTrue(!lst1.empty());
 		//RuntimeAssertTrue(lst1[19]==1);
-		blist<test_copy_t> lst2{ 2 };
+		list<test_copy_t> lst2{ 2 };
 	}
 	DebugNewTitle("test copy ctor");
 	{
-		blist<test_copy_t> lst1{ 2, test_copy_t{4} };
-		blist<test_copy_t> lst2{ lst1 };
+		list<test_copy_t> lst1{ 2, test_copy_t{4} };
+		list<test_copy_t> lst2{ lst1 };
 		lst1.debug("1:");
 		lst2.debug("2:");
 	}
 	DebugNewTitle("test template ctor");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int, ptr::size_t> lst2{ lst1 };
+		list<int> lst1{ 20, 1 };
+		list<int, ptr::size_t> lst2{ lst1 };
 		lst2.debug("t-copy");
 	}
 	DebugNewTitle("test move");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int> lst2{ util::move(lst1) };
-		blist<int,ptr::size_t> lst3{ util::move(lst2) };
+		list<int> lst1{ 20, 1 };
+		list<int> lst2{ util::move(lst1) };
+		list<int,ptr::size_t> lst3{ util::move(lst2) };
 		lst3.debug("moved");
 		int a = 0;
 	}
 	DebugNewTitle("swap");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int> lst2{ 20, 2 };
+		list<int> lst1{ 20, 1 };
+		list<int> lst2{ 20, 2 };
 		util::swap(lst1, lst2);
 		RuntimeAssertTrue(lst1.front() == 2);
 		RuntimeAssertTrue(lst2.front() == 1);
 	}
 	DebugNewTitle("copy assign");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int> lst2{ 10, 2 };
-		blist<int> lst3{ 30, 3 };
-		blist<int, uint16> lst4{ 10, 2 };
-		blist<int, uint16> lst5{ 30, 3 };
+		list<int> lst1{ 20, 1 };
+		list<int> lst2{ 10, 2 };
+		list<int> lst3{ 30, 3 };
+		list<int, uint16> lst4{ 10, 2 };
+		list<int, uint16> lst5{ 30, 3 };
 		lst2 = lst1;
 		lst3 = lst1;
 		lst4 = lst1;
@@ -66,16 +65,16 @@ int main()
 	}
 	DebugNewTitle("move assign");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int> lst2{ 10, 2 };
-		blist<int> lst3{ 30, 3 };
+		list<int> lst1{ 20, 1 };
+		list<int> lst2{ 10, 2 };
+		list<int> lst3{ 30, 3 };
 		lst2 = util::move(lst1);
 		lst3 = util::move(lst2);
 		RuntimeAssertTrue(lst3.back() == 1 && lst3.size() == 20);
 	}
 	DebugNewTitle("assign fill");
 	{
-		blist<int> lst1{ 20, 1 };
+		list<int> lst1{ 20, 1 };
 		lst1.assign(20, 2);
 		RuntimeAssertTrue(lst1.back() == 2 && lst1.size() == 20);
 		lst1.assign(10, 3);
@@ -85,9 +84,9 @@ int main()
 	}
 	DebugNewTitle("assign range");
 	{
-		blist<int> lst1{ 20, 1 };
-		blist<int> lst2{ 10, 2 };
-		blist<int> lst3{ 25, 3 };
+		list<int> lst1{ 20, 1 };
+		list<int> lst2{ 10, 2 };
+		list<int> lst3{ 25, 3 };
 		lst1.assign(lst2.begin(), lst2.size());
 		RuntimeAssertTrue(lst1.back() == 2 && lst1.size() == 10);
 		lst1.assign(lst3.begin(), lst3.size());
@@ -95,7 +94,7 @@ int main()
 	}
 	DebugNewTitle("initialize / front / back");
 	{
-		const blist<int> lst1{ { 1,2,3,4,5,6,7 } };
+		const list<int> lst1{ { 1,2,3,4,5,6,7 } };
 		RuntimeAssertTrue(lst1.front() == 1);
 		RuntimeAssertTrue(lst1.back() == 7);
 		lst1.cdebug("test const iter:");
@@ -103,7 +102,7 @@ int main()
 	}
 	DebugNewTitle("test pop back/front");
 	{
-		blist<int> lst1{ { 1,2,3,4,5,6,7 } };
+		list<int> lst1{ { 1,2,3,4,5,6,7 } };
 		RuntimeAssertTrue(lst1.front() == 1 && lst1.back() == 7);
 		lst1.pop_back();
 		lst1.pop_front();
@@ -112,10 +111,10 @@ int main()
 	}
 	DebugNewTitle("test emplace back");
 	{
-		blist<int> lst1{ {1,2,3,4} };
+		list<int> lst1{ {1,2,3,4} };
 		lst1.emplace_back(6);
 		DebugSubTitle("test move");
-		blist<test_copy_t> lst2{ 2, test_copy_t{3} };
+		list<test_copy_t> lst2{ 2, test_copy_t{3} };
 		lst2.emplace_back( 4 );
 		lst2.emplace_front( 1 );
 		RuntimeAssertTrue(lst2.front() == 1 && lst2.back() ==4);
@@ -123,7 +122,7 @@ int main()
 	}
 	DebugNewTitle("test emplace ");
 	{
-		blist<int> lst1{ {1,3,5,7} };
+		list<int> lst1{ {1,3,5,7} };
 		lst1.emplace(lst1.cbegin(), 0);
 		lst1.emplace(lst1.cbegin() + 2, 2);
 		lst1.emplace(lst1.cend() , 8);
@@ -137,7 +136,7 @@ int main()
 	}
 	DebugNewTitle("erase");
 	{
-		blist<int> lst1{ { 1,2,3,4,5 } };
+		list<int> lst1{ { 1,2,3,4,5 } };
 		ccdk_assert( lst1.end() == lst1.cend() );
 		ccdk_assert( lst1.begin() == lst1.cbegin());
 		ccdk_assert( lst1.end() -1 == lst1.rbegin());
@@ -147,14 +146,20 @@ int main()
 	}
 	DebugNewTitle("erase range");
 	{
-		blist<int> lst1{ { 1,2,3,4,5 } };
+		list<int> lst1{ { 1,2,3,4,5 } };
 		lst1.erase(lst1.begin(), lst1.end() - 2);
 		ccdk_assert(lst1.front() == 4);
 		lst1.erase(lst1.begin(), lst1.end());
 		ccdk_assert(lst1.size() == 0);
 	}
+	DebugNewTitle("cached_list");
+	{
+		cached_list<int> cl{ {1,2,3,4} };
+		
+	}
 
-	_CrtDumpMemoryLeaks();
+	ccdk_open_leak_check();
+
 	getchar();
 	return 0;
 }

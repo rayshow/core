@@ -6,6 +6,7 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/swap.h>
+#include<ccdk/mpl/util/equals.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/mpl/iterator/biward_list_iterator.h>
@@ -13,8 +14,9 @@
 #include<ccdk/mpl/iterator/algorithm/advance.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/memory/simple_new_allocator.h>
-#include<ccdk/memory/list_allocate_adapter.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
+#include<ccdk/memory/allocator/local_cached_allocator.h>
+#include<ccdk/memory/adapter/list_allocate_adapter.h>
 #include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/container_mudule.h>
 
@@ -43,7 +45,7 @@ public:
 	using reference       = T &;
 	using const_reference = T const&;
 	using size_type       = Size;
-	using difference      = ptr::diff_t;
+	using difference_type = ptr::diff_t;
 	using allocator_type  = mem::list_allocate_adapter<typename Alloc::template rebind<Node>>;
 
 	/* iterator */
@@ -94,12 +96,12 @@ public:
 
 	// copy ctor
 	CCDK_FORCEINLINE list(list const& other)
-		: list{ other.cbegin(), other.size() } {}
+		: list{ other.begin(), other.size() } {}
 
 	// template copy ctor, node_type can  be different but T must be same
 	template<typename Size2, typename Node2>
 	CCDK_FORCEINLINE list(list<T, Size2, Alloc, Node2> const& other)
-		: list{ other.cbegin(), other.size() } {}
+		: list{ other.begin(), other.size() } {}
 
 	// sim initialize_list 
 	template<uint32 N>
@@ -109,7 +111,7 @@ public:
 	// move ctor
 	CCDK_FORCEINLINE list(list && other) 
 		noexcept : head{}, len { other.len } {
-		rvalue_set(other.address());
+		rvalue_set(other.head.address());
 		other.rvalue_reset();
 	}
 
@@ -123,7 +125,7 @@ public:
 
 	// swap data
 	CCDK_FORCEINLINE void swap(list& other) noexcept {
-		node_type* tmp;
+		link_type tmp;
 		tmp = other.head->next;
 		other.head->next = head->next;
 		tmp->prev = head.address();
@@ -200,26 +202,35 @@ public:
 
 	// access front
 	CCDK_FORCEINLINE reference front() noexcept 
-	{ ccdk_assert(len > 0); return head->next->value; }
+	{ ccdk_assert(len > 0); return head->next->data; }
 	CCDK_FORCEINLINE const_reference front() const noexcept
-	{ ccdk_assert(len > 0); return head->next->value; }
+	{ ccdk_assert(len > 0); return head->next->data; }
 
 	// access back
 	CCDK_FORCEINLINE reference back() noexcept 
-	{ ccdk_assert(len > 0); return head->prev->value; }
+	{ ccdk_assert(len > 0); return head->prev->data; }
 	CCDK_FORCEINLINE const_reference back() const noexcept 
-	{ ccdk_assert(len > 0); return head->prev->value; }
+	{ ccdk_assert(len > 0); return head->prev->data; }
 
 
-	/* iterator */
+///////////////////////////////////////////////////////////////////////////
+//// iterator
+
 	CCDK_FORCEINLINE iterator begin() noexcept { return { head->next }; }
 	CCDK_FORCEINLINE iterator end() noexcept { return { head.address() }; }
+	CCDK_FORCEINLINE const_iterator begin() const noexcept { return { head->next }; }
+	CCDK_FORCEINLINE const_iterator end() const noexcept { return { head.address() }; }
 	CCDK_FORCEINLINE const_iterator cbegin() const noexcept { return { head->next }; }
 	CCDK_FORCEINLINE const_iterator cend() const noexcept { return { head.address() }; }
 	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept { return { head->prev }; }
 	CCDK_FORCEINLINE reverse_iterator rend() noexcept { return { head.address() }; }
+	CCDK_FORCEINLINE const_reverse_iterator rbegin() const noexcept { return { head->prev }; }
+	CCDK_FORCEINLINE const_reverse_iterator rend() const noexcept { return { head.address() }; }
 	CCDK_FORCEINLINE const_reverse_iterator crbegin() const noexcept { return { head->prev }; }
 	CCDK_FORCEINLINE const_reverse_iterator crend() const noexcept { return { head.address() }; }
+
+///////////////////////////////////////////////////////////////////////////
+//// element operation
 
 	// pop back
 	CCDK_FORCEINLINE this_type& pop_back() noexcept {
@@ -324,7 +335,7 @@ public:
 		const_iterator endIt) noexcept {
 		node_type* beginPtr = const_cast<node_type*>(beginIt.data());
 		node_type* endPtr = const_cast<node_type*>(endIt.data());
-		size_type n = alg::distance(beginIt, endIt);
+		size_type n = it::distance(beginIt, endIt);
 		ccdk_assert(n <= len);
 		node_type* before = beginPtr->prev;
 		before->next = endPtr;
@@ -347,7 +358,6 @@ private:
 		len = 0;
 	}
 
-	// reset local
 
 	// set to another list
 	CCDK_FORCEINLINE void rvalue_set(node_type* other_head) noexcept {
@@ -497,4 +507,16 @@ public:
 		std::cout << std::endl;
 	}
 };
+
+// defined a 30-cached-node slist, allocate/deallocate will use this cache
+template<
+	typename T,
+	uint32 CacheSize = 30,
+	typename Size = uint32,
+	typename Alloc = mem::simple_new_allocator<T>,
+	typename Node = biward_node<T>
+>
+using cached_list = list<T, Size,
+	mem::local_cached_allocator<CacheSize, Alloc>, Node>;
+
 ccdk_namespace_ct_end

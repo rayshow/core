@@ -94,8 +94,7 @@ int main()
 		};   
 	}
 	
-
-	_CrtDumpMemoryLeaks();
+	ccdk_open_leak_check();
 	getchar();
 	return 0;
 }

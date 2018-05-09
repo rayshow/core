@@ -13,11 +13,11 @@ ccdk_namespace_memory_start
 using namespace ccdk::mpl;
 
 template<typename T>
-struct is_biward_node : and_< has_attribute_next<T>, has_attribute_prev<T>> {};
+struct is_biward_node 
+	: and_< has_attribute_next<T>, has_attribute_prev<T>> {};
 
 template<typename T>
 constexpr is_biward_node<T> is_biward_node_c{};
-
 
 #define ccdk_increase_allocate_lst3(n, head,tail,cap)                     \
 	size_type actual_size = increase_ratio::multiply(n);                  \
@@ -33,9 +33,9 @@ template<typename Alloc>
 class list_allocate_adapter
 {
 public:
-	using upstream_allocator = allocator_traits<Alloc>;
-	using value_type         = typename upstream_allocator::value_type;
-	using size_type          = typename upstream_allocator::size_type;
+	using upstream_adapter   = allocator_traits<Alloc>;
+	using value_type         = typename upstream_adapter::value_type;
+	using size_type          = typename upstream_adapter::size_type;
 	
 	using node_type = value_type;
 	using link_type = value_type * ;
@@ -46,10 +46,10 @@ public:
 	/* forward list node */
 	static auto __allocate(Alloc& alloc, size_type n, mpl::false_) {
 		link_type head, tail;
-		head = upstream_allocator::allocate(alloc, 1);
+		head = upstream_adapter::allocate(alloc, 1);
 		tail = head;
 		for (uint32 i = 0; i < n - 1; ++i) {
-			tail->next = upstream_allocator::allocate(alloc, 1);
+			tail->next = upstream_adapter::allocate(alloc, 1);
 			tail = tail->next;
 		}
 		tail->next = nullptr;
@@ -58,13 +58,12 @@ public:
 
 	/* forward list node */
 	static auto __allocate(Alloc & alloc, size_type n, mpl::true_) {
-
 		link_type head, tail, mid;
-		head = upstream_allocator::allocate(alloc, 1);
+		head = upstream_adapter::allocate(alloc, 1);
 		head->prev = nullptr;
 		tail = head;
 		for (uint32 i = 0; i < n - 1; ++i) {
-			mid = upstream_allocator::allocate(alloc, 1);
+			mid = upstream_adapter::allocate(alloc, 1);
 			tail->next = mid;
 			mid->prev = tail;
 			tail = mid;
@@ -88,7 +87,7 @@ public:
 		for (uint32 i = 0; i < n; ++i) {
 			ccdk_assert(pointer);
 			node_type* next = pointer->next;
-			upstream_allocator::deallocate(alloc, pointer, 1);
+			upstream_adapter::deallocate(alloc, pointer, 1);
 			pointer = next;
 		}
 		return pointer;

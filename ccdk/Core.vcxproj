@@ -81,7 +81,7 @@
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\map.h" />
     <ClInclude Include="container\set.h" />
-    <ClInclude Include="memory\temp_cache_adapter.h" />
+    <ClInclude Include="memory\allocator\local_cached_allocator.h" />
     <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\prediction.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
@@ -89,7 +89,7 @@
     <ClInclude Include="container\adapter\prority_queue.h" />
     <ClInclude Include="container\adapter\queue.h" />
     <ClInclude Include="container\adapter\stack.h" />
-    <ClInclude Include="container\blist.h" />
+    <ClInclude Include="container\list.h" />
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="container\filter\range_filter.h" />
     <ClInclude Include="container\impl\hash_table.h" />
@@ -100,9 +100,9 @@
     <ClInclude Include="container\unordered_set.h" />
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
-    <ClInclude Include="memory\block_list_allocate_adapter.h" />
-    <ClInclude Include="memory\debug_leak_allocator.h" />
-    <ClInclude Include="memory\list_allocate_adapter.h" />
+    <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
+    <ClInclude Include="memory\allocator\debug_leak_allocator.h" />
+    <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
     <ClInclude Include="container\vector.h" />
     <ClInclude Include="debug_type.hpp" />
     <ClInclude Include="filesystem\path.h" />
@@ -132,8 +132,8 @@
     <ClInclude Include="math\vector_runtime_support.h" />
     <ClInclude Include="memory\allocator_traits.h" />
     <ClInclude Include="memory\memory_module.h" />
-    <ClInclude Include="memory\semi_local_allocator.h" />
-    <ClInclude Include="memory\simple_new_allocator.h" />
+    <ClInclude Include="memory\allocator\semi_local_allocator.h" />
+    <ClInclude Include="memory\allocator\simple_new_allocator.h" />
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
     <ClInclude Include="mpl\base\compare_.h" />

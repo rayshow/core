@@ -522,7 +522,6 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
-    <ClInclude Include="memory\simple_new_allocator.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\allocator_traits.h" />
     <ClInclude Include="text\encoding\ascii.h" />
@@ -542,8 +541,6 @@
     <ClInclude Include="container\vector.h" />
     <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\string.h" />
-    <ClInclude Include="memory\list_allocate_adapter.h" />
-    <ClInclude Include="container\blist.h" />
     <ClInclude Include="container\unordered_map.h" />
     <ClInclude Include="container\unordered_set.h" />
     <ClInclude Include="container\adapter\prority_queue.h" />
@@ -879,12 +876,10 @@
     </ClInclude>
     <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
     <ClInclude Include="mpl\type_traits\has_attribute.h" />
-    <ClInclude Include="memory\block_list_allocate_adapter.h" />
     <ClInclude Include="container\impl\hash_table.h" />
     <ClInclude Include="container\impl\rb_tree.h" />
     <ClInclude Include="mpl\base\compatible_op.h" />
     <ClInclude Include="mpl\fusion\local_obj.h" />
-    <ClInclude Include="memory\debug_leak_allocator.h" />
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
     <ClInclude Include="container\filter\range_filter.h" />
@@ -892,7 +887,6 @@
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="mpl\fusion\local_arr.h" />
-    <ClInclude Include="memory\semi_local_allocator.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="mpl\function\prediction.h" />
@@ -908,6 +902,12 @@
     <ClInclude Include="container\bitset.h" />
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\ext\circular_slist.h" />
-    <ClInclude Include="memory\temp_cache_adapter.h" />
+    <ClInclude Include="memory\allocator\simple_new_allocator.h" />
+    <ClInclude Include="memory\allocator\semi_local_allocator.h" />
+    <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
+    <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
+    <ClInclude Include="memory\allocator\debug_leak_allocator.h" />
+    <ClInclude Include="memory\allocator\local_cached_allocator.h" />
+    <ClInclude Include="container\list.h" />
   </ItemGroup>
 </Project>

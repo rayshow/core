@@ -1,6 +1,7 @@
 #pragma once
 
 #include<ccdk/mpl/base/compile_check.h>
+#include<ccdk/mpl/base/if_.h>
 #include<ccdk/mpl/util/destruct.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/util/swap.h>
@@ -8,9 +9,10 @@
 #include<ccdk/mpl/iterator/forward_list_iterator.h>
 #include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
-#include<ccdk/memory/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/memory/list_allocate_adapter.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
+#include<ccdk/memory/allocator/local_cached_allocator.h>
+#include<ccdk/memory/adapter/list_allocate_adapter.h>
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/container/impl/link_node.h>
 
@@ -18,6 +20,12 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
+/*
+	T:         element type
+	Size:      size type, store length
+	Alloc:     base allocator type
+	Node:      list node type, need have next and data field
+*/
 template<
 	typename T,
 	typename Size = uint32,
@@ -38,8 +46,9 @@ public:
 	using reference       = T&;
 	using const_reference = T const&;
 	using size_type       = Size;
-	using difference_type = ptr::diff_t ;
-	using allocator_type  = mem::list_allocate_adapter< typename Alloc::template rebind<Node> > ;  /* list node block allcate */
+	using difference_type = ptr::diff_t;
+	using base_allocator  = typename Alloc::template rebind<Node>;
+	using allocator_type  = mem::list_allocate_adapter< base_allocator > ;
 
 	/* iterator */
 	using iterator       = it::iterator< forward_category, node_type >;
@@ -50,81 +59,81 @@ public:
 
 private:
 	link_type  head;
+	link_type  tail;
 	size_type  len;
 public:
 
-	/* destruct */
+///////////////////////////////////////////////////////////////////////
+//// ctor / de-ctor
+
+	// de-ctor
 	CCDK_FORCEINLINE ~slist() {
-		if (len > 0) {
+		if (len > 0) { 
 			destroy();
-			head = nullptr;
-			len = 0;
+			rvalue_set(); 
 		}
 	}
 
-	/* default */
+	// default / nullptr ctor
 	CCDK_FORCEINLINE constexpr slist() 
-		noexcept : head{ nullptr }, len{0}{}
+		noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
 	CCDK_FORCEINLINE constexpr slist(ptr::nullptr_t) 
-		noexcept : head{ nullptr }, len{ 0 } {}
+		noexcept : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
 
-
-	/* fill */
+	// fill 
 	CCDK_FORCEINLINE slist(size_type n, T const& t = T()) {
 		allocate_fill(n, t);
 	}
 
-	/* copy range-n */
+	// copy range-n
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE slist(InputIt beginIt, size_type n) {
-		allocate_copy(beginIt, n);
+	CCDK_FORCEINLINE slist(InputIt begin, size_type n) {
+		allocate_copy(begin, n);
 	}
 
-	/* copy range */
+	// copy range 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE slist(InputIt beginIt, InputIt endIt) {
-		allocate_copy(beginIt, it::distance(beginIt, endIt));
-	}
+	CCDK_FORCEINLINE slist(InputIt begin, InputIt end)
+		: slist(begin, end) {}
 
-	/* template copy */
-	template<typename Size2, typename Alloc2, typename Node2>
-	CCDK_FORCEINLINE slist(slist<T,Size2,Alloc2,Node2> const& other) {
-		allocate_copy(other.begin(), other,len);
-	}
+	// template copy
+	template<typename Size2, typename Alloc2,typename Node2>
+	CCDK_FORCEINLINE slist(slist<T,Size2,Alloc2,Node2> const& other) 
+		: slist(other.begin(), other.size()) {}
 
-	/* copy */
-	CCDK_FORCEINLINE slist(slist const& other) {
-		allocate_copy(other.begin(), other.len);
-	}
+	// copy
+	CCDK_FORCEINLINE slist(slist const& other)
+		: slist(other.begin(), other.size()) {}
 
-	/* template move */
+	// array initialize
+	template<uint32 N>
+	CCDK_FORCEINLINE slist(T const(&arr)[N])
+		: slist(arr, N) {}
+
+
+	// template move 
 	template<typename Size2, typename Alloc2, typename Node2>
 	CCDK_FORCEINLINE slist(slist<T, Size2, Alloc, Node> && other)
-		noexcept : head{ other.head }, len{ other.len } {
+		noexcept : head{ other.head }, tail{ other.tail }, len { other.len } {
 		other.rvalue_reset();
 	}
 
 	/* move */
 	CCDK_FORCEINLINE slist(slist && other)
-		noexcept : head{ other.head }, len{ other.len } {
+		noexcept : head{ other.head }, tail{ other.tail }, len{ other.len } {
 		other.rvalue_reset();
 	}
 
-	//array initialize
-	template<uint32 N>
-	CCDK_FORCEINLINE slist(T const(&arr)[N]) {
-		allocate_copy(arr, N);
-	}
+///////////////////////////////////////////////////////////////////////////////
+//// swap / assign
 
-
+	//swap with same type
 	CCDK_FORCEINLINE void swap(slist & other) noexcept {
 		util::swap(head, other.head);
 		util::swap(len, other.len);
 	}
 
-
-
-	/* template copy assign  */
+	// template copy assign 
 	template<typename Size2, typename Alloc2, typename Node2>
 	CCDK_FORCEINLINE this_type& operator=(slist<T, Size2, Alloc2, Node2> const& other) {
 		assign_copy(other.begin(), other.len);
@@ -233,16 +242,23 @@ private:
 		deallocate();
 	}
 
-	CCDK_FORCEINLINE void rvalue_reset() noexcept { head = nullptr; len = 0; }
-	CCDK_FORCEINLINE void rvalue_set(node_type* newHead, size_type newSize) noexcept {
+	CCDK_FORCEINLINE void rvalue_reset() noexcept { 
+		head = nullptr; 
+		tail = nullptr;
+		len = 0; 
+	}
+	CCDK_FORCEINLINE void rvalue_set(link_type newHead,
+		link_type newTail, size_type newSize) noexcept {
 		destroy();
-		head = newHead; len = newSize;
+		head = newHead; 
+		tail = newTail;
+		len = newSize;
 	}
 
 
 	CCDK_FORCEINLINE void allocate_fill(size_type n, T const& t) {
 		if (n == 0) return;
-		head = allocator_type::allocate(*this, n).first;
+		fs::tie(head,tail) = allocator_type::allocate(*this, n);
 		util::construct_fill_n(iterator{ head }, t, n);
 		len = n;
 	}
@@ -250,7 +266,7 @@ private:
 	template<typename InputIt>
 	CCDK_FORCEINLINE void allocate_copy(InputIt beginIt, size_type n) {
 		if (n == 0) return;
-		head = allocator_type::allocate(*this, n).first;
+		fs::tie(head, tail) = allocator_type::allocate(*this, n);
 		util::construct_copy_n(iterator{ head }, beginIt, n);
 		len = n;
 	}
@@ -259,23 +275,24 @@ private:
 	CCDK_FORCEINLINE void assign_copy(InputIt beginIt, size_type n) {
 		if (n == 0) return;
 		destruct_content();
+		iterator tail1{nullptr}, tail2{nullptr};
+		fs::tie(tail1, tail2) = util::construct_copy_n(begin(), beginIt, fn::min(len,n) - 1);
 		if (n > len) {
-			auto tails = util::construct_copy_n(begin(), beginIt, len - 1);
-			ccdk_assert(tails.first.content->next == nullptr);
-			tails.first.content->next = allocator_type::allocate(*this,n - len).first;
+			ccdk_assert( ++tail1 == end() );
+			tail1.content->next = allocator_type::allocate(*this,n - len).first;
 			util::construct_copy_n(tails.first, tails.second, n - len + 1);
 		} else {
 			//assign front n-1 elements
 			auto tails = util::construct_copy_n(begin(), beginIt, n - 1);
 			link_type last = tails.first.content;
 			ccdk_assert(last);
-			link_type ext_node = last->next;
+			link_type to_delete = last->next;
 			//assign last element
 			last->data = *(tails.second);
 			last->next = nullptr;
 			if (n < len) {
-				ccdk_assert(ext_node);
-				allocator_type::deallocate(*this, ext_node, len-n);
+				ccdk_assert(to_delete);
+				allocator_type::deallocate(*this, to_delete, len-n);
 			}
 		}
 		len = n;
@@ -292,11 +309,11 @@ private:
 		} else {
 			auto last = util::construct_fill_n(begin(), t, n-1);
 			*last = t;
-			link_type ext_node = last.content->next;
+			link_type to_delete = last.content->next;
 			last.content->next = nullptr;
 			if (n < len) {
-				ccdk_assert(ext_node);
-				allocator_type::deallocate(*this, ext_node, len - n);
+				ccdk_assert(to_delete);
+				allocator_type::deallocate(*this, to_delete, len - n);
 			}
 		}
 		len = n;
@@ -337,8 +354,19 @@ public:
 		});
 		DebugValueItEnd();
 	}
-
-
 };
+
+
+// defined a 30-cached-node slist, allocate/deallocate will use this cache
+template<
+	typename T,
+	uint32 CacheSize = 30,
+	typename Size = uint32,
+	typename Alloc = mem::simple_new_allocator<T>,
+	typename Node = forward_node<T>
+>
+using cached_slist = slist<T, Size,
+	mem::local_cached_allocator<CacheSize,Alloc>, Node>;
+
 
 ccdk_namespace_ct_end

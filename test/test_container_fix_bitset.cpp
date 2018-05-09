@@ -1,4 +1,4 @@
-#include<ccdk/container/fix_bitset.h>
+#include<ccdk/container/ext/fix_bitset.h>
 #include<bitset>
 #include<stdio.h>
 #include<list>
@@ -192,7 +192,8 @@ int main()
 		l.flip().debug();
 	}
 	
-	_CrtDumpMemoryLeaks();
+	ccdk_open_leak_check();
+
 	getchar();
 	return 0;
 }

@@ -11,8 +11,8 @@
 #include<ccdk/mpl/units/ratio.h>
 #include<ccdk/mpl/iterator/algorithm/advance.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
-#include<ccdk/memory/simple_new_allocator.h>
-#include<ccdk/memory/list_allocate_adapter.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
+#include<ccdk/memory/adapter/list_allocate_adapter.h>
 
 #include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/container_mudule.h>
@@ -23,7 +23,7 @@ using namespace ccdk::mpl;
 
 
 /* lazy single list:
-   delete/pop node will not free/delete its memory, but link to tail->next to keep a cache
+    delete/pop node will not free/delete its memory, but link to tail->next to keep a cache
 	and avoid frequency new/delete
    push/insert node will first utilize cached memory after tail
 */
@@ -34,11 +34,10 @@ template<
 	typename Alloc = mem::simple_new_allocator< T >,
 	typename Node = forward_node<T>
 >
-class lazy_slist : protected Alloc::template rebind<Node>
+class circular_slist : protected Alloc::template rebind<Node>
 {
 public:
 	typedef lazy_slist           this_type;
-	typedef lazy_slist           type;
 	typedef Node                 node_type;
 
 	/* common */

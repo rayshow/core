@@ -12,9 +12,8 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
 #include<ccdk/mpl/units/ratio.h>
-
 #include<ccdk/text/char_traits.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
 ccdk_namespace_ct_start
@@ -58,6 +57,9 @@ public:
 	friend class bitset;
 
 private:
+
+	constexpr static uint32 kLeastElements = 1;
+
 	pointer   content;
 	size_type len;
 	size_type cap;
@@ -219,7 +221,7 @@ public:
 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
-		assign_copy_range(beginIt, alg::distance(beginIt, endIt));
+		assign_copy_range(beginIt, it::distance(beginIt, endIt));
 		return *this;
 	}
 
@@ -352,7 +354,7 @@ public:
 		iterator it2 = beginIt;
 		for (const_iterator it = endIt; it != end(); ++it, ++it2)
 			*it2 = *it;
-		size_type n = alg::distance(beginIt, endIt);
+		size_type n = it::distance(beginIt, endIt);
 		it2 = end()-1;
 		for (uint32 i = 0; i < n; ++i, --it2)
 			*it2 = false;

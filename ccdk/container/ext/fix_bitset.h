@@ -11,7 +11,7 @@
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/swap.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
 ccdk_namespace_ct_start
@@ -141,7 +141,7 @@ public:
 	/* range copy */
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE fix_bitset(InputIt beginIt, InputIt endIt) noexcept {
-		util::copy_n(begin(), beginIt, fn::min(NBit, alg::distance(beginIt, endIt)));
+		util::copy_n(begin(), beginIt, fn::min(NBit, it::distance(beginIt, endIt)));
 	}
 
 	/* compile copy */
@@ -158,6 +158,9 @@ public:
 	CCDK_FORCEINLINE void swap(fix_bitset& other) {
 		util::swap(content, other.content);
 	}
+
+/////////////////////////////////////////////////////////////////////////////////
+//// assign operation 
 
 	/* copy assign */
 	CCDK_FORCEINLINE this_type& operator=(fix_bitset const& other) {
@@ -196,28 +199,31 @@ public:
 		util::copy_range(begin(), beginIt, endIt);
 	}
 
-	/* iterator */
-	CCDK_FORCEINLINE iterator begin()
-		noexcept { return { content, 0, 1, N}; }
-	CCDK_FORCEINLINE iterator end()
-		noexcept { return { content, kLastOffset, kLastMask , N }; }
-	CCDK_FORCEINLINE constexpr const_iterator cbegin()
-		const noexcept { return { content, 0, 1, N }; }
-	CCDK_FORCEINLINE constexpr const_iterator cend()
-		const noexcept { return { content, kLastOffset, kLastMask , N }; }
-	CCDK_FORCEINLINE reverse_iterator rbegin()
-		noexcept { return { { content, kReverseOffst, kReverseMask , N } }; }
-	CCDK_FORCEINLINE reverse_iterator rend()
-		noexcept { return { {content, size_type(-1),kTopMask, N } }; }
-	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin()
-		const noexcept { return { { content, kReverseOffst, kReverseMask, N } }; }
-	CCDK_FORCEINLINE constexpr const_reverse_iterator crend()
-		const noexcept { return { { content, size_type(-1), kTopMask, N } }; }
+/////////////////////////////////////////////////////////////////////////////////
+//// iterator
 
-	/* attribute */
+	CCDK_FORCEINLINE iterator begin() noexcept { return { content, 0, 1, N}; }
+	CCDK_FORCEINLINE iterator end() noexcept { return { content, kLastOffset, kLastMask , N }; }
+	CCDK_FORCEINLINE const_iterator begin() const noexcept { return { content, 0, 1, N }; }
+	CCDK_FORCEINLINE const_iterator end() const noexcept { return { content, kLastOffset, kLastMask , N }; }
+	CCDK_FORCEINLINE constexpr const_iterator cbegin() const noexcept { return { content, 0, 1, N }; }
+	CCDK_FORCEINLINE constexpr const_iterator cend() const noexcept { return { content, kLastOffset, kLastMask , N }; }
+	CCDK_FORCEINLINE reverse_iterator rbegin() noexcept { return { { content, kReverseOffst, kReverseMask , N } }; }
+	CCDK_FORCEINLINE reverse_iterator rend() noexcept { return { {content, size_type(-1),kTopMask, N } }; }
+	CCDK_FORCEINLINE const_reverse_iterator rbegin() const noexcept { return { { content, kReverseOffst, kReverseMask , N } }; }
+	CCDK_FORCEINLINE const_reverse_iterator rend() const noexcept { return { { content, size_type(-1),kTopMask, N } }; }
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin() const noexcept { return { { content, kReverseOffst, kReverseMask, N } }; }
+	CCDK_FORCEINLINE constexpr const_reverse_iterator crend() const noexcept { return { { content, size_type(-1), kTopMask, N } }; }
+
+/////////////////////////////////////////////////////////////////////////////////
+//// readonly attribute
+
 	CCDK_FORCEINLINE constexpr size_type size() { return NBit; }
 	CCDK_FORCEINLINE constexpr size_type capcity() { return Bytes * 8; }
 	CCDK_FORCEINLINE constexpr size_type max_size() { return size_type(-1) / sizeof(value_type); }
+
+////////////////////////////////////////////////////////////////////////////////
+//// element operation
 
 	/* index */
 	CCDK_FORCEINLINE reference operator[](size_type index) noexcept {
@@ -248,6 +254,10 @@ public:
 	CCDK_FORCEINLINE constexpr const_reference back() const noexcept {
 		return { content[len / kStoreBits], cshl<value_type>(1, NBit % kStoreBits) };
 	}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//// bit operation
 
 	CCDK_FORCEINLINE constexpr size_type count_one() {
 		auto e = end();

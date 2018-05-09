@@ -20,8 +20,8 @@ template<typename Node>
 struct iterator< forward_category, Node >
 {
 	using this_type       = iterator;
+	using const_this_type = iterator< forward_category, const Node >;
 	using raw_node        = remove_const_t<Node>;
-	using non_const_this  = iterator< forward_category, raw_node >;
 	using raw_value_type  = typename raw_node::value_type;
 	using value_type      = typename derive_if_t< is_const<Node>,
 			                add_const<raw_value_type>, identity<raw_value_type> >;
@@ -61,24 +61,24 @@ struct iterator< forward_category, Node >
 		return this_type{ content } +=step;
 	}
 
-	/* const */
+	//deference
 	CCDK_FORCEINLINE const_reference operator*() const noexcept { return content->data; }
 	CCDK_FORCEINLINE reference operator*() noexcept { return content->data; }
+
+	//member
+	
+
+
+	// iterator to const_iterator
+	CCDK_FORCEINLINE operator const_this_type() const noexcept { ccdk_assert(content); return { content }; }
+
 
 	/* cmp */
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return content == other.content;
 	}
 
-	/* cmp */
-	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return content != other.content;
-	}
-
-	// const_iterator to iterator
-	CCDK_FORCEINLINE operator non_const_this() const noexcept {
-		return { const_cast<raw_node*>(content) };
-	}
+	
 
 };
 

@@ -13,7 +13,7 @@
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/units/ratio.h>
 #include<ccdk/container/filter/range_filter.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
 #include<ccdk/container/container_mudule.h>
@@ -32,17 +32,17 @@ template<
 class vector : protected Alloc
 {
 public:
-	using this_type      = vector;
-	using increase_ratio = InceaseRatio;
+	using this_type       = vector;
+	using increase_ratio  = InceaseRatio;
 	
-	using value_type = T;
-	using pointer = T * ;
-	using const_pointer = T const*;
-	using reference = T & ;
+	using value_type      = T;
+	using pointer         = T * ;
+	using const_pointer   = T const*;
+	using reference       = T & ;
 	using const_reference = T const&;
-	using size_type = Size;
+	using size_type       = Size;
 	using difference_type = ptr::diff_t;
-	using allocator_type = mem::allocator_traits<Alloc>;
+	using allocator_type  = mem::allocator_traits<Alloc>;
 
 	/* iterator */
 	using iterator               = T*;
@@ -52,10 +52,11 @@ public:
 	
 	template<typename T2, typename Ratio2, typename Size2, typename Alloc2>
 	friend class vector;
-	constexpr static uint32 kLeastElements = 10;
+	
 
 private:
-	
+	constexpr static uint32 kLeastElements = 10;
+
 	T *       content;
 	size_type len;
 	size_type cap;
@@ -237,6 +238,15 @@ public:
 		ccdk_assert(content && len > 0); 
 		return content + len;
 	}
+	CCDK_FORCEINLINE const_iterator begin() const noexcept {
+		ccdk_assert(content);
+		return content;
+	}
+	CCDK_FORCEINLINE const_iterator end() const noexcept {
+		ccdk_assert(content && len > 0);
+		return content + len;
+	}
+
 	CCDK_FORCEINLINE const_iterator cbegin() const noexcept { 
 		ccdk_assert(content);
 		return content;
@@ -250,6 +260,14 @@ public:
 		return {content+len-1};
 	}
 	CCDK_FORCEINLINE reverse_iterator rend() noexcept {
+		ccdk_assert(content && len > 0);
+		return { content - 1 };
+	}
+	CCDK_FORCEINLINE const_reverse_iterator rbegin() const noexcept {
+		ccdk_assert(content);
+		return { content + len - 1 };
+	}
+	CCDK_FORCEINLINE const_reverse_iterator rend() const noexcept {
 		ccdk_assert(content && len > 0);
 		return { content - 1 };
 	}

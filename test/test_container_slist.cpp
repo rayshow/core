@@ -12,7 +12,7 @@ struct test_mem {
 	char b[0];
 };
 
-int main()
+void debug_slist()
 {
 	DebugValue(sizeof(test_mem));
 	DebugNewTitle("ctor");
@@ -20,11 +20,11 @@ int main()
 		DebugSubTitle("default");
 		{
 			slist<int> s1{};
-			slist<int> s2{nullptr};
+			slist<int> s2{ nullptr };
 		}
 		DebugSubTitle("fill ctor");
 		{
-			slist<int> s1{5, 1};
+			slist<int> s1{ 5, 1 };
 			s1.debug_value();
 		}
 		DebugSubTitle("range/range-n ctor");
@@ -85,7 +85,7 @@ int main()
 	}
 	DebugNewTitle("it");
 	{
-		slist<int> s1{ {1,2,3,4,5,4,3,2} };
+		slist<int> s1{ { 1,2,3,4,5,4,3,2 } };
 		ccdk_assert(s1.size() == 8);
 		ccdk_assert(s1.begin() == s1.cbegin());
 		slist<int>::iterator bg = s1.cbegin();
@@ -102,8 +102,23 @@ int main()
 		s1.push_front(3);
 		ccdk_assert(s1.front() == 3);
 	}
-	
+}
 
+
+void debug_cached_slist()
+{
+	cached_slist<int> lst{ {1,2,3,4,5,6} };
+	lst.pop_front();
+	lst.pop_front();
+	lst.push_front(2);
+	lst.push_front(1);
+	DebugValue("before destruct");
+}
+
+int main()
+{
+	debug_slist();
+	debug_cached_slist();
 	getchar();
 	ccdk_open_leak_check();
 

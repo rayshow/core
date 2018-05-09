@@ -26,9 +26,11 @@ template<typename Node>
 struct iterator< biward_category, Node >
 {
 	using this_type        = iterator;
+	using const_this_type  = iterator< biward_category, const Node >;
 	using node_type        = Node;
 	using link_type        = Node * ;
 	using raw_node         = remove_const_t<Node>;
+	using non_const_this   = iterator< biward_category, raw_node >;
 	using raw_value_type   = typename raw_node::value_type ;
 	using value_type       = typename derive_if_t< is_const<Node>,
 							add_const<raw_value_type>, identity<raw_value_type> >;
@@ -44,89 +46,78 @@ struct iterator< biward_category, Node >
 
 	link_type content;
 
-	//access content
+	// access content
 	CCDK_FORCEINLINE node_type* data() noexcept {return content;}
 	CCDK_FORCEINLINE node_type const* data() const noexcept {return content;}
-	/* ++it */
-	CCDK_FORCEINLINE this_type& operator++() noexcept {
-		content = content->next; return *this;
-	}
 
-	/* --it */
-	CCDK_FORCEINLINE this_type& operator--() noexcept {
-		content = content->prev; return *this;
-	}
+/////////////////////////////////////////////////////////////////////////////////////
+//// inc / dec 
 
-	/* it++ */
-	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept {
-		return { content->next };
-	}
+	CCDK_FORCEINLINE this_type& operator++() noexcept { ccdk_assert(content); content = content->next; return *this; }
+	CCDK_FORCEINLINE this_type& operator--() noexcept { ccdk_assert(content); content = content->prev; return *this; }
+	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept { ccdk_assert(content); return { content->next }; }
+	CCDK_FORCEINLINE constexpr this_type operator--(int) const noexcept { ccdk_assert(content); return { content->prev }; }
 
-	/* it-- */
-	CCDK_FORCEINLINE constexpr this_type operator--(int) const noexcept {
-		return { content->prev };
-	}
-
-	/* it+=step */
-	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept {
-		while (step--) {
+	// self add multi-step
+	CCDK_FORCEINLINE this_type& operator+=(size_type step) noexcept { 
+		while (step--) { 
+			ccdk_assert(content); 
 			content = content->next;
-			ccdk_assert(content);
-		}
+		} 
 		return *this;
 	}
-	/* it+step */
-	CCDK_FORCEINLINE constexpr this_type operator+(size_type step) const noexcept {
+	// add multi-step
+	CCDK_FORCEINLINE this_type operator+(size_type step) const noexcept {
+		ccdk_assert(content);
 		return this_type{ content } += step;
 	}
 
-	/* it-=step */
+	// self sub multi-step
 	CCDK_FORCEINLINE this_type& operator-=(size_type step) noexcept {
 		while (step--) {
-			content = content->prev;
 			ccdk_assert(content);
+			content = content->prev;
 		}
 		return *this;
 	}
 
-	/* it-step */
-	CCDK_FORCEINLINE constexpr this_type operator-(size_type step) const noexcept {
+	// sub multi-step
+	CCDK_FORCEINLINE this_type operator-(size_type step) const noexcept {
+		ccdk_assert(content);
 		return this_type{ content } -= step;
 	}
 
-	/* dereference */
-	CCDK_FORCEINLINE const_reference operator*() const noexcept { return content->value; }
-	CCDK_FORCEINLINE reference operator*() noexcept { return content->value; }
+//////////////////////////////////////////////////////////////////////////
+//// member / deference
 
-	/* member */
-	CCDK_FORCEINLINE const_pointer operator->() const noexcept { return content; }
-	CCDK_FORCEINLINE pointer operator->() noexcept { return content; }
+	CCDK_FORCEINLINE const_reference operator*() const noexcept { ccdk_assert(content); return content->data; }
+	CCDK_FORCEINLINE reference operator*() noexcept { ccdk_assert(content); return content->data; }
+	CCDK_FORCEINLINE const_pointer operator->() const noexcept { ccdk_assert(content); return content; }
+	CCDK_FORCEINLINE pointer operator->() noexcept { ccdk_assert(content); return content; }
 
-	/* cast to const version */
-	CCDK_FORCEINLINE operator iterator<biward_category, const Node>() const noexcept {
-		return { content };
-	}
+	// const_iterator to iterator
+	CCDK_FORCEINLINE operator const_this_type() const noexcept { return { content }; }
 
-	/* cmp */
+	// iterator == iterator
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return content == other.content;
 	}
 
-	/* cmp */
-	CCDK_FORCEINLINE bool operator!=(this_type const& other) const noexcept {
-		return content != other.content;
-	}
 };
-	template<typename Node>
-	bool operator==(iterator<biward_category, const Node> const& lhs,
-			iterator<biward_category, Node> const& rhs) noexcept {
-		return lhs.data() == rhs.data();
-	}
-	template<typename Node>
-	bool operator==(iterator<biward_category, Node> const& lhs,
-		iterator<biward_category, const Node> const& rhs) noexcept {
-		return lhs.data() == rhs.data();
-	}
+
+// const_iterator == iterator
+template<typename Node>
+CCDK_FORCEINLINE bool operator==(iterator<biward_category, const Node> const& lhs,
+		iterator<biward_category, Node> const& rhs) noexcept {
+	return lhs.content == rhs.content;
+}
+
+// iterator == const_iterator
+template<typename Node>
+CCDK_FORCEINLINE bool operator==(iterator<biward_category, Node> const& lhs,
+	iterator<biward_category, const Node> const& rhs) noexcept {
+	return lhs.content == rhs.content;
+}
 
 ccdk_namespace_mpl_it_end
 
