@@ -374,7 +374,7 @@ public:
 // defined a 30-cached-node slist, allocate/deallocate will use this cache
 template<
 	typename T,
-	uint32 CacheSize = 30,
+	uint32 CacheSize = 10,
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T,Size>,
 	typename Node = forward_node<T>

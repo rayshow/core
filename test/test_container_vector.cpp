@@ -54,7 +54,6 @@ public:
 		return *a;
 	}
 
-
 	leak_test(leak_test const& t) : a{ new int  } {
 		*a = *t.a;
 		DebugValue("implace_test copy construct");
@@ -506,40 +505,85 @@ void local_vector_test()
 			s2.debug_value();
 		}
 	}
-	
-	//	DebugNewTitle("copy assign");
-	//	{
-	//		DebugSubTitle("copy only");
-	//		{
-	//			vector<int> ivec1(10, 1);
-	//			vector<int> ivec2(10, 2);
-	//			ivec2 = nullptr;
-	//			ivec2.debug_value("ivec2:");
-	//			ivec2 = ivec1;
-	//			ivec2.debug_value("ivec2:");
-	//		}
-	//		DebugSubTitle("template copy only");
-	//		{
-	//			vector<int> ivec1(10, 1);
-	//			vector<int, units::ratio<3, 1>> ivec2(10, 2);
-	//			ivec1 = ivec2;
-	//			ivec1.debug_value("ivec1:");
-	//		}
-	//		DebugSubTitle("allocate copy");
-	//		{
-	//			vector<int> ivec1(3, 1);
-	//			vector<int> ivec2(10, 2);
-	//			ivec1 = ivec2;
-	//			ivec1.debug_value("ivec1:");
-	//		}
-	//		DebugSubTitle("template allocate only");
-	//		{
-	//			vector<int> ivec1(3, 1);
-	//			vector<int, units::ratio<3, 1>> ivec2(10, 2);
-	//			ivec1 = ivec2;
-	//			ivec1.debug_value("ivec1:");
-	//		}
-	//	}
+	DebugNewTitle(" assign");
+	{
+		DebugSubTitle("stack copy stack");
+		{
+			svec10 s1(10, "c++");
+			svec10 s2(10, "java");
+			ccdk_assert(s1.is_stack() && s2.is_stack());
+			s1 = s2;
+			s1.debug_value();
+			s2.debug_value();
+			ccdk_assert(s1.is_stack() && s2.is_stack());
+		}
+		DebugSubTitle("heap copy stack");
+		{
+			svec10 s1(10, "c++");
+			svec10 s2(10, "java");
+			s1.push_back("java");
+			ccdk_assert(!s1.is_stack() && s2.is_stack());
+			s1 = s2;
+			s1.debug_value();
+			s2.debug_value();
+			ccdk_assert(!s1.is_stack() && s2.is_stack());
+		}
+		DebugSubTitle("stack copy heap");
+		{
+			svec10 s1(10, "c++");
+			svec10 s2(10, "java");
+			s2.push_back("java");
+			ccdk_assert(s1.is_stack() && !s2.is_stack());
+			s1 = s2;
+			s1.debug_value();
+			s2.debug_value();
+			ccdk_assert(!s1.is_stack() && !s2.is_stack());
+		}
+		DebugSubTitle("heap copy heap");
+		{
+			svec10 s1(10, "c++");
+			svec10 s2(10, "java");
+			s2.push_back("java");
+			s1.push_back({ "c++", "c++" });
+			ccdk_assert(!s1.is_stack() && !s2.is_stack());
+			s1 = s2;
+			s1.debug_value();
+			s2.debug_value();
+		}
+
+		DebugSubTitle("move");
+		{
+			DebugSubTitle("stack move to ");
+			{
+				svec10 s1(10, "c++");
+				svec10 s2(10, "java");
+				s1 = util::move(s2);
+				s1.debug_value();
+				s1.debug_value();
+			}
+			DebugSubTitle("heap move to ");
+			{
+				svec10 s1(10, "c++");
+				svec10 s2(10, "java");
+				s2.push_back("java");
+				s1 = util::move(s2);
+				s1.debug_value();
+				s2.debug_value();
+			}
+		}
+		DebugSubTitle("fill-n");
+		{
+			svec10 s1{};
+			s1.assign(10, "c++");
+			ccdk_assert(s1.is_stack());
+			s1.debug_value();
+			s1.assign(20, "java");
+			s1.debug_value();
+			ccdk_assert(!s1.is_stack());
+			s1.assign(5, "scala");
+			s1.debug_value();
+		}
+	}
 	//	DebugNewTitle("move assign");
 	//	{
 	//		DebugSubTitle("move only");

@@ -688,14 +688,14 @@ protected:
 	using Super::cap;
 	using Super::rvalue_set;
 	using Super::rvalue_reset;
+	using Super::destruct_content;
+	using Super::destroy;
 public:
 	using this_type = local_vector;
 	using size_type = Size;
 	using allocator_type = typename Super::allocator_type;
 	using pointer = typename Super::pointer;
 
-	using Super::operator=;
-	using Super::assign;
 	using Super::operator[];
 	using Super::at;
 	using Super::begin;
@@ -770,7 +770,7 @@ public:
 	}
 
 //////////////////////////////////////////////////////////////////////////////
-//// assign / swap 
+////  swap 
 
 	void swap(this_type& other) {
 		if (other.is_stack() && is_stack()) {
@@ -793,18 +793,79 @@ public:
 		util::swap(cap, other.cap);
 	}
 
+//////////////////////////////////////////////////////////////////////////////////////
+//// assign 
 
+	//clear content
+	this_type& operator=(ptr::nullptr_t) {
+		destruct_content();
+	}
 
-	this_type& operator=(local_vector && other) {
+	//assign copy
+	this_type& operator=(this_type const& other) {
+		ccdk_if_not_this(other) {
+			return assign(other.begin(), other.size());
+		}
+		return *this;
+	}
+
+	//assign move
+	this_type& operator=(this_type && other) {
 		ccdk_if_not_this(other) {
 			destroy();
-			move_impl(other);
+			move_impl(util::move(other));
 		}
+		return *this;
+	}
+
+	//assign array
+	this_type& operator=(std::initializer_list<T> const& lst) {
+		return assign(lst.begin(), lst.size());
+	}
+
+	//range-n
+	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
+	this_type& assign(InputIt begin, size_type n) {
+		assign_set_enough_memory(n);
+		util::construct_copy_n(content, begin, n);
+		len = n;
+		return *this;
+	}
+
+	//range
+	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
+	this_type& assign(InputIt begin, InputIt end) {
+		return assign(begin, it::distance( begin, end));
+	}
+
+	//fill-n
+	this_type& assign(size_type n, T const& t) {
+		assign_set_enough_memory(n);
+		util::construct_fill_n(content, t, n);
+		len = n;
+		return *this;
 	}
 
 	CCDK_FORCEINLINE bool is_stack() const noexcept { return KLeastElemntCount == cap; }
 
 private:
+
+	void assign_set_enough_memory(size_type n) {
+		if (capacity() == 0 && n <= KLeastElemntCount) {
+			//first allocate and stack is big enough
+			content = allocator_type::allocate(*this, KLeastElemntCount);
+			cap = KLeastElemntCount;
+		}
+		else if (n > capacity()) {
+			//memory not enough, reallocate it
+			destroy();
+			content = allocator_type::allocate_inc(*this, n, &cap);
+		}
+		else {
+			//memory enough, destruct old content
+			destruct_content();
+		}
+	}
 
 	//this is heap based
 	void swap_stack_and_heap(local_vector& stack) {
@@ -837,8 +898,6 @@ public:
 	void debug_is_stack() {
 		DebugValue("is stack:", is_stack());
 	}
-	
-
 };
 
 
