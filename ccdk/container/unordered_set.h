@@ -55,16 +55,15 @@ public:
 //// ctor
 
 	//default and nullptr ctor
-	CCDK_FORCEINLINE unordered_set() noexcept :super_type{} {}
+	CCDK_FORCEINLINE unordered_set() 
+		noexcept : super_type{} {}
 	CCDK_FORCEINLINE unordered_set(ptr::nullptr_t) 
 		noexcept : super_type{nullptr} {}
 
 	//range-n
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
 	CCDK_FORCEINLINE unordered_set(InputIt begin, size_type n)
-		: super_type{ n } {
-		insert_unique(begin, n);
-	}
+		: super_type{ n } { insert_unique(begin, n); }
 
 	//range
 	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
