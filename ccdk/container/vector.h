@@ -15,19 +15,17 @@
 #include<ccdk/container/filter/range_filter.h>
 #include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
-
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
-//TODO add nullptr-optimize
 template<
 	typename T,
-	typename InceaseRatio = units::ratio<2, 1>,             /* 2X incease ratio*/
+	typename InceaseRatio = units::ratio<2, 1>,  /* 2X incease ratio*/
 	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator<T>
+	typename Alloc = mem::simple_new_allocator<T,Size>
 >
 class vector : protected Alloc
 {
@@ -53,7 +51,6 @@ public:
 	template<typename T2, typename Ratio2, typename Size2, typename Alloc2>
 	friend class vector;
 	
-
 private:
 	constexpr static uint32 kLeastElements = 10;
 

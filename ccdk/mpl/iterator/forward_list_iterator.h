@@ -7,6 +7,7 @@
 #include<ccdk/mpl/type_traits/has_attribute.h>
 #include<ccdk/mpl/iterator/iterator_fwd.h>
 #include<ccdk/mpl/util/move.h>
+#include<ccdk/mpl/util/equals.h>
 
 ccdk_namespace_mpl_it_start
 
@@ -41,11 +42,13 @@ struct iterator< forward_category, Node >
 
 	/* ++it */
 	CCDK_FORCEINLINE this_type& operator++() noexcept {
+		ccdk_assert(content);
 		content = content->next; return *this;
 	}
 
 	/* it++ */
 	CCDK_FORCEINLINE constexpr this_type operator++(int) const noexcept { 
+		ccdk_assert(content);
 		return { content->next };
 	}
 
@@ -66,20 +69,17 @@ struct iterator< forward_category, Node >
 	CCDK_FORCEINLINE reference operator*() noexcept { return content->data; }
 
 	//member
-	
-
+	CCDK_FORCEINLINE pointer operator->() noexcept { return &(content->data); }
+	CCDK_FORCEINLINE const_pointer operator->() const noexcept { return &(content->data); }
 
 	// iterator to const_iterator
 	CCDK_FORCEINLINE operator const_this_type() const noexcept { ccdk_assert(content); return { content }; }
 
 
-	/* cmp */
+	// iterator == iterator
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return content == other.content;
 	}
-
-	
-
 };
 
 //  iterator == const_iterator

@@ -1,20 +1,14 @@
 
 #include<ccdk/container/slist.h>
 #include<stdio.h>
-#include<list>
+#include<string>
 
 using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::ct;
 
-struct test_mem {
-	int a;
-	char b[0];
-};
-
 void debug_slist()
 {
-	DebugValue(sizeof(test_mem));
 	DebugNewTitle("ctor");
 	{
 		DebugSubTitle("default");
@@ -25,16 +19,22 @@ void debug_slist()
 		DebugSubTitle("fill ctor");
 		{
 			slist<int> s1{ 5, 1 };
+			slist<std::string> s2{ 5, "hello" };
 			s1.debug_value();
+			s2.debug_value();
 		}
-		DebugSubTitle("range/range-n ctor");
+		DebugSubTitle("range/range-n/array ctor");
 		{
-			DebugValue(has_attribute_next_v<forward_node<int>>);
 			slist<int> s1{ 5, 1 };
 			slist<int> s2{ s1.begin(), s1.end() };
 			slist<int> s3{ s1.cbegin(), s1.size() };
 			s2.debug_value();
 			s3.debug_value();
+			slist<std::string> s4{ {"hello", "world", "c++"} };
+			slist<std::string> s5{ s4.begin(), s4.end() };
+			slist<std::string> s6{ s4.cbegin(), s4.cend() };
+			s5.debug_value();
+			s6.debug_value();
 		}
 		DebugSubTitle("copy/move ctor");
 		{
@@ -44,6 +44,12 @@ void debug_slist()
 			s1.debug_value();
 			s2.debug_value();
 			s3.debug_value();
+			slist<std::string> s4{ { "hello", "world", "c++" } };
+			slist<std::string> s5{ s4 };
+			slist<std::string> s6{ util::move(s5) };
+			s4.debug_value();
+			s5.debug_value();
+			s6.debug_value();
 		}
 		DebugSubTitle("swap");
 		{
@@ -72,6 +78,18 @@ void debug_slist()
 			s1 = util::move(s4);
 			s4.debug_value();
 			s1.debug_value();
+			slist<std::string> s5{ 5, "hello" };
+			slist<std::string> s6{ 3, "world" };
+			slist<std::string> s7{ 6, "c++" };
+			slist<std::string> s8{ 10, "java" };
+			s5.debug_value();
+			s5 = s6;
+			s5.debug_value();
+			s5 = s7;
+			s5.debug_value();
+			s5 = util::move(s8);
+			s8.debug_value();
+			s5.debug_value();
 		}
 		DebugSubTitle("assign fill");
 		{
@@ -81,6 +99,21 @@ void debug_slist()
 			s1.debug_value();
 			s1.assign(6, 3);
 			s1.debug_value();
+			slist<std::string> s2{ 5, "c++" };
+			s2.debug_value();
+			s2.assign(3, "java");
+			s2.debug_value();
+			s2.assign(6, "scala");
+			s2.debug_value();
+		}
+		DebugSubTitle("assign array");
+		{
+			slist<int> s1{ 5, 1 };
+			s1 = { 1,2,3,4,5 };
+			s1.debug_value();
+			slist<std::string> s2{ 5, "c++" };
+			s2 = { "c++", "java", "scala", "python" };
+			s2.debug_value();
 		}
 	}
 	DebugNewTitle("it");
@@ -88,7 +121,7 @@ void debug_slist()
 		slist<int> s1{ { 1,2,3,4,5,4,3,2 } };
 		ccdk_assert(s1.size() == 8);
 		ccdk_assert(s1.begin() == s1.cbegin());
-		slist<int>::iterator bg = s1.cbegin();
+		slist<int>::const_iterator bg = s1.begin();
 		for (auto &it : s1) {
 			DebugValueIt(it);
 		}
@@ -96,10 +129,13 @@ void debug_slist()
 	DebugNewTitle("pop/push");
 	{
 		slist<int> s1{ { 1,2,3,4,5,4,3,2 } };
-		ccdk_assert(s1.front() == 1);
 		s1.pop_front();
-		ccdk_assert(s1.front() == 2);
+		s1.debug_value();
 		s1.push_front(3);
+		s1.debug_value();
+		s1.push_back(10);
+		s1.debug_value();
+		ccdk_assert(s1.back() == 10);
 		ccdk_assert(s1.front() == 3);
 	}
 }

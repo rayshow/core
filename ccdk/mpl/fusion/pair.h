@@ -206,14 +206,14 @@ struct rpair
 
 	template<typename T1, typename T2>
 	void operator = (pair<T1, T2> const& p) {
-		DebugValue("copy");
+		DebugValue("rpair copy");
 		first = p.first;
 		second = p.second;
 	}
 
 	template<typename T1, typename T2>
 	void operator = (pair<T1, T2>&& p) {
-		DebugValue("move");
+		DebugValue("rpair move");
 		first = util::move(p.first);
 		second = util::move(p.second);
 	}

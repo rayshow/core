@@ -903,11 +903,11 @@
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\ext\circular_slist.h" />
     <ClInclude Include="memory\allocator\simple_new_allocator.h" />
-    <ClInclude Include="memory\allocator\semi_local_allocator.h" />
     <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
     <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
-    <ClInclude Include="memory\allocator\debug_leak_allocator.h" />
     <ClInclude Include="memory\allocator\local_cached_allocator.h" />
     <ClInclude Include="container\list.h" />
+    <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
+    <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
   </ItemGroup>
 </Project>

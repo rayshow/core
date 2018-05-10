@@ -16,6 +16,8 @@ template<typename Ret> CCDK_FORCEINLINE constexpr Ret cshl(Ret a, Ret b) noexcep
 template<typename Ret> CCDK_FORCEINLINE constexpr Ret cshr(Ret a, Ret b) noexcept { return a >> b; }
 template<typename Ret> CCDK_FORCEINLINE constexpr Ret cbitor(Ret a, Ret b) noexcept { return a | b; }
 template<typename Ret> CCDK_FORCEINLINE constexpr Ret cbitand(Ret a, Ret b) noexcept { return a & b; }
+template<typename C> CCDK_FORCEINLINE constexpr bool cle(C a, C b) noexcept { return a < b; }
+template<typename C> CCDK_FORCEINLINE constexpr bool cge(C a, C b) noexcept { return a > b; }
 template<typename Ret> CCDK_FORCEINLINE constexpr Ret cneg(Ret a) noexcept { return -a; }
 
 namespace base_impl {

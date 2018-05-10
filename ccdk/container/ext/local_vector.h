@@ -13,7 +13,7 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/construct.h>
 #include<ccdk/mpl/units/ratio.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/container/filter/range_filter.h>
 #include<ccdk/container/container_mudule.h>
@@ -233,7 +233,7 @@ public:
 
 	template<InputIt>
 	CCDK_FORCEINLINE this_type& assign(InputIt beginIt, InputIt endIt) {
-		return assign_copy(beginIt, alg::distance(beginIt, endIt));
+		return assign_copy(beginIt, it::distance(beginIt, endIt));
 	}
 
 	//attr

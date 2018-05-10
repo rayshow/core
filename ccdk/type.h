@@ -32,39 +32,37 @@ namespace ccdk
 	static_assert(sizeof(uint64) == 8, "uint64 is not 8 byte.");
 	static_assert(sizeof(int64) == 8, "int64 is not 8 byte.");
 
+	//unsigned integer transform to signed version
+	template<typename T> struct to_signed {};
+	template<> struct to_signed<uint8> { using type = int8; };
+	template<> struct to_signed<uint16> { using type = int16; };
+	template<> struct to_signed<uint32> { using type = int32; };
+	template<> struct to_signed<uint64> { using type = int64; };
+	template<typename T> using to_signed_t = typename to_signed<T>::type;
 
-	/* memory releative type / helpful function */
+	//pointer releative type / helpful fn
 	namespace ptr
 	{
+		//define size_t / diff_t / 
 		template<int32 size> struct ptr_traits { static_assert(size != 4 || size != 8, "unkown ptr size."); };
-		template<> struct ptr_traits<4> { typedef uint32 size_t;  typedef int32 diff_t; };
-		template<> struct ptr_traits<8> { typedef uint64 size_t;  typedef int64 diff_t; };
-		typedef typename ptr_traits<sizeof(void*)>::size_t size_t;  
-		typedef typename ptr_traits<sizeof(void*)>::diff_t diff_t;
+		template<>           struct ptr_traits<4> { using size_t = uint32 ; using diff_t = int32; };
+		template<>           struct ptr_traits<8> { using size_t = uint64 ; using diff_t = int64; };
+		using size_t = typename ptr_traits<sizeof(void*)>::size_t;
+		using diff_t = typename ptr_traits<sizeof(void*)>::diff_t;
+
+		//define nullptr_t 
 		typedef decltype(nullptr) nullptr_t;
+
+		//define nothrow_t
 		typedef std::nothrow_t nothrow_t;
 		constexpr nothrow_t nothrow;
 
-		template<typename T>
-		void safe_delete(T*& t)
-		{
-			//rise error if T is imcomplete like void*
-			sizeof(*t); if (t) { delete t; t = nullptr; }
-		}
+		// safe release t / array t, rise compile error if T is imcomplete like void*
+		template<typename T> void safe_delete(T*& t) { sizeof(*t); if (t) { delete t; t = nullptr; } }
+		template<typename T> void safe_delete_array(T*& t) { sizeof(*t); if (t) { delete[] t; t = nullptr; } }
 
-		template<typename T>
-		void safe_delete_array(T*& t)
-		{
-			//rise error if T is imcomplete
-			sizeof(*t); if (t) { delete[] t; t = nullptr; }
-		}
-
-		//like void* / declare Type*, not check type
-		template<typename T>
-		void imcomp_delete(T*& t)
-		{
-			if (t) { delete t; t = nullptr; }
-		}
+		//like void* / declared T*, not check type
+		template<typename T> void imcomp_delete(T*& t) { if (t) { delete t; t = nullptr; } }
 
 #define ccdk_safe_delete_if_exception( content , expr )                        \
 			try { (content) = (expr); }                                        \
@@ -78,12 +76,11 @@ namespace ccdk
 #define ccdk_check_index(index, length)  ccdk_throw_if( (((index)>=(length) && (index)<=-(int64)(length))), std::out_of_range{"invalid index"} )
 #define ccdk_check_expr(expr, exception) ccdk_throw_if(!(expr), exception )
 
-#define ccdk_if_not_this(T)          if(ccdk_likely( ::ccdk::mpl::util::addressof(T)!=this ))
-#define ccdk_if_not_same_addr(T1,T2) if(ccdk_likely( ::ccdk::mpl::util::addressof(T1)!=::ccdk::mpl::util::addressof(T2) ))
+#define ccdk_if_not_this(T)          if(ccdk_likely( mpl::addressof(T)!=this ))
+#define ccdk_if_not_same_addr(T1,T2) if(ccdk_likely( mpl::addressof(T1)!= mpl::addressof(T2) ))
 
 #define CCDK_TFN(T)  template<typename...> typename T
 #define CCDK_TFN1(T) template<typename, typename...> typename T
-
 	}
 
 }

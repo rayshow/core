@@ -46,27 +46,27 @@ template<typename Alloc>
 class allocator_traits
 {
 public:
-	typedef Alloc                               allocator_type;
-	typedef typename Alloc::value_type          value_type;
-	typedef value_type*                         pointer;
-	typedef value_type const*                   const_pointer;
-	typedef value_type&                         reference;
-	typedef value_type const&                   const_reference;
-	typedef typename get_size_type<Alloc>::type size_type;
-	typedef typename get_diff_type<Alloc>::type different_type;
+	using value_type = typename Alloc::value_type;
+	using pointer = value_type * ;
+	using const_pointer = value_type const*;
+	using reference = value_type &;
+	using const_reference = value_type const&;
+	using size_type = typename get_size_type<Alloc>::type ;
+	using difference_type = to_signed_t<size_type>;
+
 	template<typename P>
 	using rebind = allocator_traits<P>;
 
-	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n) {
+	CCDK_FORCEINLINE static pointer allocate(Alloc& alloc, size_type n) {
 		ccdk_assert(n > 0);
 		return static_cast<pointer>(alloc.allocate(n)); 
 	}
-	CCDK_FORCEINLINE static pointer allocate(allocator_type& alloc, size_type n, const void* hint){
+	CCDK_FORCEINLINE static pointer allocate(Alloc& alloc, size_type n, const void* hint){
 		if (n == 0) return nullptr;
 		return static_cast<pointer>(alloc.allocate(n, hint)); 
 	}
 
-	CCDK_FORCEINLINE static void deallocate(allocator_type& alloc, pointer& p, size_type n) {
+	CCDK_FORCEINLINE static void deallocate(Alloc& alloc, pointer& p, size_type n) {
 		sizeof(*p); /* check imcomplete type */
 		if(p) alloc.deallocate(p,n); 
 		p = nullptr;

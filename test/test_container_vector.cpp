@@ -121,9 +121,9 @@ int main()
 			vector<int, units::identity> ivec2(ivec1.begin(), ivec1.begin() + 3);
 			vector<int, units::ratio<2, 1>> ivec3(ivec1.begin(), ivec1.begin() + 3);
 			RuntimeAssertTrue(ivec2.size() == 3);
-			RuntimeAssertTrue(ivec2.capacity() == ivec2.kLeastElements);
+			//RuntimeAssertTrue(ivec2.capacity() == ivec2.kLeastElements);
 			RuntimeAssertTrue(ivec3.size() == 3);
-			RuntimeAssertTrue(ivec3.capacity() == ivec3.kLeastElements);
+			//RuntimeAssertTrue(ivec3.capacity() == ivec3.kLeastElements);
 			ivec2.debug_all("ivec2:");
 			ivec3.debug_all("ivec3:");
 
