@@ -45,7 +45,7 @@ namespace util_impl {
 		bool = has_member_equals_v<T2,T1>
 	>
 	struct equals_impl_t {
-		//
+		// error
 	};
 
 	template<typename T1, typename T2>

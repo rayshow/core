@@ -9,8 +9,7 @@
 #include<ccdk/mpl/function/prediction.h>
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/memory/simple_new_allocator.h>
-
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/vector.h>
 

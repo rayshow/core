@@ -34,18 +34,36 @@ public:
 		return upstream_adapter::deallocate(alloc, address, n);
 	}
 
-	// ext-allocate function, allocate memory,
-	// set capacity and check weather out of size_type range
-	static auto allocate_inc(Alloc& alloc, size_type n, ) {
-		size_type actual_size = fn::max(LeastCount, allocate_ratio::multiply(n));
-		
-		if (n == size_type(-1) || cge<difference_type>() throw std::bad_alloc{};            
-			content = allocator_type::allocate(*this, actual_size);
+	static pointer allocate(Alloc& alloc, size_type n) {
+		return upstream_adapter::allocate(alloc, fn::max(LeastCount,n));
 	}
 
+	// ext-allocate function, allocate memory and check weather overflow
+	// set capacity and length 
+	static pointer allocate_inc(Alloc& alloc, size_type n, size_type* cap, size_type* len) {
+		//compute actually allocating size
+		size_type actual_size = fn::max(LeastCount, allocate_ratio::multiply(n));
+		// size overflow
+		if (n == size_type(-1) || cge<difference_type>(n, actual_size))
+			throw std::bad_alloc{};
+		//allocate
+		pointer memory = upstream_adapter::allocate(alloc, actual_size);
+		//allocate success
+		if (cap) *cap = actual_size;
+		if (len) *len = n;
+		return memory;
+	}
+
+	static pointer allocate_inc(Alloc& alloc, size_type n, size_type* cap) {
+		return allocate_inc(alloc, n, cap, nullptr);
+	}
+
+	static pointer allocate_inc(Alloc& alloc, size_type n) {
+		return allocate_inc(alloc, n, nullptr, nullptr);
+	}
 
 	CCDK_FORCEINLINE static constexpr size_type max_allocate_size() noexcept {
-		return size_type(-1) / sizeof(node_type);
+		return size_type(-1) / sizeof(value_type);
 	}
 };
 

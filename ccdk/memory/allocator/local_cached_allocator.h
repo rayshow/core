@@ -48,7 +48,7 @@ public:
 	when cache is not full, deallocate will put memory block to it, and allocate
 		will get memory block from it
 	note:
-		only allocate/deallocate 1 element is premit because cache is not continuous
+		only for list and tree container
 */
 template<
 	uint32 Limit,    //max nodes to cache

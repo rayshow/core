@@ -38,7 +38,7 @@ public:
 	using size_type          = typename upstream_adapter::size_type;
 	
 	using node_type = value_type;
-	using link_type = value_type * ;
+	using link_type = value_type*;
 
 	template<typename U>
 	using rebind = list_allocate_adapter<U>;

@@ -22,6 +22,9 @@ ccdk_namespace_ct_start
 
 using namespace ccdk::mpl;
 
+
+struct vector_actual_size_tag {};
+
 template<
 	typename T,                              /* element type */
 	typename IncRatio = units::ratio<2, 1>,  /* 2X incease ratio*/
@@ -52,10 +55,18 @@ public:
 	template<typename, typename, uint32, typename, typename>
 	friend class vector;
 	
-private:
+protected:
 	pointer   content;
 	size_type len;
 	size_type cap;
+
+	//for local vector
+	CCDK_FORCEINLINE explicit vector(vector_actual_size_tag, size_type n){
+		ccdk_assert(n > 0);
+		content = allocator_type::allocate(*this, n);
+		cap = n;
+		len = 0;
+	}
 
 public:
 
@@ -274,8 +285,7 @@ public:
 		typename  = check_t< has_constructor< T, Args...>> >
 	CCDK_FORCEINLINE this_type& emplace_back(Args&& ... args){
 		if (len == cap) { reallocate_move(); }
-		util::construct<T>(content + len++, util::forward<P>(p),
-			util::forward<Args>(args)...);
+		util::construct<T>(content + len++, util::forward<Args>(args)...);
 		return *this;
 	}
 
@@ -504,7 +514,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////
 //// implements
-private:
+protected:
 	// reset but not deallocate memory 
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
 		content = nullptr; len = 0;  cap = 0;
@@ -652,7 +662,7 @@ private:
 //// debug
 public:
 
-	void debug_all(const char* str="") const noexcept {
+	void debug_value(const char* str="") const noexcept {
 		DebugValueItBegin(str);
 		for (uint32 i = 0; i < len; ++i) {
 			DebugValueIt(this->at(i));
@@ -661,21 +671,175 @@ public:
 	}
 };
 
-
 template<
 	typename T,                                          /* element type */
-	uint32  KLeastElemntCount = 128,                     /* least allocate 10 elements */
+	uint32  KLeastElemntCount = 32,                      /* least allocate 128 elements */
 	typename IncRatio = units::ratio<2, 1>,              /* 2X incease ratio*/
 	typename Size = uint32,                              /* size type */
 	typename Alloc = mem::simple_new_allocator<T, Size>, /* basic allocator */
-	typename Super = vector<T, IncRatio, KLeastElemntCount,
+	typename Super = vector<T, IncRatio, KLeastElemntCount, Size,
 	mem::semi_stack_allocator< KLeastElemntCount, Alloc>>
 >
-class local_vector : protected Super
+class local_vector : public Super
 {
+protected:
+	using Super::content;
+	using Super::len;
+	using Super::cap;
+	using Super::rvalue_set;
+	using Super::rvalue_reset;
 public:
+	using this_type = local_vector;
+	using size_type = Size;
+	using allocator_type = typename Super::allocator_type;
+	using pointer = typename Super::pointer;
+
+	using Super::operator=;
+	using Super::assign;
+	using Super::operator[];
+	using Super::at;
+	using Super::begin;
+	using Super::end;
+	using Super::cbegin;
+	using Super::cend;
+	using Super::rbegin;
+	using Super::rend;
+	using Super::crbegin;
+	using Super::crend;
+	using Super::size;
+	using Super::capacity;
+	using Super::max_size;
+	using Super::empty;
+	using Super::front;
+	using Super::back;
+	using Super::data;
+	using Super::pop_back;
+	using Super::push_back;
+	using Super::emplace_back;
+	using Super::emplace;
+	using Super::insert;
+	using Super::erase;
+	using Super::clear;
+	using Super::map;
+	using Super::foreach;
+
+	constexpr static vector_actual_size_tag ActualSizeInit{};
 	
-}
+	//use stack memory, set capcity, but not set length
+	local_vector() : Super{ ActualSizeInit, KLeastElemntCount } {}
+
+	//0-fill-ctor, use stack memory  and set length = n
+	local_vector(size_type n, ptr::nullptr_t) : local_vector{} {
+		ccdk_assert(n <= KLeastElemntCount); //if trigger, you should incease the KLeastElemntCount
+		memset(content, 0, n*sizeof(T));
+		len = n;
+	}
+
+	//fill-ctor  , use stack memory and set length = n
+	local_vector(size_type n, T const& t) :local_vector{} {
+		ccdk_assert(n <= KLeastElemntCount); //if trigger, you should incease the KLeastElemntCount
+		util::construct_fill_n(content, t, n);
+		len = n;
+	}
+
+	//range-n
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
+	local_vector(InputIt begin, size_type n) :local_vector{} {
+		ccdk_assert(n <= KLeastElemntCount); //if trigger, you should incease the KLeastElemntCount
+		util::construct_copy_n(content, begin, n);
+		len = n;
+	}
+
+	//range-ctor
+	template<typename InputIt, typename = check_t< is_iterator<InputIt>> >
+	local_vector(InputIt begin, InputIt end) 
+		:local_vector{begin, it::distance(begin, end)} {}
+
+	//copy-ctor
+	local_vector(local_vector const& other)
+		:local_vector{ other.begin(), other.size() } {}
+
+	//array-ctor
+	template<uint32 N>
+	local_vector(T const (&arr)[N])
+		: local_vector{ arr, N } {}
+
+	//move
+	local_vector(local_vector && other) noexcept {
+		move_impl(util::move(other));
+	}
+
+//////////////////////////////////////////////////////////////////////////////
+//// assign / swap 
+
+	void swap(this_type& other) {
+		if (other.is_stack() && is_stack()) {
+			uint32 max_byte = fn::max(other.size(), size()) * sizeof(T);
+			uint8 tmp[KLeastElemntCount*sizeof(T)];
+			memcpy(tmp, other.content, max_byte);
+			memcpy(other.content, content, max_byte);
+			memcpy(content, tmp, max_byte);
+		} 
+		else if (!other.is_stack() && !is_stack()) {
+			util::swap(content, other.content);
+		}
+		else if (other.is_stack() && !is_stack()) {
+			swap_stack_and_heap(other);
+		}
+		else {
+			other.swap_stack_and_heap(*this);
+		}
+		util::swap(len, other.len);
+		util::swap(cap, other.cap);
+	}
+
+
+
+	this_type& operator=(local_vector && other) {
+		ccdk_if_not_this(other) {
+			destroy();
+			move_impl(other);
+		}
+	}
+
+	CCDK_FORCEINLINE bool is_stack() const noexcept { return KLeastElemntCount == cap; }
+
+private:
+
+	//this is heap based
+	void swap_stack_and_heap(local_vector& stack) {
+		pointer tmp = content;
+		content = allocator_type::allocate(*this, KLeastElemntCount);
+		if(stack.size()) memcpy(content, stack.content, stack.size() * sizeof(T));
+		stack.content = tmp;
+	}
+	
+	void move_impl(local_vector&& other) noexcept {
+		if (other.size() == KLeastElemntCount) {
+			//in stack, move content to this stack
+			content = allocator_type::allocate(*this, KLeastElemntCount);
+			memcpy(content, other.begin(), sizeof(T)*other.size());
+			memset(other.begin(), 0, sizeof(T)*other.size());
+			cap = KLeastElemntCount;
+			len = other.size();
+			other.rvalue_reset();
+		}
+		else {
+			//in heap, transfer from other to this, and reset other
+			rvalue_set(other.content, other.len, other.cap);
+			other.rvalue_reset();
+		}
+	}
+
+public:
+	using Super::debug_value;
+
+	void debug_is_stack() {
+		DebugValue("is stack:", is_stack());
+	}
+	
+
+};
 
 
 ccdk_namespace_ct_end

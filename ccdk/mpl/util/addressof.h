@@ -5,9 +5,10 @@
 ccdk_namespace_mpl_util_start
 
 #if !defined(CCDK_COMPILER_GCC)
+
+	// return address of t
 	template<class T>
-	CCDK_FORCEINLINE constexpr  T * addressof(T& t) noexcept
-	{	// return address of _Val
+	CCDK_FORCEINLINE constexpr T * addressof(T& t) noexcept {	
 		return (__builtin_addressof(t));
 	}
 #else
