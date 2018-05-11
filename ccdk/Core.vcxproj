@@ -212,6 +212,7 @@
     <ClInclude Include="mpl\units\quantity.h" />
     <ClInclude Include="mpl\units\ratio.h" />
     <ClInclude Include="mpl\util\at.h" />
+    <ClInclude Include="mpl\util\compare.h" />
     <ClInclude Include="mpl\util\construct.h" />
     <ClInclude Include="mpl\util\data.h" />
     <ClInclude Include="mpl\util\destruct.h" />

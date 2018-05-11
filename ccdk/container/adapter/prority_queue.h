@@ -2,7 +2,7 @@
 
 #include<ccdk/container/container_mudule.h>
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/container/slist.h>
+#include<ccdk/container/vector.h>
 
 ccdk_namespace_ct_start
 
@@ -12,7 +12,7 @@ template<
 	typename T,
 	typename Size,
 	typename Alloc = mem::simple_new_allocator<T, Size>,
-	typename Base = slist<T, Size, Alloc>
+	typename Base = vector<T, units::ratio<2,1>, 10, Size, Alloc>
 >
 class prioity_queue
 {
@@ -67,17 +67,15 @@ public:
 	}
 
 	//push / pop
-	CCDK_FORCEINLINE void pop() { content.pop_front(); }
+	CCDK_FORCEINLINE void pop() { content.pop_back()(); }
 	CCDK_FORCEINLINE void push(T const& t) { content.push_back(t); }
 	CCDK_FORCEINLINE void push(T && t) { content.push_back(util::move(t)); }
 	template<typename... Args>
 	CCDK_FORCEINLINE void emplace(Args && t) { content.emplace_back(util::forward<Args>(args)...); }
 
 	//front / back
-	CCDK_FORCEINLINE reference front() noexcept { content.front(); }
-	CCDK_FORCEINLINE const_reference front() const noexcept { content.front(); }
-	CCDK_FORCEINLINE reference back() noexcept { content.back(); }
-	CCDK_FORCEINLINE const_reference back() const noexcept { content.back(); }
+	CCDK_FORCEINLINE reference top() noexcept { content.back(); }
+	CCDK_FORCEINLINE const_reference top() const noexcept { content.back(); }
 
 	//size / empty
 	CCDK_FORCEINLINE size_type size() const noexcept { return content.size(); }

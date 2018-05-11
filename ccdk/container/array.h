@@ -60,7 +60,6 @@ public:
 	CCDK_FORCEINLINE constexpr array() : len(0) {}
 	CCDK_FORCEINLINE constexpr array(ptr::nullptr_t) : len(0) {}
 
-
 	/* compile-time arry constructor, note for c-string length include 0-terminal  */
 	template<
 		uint32 N2, 

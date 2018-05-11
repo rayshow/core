@@ -67,8 +67,9 @@ void move(T(&dest)[D], T(&&src)[S])
 }
 
 /* pod-type array*/
-template<typename T, ptr::size_t D, ptr::size_t S,
-	typename = check_t< not_<is_trivial<T>>>,          /* T is not pod  */
+template<
+	typename T, ptr::size_t D, ptr::size_t S,
+	typename = check_t< not_<is_trivial<T>>>,      /* T is not pod  */
 	typename = check_t< has_move_assigner<T>>      /* and has move asssigner */
 >
 void move(T(&dest)[D], T(&&src)[S])

@@ -909,5 +909,6 @@
     <ClInclude Include="container\list.h" />
     <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
     <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
+    <ClInclude Include="mpl\util\compare.h" />
   </ItemGroup>
 </Project>

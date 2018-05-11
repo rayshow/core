@@ -8,32 +8,19 @@
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/mpl/function/bind_mfn.h>
 #include<ccdk/memory/allocator_traits.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/container/impl/link_node.h>
 
 ccdk_namespace_ct_start
 
 using namespace mpl;
 
-// just call util::KeyCmpFn
-
-template<typename T>
-struct default_cmp {
-
-};
-
-template<typename T>
-struct default_to_key {
-};
-
 template<
 	typename Key,
 	typename MappedType,
 	typename T,
-	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator<T>,
-	typename MapKeyFn = default_to_key<T>,
-	typename CmpFn  = default_cmp<T>,
+	typename Size = uint32,                               //
+	typename Alloc = mem::simple_new_allocator<T,Size>,   //rb-node allocator
 	typename Node = rb_node<T>
 >
 class rb_tree : protected Alloc::rebind< Node >
