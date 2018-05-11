@@ -12,7 +12,7 @@
 #include<ccdk/mpl/iterator/round_index_iterator.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/mpl/units/ratio.h>
-#include<ccdk/memory/simple_new_allocator.h>
+#include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator_traits.h>
 
 #include<ccdk/container/container_mudule.h>

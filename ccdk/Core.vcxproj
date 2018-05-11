@@ -218,6 +218,7 @@
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\util\fill.h" />
+    <ClInclude Include="mpl\util\impl\has_member_decl.h" />
     <ClInclude Include="text\string.h" />
     <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\encoding\ascii.h" />

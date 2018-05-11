@@ -6,34 +6,12 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_equal.h>
 #include<ccdk/mpl/util/addressof.h>
+#include<ccdk/mpl/util/impl/has_member_decl.h>
 
 ccdk_namespace_mpl_util_start
 
-// test weather member ptr::size_t to_hash() exists
-namespace ut_impl
-{
-	template<typename T1, typename T2>
-	struct has_equals_impl
-	{
-		template<
-			typename P1,
-			typename P2,
-			//check to_hash() exists
-			typename Ret = decltype(makeval<P1>().equals(declval<P2>())), 
-			//check return is bool
-			typename = check_t< is_same<Ret, bool>>   
-		>
-		constexpr static bool sfinae(int) { return true; }
-		template<typename P1, typename = P2>
-		constexpr static bool sfinae(...) { return false; }
-		constexpr static bool value = sfinae<T1, T2>(0);
-	};
-}
-template<typename T1, typename T2>
-struct has_member_equals :bool_< ut_impl::has_equals_impl<T1,T2>::value > {};
-template<typename T1, typename T2>
-static constexpr bool  has_member_equals_v = ut_impl::has_equals_impl<T1, T2>::value;
-
+// has_member_less test weather bool T.less( P ) is exists
+CCDK_MPL_HAS_MEMBER_DECL(equals, equals, bool);
 
 namespace util_impl {
 

@@ -15,11 +15,36 @@ template<
 	typename Value,
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<fs::pair<Key, Value>, Size>,
-	typename Super = rb_tree<Key,Value,fs::pair<Key,Value>,Size,Alloc>
+	typename Impl = rb_tree<false, Key, Value, fs::pair<Key,Value>,
+		fs::get_first_t, fs::get_second_t, Size,Alloc>
 >
-class map: public Super
+class map: public Impl
 {
+	using super_type = Impl;
+	using this_type  = map;
+	using value_type = fs::pair<Key, Value>;
+	using size_type  = Size;
 
+public:
+
+	using Impl::foreach;
+
+	map() noexcept : super_type{} {}
+	map(ptr::nullptr_t) noexcept : super_type{nullptr} {}
+
+	template<typename InputIt, typename = check_t<is_iterator<InputIt>>>
+	map(InputIt begin, size_type n) : super_type{ begin, n } {}
+
+	template<uint32 N>
+	map(value_type const(&arr)[N]) : map{ arr,N } {}
+
+	void debug_value(const char* title="") {
+		DebugValueItBegin(title);
+		foreach([](const value_type& v) {
+			DebugValueIt(v.first, v.second);
+		});
+		DebugValueItEnd();
+	}
 };
 
 

@@ -910,5 +910,6 @@
     <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
     <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
     <ClInclude Include="mpl\util\compare.h" />
+    <ClInclude Include="mpl\util\impl\has_member_decl.h" />
   </ItemGroup>
 </Project>

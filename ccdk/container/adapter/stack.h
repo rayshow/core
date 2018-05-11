@@ -67,21 +67,31 @@ public:
 	}
 
 	//push / pop
-	CCDK_FORCEINLINE void pop() { content.pop_back(); }
+	CCDK_FORCEINLINE void pop() noexcept { content.pop_back(); }
 	CCDK_FORCEINLINE void push(T const& t) { content.push_back(t); }
 	CCDK_FORCEINLINE void push(T && t) { content.push_back(util::move(t)); }
 	template<typename... Args>
-	CCDK_FORCEINLINE void emplace(Args && t) { content.emplace_back(util::forward<Args>(args)...); }
+	CCDK_FORCEINLINE void emplace(Args &&... args) { content.emplace_back(util::forward<Args>(args)...); }
 
 	//top
-	CCDK_FORCEINLINE reference top() noexcept { content.back(); }
-	CCDK_FORCEINLINE const_reference top() const noexcept { content.back(); }
+	CCDK_FORCEINLINE reference top() noexcept { return content.back(); }
+	CCDK_FORCEINLINE const_reference top() const noexcept { return content.back(); }
+
 
 	//size / empty
 	CCDK_FORCEINLINE size_type size() const noexcept { return content.size(); }
 	CCDK_FORCEINLINE size_type empty() const noexcept { return content.empty(); }
 };
 
+
+// local stack
+template<
+	typename T,
+	uint32 KLeastElements = 128,
+	typename Size = uint32 ,
+	typename Alloc = mem::simple_new_allocator<T, Size> >
+using local_stack = stack<T, Size, Alloc,
+	local_vector<T, KLeastElements, units::ratio<2, 1>, Size, Alloc> >;
 
 
 

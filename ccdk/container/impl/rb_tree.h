@@ -7,29 +7,34 @@
 #include<ccdk/mpl/iterator/reverse_iterator.h>
 #include<ccdk/mpl/fusion/local_obj.h>
 #include<ccdk/mpl/function/bind_mfn.h>
+#include<ccdk/mpl/util/compare.h>
 #include<ccdk/memory/allocator_traits.h>
 #include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/container/impl/link_node.h>
+#include<ccdk/container/adapter/stack.h>
 
 ccdk_namespace_ct_start
 
 using namespace mpl;
 
 template<
+	bool AllowEqualKey,
 	typename Key,
 	typename MappedType,
 	typename T,
+	typename ExtractKey,
+	typename ExtractMapped,
 	typename Size = uint32,                               //
 	typename Alloc = mem::simple_new_allocator<T,Size>,   //rb-node allocator
 	typename Node = rb_node<T>
 >
-class rb_tree : protected Alloc::rebind< Node >
+class rb_tree : protected Alloc::template rebind< Node >
 {
-	using this_type = rb_tree;
-	using node_type = Node;
-	using link_type = node_type * ;
+	using this_type  = rb_tree;
+	using node_type  = Node;
+	using link_type  = node_type * ;
 	using clink_type = node_type const*;
-	using key_type = Key;
+	using key_type   = Key;
 	using mapped_type = MappedType;
 
 	/* common */
@@ -40,7 +45,8 @@ class rb_tree : protected Alloc::rebind< Node >
 	using const_reference = T const&;
 	using size_type = Size;
 	using difference_type = ptr::diff_t;
-	using allocator_type = mem::allocator_traits< typename Alloc::rebind< Node > >;
+	using allocator_type = mem::allocator_traits< 
+		typename Alloc::template rebind< Node > >;
 
 	//iterator
 	using iterator = it::iterator< bstree_tag, Node>;
@@ -49,8 +55,8 @@ class rb_tree : protected Alloc::rebind< Node >
 	using const_reverse_iterator = it::reverse_iterator< const_iterator>;
 
 private:
-	static constexpr MapKeyFn MappingKeyFn{};  //mapping value to key fn
-	static constexpr CmpFn    KeyCmpFn{};
+	static constexpr ExtractKey     ExtractKeyFn{};
+	static constexpr ExtractMapped  ExtractMappedFn{};
 
 	fs::local_obj<node_type> head;      // a empty node, pointer to root
 	size_type				 len;       // length
@@ -58,7 +64,7 @@ private:
 	//handful function
 	CCDK_FORCEINLINE clink_type end_node() const noexcept { return head.address(); }
 	CCDK_FORCEINLINE link_type& root() noexcept { return head->parent; }
-	CCDK_FORCEINLINE key_type& KeyOfLink(link_type node) noexcept { return MappingKeyFn(node->value); }
+	CCDK_FORCEINLINE key_type&  KeyOfLink(link_type node) noexcept { return ExtractKeyFn(node->data); }
 	CCDK_FORCEINLINE link_type& left_most() noexcept { return head->left; }
 	CCDK_FORCEINLINE link_type& right_most() noexcept { return head->right; }
 
@@ -114,44 +120,45 @@ public:
 		head->right = tmp;
 		tmp = other_head->parent;
 		other_head->parent = head->parent;
-		head->parent tmp;
+		head->parent = tmp;
 		util::swap(len, other.len);
 	}
 
 	//emplace insert
 	template<typename... Args>
 	fs::pair<iterator, bool> emplace(Args&&... args) {
-		link_type node = new_node(util::forward<Args>(args)...);
-		auto p = insert_impl<AllowEqualKey>(node);
+		link_type node = new_node(nullptr, util::forward<Args>(args)...);
+		auto p = insert_impl(node);
 		if (!p.second) destroy_node(node);
 		return p;
 	}
 
 	// insert one node
-	template<bool AllowEqualKey>
 	fs::pair<iterator, bool> insert(T const& t) { 
-		link_type node = new_node(t);
-		auto p = insert_impl<AllowEqualKey>(node);
+		link_type node = new_node(nullptr,t);
+		auto p = insert_impl(node);
 		//insert failed
 		if (!p.second) destroy_node(node);
 		return p;
 	 }
 
 	// range insert
-	template< bool AllowEqualKey, typename InputIt,
+	template< 
+		typename InputIt,
 		typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE void insert(InputIt begin, InputIt end) {
 		for (InputIt it = begin; it != end; ++it) {
-			insert<AllowEqualKey>(*it);
+			insert(*it);
 		}
 	}
 	
 	// range-n insert
-	template< bool AllowEqualKey, typename InputIt,
+	template< 
+		typename InputIt,
 		typename = check_t< is_iterator<InputIt>> >
 	CCDK_FORCEINLINE void insert(InputIt begin, size_type n) {
-		for (size_type i = 0; i<n; ++i,++it) {
-			insert<AllowEqualKey>(*it);
+		for (size_type i = 0; i<n; ++i,++begin) {
+			insert(*begin);
 		}
 	}
 
@@ -173,8 +180,8 @@ public:
 	void clear() {
 		link_type node = root();
 		while (node!= end_node()) {
-			link_type parent = node->parent;
 			if (!node->left && !node->right) {
+				link_type parent = node->parent;
 				if (node == parent->left) {
 					parent->left = nullptr;
 				}
@@ -182,7 +189,7 @@ public:
 					parent->right = nullptr;
 				}
 				destroy_node(node);
-				node = node->parent;
+				node = parent;
 			}
 			else if(node->left) {
 				node = node->left;
@@ -247,17 +254,31 @@ public:
 	CCDK_FORCEINLINE size_type size() const noexcept { return len;}
 	CCDK_FORCEINLINE bool empty() const noexcept { return len == 0; }
 
-//// implements 
-private:
-	CCDK_FORCEINLINE static link_type min_node(link_type node) noexcept {
-		while (node->left) node = node->left;
-		return node;
+	
+////////////////////////////////////////////////////////////////////
+//// transform / foreach
+
+	// inorder visit
+	template<typename Fn>
+	CCDK_FORCEINLINE void foreach(Fn fn) {
+		// more than 2^64 node may over local stack's stack size, but heap will hold it 
+		local_stack<link_type, 128> stack;
+		link_type node = root();
+		while (node || !stack.empty()) {
+			while (node) {
+				stack.push(node);
+				node = node->left;
+			}
+			node = stack.top();
+			stack.pop();
+			fn(node->data);
+			node = node->right;
+		}
 	}
 
-	CCDK_FORCEINLINE static link_type max_node(link_type node) noexcept {
-		while (node->right) node = node->right;
-		return node;
-	}
+
+//// implements 
+private:
 
 	CCDK_FORCEINLINE void rvalue_set(fs::local_obj<node_type> & other) noexcept {
 		head->parent = other->parent;
@@ -275,6 +296,36 @@ private:
 		head->right = head.address();
 		head->parent = nullptr;
 		head->set_black();
+	}
+
+	CCDK_FORCEINLINE static link_type min_node(link_type node) noexcept {
+		while (node->left) node = node->left;
+		return node;
+	}
+
+	CCDK_FORCEINLINE static link_type max_node(link_type node) noexcept {
+		while (node->right) node = node->right;
+		return node;
+	}
+
+	CCDK_FORCEINLINE link_type prev(link_type node) noexcept {
+		if (node->left) return max_node(node->left);
+		while (node != root()) {
+			link_type parent = node->parent;
+			if (node == parent->right) return parent;
+			node = parent;
+		}
+		return nullptr;
+	}
+
+	CCDK_FORCEINLINE link_type next(link_type node) noexcept {
+		if (node->right) return min_node(node->right);
+		while (node != root()) {
+			link_type parent = node->parent;
+			if (node == parent->left) return parent;
+			node = parent;
+		}
+		return nullptr;
 	}
 
 	CCDK_FORCEINLINE clink_type lower_bound_impl(key_type const& key) const noexcept {
@@ -315,7 +366,7 @@ private:
 	CCDK_FORCEINLINE link_type new_node(link_type parent, Args&&... args) {
 		link_type new_node = allocator_type::allocate(*this, 1);
 		// value is in the front of Node Type, so just use node's address 
-		util::construct(new_node, util::forward<Args>(args)...);
+		util::construct<value_type>(new_node, util::forward<Args>(args)...);
 		new_node->left = nullptr;
 		new_node->right = nullptr;
 		//new_node except root is always red
@@ -529,21 +580,23 @@ private:
 
 	// do actually insert 
 	CCDK_FORCEINLINE fs::pair<iterator,bool> 
-		insert_at(link_type parent, link_type child) 
+		insert_at(link_type parent, link_type new_node, bool insert_at_left) 
 	{
-		child->parent = parent;
-		link_type new_node = new_node(t, parent);
-		//root is empty 
-		if (parent == head.address()) {
-			ccdk_assert(root() == nullptr);
-			root() = new_node;
-			//root is always black
-			new_node->set_black();
-			left_most() = new_node;
-			right_most() = new_node;
+		new_node->parent = parent;
+		
+		// key of new node < key of parent, insert to left
+		if (insert_at_left) {
+			if (parent->left) {
+				int a = 0;
+			}
+			ccdk_assert(parent->left == nullptr);
+			parent->left = new_node;
+			if (parent == left_most()) {
+				left_most() = new_node;
+			}
 		}
-		// key of t > key of parent, insert to left
-		else if (greater) {
+		// key of t > key of parent, insert to right
+		else {
 			ccdk_assert(parent->right == nullptr);
 			// insert to right
 			parent->right = new_node;
@@ -552,122 +605,153 @@ private:
 				right_most() = new_node;
 			}
 		}
-		// key of t < key of parent, insert to left
-		else {
-			ccdk_assert(parent->left == nullptr);
-			parent->left = new_node;
-			if (parent == left_most()) {
-				left_most() = new_node;
-			}
-		}
 		// insert at root's child, no need rebalance
 		if (parent != root()) {
-			rebalance_at(parent, new_node)
+			rebalance_at(parent, new_node);
 		}
+		++len;
 		return { {new_node}, true };
 	}
 
-	template<bool AllowEqualKey = false>
 	CCDK_FORCEINLINE fs::pair<iterator,bool>
 		insert_impl(link_type new_node) {
 
+		//root is empty 
+		if (root() == nullptr) {
+			ccdk_assert(root() == nullptr);
+			new_node->parent = head.address();
+			//root is always black
+			new_node->set_black();
+			head->set_pointer(new_node, new_node, new_node);
+			++len;
+			return { { new_node }, true };
+		}
+
 		link_type parent = head.address();
 		link_type child = root();
-		Key new_key = KeyOfLink(new_node);
+
+		key_type new_key = KeyOfLink(new_node);
 		bool insert_at_left = false;
 		while (child) {
 			parent = child;
 			//t.key > child.key ?
-			insert_at_left = KeyCmpFn(new_key, KeyOfLink(child));
+			insert_at_left = util::compare(new_key, KeyOfLink(child));
 			child = insert_at_left ? child->left : child->right;
 		}
 
 		//if allow multi-common-keys, just insert and return
 		if (AllowEqualKey) {
-			return insert_at(parent, new_node);
+			return insert_at(parent, new_node, insert_at_left);
 		}
 
 		// if insert right, parent need greater than t
 		// else prev-node need greater than t
 		link_type prev_insert = parent;
-		//greater than parent
+		//greater than parent 
 		if (insert_at_left) {
-			if (child == left_most()) {
-				return insert_at(parent, new_node);
+			if (parent == left_most()) {
+				return insert_at(parent, new_node, true);
 			}
 			else {
-				prev_insert = parent->prev();
+				prev_insert = prev(parent);
+				//if parent is not the left-most node, prev exists
+				ccdk_assert(prev_insert);
 			}
 		}
 
-		// check again, prev node must greater than t
-		if (KeyCmpFn(KeyOfLink(prev_insert), new_key)) {
-			return insert_at(parent, new_node);
+		// check again, prev node must greater than new_node
+		if (util::compare(KeyOfLink(prev_insert), new_key)) {
+			return insert_at(parent, new_node,true);
 		}
 		//here insert failed with not-unique-key
 		return { {prev_insert}, false };
 	}
 
 	// 
-	void rebalance_at(link_type p, link_type c, link_type gp) {
+	void rebalance_at(link_type P, link_type C) {
 		/*
-			  *  grand-parent( gp )
-			/  \
-			*  *  parent( p ) and parent-brother( pb )
-			/ \
-			child ( c ) and child-brother
+			   G  grand-parent
+			 /  \
+			P    S  parent( P ) and parent-sibling( S )
+		   /  \
+		  C    C  child ( C left or right ) C's sibling is CS
 
 			there are  cases:
-				case 1: p black, no need process
-				case 2: p on the left
-					sub-case 1: p red, pb red
-						turn p and pb black, gp red, recursive justify  gp as c
-					sub-case 2: p red, pb black, insert left
-						rotate right, switch p and gp's color
-					sub-case 3: p red, pb black, insert right
-				case 3: p on the right, mirror with on the left
+				case 1: P black, no need process
+				case 2: P on the left
+					sub-case 1: P red, S red
+						turn P and S black, G red, recursive justify G as C
+					sub-case 2: P red S black => G black, S=Nil,CS=Nil
+						insert at left(Red) rotate right, switch P and G's color
+						        C   Black
+                              /   \ 
+						Red  P     G  Red
+							    
+					sub-case 3: P red, G black, insert right => CS is Nil, S is Nil
+						rise C to G, and P as C's left and G as C's right
+							   C  Black
+                             /   \
+						Red P     G  Red
+				case 3: P on the right, mirror with on the left
 		*/
 
 		// case 1
-		if (p->is_black()) return;
+		if (P->is_black()) return;
 		
-		while (  p!=root() && p->is_red() && p != head.address() ) {
-			bool parent_on_left = p == gp->left;
-			bool child_on_right = c == p->right;
-			link_type pb = parent_on_left ? gp->right : gp->left;
-			bool pb_is_red = pb && pb->is_red();
+		// P is red, if is black goto case 1 stop
+		while ( P !=root() && P->is_red() && P != head.address() ) {
+			link_type G = P->parent;
+			bool parent_on_left = P == G->left;
+			link_type S = parent_on_left ? G->right : G->left;
+			bool S_is_red = S && S->is_red();
 
 			//case 2.1  / 3.1
-			if (pb_is_red) {
-				p->set_black();
-				pb->set_black();
-				gp->set_red();
-				c = gp;
-				p = c->parent;
-				gp = p->parent;
+			if (S_is_red) {
+				P->set_black();
+				S->set_black();
+				G->set_red();
+				//recursive to head
+				C = G;
+				P = C->parent;
 			}
-			// case 2
-			else if (parent_on_left) {
-				if (child_on_right) {
-					// case 2.3
-					rotate_left(c, p);
-					util::swap(c, p);
-				}
-				// case 2.2
-				rotate_right(p, gp);
-			}
-			// case 3 mirror with case 2
+			// case 2.2 2.3 3.2 3.3
 			else {
-				if (!child_on_right) {
-					// case 2.3
-					rotate_right(c, p);
-					util::swap(c, p);
+				bool child_on_right = C == P->right;
+				//S is black and P is Red + P no child => S is Nil, CS is Nil, G is red
+				ccdk_assert(S == nullptr);
+				ccdk_assert((child_on_right ? P->left : P->right) == nullptr);
+				ccdk_assert(G->is_black());
+				if (parent_on_left) {
+					if (child_on_right) {
+						// case 2.3
+						C->set_pointer(G->parent, P, G);
+						C->set_black();
+						P->set_pointer(C, nullptr, nullptr);
+						G->set_pointer(C, nullptr, nullptr);
+						G->set_red();
+					}
+					else {
+						// case 2.2 visited
+						rotate_right(P, G);
+					}
 				}
-				// case 2.2
-				rotate_left(p, gp);
-			}
-			root()->set_black();
+				else {
+					// case 3.3 mirror with 2.3
+					if (!child_on_right) {
+						C->set_pointer(G->parent, G, P);
+						C->set_black();
+						P->set_pointer(C, nullptr, nullptr);
+						G->set_pointer(C, nullptr, nullptr);
+						G->set_red();
+					}
+					else {
+						// case 3.2 mirror with 2.2
+						rotate_left(P, G);
+					}
+				}
+			} 
 		}// while
+		root()->set_black();
 	}
 
 	CCDK_FORCEINLINE void rotate_right(link_type P, link_type G) noexcept {
@@ -705,8 +789,13 @@ private:
 
 		// parent pointer to grand-grand-pa
 		P->parent = GG;
-		if (GG->left == G) GG->left = P;
-		else GG->right = P;
+		if (GG == head.address()) {
+			GG->parent = P;
+		}
+		else {
+			if (GG->left == G) GG->left = P;
+			else GG->right = P;
+		}
 		
 		//parent switch to black
 		P->set_black();
@@ -751,8 +840,13 @@ private:
 
 		// parent's parent pointer to grand-grand-pa
 		P->parent = GG;
-		if (GG->left == G) GG->left = P;
-		else GG->right = P;
+		if (GG == head.address()) {
+			GG->parent = P;
+		}
+		else {
+			if (GG->left == G) GG->left = P;
+			else GG->right = P;
+		}
 
 		//parent switch to plack
 		P->set_black();
