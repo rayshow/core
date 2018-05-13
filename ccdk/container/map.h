@@ -28,6 +28,7 @@ class map: public Impl
 public:
 
 	using Impl::foreach;
+	using Impl::print_tree;
 
 	map() noexcept : super_type{} {}
 	map(ptr::nullptr_t) noexcept : super_type{nullptr} {}
@@ -45,6 +46,8 @@ public:
 		});
 		DebugValueItEnd();
 	}
+
+
 };
 
 

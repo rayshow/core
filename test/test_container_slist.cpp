@@ -138,8 +138,38 @@ void debug_slist()
 		ccdk_assert(s1.back() == 10);
 		ccdk_assert(s1.front() == 3);
 	}
+	DebugNewTitle("empty op");
+	{
+		{
+			slist<int> s{};
+			s.push_back(1);
+		}
+		{
+			slist<int> s{};
+			s.push_front(1);
+		}
+		{
+			slist<int> s{};
+			s = { 1,2,3,4 };
+		}
+		{
+			slist<int> s{};
+			s.pop_front();
+		}
+		{
+			slist<int> s{ {1,2,3,4,5} };
+			s.foreach([](int v) {
+				DebugValueIt(v);
+			});
+			DebugValueItEnd();
+		}
+		{
+			slist<int> s{ { 1,2,3,4,5 } };
+			auto news = s.map([](int v) { return v + 3; });
+			news.debug_value();
+		}
+	}
 }
-
 
 void debug_cached_slist()
 {

@@ -10,7 +10,7 @@ using namespace ccdk::mpl;
 
 template<
 	typename T,
-	typename Size,
+	typename Size = uint32 ,
 	typename Alloc = mem::simple_new_allocator<T,Size>,
 	typename Base = vector<T, units::ratio<2,1>, 20, Size, Alloc>
 >

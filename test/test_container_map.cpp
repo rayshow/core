@@ -44,14 +44,15 @@ int main()
 		{
 			simap m{ {{"red",1},{"green",2}, {"blue",3}} };
 			m.debug_value();
+			m.print_tree();
 		}
 		DebugNewTitle("path test");
 		{
-			iimap m{};
-			for (int i = 10; i > 0; ++i) {
+			/*iimap m{};
+			for (int i = 1; i < 100; ++i) {
 				DebugValue(i);
 				m.insert({ i,i });
-			}
+			}*/
 		}
 	}
 

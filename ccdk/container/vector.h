@@ -25,11 +25,13 @@ using namespace ccdk::mpl;
 
 struct vector_actual_size_tag {};
 
+constexpr uint32 kVectorLestElements = 16;
+
 template<
-	typename T,                              /* element type */
-	typename IncRatio = units::ratio<2, 1>,  /* 2X incease ratio*/
-	uint32  KLeastElemntCount = 10,          /* least allocate 10 elements */
-	typename Size = uint32,                  /* size type */
+	typename T,                               /* element type */
+	typename IncRatio = units::ratio<2, 1>,   /* 2X incease ratio*/
+	uint32  N = kVectorLestElements,          /* least allocate 10 elements */
+	typename Size = uint32,                   /* size type */
 	typename Alloc = mem::simple_new_allocator<T,Size> /* basic allocator */
 >
 class vector : protected Alloc
@@ -43,8 +45,7 @@ public:
 	using const_reference = T const&;
 	using size_type       = Size;
 	using difference_type = ptr::diff_t;
-	using allocator_type  = mem::array_allocate_adapter<
-		KLeastElemntCount, IncRatio, Alloc>;
+	using allocator_type  = mem::array_allocate_adapter< N, IncRatio, Alloc>;
 
 	/* iterator */
 	using iterator               = T*;

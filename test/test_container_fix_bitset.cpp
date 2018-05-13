@@ -1,4 +1,4 @@
-#include<ccdk/container/ext/fix_bitset.h>
+#include<ccdk/container/fix_bitset.h>
 #include<bitset>
 #include<stdio.h>
 #include<list>

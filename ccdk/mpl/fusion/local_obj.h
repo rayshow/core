@@ -22,20 +22,6 @@ public:
 	//default ctor
 	CCDK_FORCEINLINE local_obj() noexcept = default;
 
-	// implace ctor
-	template<typename... Args>
-	CCDK_FORCEINLINE constexpr local_obj(Args&&... args) 
-		noexcept(has_nothrow_constructor_v<T,Args...>) 
-		: bytes{ 0 }  {
-		construct(util::forward<Args>(args)...);
-	}
-
-
-	void swap(local_obj & other)
-	{
-		util::swap(*address(), *other.address());
-	}
-
 	//  call ctor
 	template<typename... Args>
 	CCDK_FORCEINLINE void construct(Args&&... args)

@@ -10,7 +10,7 @@ using namespace ccdk::mpl;
 
 template<
 	typename T,
-	typename Size,
+	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<T, Size>,
 	typename Base = slist<T,Size,Alloc>
 >
@@ -71,13 +71,13 @@ public:
 	CCDK_FORCEINLINE void push(T const& t) { content.push_back(t); }
 	CCDK_FORCEINLINE void push(T && t) { content.push_back(util::move(t)); }
 	template<typename... Args>
-	CCDK_FORCEINLINE void emplace(Args && t) { content.emplace_back(util::forward<Args>(args)...); }
+	CCDK_FORCEINLINE void emplace(Args &&... args) { content.emplace_back(util::forward<Args>(args)...); }
 
 	//front / back
-	CCDK_FORCEINLINE reference front() noexcept { content.front(); }
-	CCDK_FORCEINLINE const_reference front() const noexcept { content.front(); }
-	CCDK_FORCEINLINE reference back() noexcept { content.back(); }
-	CCDK_FORCEINLINE const_reference back() const noexcept { content.back(); }
+	CCDK_FORCEINLINE reference front() noexcept { return content.front(); }
+	CCDK_FORCEINLINE const_reference front() const noexcept { return content.front(); }
+	CCDK_FORCEINLINE reference back() noexcept { return content.back(); }
+	CCDK_FORCEINLINE const_reference back() const noexcept { return content.back(); }
 
 	//size / empty
 	CCDK_FORCEINLINE size_type size() const noexcept { return content.size(); }
@@ -85,6 +85,13 @@ public:
 };
 
 
+template<
+	typename T,
+	uint32 CacheSize = 10,
+	typename Size = uint32,
+	typename Alloc = mem::simple_new_allocator<T, Size>
+>
+using cached_queue = queue<T, Size, Alloc, cached_slist<T, CacheSize, Size, Alloc>>;
 
 
 ccdk_namespace_ct_end

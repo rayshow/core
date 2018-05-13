@@ -893,15 +893,10 @@
     <ClInclude Include="mpl\type_traits\is_volatile.h" />
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\function\identity.h" />
-    <ClInclude Include="container\ext\circular_buffer.h" />
-    <ClInclude Include="container\ext\fix_bitset.h" />
-    <ClInclude Include="container\ext\fix_circular_buffer.h" />
-    <ClInclude Include="container\ext\local_vector.h" />
     <ClInclude Include="container\map.h" />
     <ClInclude Include="container\set.h" />
     <ClInclude Include="container\bitset.h" />
     <ClInclude Include="container\slist.h" />
-    <ClInclude Include="container\ext\circular_slist.h" />
     <ClInclude Include="memory\allocator\simple_new_allocator.h" />
     <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
     <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
@@ -911,5 +906,9 @@
     <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
     <ClInclude Include="mpl\util\compare.h" />
     <ClInclude Include="mpl\util\impl\has_member_decl.h" />
+    <ClInclude Include="container\circular_buffer.h" />
+    <ClInclude Include="container\fix_bitset.h" />
+    <ClInclude Include="container\fix_circular_buffer.h" />
+    <ClInclude Include="mpl\base\bit_alg.h" />
   </ItemGroup>
 </Project>

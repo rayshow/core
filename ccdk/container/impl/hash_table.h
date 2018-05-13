@@ -126,7 +126,7 @@ template<
 	typename ExactValueFn,                        // exact value from T
 	typename MaxLoadFactor = units::ratio<1,2>,   // over 0.5 load factor will rehash 
 	typename Size = uint32,                       // size_type
-	typename Alloc = mem::simple_new_allocator<T>,
+	typename Alloc = mem::simple_new_allocator<T,Size>,
 	typename Node = forward_node<T>
 >
 class hash_table: protected Alloc::template rebind<Node>
@@ -137,8 +137,9 @@ public:
 	using node_type   = Node;
 	using link_type   = node_type * ;
 	using mapped_type = MappedType;
-	using bucket_container = vector<link_type, units::ratio<1,1>, Size,
-		typename Alloc::template rebind<link_type> >;
+	using bucket_container = vector<link_type, 
+		units::ratio<1,1>, kVectorLestElements, 
+		Size, typename Alloc::template rebind<link_type> >;
 	using node_allocator_type = mem::allocator_traits<
 		typename Alloc::template rebind<node_type>>;
 

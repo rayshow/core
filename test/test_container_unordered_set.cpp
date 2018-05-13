@@ -1,3 +1,4 @@
+#define CCDK_PROFILE 1
 #include<ccdk/container/unordered_set.h>
 #include<string>
 using namespace ccdk;

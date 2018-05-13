@@ -12,6 +12,7 @@
 #include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/container/impl/link_node.h>
 #include<ccdk/container/adapter/stack.h>
+#include<ccdk/container/adapter/queue.h>
 
 ccdk_namespace_ct_start
 
@@ -276,7 +277,29 @@ public:
 		}
 	}
 
+	 
+	CCDK_FORCEINLINE void preorder(link_type node = nullptr) {
+		queue<fs::pair<int,link_type>> que{};
+		que.push({ 1,root() });
+		int prev = 1;
+		while (!que.empty())
+		{
+			auto p = que.front();
+			que.pop();
+			DebugValueIt(p.second->data.first);
+			if (p.first != prev) {
+				DebugValueItEnd();
+				prev = p.first;
+			}
+			if (p.second->left) que.push({ p.first+1, p.second->left });
+			if (p.second->right) que.push({ p.first+1, p.second->right });
+		}
+	
+	}
 
+	CCDK_FORCEINLINE void print_tree() {
+		preorder(root());
+	}
 //// implements 
 private:
 
@@ -661,7 +684,7 @@ private:
 
 		// check again, prev node must greater than new_node
 		if (util::compare(KeyOfLink(prev_insert), new_key)) {
-			return insert_at(parent, new_node,true);
+			return insert_at(parent, new_node, insert_at_left);
 		}
 		//here insert failed with not-unique-key
 		return { {prev_insert}, false };
@@ -718,6 +741,9 @@ private:
 			else {
 				bool child_on_right = C == P->right;
 				//S is black and P is Red + P no child => S is Nil, CS is Nil, G is red
+				if (S != nullptr) {
+					int a = 0;
+				}
 				ccdk_assert(S == nullptr);
 				ccdk_assert((child_on_right ? P->left : P->right) == nullptr);
 				ccdk_assert(G->is_black());

@@ -33,7 +33,7 @@ public:
 	//then increase will use heap memory
 	CCDK_FORCEINLINE pointer allocate(ptr::size_t n) {
 		if (n == KLeastElements) return reinterpret_cast<pointer>( stack_memory);
-		else upstream.allocate(n);
+		else return upstream.allocate(n);
 	}
 
 	CCDK_FORCEINLINE pointer allocate(ptr::size_t n, const void* hint) { allocate(n); }

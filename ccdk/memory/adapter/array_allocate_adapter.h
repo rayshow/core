@@ -34,8 +34,11 @@ public:
 		return upstream_adapter::deallocate(alloc, address, n);
 	}
 
-	static pointer allocate(Alloc& alloc, size_type n) {
-		return upstream_adapter::allocate(alloc, fn::max(LeastCount,n));
+	static pointer allocate(Alloc& alloc, size_type n, size_type& cap) {
+		size_type actual_size = fn::max(LeastCount, allocate_ratio::multiply(n));
+		pointer memory = upstream_adapter::allocate(alloc, actual_size);
+		cap = actual_size;
+		return memory;
 	}
 
 	// ext-allocate function, allocate memory and check weather overflow
