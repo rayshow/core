@@ -53,10 +53,10 @@ public:
 	friend class circular_buffer;
 
 private: 
-	pointer   content;  // memory
+	pointer   content;   // memory
 	size_type ibegin;    // ibegin element index
 	size_type iend;      // iend  element index, remain 1 element when last+2 == first
-	size_type cap;      // cap is awalys 2^n, but store 2^n-1 to caculate fast
+	size_type cap;       // cap is awalys 2^n, but store 2^n-1 to caculate fast
 	
 #define CHECK_POW2() ccdk_assert( !(difference_type(cap) & (difference_type(cap)+1)) )
 	// help index fn
@@ -452,6 +452,8 @@ private:
 		iend = n;
 		return *this;
 	}
+
+#undef CHECK_POW2
 
 public:
 
