@@ -239,7 +239,7 @@ template<
 	typename T,
 	typename MaxLoadFactor = units::ratio<1, 2>,
 	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator<T>,
+	typename Alloc = mem::simple_new_allocator<T,Size>,
 	typename Container = hash_table<
 	true, T, T, T, fn::identity_t, fn::identity_t,
 	MaxLoadFactor, Size, Alloc>

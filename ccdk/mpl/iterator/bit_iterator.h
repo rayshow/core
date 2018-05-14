@@ -167,15 +167,15 @@ struct iterator< bit_random_category, T, Size >
 
 template<typename T, typename Size>
 CCDK_FORCEINLINE bool operator==(
-	iterator< bit_random_category, const T, Size > const lhs,
-	iterator< bit_random_category,  T, Size > const rhs)noexcept {
+	iterator< bit_random_category, const T, Size > const& lhs,
+	iterator< bit_random_category,  T, Size > const& rhs)noexcept {
 	return lhs.base == rhs.base && lhs.mask == rhs.mask && lhs.pos == rhs.pos;
 }
 
 template<typename T, typename Size>
 CCDK_FORCEINLINE bool operator==(
-	iterator< bit_random_category, T, Size > const lhs,
-	iterator< bit_random_category, const T, Size > const rhs)noexcept {
+	iterator< bit_random_category, T, Size > const& lhs,
+	iterator< bit_random_category, const T, Size > const& rhs)noexcept {
 	return lhs.base == rhs.base && lhs.mask == rhs.mask && lhs.pos == rhs.pos;
 }
 

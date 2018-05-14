@@ -64,8 +64,7 @@ protected:
 	//for local vector
 	CCDK_FORCEINLINE explicit vector(vector_actual_size_tag, size_type n){
 		ccdk_assert(n > 0);
-		content = allocator_type::allocate(*this, n);
-		cap = n;
+		content = allocator_type::allocate(*this, n, cap);
 		len = 0;
 	}
 
@@ -854,8 +853,9 @@ private:
 	void assign_set_enough_memory(size_type n) {
 		if (capacity() == 0 && n <= KLeastElemntCount) {
 			//first allocate and stack is big enough
-			content = allocator_type::allocate(*this, KLeastElemntCount);
-			cap = KLeastElemntCount;
+			size_type actual_cap;
+			content = allocator_type::allocate(*this, KLeastElemntCount, actual_cap);
+			cap = actual_cap;
 		}
 		else if (n > capacity()) {
 			//memory not enough, reallocate it
@@ -871,7 +871,8 @@ private:
 	//this is heap based
 	void swap_stack_and_heap(local_vector& stack) {
 		pointer tmp = content;
-		content = allocator_type::allocate(*this, KLeastElemntCount);
+		size_type actual_cap;
+		content = allocator_type::allocate(*this, KLeastElemntCount, actual_cap);
 		if(stack.size()) memcpy(content, stack.content, stack.size() * sizeof(T));
 		stack.content = tmp;
 	}
@@ -879,10 +880,11 @@ private:
 	void move_impl(local_vector&& other) noexcept {
 		if (other.size() == KLeastElemntCount) {
 			//in stack, move content to this stack
-			content = allocator_type::allocate(*this, KLeastElemntCount);
+			size_type actual_cap;
+			content = allocator_type::allocate(*this, KLeastElemntCount, actual_cap);
 			memcpy(content, other.begin(), sizeof(T)*other.size());
 			memset(other.begin(), 0, sizeof(T)*other.size());
-			cap = KLeastElemntCount;
+			cap = actual_cap;
 			len = other.size();
 			other.rvalue_reset();
 		}

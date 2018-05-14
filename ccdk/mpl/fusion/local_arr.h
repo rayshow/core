@@ -21,11 +21,11 @@ template<typename T, uint32 N>
 class local_arr
 {
 public:
-	constexpr uint32 kElementSize = sizeof(T);
-	constexpr uint32 kTotalSize = kElementSize * N;
+	static constexpr uint32 kElementSize = sizeof(T);
+	static constexpr uint32 kByteSize = kElementSize * N;
 	using size_type = uint32;
 private:
-	int8   content[kTotalSize];
+	int8   content[kByteSize];
 public:
 	/* default ctor */
 	CCDK_FORCEINLINE constexpr local_arr() noexcept : content{} {}
@@ -46,7 +46,7 @@ public:
 	// copy-range
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
 	CCDK_FORCEINLINE local_arr(InputIt beginIt, InputIt endIt) {
-		util::construct_copy_n(address(), beginIt, it::distance(beginIt,endIt)));
+		util::construct_copy_n(address(), beginIt, it::distance(beginIt,endIt));
 	}
 
 	// move n 
@@ -61,11 +61,13 @@ public:
 	}
 
 	// swap each element
-	void swap(local_arr& other) {
-		uint8 tmp[kTotalSize];
-		memcpy(tmp, other.content, kTotalSize);
-		memcpy(other.content, content, kTotalSize);
-		memcpy(content, tmp, kTotalSize);
+	template<uint32 Size>
+	void swap_n(local_arr& other) {
+		static constexpr uint32 kSwapSize = Size * sizeof(T);
+		uint8 tmp[kSwapSize];
+		memcpy(tmp, other.content, kSwapSize);
+		memcpy(other.content, content, kSwapSize);
+		memcpy(content, tmp, kSwapSize);
 	}
 
 	CCDK_FORCEINLINE void operator=(local_arr const& other) noexcept {
@@ -76,15 +78,19 @@ public:
 		memcpy(content, other.construct, kTotalSize);
 	}
 
-	/* range fill */
+	// range-fill
 	template<typename... Args>
 	CCDK_FORCEINLINE void construct(ptr::size_t start, ptr::size_t n, Args&& ... args) {
-		util::construct_n<T>( 
-			reinterpret_cast<T*>(content) + start,
-			n, util::forward<Args>(args)...);
+		util::construct_n<T>(address() + start, n, util::forward<Args>(args)...);
 	}
 
-	/* range destruct */
+	// range-copy
+	template<typename InputIt>
+	CCDK_FORCEINLINE void construct(ptr::size_t start, ptr::size_t n, InputIt beginIt) {
+		util::construct_copy_n( address() + start, beginIt, n);
+	}
+
+	// range de-ctor
 	CCDK_FORCEINLINE void destruct(ptr::size_t start, ptr::size_t n) {
 		util::destruct_n(reinterpret_cast<T*>(content) + start, n);
 	}

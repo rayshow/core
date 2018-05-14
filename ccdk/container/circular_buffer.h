@@ -350,7 +350,7 @@ private:
 
 	//allocate n or more memory
 	void allocate(size_type n) {
-		size_type actual_size = ubit_alg<size_type>::clp2(n+1);
+		size_type actual_size = bit_alg<size_type>::clp2(n+1);
 		content = allocator_type::allocate(*this, actual_size, cap);
 		--cap;
 		CHECK_POW2();

@@ -24,7 +24,7 @@ template<
 	typename T = uint8,
 	typename Size = uint32,
 	typename InceaseRatio = units::ratio<1,1>,   /* pre-allocate x times more space */
-	typename Alloc = mem::simple_new_allocator<T>
+	typename Alloc = mem::simple_new_allocator<T,Size>
 >
 class bitset : protected Alloc
 {

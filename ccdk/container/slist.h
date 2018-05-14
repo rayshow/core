@@ -146,12 +146,18 @@ public:
 	// template copy assign  
 	template<typename Size2, typename Alloc2, typename Node2>
 	CCDK_FORCEINLINE this_type& operator=(slist<T, Size2, Alloc, Node> && other) {
-		return assign_move(other.head, other.tlink, other.len);
+		destroy();
+		rvalue_set(other.head, other.tlink, other.size());
+		other.rvalue_reset();
+		return *this;
 	}
 
 	/* move assign */
 	CCDK_FORCEINLINE this_type& operator=(slist && other) {
-		return assign_move(other.head, other.tlink, other.len);
+		destroy();
+		rvalue_set(other.head, other.tlink, other.size());
+		other.rvalue_reset();
+		return *this;
 	}
 
 	//assign array
@@ -377,17 +383,6 @@ private:
 		}
 		return *this;
 	}
-
-	// assign move 
-	CCDK_FORCEINLINE this_type& assign_move(
-		fs::local_obj<Node> const& newHead,
-		link_type newTail, size_type newSize) noexcept {
-		destroy();
-		rvalue_set(other.head, other.tlink, other.len);
-		other.rvalue_reset();
-		return *this;
-	}
-
 
 ////////////////////////////////////////////////////////////
 //// debug content

@@ -85,6 +85,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.container.circular_buf
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.bit_alg", "test\test.mpl.bit_alg\test.mpl.bit_alg.vcxproj", "{93F04E51-B7BC-451C-96A3-69D29656299B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.container.fix_circluar_buffer", "test\test.container.fix_circluar_buffer\test.container.fix_circluar_buffer.vcxproj", "{5723B5F3-0526-43C8-A77D-BD40588773E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -379,6 +381,14 @@ Global
 		{93F04E51-B7BC-451C-96A3-69D29656299B}.Release|Win32.Build.0 = Release|Win32
 		{93F04E51-B7BC-451C-96A3-69D29656299B}.Release|x64.ActiveCfg = Release|x64
 		{93F04E51-B7BC-451C-96A3-69D29656299B}.Release|x64.Build.0 = Release|x64
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Debug|Win32.Build.0 = Debug|Win32
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Debug|x64.ActiveCfg = Debug|x64
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Debug|x64.Build.0 = Debug|x64
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|Win32.ActiveCfg = Release|Win32
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|Win32.Build.0 = Release|Win32
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|x64.ActiveCfg = Release|x64
+		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -422,6 +432,7 @@ Global
 		{97DA9A98-A08A-422C-AFAD-326E362E3187} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 		{28B7AD32-8B9E-4CB3-9C81-72B2D4A549A4} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 		{93F04E51-B7BC-451C-96A3-69D29656299B} = {ACD318CE-325F-4554-9875-ADB66601ED5D}
+		{5723B5F3-0526-43C8-A77D-BD40588773E2} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42D0876B-9FC6-41C9-8F37-E95B46CD3046}

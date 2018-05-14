@@ -27,7 +27,7 @@ using namespace ccdk::mpl;
 template<
 	typename T,
 	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator< T >,
+	typename Alloc = mem::simple_new_allocator< T,Size >,
 	typename Node = biward_node<T>
 >
 class list : protected Alloc::template rebind<Node>

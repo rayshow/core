@@ -5,10 +5,10 @@
 
 ccdk_namespace_mpl_start
 
-template<typename T>  struct ubit_alg {};
+template<typename T>  struct bit_alg {};
 
 template<>  
-struct ubit_alg<uint8> {
+struct bit_alg<uint8> {
 	static constexpr uint32 flp2(uint32 x) noexcept {
 		x = x | (x >> 1);
 		x = x | (x >> 2);
@@ -28,7 +28,7 @@ struct ubit_alg<uint8> {
 
 
 template<>
-struct ubit_alg<uint16> {
+struct bit_alg<uint16> {
 	static constexpr uint32 flp2(uint32 x) noexcept {
 		x = x | (x >> 1);
 		x = x | (x >> 2);
@@ -48,7 +48,7 @@ struct ubit_alg<uint16> {
 
 
 template<>
-struct ubit_alg<uint32> {
+struct bit_alg<uint32> {
 	static constexpr uint32 flp2(uint32 x) noexcept {
 		x = x | (x >> 1);
 		x = x | (x >> 2);
@@ -69,7 +69,7 @@ struct ubit_alg<uint32> {
 };
 
 template<>
-struct ubit_alg<uint64> {
+struct bit_alg<uint64> {
 	static constexpr uint64 flp2(uint64 x) noexcept {
 		x = x | (x >> 1);
 		x = x | (x >> 2);
@@ -92,10 +92,10 @@ struct ubit_alg<uint64> {
 };
 
 template<uint64 N>
-struct clp2_ : uint64_< ubit_alg<uint64>::clp2(N) > {};
+struct clp2_ : uint64_< bit_alg<uint64>::clp2(N) > {};
 
 template<uint64 N>
-struct flp2_ : uint64_< ubit_alg<uint64>::flp2(N) > {};
+struct flp2_ : uint64_< bit_alg<uint64>::flp2(N) > {};
 
 template<uint64 N> static constexpr uint64 clp2_v = clp2_<N>::value;
 template<uint64 N> static constexpr uint64 flp2_v = flp2_<N>::value;

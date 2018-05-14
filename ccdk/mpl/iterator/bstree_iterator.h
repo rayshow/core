@@ -10,7 +10,8 @@ struct bstree_tag;
 
 /* binary search tree node */
 template<typename T>
-struct is_bstree_node : and_< has_attribute_left<T>, has_attribute_right<T>, has_attribute_parent<T>> {};
+struct is_bstree_node : and_< has_attribute_left<T>,
+	has_attribute_right<T>, has_attribute_parent<T>> {};
 
 template<typename T>
 constexpr is_bstree_node<T> is_bstree_node_c{};
