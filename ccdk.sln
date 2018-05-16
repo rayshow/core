@@ -87,6 +87,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.bit_alg", "test\te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.container.fix_circluar_buffer", "test\test.container.fix_circluar_buffer\test.container.fix_circluar_buffer.vcxproj", "{5723B5F3-0526-43C8-A77D-BD40588773E2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test_memory_model", "test_memory_model", "{7907B1A5-5589-40A7-BBDE-20181703B19D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_memory_model", "test\test_memory_model\test_memory_model.vcxproj", "{789AE995-C165-4737-BEB3-87FF55990029}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -389,6 +393,14 @@ Global
 		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|Win32.Build.0 = Release|Win32
 		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|x64.ActiveCfg = Release|x64
 		{5723B5F3-0526-43C8-A77D-BD40588773E2}.Release|x64.Build.0 = Release|x64
+		{789AE995-C165-4737-BEB3-87FF55990029}.Debug|Win32.ActiveCfg = Debug|Win32
+		{789AE995-C165-4737-BEB3-87FF55990029}.Debug|Win32.Build.0 = Debug|Win32
+		{789AE995-C165-4737-BEB3-87FF55990029}.Debug|x64.ActiveCfg = Debug|x64
+		{789AE995-C165-4737-BEB3-87FF55990029}.Debug|x64.Build.0 = Debug|x64
+		{789AE995-C165-4737-BEB3-87FF55990029}.Release|Win32.ActiveCfg = Release|Win32
+		{789AE995-C165-4737-BEB3-87FF55990029}.Release|Win32.Build.0 = Release|Win32
+		{789AE995-C165-4737-BEB3-87FF55990029}.Release|x64.ActiveCfg = Release|x64
+		{789AE995-C165-4737-BEB3-87FF55990029}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -433,6 +445,8 @@ Global
 		{28B7AD32-8B9E-4CB3-9C81-72B2D4A549A4} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
 		{93F04E51-B7BC-451C-96A3-69D29656299B} = {ACD318CE-325F-4554-9875-ADB66601ED5D}
 		{5723B5F3-0526-43C8-A77D-BD40588773E2} = {CEB2DFFB-6E31-4CC3-851C-D4A058A74549}
+		{7907B1A5-5589-40A7-BBDE-20181703B19D} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
+		{789AE995-C165-4737-BEB3-87FF55990029} = {7907B1A5-5589-40A7-BBDE-20181703B19D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42D0876B-9FC6-41C9-8F37-E95B46CD3046}
