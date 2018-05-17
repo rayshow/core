@@ -334,9 +334,7 @@ public:
 		}
 	}
 
-
 private:
-
 	CCDK_FORCEINLINE void rvalue_reset() noexcept {
 		destruct_content();
 		ibegin = len = 0;

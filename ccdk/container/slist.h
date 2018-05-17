@@ -212,6 +212,9 @@ public:
 			util::destruct<T>(node);
 			allocator_type::deallocate(*this, node, 1);
 			--len;
+			if (len == 0) {
+				tlink = head.address();
+			}
 		}
 		return *this;
 	}

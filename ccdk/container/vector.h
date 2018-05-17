@@ -609,12 +609,13 @@ protected:
 			if (end < len) {
 				util::construct_move_n(content + len, content + len - n, n);
 				util::move_n(content + end, content + start, len - end);
+				util::destruct_n(content + start, n);
 			}
 			// insert like [0, start, len, end) or [0, start=len, end)
 			else  {
-				util::construct_move_n(content + len, content + start, len - start);
+				util::construct_move_n(content + end, content + start, len - start);
+				util::destruct_n(content + start, len - start);
 			}
-			util::destruct_n(content + start, n);
 			util::construct_copy_n(content + start, begin, n);
 		}
 		len = new_len;
@@ -627,8 +628,8 @@ protected:
 		else move content[start, len) backward
 	*/
 	template<typename... Args>
-	void emplace_impl(size_type start, size_type end, Args&&... args) {
-		if (end <= start || start > len) return;
+	this_type& emplace_impl(size_type start, size_type end, Args&&... args) {
+		if (end <= start || start > len) return *this;
 		size_type n = end - start;
 		size_type new_len = len + n;
 		if (new_len > cap){
@@ -647,15 +648,17 @@ protected:
 			if (end < len) {
 				util::construct_move_n(content + len, content + len - n, n);
 				util::move_n(content + end, content + start, len - end);
+				util::destruct_n(content + start, n);
 			}
 			// insert like [0, start, len, end) or [0, start=len, end)
 			else {
-				util::construct_move_n(content + len, content + start, len - start);
+				util::construct_move_n(content + end, content + start, len - start);
+				util::destruct_n(content + start, len - start);
 			}
-			util::destruct<T>(content + start);
 			util::construct_n<T>(content+start, n, util::forward<Args>(args)...);
 		}
 		len = new_len;
+		return *this;
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////

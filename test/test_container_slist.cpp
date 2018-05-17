@@ -169,6 +169,20 @@ void debug_slist()
 			news.debug_value();
 		}
 	}
+	DebugNewTitle("test que");
+	{
+		int i = 0; 
+		slist<int> que;
+		que.push_back(1);
+		while (!que.empty() && i<5) {
+			int top = que.front();
+			que.pop_front();
+			DebugValueIt(top);
+			que.push_back(top * 2);
+			que.push_back(top * 2 + 1);
+			++i;
+		}
+	}
 }
 
 void debug_cached_slist()

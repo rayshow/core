@@ -48,15 +48,14 @@ int main()
 		}
 		DebugNewTitle("path test");
 		{
-			/*iimap m{};
+			iimap m{};
 			for (int i = 1; i < 100; ++i) {
-				DebugValue(i);
+				//DebugValue(i);
 				m.insert({ i,i });
-			}*/
+				m.print_tree();
+			}
 		}
 	}
-
-	
 	getchar();
 	ccdk_open_leak_check();
 	return 0;

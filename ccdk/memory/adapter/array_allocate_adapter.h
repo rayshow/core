@@ -35,7 +35,7 @@ public:
 	}
 
 	static pointer allocate(Alloc& alloc, size_type n, size_type& cap) {
-		size_type actual_size = fn::max(LeastCount, allocate_ratio::multiply(n));
+		size_type actual_size = fn::max(LeastCount, n);
 		pointer memory = upstream_adapter::allocate(alloc, actual_size);
 		cap = actual_size;
 		return memory;

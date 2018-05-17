@@ -286,15 +286,16 @@ public:
 		{
 			auto p = que.front();
 			que.pop();
-			DebugValueIt(p.second->data.first);
+			
 			if (p.first != prev) {
 				DebugValueItEnd();
 				prev = p.first;
 			}
+			DebugValueIt(p.second->data.first);
 			if (p.second->left) que.push({ p.first+1, p.second->left });
 			if (p.second->right) que.push({ p.first+1, p.second->right });
 		}
-	
+		DebugValueItEnd();
 	}
 
 	CCDK_FORCEINLINE void print_tree() {
