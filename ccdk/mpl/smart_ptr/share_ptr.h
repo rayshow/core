@@ -14,7 +14,6 @@
 #include<ccdk/mpl/type_traits/remove_dim.h>
 #include<ccdk/mpl/util/noncopyable.h>
 #include<ccdk/mpl/util/swap.h>
-#include<ccdk/mpl/util/value.h>
 #include<ccdk/mpl/util/hash.h>
 #include<ccdk/mpl/smart_ptr/smart_ptr_fwd.h>
 #include<ccdk/mpl/smart_ptr/default_deleter.h>

@@ -905,10 +905,21 @@
     <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
     <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
     <ClInclude Include="mpl\util\compare.h" />
-    <ClInclude Include="mpl\util\impl\has_member_decl.h" />
     <ClInclude Include="container\circular_buffer.h" />
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="mpl\base\bit_alg.h" />
+    <ClInclude Include="mpl\iterator\algorithm\adj_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\count.h" />
+    <ClInclude Include="mpl\iterator\algorithm\find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
+    <ClInclude Include="mpl\iterator\algorithm\is_permutation.h" />
+    <ClInclude Include="mpl\iterator\algorithm\replace.h" />
+    <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\search.h" />
+    <ClInclude Include="mpl\iterator\algorithm\transform.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
+    <ClInclude Include="mpl\iterator\algorithm\test_of.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
   </ItemGroup>
 </Project>

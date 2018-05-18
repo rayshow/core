@@ -11,7 +11,7 @@ ccdk_namespace_memory_start
 	if   T::size_type exists, type = T::size_type
 	else type = ptr::size_type
 */
-template<typename T, bool = mpl::has_inner_size_type_v<T>>
+template<typename T, bool = mpl::has_nest_size_type_v<T>>
 struct get_size_type { typedef typename T::size_type type;};
 template<typename T> struct get_size_type<T, false> { typedef ptr::size_t type; };
 
@@ -19,7 +19,7 @@ template<typename T> struct get_size_type<T, false> { typedef ptr::size_t type; 
 	if   T::different_type exists, type = T::different_type
 	else type = ptr::diff_t
 */
-template<typename T, bool = mpl::has_inner_different_type_v<T>>
+template<typename T, bool = mpl::has_nest_different_type_v<T>>
 struct get_diff_type { typedef typename T::different_type type; };
 template<typename T> struct get_diff_type<T, false> { typedef ptr::diff_t type; };
 

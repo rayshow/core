@@ -20,12 +20,10 @@ template<typename T, uint32 N>
 class array
 {
 public:
-	/* common */
 	using this_type   = array;
 	using filter_type = range_filter<T>;
 	using view_type   = range_filter_view<this_type>;
 
-	/* container */
 	using value_type      = T;
 	using pointer         = T*;
 	using const_pointer   = T const*;
@@ -34,7 +32,6 @@ public:
 	using size_type       = uint32;
 	using difference_type = int32;
 
-	/* iterator */
 	using iterator               = T*;
 	using const_iterator         = T const*;
 	using reverse_iterator       = it::reverse_iterator< iterator>;
@@ -44,11 +41,10 @@ public:
 	friend class array;
 
 private:
-
 	T       content[N];
 	uint32  len;
 
-	/* copy compile time c-array to content */
+	// copy compile time c-array to content 
 	template<uint32... indice>
 	CCDK_FORCEINLINE array(T const* arr,
 		mpl::val_pack<uint32, indice...>, uint32 inLength)

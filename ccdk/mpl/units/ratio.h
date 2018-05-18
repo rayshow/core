@@ -55,7 +55,7 @@ struct ratio
 	template<typename T>
 	static constexpr T DivAsFactor(T const& t){ 
 		static_assert(N != 0, "div 0");
-		constexpr static double factor = double(D) / double(N);
+		constexpr double factor = double(D) / double(N);
 		return (T)(double(t) * factor);
 	}
 

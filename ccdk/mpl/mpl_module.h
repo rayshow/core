@@ -10,7 +10,7 @@
 #define ccdk_namespace_mpl_start     namespace ccdk{ namespace mpl{
 #define ccdk_namespace_mpl_end       ccdk_namespace_end_of_2
 
-#define ccdk_namespace_mpl_tt_impl_start namespace ccdk{ namespace mpl { namespace tt{
+#define ccdk_namespace_mpl_tt_impl_start namespace ccdk{ namespace mpl { namespace tt_impl{
 #define ccdk_namespace_mpl_tt_impl_end ccdk_namespace_end_of_3
 
 //meta-container

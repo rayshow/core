@@ -24,11 +24,11 @@ ccdk_namespace_mpl_sp_start
 
 ccdk_namespace_mpl_sp_end
 
-ccdk_namespace_typetraits_impl_start
+ccdk_namespace_mpl_tt_impl_start
 
 //special partialization
 template<typename T1, typename T2> 
 struct is_same_impl< ccdk::mpl::sp::default_deleter<T1>, ccdk::mpl::sp::default_deleter<T2>> :true_ {};
 
-ccdk_namespace_typetraits_impl_end
+ccdk_namespace_mpl_tt_impl_end
 

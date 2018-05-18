@@ -1,8 +1,6 @@
 #pragma once
 
 #include<ccdk/mpl/mpl_module.h>
-#include<ccdk/mpl/iterator/iterator_fwd.h>
-
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/is_trivial.h>
@@ -10,9 +8,16 @@
 #include<ccdk/mpl/type_traits/is_base_of.h>
 #include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
-
+#include<ccdk/mpl/type_traits/impl/has_nest_decl.h>
+#include<ccdk/mpl/iterator/iterator_fwd.h>
 
 ccdk_namespace_mpl_it_start
+
+// test weather Container::iterator is defined
+CCDK_TT_HAS_NEST_TYPE_DECL(iterator, iterator);
+
+// test weather Container::const_iterator is defined
+CCDK_TT_HAS_NEST_TYPE_DECL(const_iterator, const_iterator);
 
 
 template<typename It>
@@ -113,7 +118,7 @@ struct is_derived_input_iterator:
 /* T is pointer type or T::category exists and category is derive from input_iterator_category */
 template<typename T>
 struct is_iterator : or_< is_pointer<T>,
-		and_< has_inner_category<T>, is_derived_input_iterator<T> >> {};
+		and_< has_nest_category<T>, is_derived_input_iterator<T> >> {};
 
 /* ptr iterator */
 template<

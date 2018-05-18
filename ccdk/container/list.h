@@ -99,8 +99,8 @@ public:
 		: list{ other.begin(), other.size() } {}
 
 	// template copy ctor, node_type can  be different but T must be same
-	template<typename Size2, typename Node2>
-	CCDK_FORCEINLINE list(list<T, Size2, Alloc, Node2> const& other)
+	template<typename Size2, typename Alloc2,typename Node2>
+	CCDK_FORCEINLINE list(list<T, Size2, Alloc2, Node2> const& other)
 		: list{ other.begin(), other.size() } {}
 
 	// sim initialize_list 
@@ -513,7 +513,7 @@ template<
 	typename T,
 	uint32 CacheSize = 30,
 	typename Size = uint32,
-	typename Alloc = mem::simple_new_allocator<T>,
+	typename Alloc = mem::simple_new_allocator<T,Size>,
 	typename Node = biward_node<T>
 >
 using cached_list = list<T, Size,

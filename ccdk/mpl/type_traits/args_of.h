@@ -9,7 +9,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace tt_detail
+		namespace tt_impl
 		{
 			template<typename T> struct args_of_impl;
 
@@ -37,7 +37,7 @@ namespace ccdk
 #undef FUNCTION_ENUM
 		}
 
-		template<typename T> struct args_of :tt_detail::args_of_impl<T> {};
+		template<typename T> struct args_of :tt_impl::args_of_impl<T> {};
 
 		template<typename T> using  args_of_t = typename args_of<T>::type;
 

@@ -6,12 +6,12 @@
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/has_equal.h>
 #include<ccdk/mpl/util/addressof.h>
-#include<ccdk/mpl/util/impl/has_member_decl.h>
+#include<ccdk/mpl/type_traits/impl/has_member_decl.h>
 
 ccdk_namespace_mpl_util_start
 
 // has_member_less test weather bool T.less( P ) is exists
-CCDK_MPL_HAS_MEMBER_DECL(equals, equals, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_equals, equals, bool);
 
 namespace util_impl {
 

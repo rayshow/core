@@ -7,15 +7,15 @@
 #include<ccdk/mpl/type_traits/has_less.h>
 #include<ccdk/mpl/type_traits/is_byte.h>
 #include<ccdk/mpl/util/addressof.h>
-#include<ccdk/mpl/util/impl/has_member_decl.h>
+#include<ccdk/mpl/type_traits/impl/has_member_decl.h>
 
 ccdk_namespace_mpl_util_start
 
 // has_member_less test weather bool T.less( P ) is exists
-CCDK_MPL_HAS_MEMBER_DECL(less, less, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_less, less, bool);
 
 // has_member_greater test weather bool T.greater( P ) is exists
-CCDK_MPL_HAS_MEMBER_DECL(greater, greater, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_greater, greater, bool);
 
 // has_member_equals test weather bool T.equals( P ) is exists
 

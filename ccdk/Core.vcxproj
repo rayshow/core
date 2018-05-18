@@ -84,7 +84,9 @@
     <ClInclude Include="mpl\base\bit_alg.h" />
     <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\prediction.h" />
+    <ClInclude Include="mpl\iterator\algorithm\adj_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\count.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
     <ClInclude Include="container\adapter\prority_queue.h" />
     <ClInclude Include="container\adapter\queue.h" />
@@ -178,6 +180,14 @@
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
+    <ClInclude Include="mpl\iterator\algorithm\find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
+    <ClInclude Include="mpl\iterator\algorithm\is_permutation.h" />
+    <ClInclude Include="mpl\iterator\algorithm\replace.h" />
+    <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\search.h" />
+    <ClInclude Include="mpl\iterator\algorithm\test_of.h" />
+    <ClInclude Include="mpl\iterator\algorithm\transform.h" />
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="mpl\iterator\bit_iterator.h" />
     <ClInclude Include="mpl\iterator\biward_list_iterator.h" />
@@ -187,6 +197,7 @@
     <ClInclude Include="mpl\iterator\round_index_iterator.h" />
     <ClInclude Include="mpl\type_traits\has_attribute.h" />
     <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
     <ClInclude Include="mpl\type_traits\is_byte.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
     <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
@@ -217,7 +228,7 @@
     <ClInclude Include="mpl\util\destruct.h" />
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\util\fill.h" />
-    <ClInclude Include="mpl\util\impl\has_member_decl.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
     <ClInclude Include="text\string.h" />
     <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\encoding\ascii.h" />

@@ -1,7 +1,6 @@
  
 #include<ccdk/mpl/function/prediction.h>
 #include<ccdk/container/map.h>
-#include<ccdk/mpl/util/impl/has_member_decl.h>
 #include<stdio.h>
 #include<string>
 

@@ -6,7 +6,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace impl
+		namespace tt_impl
 		{
 
 			//for some special class 
@@ -14,7 +14,7 @@ namespace ccdk
 		}
 
 		//ingore const volatile
-		template<typename A,typename B> struct is_same : public impl::is_same_impl<A,B> {};
+		template<typename A,typename B> struct is_same : public tt_impl::is_same_impl<A,B> {};
 		template<typename T> struct is_same<T, T> :public true_ {};
 		template<typename A,typename B> constexpr bool is_same_v = is_same<A, B>::value;
 

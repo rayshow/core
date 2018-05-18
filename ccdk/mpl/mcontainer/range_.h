@@ -55,8 +55,9 @@ struct range_
 template<typename T, T Start1, T End1, T Start2, T End2> 
 struct range_merge_<range_<T, Start1, End1>, range_<T, Start2, End2>>
 {
+	
 	static_assert(!(End1 < Start2 || End2 < Start1), "invalid range merge");
-	typedef range_< T, min_cv<T, Start1, Start2>, min_cv<T, End1, End2> > type;
+	typedef range_< T, min_val<T, Start1, Start2>, min_val<T, End1, End2> > type;
 };
 
 

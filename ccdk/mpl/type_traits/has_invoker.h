@@ -7,7 +7,6 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		
 		//class define Ret T::operator()( Args... )
 		HAS_MEMBER_FN_DECL( operator (), invoker);
 

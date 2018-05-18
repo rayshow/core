@@ -116,7 +116,7 @@ public:
 /* length quantity */
 template<typename Transform>
 using length =  quantity<default_value_type, length_, Transform>; /* different kind transform of length  */
-using ulength = length< uniform >;          /* default base length is 1m, all other length depends on it */
+using ulength = length< identity >;          /* default base length is 1m, all other length depends on it */
 
 /* meter */
 template<char... args>

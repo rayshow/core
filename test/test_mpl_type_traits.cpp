@@ -943,9 +943,9 @@ int main()
 	AssertFalse((has_arrow_v<int, int>));
 
 	//has inner type
-	AssertTrue(has_inner_type_v < false_>);
-	AssertTrue(has_inner_value_type_v< false_>);
-	AssertFalse(has_inner_type_v< int>);
+	AssertTrue(has_nest_type_v < false_>);
+	AssertTrue(has_nest_value_type_v< false_>);
+	AssertFalse(has_nest_type_v< int>);
 
 	//has invoker
 	struct TestInvoker { int operator()(int, int); };

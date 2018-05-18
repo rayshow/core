@@ -47,7 +47,7 @@ namespace detail
 }
 
 template<typename T>
-struct is_mfunction : and_< has_inner_tag<T>, detail::inner_tag_is_mfunction<T>> {};
+struct is_mfunction : and_< has_nest_tag<T>, detail::inner_tag_is_mfunction<T>> {};
 
 
 

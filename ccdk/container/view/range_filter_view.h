@@ -20,7 +20,7 @@ struct range_filter_view
 	Container&  container;
 	filter_type filter;
 
-	this_type(Container& ct, filter_type&& ft)
+	CCDK_FORCEINLINE range_filter_view(Container& ct, filter_type&& ft)
 		: container{ ct }, filter{ util::move(ft) }
 	{
 		if (filter.start < 0) { filter.start = container.size() + filter.start; }     /* allow negtive start*/
@@ -35,7 +35,7 @@ struct range_filter_view
 	
 
 	/* container[{start, end, step, pred } ] = v */
-	void operator=(value_type const& v) noexcept{
+	CCDK_FORCEINLINE void operator=(value_type const& v) noexcept{
 		if (filter.pred) {  
 			for (int32 i = filter.start; i < filter.end; i += filter.step) {
 				if (filter.pred(container.at(i))) container.at(i) = v;
@@ -48,7 +48,7 @@ struct range_filter_view
 	}
 
 	/* container[{start, end, step, pred } ] = generator */
-	void operator=(fn::function<value_type(value_type)> gen) {
+	CCDK_FORCEINLINE void operator=(fn::function<value_type(value_type)> gen) {
 		if (filter.pred) { 
 			for (int32 i = filter.start; i < filter.end; i += filter.step) {
 			if (filter.pred(container.at(i))) 

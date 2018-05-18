@@ -7,7 +7,7 @@ int main() {
 	DebugNewTitle("uint8");
 	{
 		DebugValue("");
-		using u8_alg = ubit_alg<uint8>;
+		using u8_alg = bit_alg<uint8>;
 		for (uint8 i = 0; i < uint8(-1); ++i) {
 			DebugValueIt(":", (uint32)i);
 			DebugValueIt((uint32)u8_alg::flp2(i), (uint32)u8_alg::clp2(i));

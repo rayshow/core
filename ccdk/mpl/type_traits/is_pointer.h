@@ -8,7 +8,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		namespace detail
+		namespace tt_impl
 		{
 			template<typename T> struct is_pointer_helper :public false_ {};
 			template<typename T> struct is_pointer_helper<T*> :public true_ {};
@@ -16,7 +16,7 @@ namespace ccdk
 
 		//for non-member-pointer
 		template<typename T> struct is_pointer :
-			public detail::is_pointer_helper< remove_cv_t<T> > {};
+			public tt_impl::is_pointer_helper< remove_cv_t<T> > {};
 		
 		template<typename T> constexpr bool is_pointer_v = is_pointer<T>::value;
 

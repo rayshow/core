@@ -5,8 +5,6 @@
 #include<ccdk/mpl/type_traits/declval.h>
 #include<ccdk/mpl/type_traits/is_rref.h>
 
-
-
 //+ - * / % & | ^ && || >> << == !=  > < >= <=
 #define CCDK_TT_HAS_NO_SIDE_EFFECT_BINARY_OP(opsign, opname)					     \
 		namespace operator_detail                                                    \
@@ -120,7 +118,7 @@
 
 // Ret = T.operator {-> / [] / () } ( Args... ) 
 #define HAS_MEMBER_FN_DECL(sign, opname )                                                                           \
-		namespace detail                                                                                            \
+		namespace operator_detail                                                                                            \
 		{                                                                                                           \
 			template<typename T, typename Ret, typename... Args>                                                    \
 			struct has_ ## opname ## _helper                                                                        \
@@ -152,7 +150,7 @@
 		}                                                                                                           \
 		template<typename T,typename Ret = null_, typename... Args>                                                 \
 		struct has_ ## opname :and_<not_<is_rref<Ret>>,                                                             \
-			bool_< detail::has_ ## opname ## _helper <T, Ret, Args...>::value >> {};                                \
+			bool_< operator_detail::has_ ## opname ## _helper <T, Ret, Args...>::value >> {};                                \
 		template<typename T, typename Ret = null_, typename... Args>                                                \
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<T, Ret, Args...>::value;
 
@@ -176,25 +174,6 @@
 			, __VA_ARGS__, Args...>::value>{};                                                \
 		template<typename T,typename... Args>                                                 \
 		static constexpr bool has_ ## opname ## _v = has_ ## opname<T,Args...>::value;
-
-// T::type
-#define CCDK_TT_HAS_INNER_DECL(name, inner_name)										   \
-		namespace detail                                                                   \
-		{                                                                                  \
-			template<typename T>                                                           \
-			struct has_inner_ ## name ## _helper                                           \
-			{                                                                              \
-				template<typename U, typename = typename U:: inner_name>                   \
-				constexpr static  bool sfinae(int) { return true; };                       \
-				template<typename U>                                                       \
-				constexpr static  bool  sfinae(...){ return false; };                      \
-				static constexpr bool value = sfinae<T>(0);                                \
-			};                                                                             \
-		}                                                                                  \
-		template<typename T> struct has_inner_ ## name:                                    \
-			public bool_< detail::has_inner_ ## name ## _helper<T>::value >{};             \
-		template<typename T>                                                               \
-			static constexpr bool has_inner_ ## name ## _v = has_inner_ ## name<T>::value;
 
 namespace ccdk
 {
