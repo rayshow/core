@@ -139,7 +139,7 @@ public:
 		link_type node = new_node(nullptr,t);
 		auto p = insert_impl(node);
 		//insert failed
-		if (!p.second) destroy_node(node);
+		if (!p.second()) destroy_node(node);
 		return p;
 	 }
 
@@ -287,13 +287,13 @@ public:
 			auto p = que.front();
 			que.pop();
 			
-			if (p.first != prev) {
+			if (p.first() != prev) {
 				DebugValueItEnd();
-				prev = p.first;
+				prev = p.first();
 			}
-			DebugValueIt(p.second->data.first);
-			if (p.second->left) que.push({ p.first+1, p.second->left });
-			if (p.second->right) que.push({ p.first+1, p.second->right });
+			DebugValueIt(p.second()->data.first());
+			if (p.second()->left) que.push({ p.first() +1, p.second()->left });
+			if (p.second()->right) que.push({ p.first() +1, p.second()->right });
 		}
 		DebugValueItEnd();
 	}

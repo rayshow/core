@@ -518,7 +518,6 @@
     <ClInclude Include="mpl\fusion\imap.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
-    <ClInclude Include="mpl\fusion\range.h" />
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
@@ -921,5 +920,6 @@
     <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
     <ClInclude Include="mpl\iterator\algorithm\test_of.h" />
     <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
+    <ClInclude Include="container\range.h" />
   </ItemGroup>
 </Project>

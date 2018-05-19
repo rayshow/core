@@ -42,7 +42,7 @@ public:
 	void debug_value(const char* title="") {
 		DebugValueItBegin(title);
 		foreach([](const value_type& v) {
-			DebugValueIt(v.first, v.second);
+			DebugValueIt(v.first(), v.second());
 		});
 		DebugValueItEnd();
 	}

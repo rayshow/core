@@ -6,6 +6,7 @@
 #include<ccdk/mpl/type_traits/is_pointer.h>
 #include<ccdk/mpl/type_traits/has_deref.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
+#include<ccdk/mpl/type_traits/decay.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/util/destruct.h>
@@ -16,6 +17,23 @@
 ccdk_namespace_mpl_util_start
 
 //TODO: construct add pod assign
+
+
+
+template<typename T, typename... Args>
+struct has_aggregate_constructor{
+	template<
+		typename P,
+		typename = decltype(P{ makeval<Args>()... })>
+	constexpr static bool sfinae(int) { return true; }
+	template<typename P>
+	constexpr static bool sfinae(...) { return false; }
+	constexpr static bool value = sfinae<T>(0);
+};
+
+template<typename T, typename... Args>
+struct can_do_construct :or_<has_constructor<T, Args...>, has_aggregate_constructor<T, Args...>> {};
+
 
 /* is proxy class(like iterator), try dereference It and get real address */
 template<
@@ -30,18 +48,27 @@ template<
 	new( util::addressof( *it ) ) T(util::forward<Args>(args)...);
 }
 
-/* truely pointer, directly construct on it */
+/* truely pointer, and T has constructor, directly construct on it */
 template<
 	typename T, typename... Args,
-	typename = check_t< has_constructor<T, Args...>>
+	typename = check_t< has_constructor<T, decay_t<Args>...>>
 >
 CCDK_FORCEINLINE constexpr static void construct(const void* memory, Args&& ... args)
 {
 	new( const_cast<void*>( memory)) T(util::forward<Args>(args)...);
 }
 
-/* trivially class*/
 
+/* trivially class, not defined any constructor, use aggregate constructor */
+template<
+	typename T, typename... Args,
+	typename = check_t< not_<has_constructor<T, decay_t<Args>...>>>,
+	typename = check_t< is_trivial<T>>,
+	typename = check_t< has_aggregate_constructor<T,Args...>> >
+CCDK_FORCEINLINE constexpr static void construct(const void* memory, Args&& ... args)
+{
+	new(const_cast<void*>(memory)) T{ util::forward<Args>(args)... };
+}
 
 
 namespace ut_impl

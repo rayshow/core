@@ -394,8 +394,8 @@ private:
 	template<typename... Args>
 	CCDK_FORCEINLINE node_type* new_node(Args&&... args) {
 		auto range = allocator_type::allocate(*this, 1);
-		util::construct<T>(range.first, util::forward<Args>(args)...);
-		return range.first;
+		util::construct<T>(range.first(), util::forward<Args>(args)...);
+		return range.first();
 	}
 
 	// allocate n elements and fill with t
@@ -437,10 +437,10 @@ private:
 	CCDK_FORCEINLINE void append_n(size_type n) {
 		auto pair = allocator_type::allocate(*this, n);  //TODO. allocate memory
 		node_type* tail = head->prev;
-		tail->next = pair.first;
-		pair.first->prev = tail;
-		pair.second->next = head.address();
-		head->prev = pair.second;
+		tail->next = pair.first();
+		pair.first()->prev = tail;
+		pair.second()->next = head.address();
+		head->prev = pair.second();
 	}
 
 	// release n-tail node

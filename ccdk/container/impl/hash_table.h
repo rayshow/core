@@ -223,9 +223,9 @@ public:
 	CCDK_FORCEINLINE mapped_type& at(key_type const& key) {
 		size_type index = bucket_idx(key);
 		auto p = find_node_and_prev(key, index);
-		if (p.second) {
+		if (p.second()) {
 			//find key
-			return MappingToValue(p.second->data);
+			return MappingToValue(p.second()->data);
 		}
 		//not found insert new one
 		link_type node = new_node();
@@ -248,7 +248,7 @@ public:
 	//emplace construct with args at key
 	template<
 		typename... Args,
-		typename = check_t< has_constructor<T,Args...>>
+		typename = check_t< can_do_construct<T,Args...>>
 	>
 	CCDK_FORCEINLINE auto emplace_unique(Args&&... args) {
 		link_type node = new_node(util::forward<Args>(args)...);
@@ -257,7 +257,7 @@ public:
 
 	template<
 		typename... Args,
-		typename = check_t< has_constructor<T, Args...>>
+		typename = check_t< can_do_construct<T, Args...>>
 	>
 	CCDK_FORCEINLINE auto emplace_multiple(Args&&... args) {
 		link_type node = new_node(util::forward<Args>(args)...);
@@ -388,32 +388,32 @@ public:
 	//find 
 	CCDK_FORCEINLINE iterator find(Key const& key) noexcept {
 		auto p = find_node( key );
-		return { buckets, p.first, p.second };
+		return { buckets, p.first(), p.second() };
 	}
 
 	//const find 
 	CCDK_FORCEINLINE const_iterator find(Key const& key) const noexcept {
 		auto p = find_node(key);
-		return { buckets, p.first, p.second };
+		return { buckets, p.first(), p.second() };
 	}
 
 	//equal range
 	CCDK_FORCEINLINE fs::pair<iterator,iterator>
 		equal_range(Key const& key) noexcept {
 		auto p = find_node(key);
-		link_type last_link = p.second;
+		link_type last_link = p.second();
 		while (last_link->next && 
 			util::equals(KeyOfLink(last_link->next), key)) {
 			last_link = last_link->next;
 		}
-		iterator last = { buckets, p.first, last_link };
-		return { { buckets, p.first, p.second}, ++last };
+		iterator last = { buckets, p.first(), last_link };
+		return { { buckets, p.first(), p.second()}, ++last };
 	}
 
 
 	// test key exist
 	CCDK_FORCEINLINE bool exists(Key const& key) const {
-		return find_node(key).second  != nullptr;
+		return find_node(key).second()!= nullptr;
 	}
 
 	// readonly attribute
@@ -512,7 +512,7 @@ private:
 	// locally construct a T
 	template<
 		typename... Args,
-		typename = check_t< has_constructor<T,Args...>>
+		typename = check_t< can_do_construct<T,Args...>>
 	>
 	CCDK_FORCEINLINE link_type new_node(Args&& ... args) {
 		link_type node = node_allocator_type::allocate(*this, 1);
@@ -585,7 +585,7 @@ private:
 	// test weather need rehash
 	CCDK_FORCEINLINE void test_rehash()  {
 		//need rehash 
-		if (cdiv<float>(len + 1, bucket_size()) >= MaxLoadFactor::value) {
+		if ((float)(len + 1) / bucket_size() >= MaxLoadFactor::value) {
 			rehash<AllowEqualKey>(MaxLoadFactor::DivAsFactor(bucket_size()) + 1);
 		}
 	}
@@ -601,22 +601,22 @@ private:
 
 		//find key 
 		auto p = find_node(key);
-		if (p.second) {
+		if (p.second()) {
 			destroy_node(node);
-			return { { buckets, p.first, p.second }, false };
+			return { { buckets, p.first(), p.second() }, false };
 		}
 
 #if defined(CCDK_PROFILE)
-		if (buckets.at(p.first)) {
+		if (buckets.at(p.first())) {
 			++conflict_count;
 		}
 #endif
 
 		//insert at first
-		node->next = buckets.at(p.first);
-		buckets.at(p.first) = node;
+		node->next = buckets.at(p.first());
+		buckets.at(p.first()) = node;
 		++len;
-		return { { buckets, p.first, node }, true };
+		return { { buckets, p.first(), node }, true };
 	}
 
 	// locally add a link from local constructed
@@ -631,9 +631,9 @@ private:
 		//search key
 		auto p = find_node_and_prev(key, pos);
 		//found key 
-		if (p.second && p.first) {
-			node->next = p.second;
-			p.first->next = node;
+		if (p.second() && p.first()) {
+			node->next = p.second();
+			p.first()->next = node;
 		}
 		else {
 			// not found, insert at head
@@ -656,23 +656,23 @@ private:
 
 		//find key 
 		auto p = find_node(key);
-		if (p.second) {
-			return { {buckets, p.first, p.second }, false };
+		if (p.second()) {
+			return { {buckets, p.first(), p.second() }, false };
 		}
 
 #if defined(CCDK_PROFILE)
-		if (buckets.at(p.first)) {
+		if (buckets.at(p.first())) {
 			++conflict_count;
 		}
 #endif
 
 		// not found, insert at head
-		ccdk_assert(p.first < buckets.size());
+		ccdk_assert(p.first() < buckets.size());
 		link_type node = new_node(util::forward<Args>(args)...);
-		node->next = buckets.at(p.first);
-		buckets.at(p.first) = node;
+		node->next = buckets.at(p.first());
+		buckets.at(p.first()) = node;
 		++len;
-		return { {buckets, p.first, node }, true };
+		return { {buckets, p.first(), node }, true };
 	}
 
 

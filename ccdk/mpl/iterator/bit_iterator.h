@@ -59,7 +59,9 @@ struct iterator< bit_random_category, T, Size >
 	using category        = random_category;
 	static constexpr uint32 kStoreBits = sizeof(T)*8;
 	static constexpr uint32 kShiftCount = kStoreBits -1;
-	static constexpr T kTopMask = T(1) << kShiftCount;
+	static constexpr T kOne = T(1);
+	static constexpr T kTopMask = kOne << kShiftCount;
+	
 
 	pointer           base;
 	size_type         pos;
@@ -75,7 +77,7 @@ struct iterator< bit_random_category, T, Size >
 
 	CCDK_FORCEINLINE this_type& operator--() noexcept {
 		pos -= 1 & mask;
-		mask = (mask >> T(1)) | cshl<T>(T(1) & mask, kShiftCount);
+		mask = (mask >> kOne) | cshl<T>( kOne & mask, kShiftCount);
 		return *this;
 	}
 
@@ -92,7 +94,6 @@ struct iterator< bit_random_category, T, Size >
 		this->operator--();
 		return ret;
 	}
-
 
 	/* it+=step */
 	CCDK_FORCEINLINE this_type& operator+=(difference_type step) noexcept {

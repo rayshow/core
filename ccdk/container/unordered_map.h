@@ -111,7 +111,6 @@ public:
 		return *this;
 	}
 
-
 	// literial array
 	CCDK_FORCEINLINE this_type& 
 	operator=(std::initializer_list<T> const& lst) {
@@ -143,7 +142,7 @@ public:
 	//emplace construct with args at key
 	template<
 		typename... Args,
-		typename = check_t< has_constructor<T, Args...>> >
+		typename = check_t< can_do_construct<T, Args...>> >
 	CCDK_FORCEINLINE auto emplace(Args&&... args) {
 		return emplace_unique(util::forward<Args>(args)...);
 	}
@@ -351,7 +350,7 @@ public:
 
 	CCDK_FORCEINLINE void debug_value() const noexcept {
 		foreach([](T const& t) {
-			DebugValueIt(t.first, t.second);
+			DebugValueIt(t.first(), t.second());
 		});
 		DebugValueItEnd();
 	}

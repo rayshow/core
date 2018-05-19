@@ -63,25 +63,39 @@ private:
 public:
 
 	//copy
-	CCDK_FORCEINLINE deleter_resource_base(const deleter_resource_base& other) : pair{ other.pair } {}
+	CCDK_FORCEINLINE deleter_resource_base(const deleter_resource_base& other) 
+		: pair{ other.pair } {}
 
 	//move
-	CCDK_FORCEINLINE deleter_resource_base(deleter_resource_base&& other) : pair{ util::move(other.pair) } {}
+	CCDK_FORCEINLINE deleter_resource_base(deleter_resource_base&& other)
+		: pair{ util::move(other.pair) } {}
 
-	//
-	CCDK_FORCEINLINE deleter_resource_base(Type* ptr, const Deleter& dl) : pair{ dl, ptr } {}
+	// parameter ctor
+	CCDK_FORCEINLINE deleter_resource_base(Type* ptr, const Deleter& dl) 
+		: pair{ dl, ptr } {}
 
 
-	virtual void* pointer() const noexcept override  { return (void*)pair.second; }
+	virtual void* pointer() const noexcept override  {
+		return (void*)pair.second();
+	}
 
-	virtual void* release() noexcept override { pointer_type ret = pair.second; pair.second = nullptr; return ret; }
+	virtual void* release() noexcept override { 
+		pointer_type ret = pair.second();
+		pair.second() = nullptr; 
+		return ret; 
+	}
 
 	//clone self
-	virtual resource_base* clone() const override { return new deleter_resource_base{ *this }; }
+	virtual resource_base* clone() const override { 
+		return new deleter_resource_base{ *this };
+	}
 
 
 	//delete resource
-	virtual ~deleter_resource_base() { pair.get_first()(pair.second); DebugValue(">> default resource base destructor"); }
+	virtual ~deleter_resource_base() {
+		pair.first()(pair.second());
+		DebugValue(">> default resource base destructor"); 
+	}
 };
 
 

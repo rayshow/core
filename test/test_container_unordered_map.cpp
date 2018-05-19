@@ -5,15 +5,6 @@
 using namespace ccdk::ct;
 using namespace ccdk;
 
-struct test_not_equal {
-	int a = 0;
-};
-
-bool operator==(test_not_equal t, int i) { return t.a == i; }
-bool operator!=(test_not_equal t, int i) { 
-	DebugValue("special not equal");
-	return t.a != i; 
-}
 
 struct equals_test {
 	bool equals(int a) const noexcept {
@@ -23,26 +14,8 @@ struct equals_test {
 
 int main() 
 {
-	DebugNewTitle("equals");
+	DebugNewTitle("insert");
 	{
-		DebugValue(util::equals(1, 2));
-		DebugValue(util::equals("hello", "world"));
-		const char *a = "hello";
-		const char *b = "hello";
-		DebugValue(util::equals(a, b));
-		equals_test et{};
-		DebugValue(util::equals(et, 1));
-		DebugValue(util::equals(et, 0));
-		DebugValue(util::equals(0, et));
-	}
-	DebugNewTitle("test not equal");
-	{
-		test_not_equal a{};
-		a != 1;
-	}
-
-	{
-		DebugNewTitle("insert");
 		unordered_map<int, int> a{};
 		unordered_map<int, int> b{};
 		constexpr int N = 666;
@@ -62,7 +35,7 @@ int main()
 
 		DebugNewTitle("iterator");
 		for (auto it = a.cbegin(); it != a.cend(); ++it) {
-			DebugValue((*it).first, (*it).second);
+			DebugValue((*it).first(), (*it).second());
 		}
 		RuntimeAssertTrue(a.begin() == a.cbegin());
 		decltype(a.cbegin()) it = a.begin();
@@ -70,8 +43,8 @@ int main()
 		b.assign(a.begin(), a.end());
 		b.assign(a.cbegin(), a.cend());
 	}
+	DebugNewTitle("const char* map test");
 	{
-		DebugNewTitle("const char* map");
 		unordered_map<const char*, int> a{
 			{
 				{"hello", 1},
@@ -88,7 +61,7 @@ int main()
 		});
 		
 		a.foreach([&](fs::pair<const char*,int> const& p) {
-			DebugValueIt(p.first, p.second);
+			DebugValueIt(p.first(), p.second());
 		});
 
 		ccdk_assert(a.exists("hello"));
@@ -98,7 +71,6 @@ int main()
 		ccdk_assert(a["c++"] == 4);
 		ccdk_assert(a.clear().empty());
 	}
-
 	getchar();
 	ccdk_open_leak_check();
 

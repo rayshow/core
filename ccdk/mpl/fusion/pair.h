@@ -12,180 +12,205 @@
 
 ccdk_namespace_mpl_fs_start
 
-/* normal pair */
+// common object fn of access pair/cpair/rpair
+struct get_first_t {
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
+		return p.first();
+	}
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
+		return p.first();
+	}
+};
+
+struct get_second_t {
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
+		return p.second();
+	}
+	template<typename Pair>
+	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
+		return p.second();
+	}
+};
+
+
+////////////////////////////////////////////////////////////////////////////
+//// normal pair
 template<typename First, typename Second>
 struct pair
 {
-	First  first;
-	Second second;
+	First  _1;
+	Second _2;
 
-	CCDK_FORCEINLINE pair() = default;
-	CCDK_FORCEINLINE pair(First const& first, Second const& second)
-		: first{first}, second{second} {}
+	CCDK_FORCEINLINE First& first() noexcept { return _1; }
+	CCDK_FORCEINLINE First const& first() const noexcept { return _1; }
 
-	CCDK_FORCEINLINE First& get_first() noexcept { return first; }
-	CCDK_FORCEINLINE First const& get_first() const noexcept { return first; }
-
-	CCDK_FORCEINLINE Second& get_second() noexcept { return second; }
-	CCDK_FORCEINLINE Second const& get_second() const noexcept { return second; }
+	CCDK_FORCEINLINE Second& second() noexcept { return _2; }
+	CCDK_FORCEINLINE Second const& second() const noexcept { return _2; }
 };
 
-/* make normal pair */
+// make normal pair 
 template<typename T1, typename T2>
 auto make_pair(T1&& t1, T2&& t2) { return pair<remove_ref_t<T1>, remove_ref_t<T2>>{t1, t2}; }
 
-/* index value pair */
-template<uint32 Key, typename T>
-struct ipair
+/////////////////////////////////////////////////////////////////////////////////////
+//// reference pair
+template<typename First, typename Second>
+struct rpair
 {
-	typedef decay_t<T> value_type;
-	template<uint32, typename> friend struct ipair;
+	First&  _1;
+	Second& _2;
 
-	value_type value;
+	// tie(p1,p2) = pair<T1,T2>
+	template<typename T1, typename T2>
+	CCDK_FORCEINLINE void operator=(pair<T1, T2> const& p) {
+		_1 = p._1;
+		_2 = p._2;
+	}
 
-	CCDK_FORCEINLINE constexpr ipair() :value{} {  }
+	// tie(p1,p2) = util::move( pair<T1,T2> )
+	template<typename T1, typename T2>
+	CCDK_FORCEINLINE void operator= (pair<T1, T2>&& p) {
+		_1 = util::move(p._1);
+		_2 = util::move(p._2);
+	}
 
-	/* container need check T2 convertible to T , allow narrow cast */
-	template<typename T2, typename = check_t< has_constructor<value_type, T2>>>
-	CCDK_FORCEINLINE explicit constexpr ipair(T2&& t) : value( util::forward<T2>(t) )  {}
+	//access first
+	CCDK_FORCEINLINE First& first() noexcept { return _1; }
+	CCDK_FORCEINLINE First const& first() const noexcept { return _2; }
 
-	/* copy */
-	CCDK_FORCEINLINE constexpr ipair(ipair const& other) : value{ other.value } {  }
-
-	/* move */
-	CCDK_FORCEINLINE constexpr ipair(ipair&& other) : value{ util::move(other.value) } {}
-
-	/* template copy */
-	template<uint32 Key2, typename T2,  typename = check_t< has_constructor<value_type, T2> > >
-	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> const& other) : value{ other.value } {  }
-
-	/* template move */
-	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
-	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> && other) : value{ util::move(other.value) } {  }
-
-	template<uint32 Key2, typename T2, typename = check_t< has_constructor<value_type, T2> > >
-	CCDK_FORCEINLINE void swap(ipair<Key2, T2>& other) { using namespace util; swap(value, other.value); }
+	//access second
+	CCDK_FORCEINLINE Second& second() noexcept { return _1; }
+	CCDK_FORCEINLINE Second const& second() const noexcept { return _2; }
 
 };
 
+// make rpair
+template<typename T1, typename T2>
+CCDK_FORCEINLINE rpair<T1, T2> tie(T1& t1, T2& t2) { return { t1, t2 }; }
 
-/* get value at Key */
-template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr decay_t<T> & ipair_at(ipair<Key, T> & pi) noexcept { return pi.value; }
-template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr decay_t<T> const& ipair_at(ipair<Key, T> const& pi) noexcept { return pi.value; }
-
-/* adl swap of ipair */
-template<uint32 Key1, uint32 Key2, typename T1, typename T2, typename = check_t< is_compatible<T1, T2>> >
-CCDK_FORCEINLINE void swap(ipair<Key1, T1>& lh, ipair<Key2, T2>& rh) noexcept { lh.swap(rh); }
-
-/* equal of ipair */
-template<uint32 Key1, uint32 Key2, typename T1, typename T2, typename = check_t< is_compatible<T1, T2>> >
-CCDK_FORCEINLINE bool operator==(ipair<Key1, T1>& lh, ipair<Key2, T2>& rh) noexcept { return lh.value == rh.value; }
-
-/* less of ipair */
-template<uint32 Key1, uint32 Key2, typename T1, typename T2, typename = check_t< is_compatible<T1, T2>> >
-CCDK_FORCEINLINE bool operator<(ipair<Key1, T1>& lh, ipair<Key2, T2>& rh) noexcept { return lh.value < rh.value; }
-
-
-/* index reference pair */
-template<uint32 Key, typename T>
-struct irpair
-{
-	T& value;
-
-	CCDK_FORCEINLINE constexpr irpair(T&& u) : value{ u } { }
-};
-
-
-template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr T& irpair_at(irpair<Key, T> & pi) noexcept {	return pi.value; }
-template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr T const& irpair_at(irpair<Key, T> const& pi) noexcept { return pi.value; }
-
-
-/* compress pair */
+/////////////////////////////////////////////////////////////////////////////////////
+//// compress pair
 template<typename First, typename Second, bool = is_empty_v<First> && !is_final_v<First> >
-struct cpair: public First
+struct cpair : public First
 {
 	typedef decay_t<Second> second_type;
 	template<typename, typename, bool> friend struct cpair;
 private:
-	second_type scd;
+	second_type _2;
 
 public:
-	/* deefault */
-	CCDK_FORCEINLINE constexpr cpair() : First{}, scd{} {}
+	// default
+	CCDK_FORCEINLINE constexpr cpair() = default;
 
-	/* value constructor */
+	// constructor from second compatible type, first default construct
 	template<typename U, typename = check_t< has_constructor<second_type, U>>>
-	CCDK_FORCEINLINE explicit constexpr cpair(U&& u) : First(), scd(util::forward<U>(u)) {}
+	CCDK_FORCEINLINE explicit constexpr cpair(U&& u) : First(), _2(util::forward<U>(u)) {}
 
-	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) : First(util::forward<T>(t)), scd(util::forward<U>(u)) {}
+	//constructor from two compatible type
+	template<typename T, typename U,
+		typename = check_t< has_constructor<First, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) 
+		: First(util::forward<T>(t)), _2(util::forward<U>(u)) {}
 
-	/* copy */
-	CCDK_FORCEINLINE constexpr cpair(cpair const& other) : First{ other }, scd{ other.scd } {}
+	// copy
+	CCDK_FORCEINLINE constexpr cpair(cpair const& other) 
+		: First{ other.first() }, _2{ other._2 } {}
 
-	/* move */
-	CCDK_FORCEINLINE constexpr cpair(cpair && other) : First{ util::move(other) }, scd{ util::move(other.scd) } {}
+	// move
+	CCDK_FORCEINLINE constexpr cpair(cpair && other) 
+		: First{ util::move(other.first()) }, _2{ util::move(other._2) } {}
 
-	/* template copy, for compatible type */
-	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(cpair<T,U> const& other) : First{ other.first() }, scd{ other.second() } {}
+	// template copy, for compatible type 
+	template<typename T, typename U,
+		typename = check_t< has_constructor<First, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> const& other) 
+		: First{ other.first() }, _2{ other._2 } {}
 
-	/* template move, for compatible type */
-	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) : First{ util::move(other.first()) }, scd{ util::move(other.second()) } {}
+	// template move, for compatible type
+	template<typename T, typename U,
+		typename = check_t< has_constructor<First, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) 
+		: First{ util::move(other.first()) }, _2{ util::move(other._2) } {}
 
-	template<typename T, typename U, typename = check_t< has_constructor<First, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept {  util::swap(scd, other.scd); }
+	//template swap
+	template<typename T, typename U,
+		typename = check_t< has_constructor<First, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept { util::swap(_2, other._2); }
 
+	//access first
 	CCDK_FORCEINLINE constexpr First& first() noexcept { return *this; }
 	CCDK_FORCEINLINE constexpr const First& first() const noexcept { return *this; }
 
-	CCDK_FORCEINLINE constexpr second_type& second() noexcept { return scd; }
-	CCDK_FORCEINLINE constexpr const second_type& second() const noexcept { return scd; }
+	//access second
+	CCDK_FORCEINLINE constexpr second_type& second() noexcept { return _2; }
+	CCDK_FORCEINLINE constexpr const second_type& second() const noexcept { return _2; }
 
-	
+
 };
 
 template<typename First, typename Second>
-struct cpair<First,Second,false>
+struct cpair<First, Second, false>
 {
 	typedef decay_t<First> first_type;
 	typedef decay_t<Second> second_type;
 	template<typename, typename, bool> friend struct cpair;
 private:
-	first_type  fst;
-	second_type scd;
+	first_type  _1;
+	second_type _2;
 
 public:
 
+	//default 
+	CCDK_FORCEINLINE constexpr cpair() = default;
+
+	// constructor from second compatible type, first default construct
 	template<typename U>
-	CCDK_FORCEINLINE constexpr cpair(U&& u) : fst{}, scd(util::forward<U>(u)) {}
+	CCDK_FORCEINLINE constexpr cpair(U&& u) : _1{}, _2(util::forward<U>(u)) {}
 
+	//constructor from two compatible type
+	template<typename T, typename U,
+		typename = check_t< has_constructor<first_type, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) 
+		: _1(util::forward<T>(t)), _2(util::forward<U>(u)) {}
+
+	// copy
+	CCDK_FORCEINLINE constexpr cpair(cpair const& other) : _1{ other._1 }, _2{ other._2 } {}
+
+	//move
+	CCDK_FORCEINLINE constexpr cpair(cpair && other) : _1{ util::move(other._1) }, _2{ util::move(other._2) } {}
+
+	//template copy
 	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(T&& t, U&& u) : fst(util::forward<T>(t)), scd(util::forward<U>(u)) {}
+	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> const& other) : _1{ other.first() }, _2{ other.second() } {}
 
-	/* copy */
-	CCDK_FORCEINLINE constexpr cpair(cpair const& other) : fst{ other.fst }, scd{ other.scd } {}
-
-	/* move */
-	CCDK_FORCEINLINE constexpr cpair(cpair && other) : fst{ util::move(other.fst) }, scd{ util::move(other.scd) } {}
-
-	/* template copy, for compatible type */
+	//template move
 	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> const& other) : fst{ other.first() }, scd{ other.second() } {}
+	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) : _1{ util::move(other.first()) }, _2{ util::move(other.second()) } {}
 
-	/* template move, for compatible type */
-	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE constexpr cpair(cpair<T, U> && other) : fst{ util::move(other.first()) }, scd{ util::move(other.second()) } {}
+	//template swap
+	template<typename T, typename U,
+		typename = check_t< has_constructor<first_type, T>>,
+		typename = check_t< has_constructor<second_type, U>> >
+	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept {
+		util::swap(_1, other._1); 
+		util::swap(_2, other._2); 
+	}
 
-	template<typename T, typename U, typename = check_t< has_constructor<first_type, T>>, typename = check_t< has_constructor<second_type, U>> >
-	CCDK_FORCEINLINE void swap(cpair<T, U>& other) noexcept { using namespace util; swap(fst, other.fst); swap(scd, other.scd); }
+	//access first
+	CCDK_FORCEINLINE constexpr First& first() noexcept { return _1; }
+	CCDK_FORCEINLINE constexpr const First& first() const noexcept { return _1; }
 
-	CCDK_FORCEINLINE constexpr First& first() noexcept { return fst; }
-	CCDK_FORCEINLINE constexpr const First& first() const noexcept { return fst; }
-
-	CCDK_FORCEINLINE constexpr second_type& second() noexcept { return scd; }
-	CCDK_FORCEINLINE constexpr const second_type& second() const noexcept { return scd; }
+	//access second
+	CCDK_FORCEINLINE constexpr second_type& second() noexcept { return _2; }
+	CCDK_FORCEINLINE constexpr const second_type& second() const noexcept { return _2; }
 };
 
 /* get value at Key type */
@@ -198,51 +223,91 @@ CCDK_FORCEINLINE void swap(cpair<T1, U1>& lh, cpair<T2, U2>& rh) noexcept { lh.s
 template<typename T1, typename T2, typename U1, typename U2, typename = check_t< is_compatible<T1, T2>>, typename = check_t< is_compatible<U1, U2>> >
 CCDK_FORCEINLINE bool operator==(cpair<T1, U1>& lh, cpair<T2, U2>& rh) noexcept { lh.first() == rh.first() && lh.second() == rh.second(); }
 
-template<typename First, typename Second>
-struct rpair
+/////////////////////////////////////////////////////////////////////////////////////
+//// compile-time index pair
+template<uint32 Key, typename T>
+struct ipair
 {
-	First&  first;
-	Second& second;
+	typedef decay_t<T> value_type;
+	template<uint32, typename> friend struct ipair;
 
-	template<typename T1, typename T2>
-	void operator = (pair<T1, T2> const& p) {
-		DebugValue("rpair copy");
-		first = p.first;
-		second = p.second;
-	}
+	value_type value;
 
-	template<typename T1, typename T2>
-	void operator = (pair<T1, T2>&& p) {
-		DebugValue("rpair move");
-		first = util::move(p.first);
-		second = util::move(p.second);
+	//default
+	CCDK_FORCEINLINE ipair() = default;
+
+	// second use compatible type
+	template<typename T2, 
+		typename = check_t< has_constructor<value_type, T2>>>
+	CCDK_FORCEINLINE explicit constexpr ipair(T2&& t) 
+		: value( util::forward<T2>(t) )  {}
+
+	//copy
+	CCDK_FORCEINLINE constexpr ipair(ipair const& other) 
+		: value{ other.value } {  }
+
+	//move
+	CCDK_FORCEINLINE constexpr ipair(ipair&& other) 
+		: value{ util::move(other.value) } {}
+
+	//template copy
+	template<
+		uint32 Key2, typename T2,
+		typename = check_t< has_constructor<value_type, T2> > >
+	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> const& other) 
+		: value{ other.value } {  }
+
+	// template move
+	template<
+		uint32 Key2, typename T2,
+		typename = check_t< has_constructor<value_type, T2> > >
+	CCDK_FORCEINLINE constexpr ipair(ipair<Key2, T2> && other) 
+		: value{ util::move(other.value) } { }
+
+
+	//template swap
+	template<
+		uint32 Key2, typename T2,
+		typename = check_t< has_constructor<value_type, T2> > >
+	CCDK_FORCEINLINE void swap(ipair<Key2, T2>& other) { 
+		util::swap(value, other.value); 
 	}
 };
 
-template<typename T1, typename T2>
-rpair<T1, T2> tie(T1& t1, T2& t2) { return { t1, t2 }; }
+// compile-time get second value by index
+template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr decay_t<T>& ipair_at(ipair<Key, T> & pi) noexcept { return pi.value; }
+template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr decay_t<T> const& ipair_at(ipair<Key, T> const& pi) noexcept { return pi.value; }
+
+// equal of ipair
+template<uint32 Key1, uint32 Key2, typename T1, typename T2, typename = check_t< is_compatible<T1, T2>> >
+CCDK_FORCEINLINE bool operator==(ipair<Key1, T1>& lh, ipair<Key2, T2>& rh) noexcept { return lh.value == rh.value; }
+
+// less of ipair
+template<
+	uint32 Key1, uint32 Key2,
+	typename T1, typename T2, 
+	typename = check_t< is_compatible<T1, T2>> >
+CCDK_FORCEINLINE bool operator<(ipair<Key1, T1>& lh, ipair<Key2, T2>& rh) noexcept {
+	return lh.value < rh.value; 
+}
 
 
-struct get_first_t {
-	template<typename Pair>
-	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
-		return p.get_first();
-	}
-	template<typename Pair>
-	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
-		return p.get_first();
-	}
+/////////////////////////////////////////////////////////////////////////////////////
+//// compile-time index reference pair
+template<uint32 Key, typename T>
+struct irpair
+{
+	T& value;
+
+	CCDK_FORCEINLINE constexpr irpair() = default;
+	CCDK_FORCEINLINE constexpr irpair(T&& u) : value{ u } { }
 };
 
-struct get_second_t {
-	template<typename Pair>
-	CCDK_FORCEINLINE decltype(auto) operator()(Pair const& p) const noexcept {
-		return p.get_second();
-	}
-	template<typename Pair>
-	CCDK_FORCEINLINE decltype(auto) operator()(Pair & p) const noexcept {
-		return p.get_second();
-	}
-};
+// compile-time get second value by index
+template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr T& irpair_at(irpair<Key, T> & pi) noexcept {	return pi.value; }
+template<uint32 Key, typename T> CCDK_FORCEINLINE constexpr T const& irpair_at(irpair<Key, T> const& pi) noexcept { return pi.value; }
+
+
+
 
 ccdk_namespace_mpl_fs_end

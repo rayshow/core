@@ -17,13 +17,13 @@ int main()
 		mm.insert({ 3,"lucy" });
 		mm.debug_value();
 		auto range = mm.equal_range(1);
-		for (auto it = range.first; it != range.second; ++it) {
-			DebugValueIt((*it).first, (*it).second);
+		for (auto it = range.first(); it != range.second(); ++it) {
+			DebugValueIt((*it).first(), (*it).second());
 		}
 		DebugValueItEnd();
 		auto range2 = mm.equal_range(2);
-		for (auto it = range.first; it != range.second; ++it) {
-			DebugValueIt((*it).first, (*it).second);
+		for (auto it = range.first(); it != range.second(); ++it) {
+			DebugValueIt((*it).first(), (*it).second());
 		}
 		DebugValueItEnd();
 		ccdk_assert(2 == mm.erase(1));

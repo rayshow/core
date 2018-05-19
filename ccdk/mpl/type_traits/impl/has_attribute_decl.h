@@ -22,7 +22,7 @@ namespace TraitName##_ns                                                  \
 #define CCDK_TT_HAS_ATTRIBUTE_DECL(TraitName, AttributeName )             \
 		CCDK_TT_HAS_ATTRIBUTE_DECL_IMPL(TraitName, AttributeName)         \
 template<typename ClassType, typename ValueType = null_>                  \
-struct TraitName :bool_<TraitName##_ns::TraitName##_impl<T, Type>::value>{}; \
+struct TraitName :bool_<TraitName##_ns::TraitName##_impl<ClassType,ValueType>::value>{}; \
 template<typename ClassType, typename ValueType = null_>                  \
 static constexpr bool TraitName##_v =                                     \
 	TraitName##_ns::TraitName##_impl<ClassType, ValueType>::value;        \

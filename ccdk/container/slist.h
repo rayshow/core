@@ -309,7 +309,7 @@ private:
 	// emplace construct node with args...
 	template<typename... Args>
 	CCDK_FORCEINLINE link_type new_node(Args&&... args) {
-		link_type node = allocator_type::allocate(*this, 1).first;
+		link_type node = allocator_type::allocate(*this, 1).first();
 		util::construct<T>(node, util::forward<Args>(args)...);
 		node->next = nullptr;
 		return node;
@@ -348,8 +348,8 @@ private:
 			}
 			else {
 				auto its = util::construct_copy_n(begin(), beginIt, n - 1);
-				tlink = its.first.content; //to last node
-				tlink->data = *its.second;
+				tlink = its.first().content; //to last node
+				tlink->data = *its.second();
 				if (n < len) {
 					ccdk_assert(tlink->next);
 					allocator_type::deallocate(*this, tlink->next, len - n);
