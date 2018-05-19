@@ -1,14 +1,15 @@
 #pragma once
 
+#include<ccdk/mpl/mpl_module.h>
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/mpl/iterator/algorithm/foreach.h>
 #include<ccdk/mpl/type_traits/impl/has_member_decl.h>
+#include<ccdk/mpl/iterator/algorithm/foreach.h>
 
 ccdk_namespace_mpl_it_start
 
 // some container like bit_set  defined more efficient any/all of 
-CCDK_TT_HAS_MEMBER_DECL(any_of, any_of, bool);
-CCDK_TT_HAS_MEMBER_DECL(all_of, all_of, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(any_of, any_of, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(all_of, all_of, bool);
 
 template<
 	typename Container, 
