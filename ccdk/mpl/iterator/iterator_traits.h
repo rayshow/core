@@ -47,8 +47,7 @@ struct iterator_traits<T*>
 };
 
 template<typename T>
-struct iterator_traits<T const*>
-{
+struct iterator_traits<T const*> {
 	using value_type      = T;
 	using pointer         = T const*;
 	using const_pointer   = T const*;

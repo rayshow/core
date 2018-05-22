@@ -1,25 +1,43 @@
 #pragma once
 
+#define CCDK_OS_DEFINE  0
+#define CCDK_OS_WINDOW  1
+#define CCDK_OS_ANDROID 2
+#define CCDK_OS_LINUX   3
+#define CCDK_OS_APPLE   4
+#define CCDK_OS_MAC     5
+
+#define CCDK_COMPILER_DEFINE 0
+#define CCDK_COMPILER_MSVC   1
+#define CCDK_COMPILER_CLANG  2
+#define CCDK_COMPILER_GCC    3
+#define CCDK_COMPILER_INTEL  4
+
+#define CCDK_SIMD_DEFINE    0
+#define CCDK_SIMD_SSE       1  //sse or above
+#define CCDK_SIMD_NEON      2  //NEON 
+#define CCDK_SIMD_NONE      3  //FPU
+
 //OS
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#	define CCDK_OS_WINDOW
+#	define CCDK_OS_DEFINE CCDK_OS_WINDOW
 #	define CCDK_MAX_PATH        MAX_PATH
 #	define CCDK_ANSI_LINE_TERMINATOR "\r\n"
 #	define CCDK_WIDE_LINE_TERMINATOR L"\r\n"
 #elif defined(linux) || defined(__linux) || defined(__linux__)
 #   if defined(ANDROID) || defined(__ANDROID__)
-#		define CCDK_OS_ANDROID
+#		define CCDK_OS_DEFINE CCDK_OS_ANDROID
 #   else
-#		define CCDK_OS_LINUX
+#		define CCDK_OS_DEFINE CCDK_OS_LINUX
 #   endif
 #	define CCDK_MAX_PATH    PATH_MAX
 #	define CCDK_ANSI_LINE_TERMINATOR "\n"
 #	define CCDK_WIDE_LINE_TERMINATOR L"\n"
 #elif  defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #	if defined(__IPHONEOS__)
-#      define  CCDK_OS_APPLE
+#      define  CCDK_OS_DEFINE CCDK_OS_APPLE
 #   else
-#      define  CCDK_OS_MAC
+#      define  CCDK_OS_DEFINE CCDK_OS_MAC
 #   endif
 #	define CCDK_MAX_PATH    1024
 #	define CCDK_ANSI_LINE_TERMINATOR "\r"
@@ -32,16 +50,16 @@
 //compiler
 #if defined(_MSC_VER) && _MSC_VER >=1800
 #	if defined(__clang__)
-#		define CCDK_COMPILER_CLANG   //clang with msvc
+#		define CCDK_COMPILER_DEFINE CCDK_COMPILER_CLANG   //clang with msvc
 #	else
-#		define CCDK_COMPILER_MSVC
+#		define CCDK_COMPILER_DEFINE CCDK_COMPILER_MSVC
 #	endif
 #elif defined(__clang__) && __cplusplus >=201103L
-#define CCDK_COMPILER_CLANG
+#define CCDK_COMPILER_DEFINE CCDK_COMPILER_CLANG
 #elif defined(__GNUC__) && !defined(__ibmxl__) && __cplusplus >=201103L
-#define CCDK_COMPILER_GCC
+#define CCDK_COMPILER_DEFINE CCDK_COMPILER_GCC
 #elif defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC) && __cplusplus >=201103L
-#define CCDK_COMPILER_INTEL
+#define CCDK_COMPILER_DEFINE CCDK_COMPILER_INTEL
 #else
 #error "compiler not support"
 #endif
@@ -63,11 +81,11 @@
 
 //vector math support
 #	if defined(_M_IX86) || defined(__i386__) || defined(_M_X64) || defined(__x86_64__) || defined(__amd64__) //intel or amd
-#		define CCDK_SSE                                         	 
+#		define CCDK_SIMD_DEFINE CCDK_SIMD_SSE                                         	 
 #   elif  defined(_M_ARM) || defined(_M_ARM64) //mali 
-#		define CCDK_NEON                          
+#		define CCDK_SIMD_DEFINE CCDK_SIMD_NEON                          
 #	else
-#		define CCDK_FPU  //float compute
+#		define CCDK_SIMD_DEFINE CCDK_SIMD_NONE
 #	endif
 
 
@@ -157,14 +175,14 @@
 #endif
 
 
-#if defined(CCDK_COMPILER_MSVC)
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC
 //4514: un-used inline function had been removed
 //4710: function had not been inlined
 //4505: un-reference local function had been removed
 #pragma warning(disable:4514 4710 4505)
 #endif
 
-#if defined(CCDK_COMPILER_MSVC) && (defined(DEBUG) || defined(_DEBUG))
+#if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC) && (defined(DEBUG) || defined(_DEBUG))
 //#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #define ccdk_open_leak_check()                         \
 	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG); \

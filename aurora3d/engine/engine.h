@@ -6,7 +6,7 @@
 #include<vector>
 #include<functional>
 #include<set>
-#include"pulser.h"
+#include<parser.h>
 
 //pre-defined header
 #include"../common_def.h"

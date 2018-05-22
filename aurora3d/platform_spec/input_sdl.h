@@ -18,7 +18,7 @@ namespace Aurora3D
 	class Input
 	{
 	private:
-		std::weak_ptr<Window> window_{};
+		std::weak_ptr<Window>   window_{};
 		std::unordered_set<int> key_down_{};
 		std::unordered_set<int> key_press_{};
 		std::unordered_set<int> scancode_down_{};
