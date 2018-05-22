@@ -8,25 +8,25 @@ namespace ccdk
 	namespace mpl
 	{
 		//test if typename T::type is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(type, type);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_type, type);
 
 		//test if typename T::value_type is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(value_type, value_type);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_value_type, value_type);
 
 		//test if typename T::tag is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(tag, tag);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_tag, tag);
 
 		//test if typename T::size_type is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(size_type, size_type);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_size_type, size_type);
 
 		//test if typename T::different_type is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(different_type, different_type);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_different_type, different_type);
 
 		//test if typename T::categroy is well-formed
-		CCDK_TT_HAS_NEST_TYPE_DECL(category, category);
+		CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_category, category);
 
 		//test if constexpr T::value is well-formed
-		CCDK_TT_HAS_NEST_CONSTEXPR_DECL(value, value);
+		CCDK_TT_HAS_NEST_CONSTEXPR_DECL(has_nest_value, value);
 
 		/* Fn::type exists, return Fn::type */
 		template<typename Fn, bool = has_nest_type_v<Fn>>

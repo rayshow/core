@@ -27,7 +27,7 @@ namespace alg_impl
 	}
 }
 
-template<typename It>
+template<typename It, typename = check_t< is_iterator<It>>>
 CCDK_FORCEINLINE It advance(It begin, ptr::diff_t n) noexcept
 {
 	return alg_impl::advance_impl(begin, end, iterator_category_c<It>);

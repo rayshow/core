@@ -9,15 +9,16 @@
 #include<ccdk/mpl/type_traits/has_assigner.h>
 #include<ccdk/mpl/type_traits/has_constructor.h>
 #include<ccdk/mpl/type_traits/impl/has_nest_decl.h>
+#include<ccdk/mpl/type_traits/has_inner_type.h>
 #include<ccdk/mpl/iterator/iterator_fwd.h>
 
 ccdk_namespace_mpl_it_start
 
 // test weather Container::iterator is defined
-CCDK_TT_HAS_NEST_TYPE_DECL(iterator, iterator);
+CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_iterator, iterator);
 
 // test weather Container::const_iterator is defined
-CCDK_TT_HAS_NEST_TYPE_DECL(const_iterator, const_iterator);
+CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_const_iterator, const_iterator);
 
 
 template<typename It>
