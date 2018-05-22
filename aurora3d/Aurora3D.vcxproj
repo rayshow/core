@@ -21,14 +21,14 @@
   <ItemGroup>
     <ClCompile Include="auxiliary\aux_string.cpp" />
     <ClCompile Include="engine\engine.cpp" />
-    <ClCompile Include="graphics\constant_buffer.cpp" />
-    <ClCompile Include="graphics\dx11\const_buffer_dx11_impl.cpp" />
-    <ClCompile Include="graphics\dx11\graphics_dx11_impl.cpp" />
-    <ClCompile Include="graphics\dx11\vertex_buffer_dx11_impl.cpp" />
-    <ClCompile Include="graphics\gpu_object.cpp" />
-    <ClCompile Include="graphics\graphics.cpp" />
-    <ClCompile Include="graphics\render_surface.cpp" />
-    <ClCompile Include="graphics\vertex_buffer.cpp" />
+    <ClCompile Include="graphic\constant_buffer.cpp" />
+    <ClCompile Include="graphic\dx11\const_buffer_dx11_impl.cpp" />
+    <ClCompile Include="graphic\dx11\graphics_dx11_impl.cpp" />
+    <ClCompile Include="graphic\dx11\vertex_buffer_dx11_impl.cpp" />
+    <ClCompile Include="graphic\gpu_object.cpp" />
+    <ClCompile Include="graphic\graphics.cpp" />
+    <ClCompile Include="graphic\render_surface.cpp" />
+    <ClCompile Include="graphic\vertex_buffer.cpp" />
     <ClCompile Include="math\math_utility.cpp" />
     <ClCompile Include="platform_spec\window_sdl_win32.cpp" />
     <ClCompile Include="platform_spec\input_sdl.cpp" />
@@ -39,14 +39,12 @@
     <ClCompile Include="math\vector.cpp" />
     <ClCompile Include="resource\image.cpp" />
     <ClCompile Include="scene\scene.cpp" />
-    <ClCompile Include="sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auxiliary\Aux_string.h" />
-    <ClInclude Include="common_def.h" />
+    <ClInclude Include="compile.h" />
     <ClInclude Include="core\timer.h" />
     <ClInclude Include="auxiliary\uncopyable.h" />
-    <ClInclude Include="auxiliary\singleton.h" />
     <ClInclude Include="engine\application.h" />
     <ClInclude Include="engine\engine.h" />
     <ClInclude Include="engine\pulser.h" />
@@ -54,7 +52,6 @@
     <ClInclude Include="event\input_evt.h" />
     <ClInclude Include="io\io_def.h" />
     <ClInclude Include="io\serialize.h" />
-    <ClInclude Include="io\serialize_trait.h" />
     <ClInclude Include="math\capsule.h" />
     <ClInclude Include="math\euler.h" />
     <ClInclude Include="math\int_rect.h" />
@@ -69,19 +66,20 @@
     <ClInclude Include="math\sphere.h" />
     <ClInclude Include="math\vector3.h" />
     <ClInclude Include="math\vector4.h" />
+    <ClInclude Include="module.h" />
     <ClInclude Include="platform_spec\platform_def.h" />
     <ClInclude Include="platform_spec\window_sdl.h" />
     <ClInclude Include="event\engine_evt.h" />
     <ClInclude Include="event\event_def.h" />
     <ClInclude Include="event\window_evt.h" />
-    <ClInclude Include="graphics\constant_buffer.h" />
-    <ClInclude Include="graphics\dx11\graphics_dx11_impl.h" />
-    <ClInclude Include="graphics\gpu_object.h" />
-    <ClInclude Include="graphics\graphics.h" />
-    <ClInclude Include="graphics\graphics_def.h" />
+    <ClInclude Include="graphic\constant_buffer.h" />
+    <ClInclude Include="graphic\dx11\graphics_dx11_impl.h" />
+    <ClInclude Include="graphic\gpu_object.h" />
+    <ClInclude Include="graphic\graphics.h" />
+    <ClInclude Include="graphic\graphics_def.h" />
     <ClInclude Include="graphics\render_target.h" />
-    <ClInclude Include="graphics\texture.h" />
-    <ClInclude Include="graphics\vertex_buffer.h" />
+    <ClInclude Include="graphic\texture.h" />
+    <ClInclude Include="graphic\vertex_buffer.h" />
     <ClInclude Include="platform_spec\input_sdl.h" />
     <ClInclude Include="io\binary_file.h" />
     <ClInclude Include="auxiliary\aux_string_trait.h" />
@@ -94,12 +92,12 @@
     <ClInclude Include="platform_spec\GenericMemory.h" />
     <ClInclude Include="platform_spec\GenericString.h" />
     <ClInclude Include="platform_spec\GenericTime.h" />
-    <ClInclude Include="precompile_def.h" />
     <ClInclude Include="renderer\model.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="resource\image.h" />
     <ClInclude Include="resource\resource_def.h" />
     <ClInclude Include="scene\scene.h" />
+    <ClInclude Include="type.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A8BBC1B-400D-45B4-9E3D-20FB0C8A1671}</ProjectGuid>
@@ -151,7 +149,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../3rd/dx11/Include;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../3rd/dx11/Include;$(IncludePath)</IncludePath>
     <LibraryPath>../3rd/dx11/Lib/x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -3,14 +3,15 @@
 #include <string>
 #include <mutex>
 #include <list>
-
-#include "../design/singleton.h"
-#include "../precompile_def.h"
+#include <module.h>
+#include <ccdk/mpl/design_pattern/singleton.h>
 #include "binary_file.h"
 #include "buffer.h"
 
-namespace Aurora3D
-{
+a3d_namespace_io_start
+
+using namespace ccdk;
+
 	enum class LogLevel :unsigned char
 	{
 		Debug = 0,
@@ -21,7 +22,7 @@ namespace Aurora3D
 		Max
 	};
 
-	class Logger:public Singleton<Logger> 
+	class Logger:public dp::singleton<Logger> 
 	{
 	private:
 		BinaryFileWriter file{};
@@ -62,9 +63,11 @@ namespace Aurora3D
 #	define CCDK_CHECK_UNLIKELY(expr)  
 #endif
 
-#define CCDK_INFO(msg)           Logger::GetSingletonPtr()->Write(LogLevel::Info, msg);
-#define CCDK_WARNING(msg)        Logger::GetSingletonPtr()->Write(LogLevel::Warn, msg,  AString{__FILE__}, __LINE__);
-#define CCDK_ERROR(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Error, msg, AString{__FILE__}, __LINE__);
-#define CCDK_FATAL(msg)          Logger::GetSingletonPtr()->Write(LogLevel::Fatal, msg, AString{__FILE__}, __LINE__);
-#define CCDK_LOG_FORMAT(lv, prefix,...) Logger::GetSingletonPtr()->WriteFormat( (lv),  AString{__FILE__}, __LINE__, __VA_ARGS__ );
-};
+#define CCDK_INFO(msg)           Logger::instance()->Write(LogLevel::Info, msg);
+#define CCDK_WARNING(msg)        Logger::instance()->Write(LogLevel::Warn, msg,  AString{__FILE__}, __LINE__);
+#define CCDK_ERROR(msg)          Logger::instance()->Write(LogLevel::Error, msg, AString{__FILE__}, __LINE__);
+#define CCDK_FATAL(msg)          Logger::instance()->Write(LogLevel::Fatal, msg, AString{__FILE__}, __LINE__);
+#define CCDK_LOG_FORMAT(lv, prefix,...) Logger::instance()->WriteFormat( (lv),  AString{__FILE__}, __LINE__, __VA_ARGS__ );
+
+
+a3d_namespace_io_end

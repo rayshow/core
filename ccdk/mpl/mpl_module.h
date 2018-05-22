@@ -44,3 +44,7 @@
 //module units
 #define ccdk_namespace_mpl_units_start namespace ccdk{ namespace mpl{ namespace units{
 #define ccdk_namespace_mpl_units_end  ccdk_namespace_end_of_3 
+
+//module units
+#define ccdk_namespace_mpl_design_pattern_start namespace ccdk{ namespace mpl{ namespace dp{
+#define ccdk_namespace_mpl_design_pattern_end  ccdk_namespace_end_of_3 

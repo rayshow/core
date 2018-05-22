@@ -9,34 +9,7 @@ namespace Aurora3D
 {
 	bool BinaryFileReader::Open(const std::string& file)
 	{
-		CCDK_ASSERT(!file.empty());
-
-		if (IsOpened())
-		{
-			CCDK_WARNING(file + " had been opened, close it and open again");
-			return false;
-		}
-
-		std::string& path = PathHelper::UnixStylePath(file);
-
-		if (nullptr == ( handle = fopen(path.c_str(), "rb")))
-		{
-			CCDK_WARNING("file "+ path + " open failed, please ensure file name is correct.");
-			return false;
-		}
-		fseek(handle, 0, SEEK_END);
-		long size = ftell(handle);
-		fseek(handle, 0, SEEK_SET);
-		if (0 == size)
-		{
-			Close();
-			CCDK_WARNING("file " + path + " is empty");
-			return false;
-		}
-
-		file_name = path;
-		file_size = size;
-		return true;
+		
 	}
 
 	size_type BinaryFileReader::Read(uint8* buf, size_type size)
