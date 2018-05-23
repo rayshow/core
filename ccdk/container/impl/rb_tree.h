@@ -282,6 +282,7 @@ public:
 		queue<fs::pair<int,link_type>> que{};
 		que.push({ 1,root() });
 		int prev = 1;
+		int space = 40;
 		while (!que.empty())
 		{
 			auto p = que.front();
@@ -291,9 +292,25 @@ public:
 				DebugValueItEnd();
 				prev = p.first();
 			}
-			DebugValueIt(p.second()->data.first());
-			if (p.second()->left) que.push({ p.first() +1, p.second()->left });
-			if (p.second()->right) que.push({ p.first() +1, p.second()->right });
+			if (p.second()) {
+				std::cout << p.second()->data.first();
+				if (p.second()->is_red()) {
+					std::cout << "(R)";
+				}
+				else {
+					std::cout << "(B)";
+				}
+				std::cout << "  ";
+				que.push({ p.first() + 1, p.second()->left });
+				que.push({ p.first() + 1, p.second()->right });
+			}
+			else {
+
+				DebugValueIt("N(B)");
+				std::cout << "  ";
+			}
+			
+			
 		}
 		DebugValueItEnd();
 	}

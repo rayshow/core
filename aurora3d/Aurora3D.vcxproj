@@ -34,7 +34,6 @@
     <ClCompile Include="platform_spec\input_sdl.cpp" />
     <ClCompile Include="io\binary_file.cpp" />
     <ClCompile Include="io\file_system.cpp" />
-    <ClCompile Include="io\logger.cpp" />
     <ClCompile Include="io\buffer.cpp" />
     <ClCompile Include="math\vector.cpp" />
     <ClCompile Include="resource\image.cpp" />

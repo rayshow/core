@@ -9,31 +9,17 @@
 
 ccdk_namespace_mpl_it_start
 
-//find from front
-CCDK_TT_HAS_MEMBER_EXTRA_DECL(has_member_find, find<N>);
-
 //////////////////////////////////////////////////////////////////////////////////////
 //// find Times-th matching  iterator which is equal to a value
-
-//container version, has find<Times>
-template<
-	uint32 Times = 1,     //first time appear
-	typename Container,
-	typename FN,          // Container::value_type => bool 
-	typename = check_t< has_member_find< Container, Times, FN> >>
-CCDK_FORCEINLINE auto find(Container const& ct, FN Fn) noexcept { 
-	return ct.template find<Times>(Fn);
-}
 
 //container version, not has find<Times>, use iterator loop instead
 template<
 	uint32 Times = 1,
 	typename Container,
-	typename FN,          // Container::value_type => bool 
-	typename = check_t<not_<has_member_find<Container,Times, FN>> >,
+	typename FN,          // ValueType,ValueType => bool 
 	typename = check_t<has_nest_iterator<Container>> >
-CCDK_FORCEINLINE auto find(Container const& ct, FN Fn) {
-	return find(ct.begin(), ct.end(), v);
+	CCDK_FORCEINLINE auto adjacent_find(Container const& ct, FN Fn) {
+	return adjacent_find(ct.begin(), ct.end(), Fn);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,16 +27,18 @@ CCDK_FORCEINLINE auto find(Container const& ct, FN Fn) {
 
 template<
 	uint32 Times = 1,
-	typename InputIt,
+	typename ForwardIt,
 	typename FN,
-	typename = check_t< is_iterator<InputIt>>>
-auto find(InputIt begin, InputIt end, FN Fn) {
+	typename = check_t< is_iterator<ForwardIt>>>
+	auto adjacent_find(ForwardIt begin, ForwardIt end, FN Fn) {
 	uint32 count = 0;
-	for (auto it = begin; it != end; ++it) {
-		if (Fn(*it)) {
+	auto preit = begin;
+	auto it = ++preit;
+	for (; it != end; preit = it, ++it) {
+		if (Fn(*preit, *it)) {
 			++count;
 			if (count == Times) {
-				return it;
+				return preit;
 			}
 		}
 	}

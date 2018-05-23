@@ -31,9 +31,6 @@
     <ClCompile Include="io\binary_file.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="io\logger.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
     <ClCompile Include="math\math_utility.cpp" />
     <ClCompile Include="io\buffer.cpp" />
     <ClCompile Include="io\file_system.cpp">

@@ -908,7 +908,6 @@
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="mpl\base\bit_alg.h" />
-    <ClInclude Include="mpl\iterator\algorithm\adj_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\count.h" />
     <ClInclude Include="mpl\iterator\algorithm\find.h" />
     <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
@@ -922,5 +921,7 @@
     <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
     <ClInclude Include="container\range.h" />
     <ClInclude Include="mpl\design_pattern\singleton.h" />
+    <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\unique.h" />
   </ItemGroup>
 </Project>

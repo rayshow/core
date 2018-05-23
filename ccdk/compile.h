@@ -1,22 +1,24 @@
 #pragma once
 
-#define CCDK_OS_DEFINE  0
+//#define CCDK_OS_DEFINE  0
 #define CCDK_OS_WINDOW  1
 #define CCDK_OS_ANDROID 2
 #define CCDK_OS_LINUX   3
 #define CCDK_OS_APPLE   4
 #define CCDK_OS_MAC     5
 
-#define CCDK_COMPILER_DEFINE 0
+//#define CCDK_COMPILER_DEFINE 0
 #define CCDK_COMPILER_MSVC   1
 #define CCDK_COMPILER_CLANG  2
 #define CCDK_COMPILER_GCC    3
 #define CCDK_COMPILER_INTEL  4
 
-#define CCDK_SIMD_DEFINE    0
+//#define CCDK_SIMD_DEFINE    0
 #define CCDK_SIMD_SSE       1  //sse or above
 #define CCDK_SIMD_NEON      2  //NEON 
 #define CCDK_SIMD_NONE      3  //FPU
+
+#define WSTR( str )   L##str
 
 //OS
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -78,7 +80,6 @@
 #  define CCDK_ARCH64                                            0
 #endif
 
-
 //vector math support
 #	if defined(_M_IX86) || defined(__i386__) || defined(_M_X64) || defined(__x86_64__) || defined(__amd64__) //intel or amd
 #		define CCDK_SIMD_DEFINE CCDK_SIMD_SSE                                         	 
@@ -97,7 +98,9 @@
 
 //function like macro
 #ifndef ccdk_likely
-#if defined(CCDK_COMPILER_GCC) ||  defined(CCDK_COMPILER_CLANG) //linux or  clang
+//linux or  clang
+#if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_GCC) ||\
+	(CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG)  
 #define ccdk_likely(x)    __builtin_expect(!!(x), 1)
 #define ccdk_unlikely(x)  __builtin_expect(!!(x), 0)
 #else

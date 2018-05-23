@@ -23,7 +23,7 @@ public:
 	
 	CCDK_FORCEINLINE void close() { if (is_opened()) fclose(handle); }
 	
-	CCDK_FORCEINLINE void open(std::string const& filename) {
+	CCDK_FORCEINLINE bool open(std::string const& filename) {
 		if (is_opened()) close();
 		return open_impl(filename);
 	}
@@ -47,7 +47,7 @@ public:
 
 private:
 
-	void open_impl(std::string const& filename) {
+	bool open_impl(std::string const& filename) {
 		a3d_assert(!filename.empty());
 		std::string path = PathHelper::UnixStylePath(filename);
 
@@ -73,23 +73,38 @@ private:
 
 };
 
-
-
-
-class BinaryFileWriter : public writer
+class binary_writer : public writer
 {
 private:
-	std::string file_name{};
+	std::string filename{};
 	FILE*       handle = nullptr;
 public:
-	BinaryFileWriter() = default;
-	CCDK_FORCEINLINE BinaryFileWriter(const std::string& file, FileWriteMode mode = FileWriteMode::Replace){ Open(file, mode); }
-	virtual ~BinaryFileWriter() { if (IsOpened()){ Close();  } }
-
-	CCDK_FORCEINLINE bool IsOpened(){ return nullptr != handle; }
-	CCDK_FORCEINLINE void Close(){ if (IsOpened()) fclose(handle); }
-	AURORCCDK_API    bool Open(const std::string& file, FileWriteMode mode = FileWriteMode::Replace);
-	virtual size_type Write(const uint8* data, size_type size) override ;
+	CCDK_FORCEINLINE binary_writer() = default;
+	CCDK_FORCEINLINE binary_writer(const std::string& file,
+		Mode mode = Mode::Replace){
+		open(file, mode); 
+	}
+	virtual ~binary_writer() override { close(); }
+	virtual bool is_opened() override { return nullptr != handle; }
+	virtual bool close() override { if (is_opened()) fclose(handle); }
+	virtual bool open(const std::string& fileName, Mode mode = Mode::Replace) override {
+		static constexpr char* kWriteMode[2] = { "rb", "r+b" };
+		a3d_assert(!fileName.empty());
+		if (is_opened()) {
+			A3D_WARNING("file " + filename + " already opened, reopen "+fileName+" will close it.");
+			close();
+		}
+		std::string& path = PathHelper::UnixStylePath(fileName);
+		if (nullptr == (handle = fopen(path.c_str(), kWriteMode[uint32(mode)]))) {
+			A3D_WARNING("file " + path + " open failed, please ensure file name is correct.");
+			return false;
+		}
+		filename = fileName;
+		return true;
+	}
+	virtual ptr::size_t write(const uint8* data, ptr::size_t size) override {
+		return fwrite(data, size, 1, handle);
+	}
 	virtual bool WritedEnd() override { return GetWritedSize() >= 0x7ffffffe; }
 };
 

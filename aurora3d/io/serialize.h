@@ -32,12 +32,11 @@ CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_writable, write_to, void)
 //test weather void read_from(reader&) is exists
 CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_readable, read_from, void)
 
-
 //serialize write base class
 class writer
 {
 public:
-	enum :uint8 {
+	enum Mode :uint8 {
 		Replace = 0,
 		Append
 	};
@@ -57,14 +56,13 @@ public:
 		typename T,
 		typename = check_t< not_< is_real_size<T>>>,
 		typename = check_t< is_serialize_writable<T>> >
-	A3D_FORCEINLINE writer& operator<<(T const& t) {
-		t.write_to(*this);
-	}
+	A3D_FORCEINLINE writer& operator<<(T const& t) { t.write_to(*this); }
 
 	A3D_FORCEINLINE ptr::size_t pos() const { return _pos; }
 	A3D_FORCEINLINE void inc_pos(uint32 size) { _pos += size; }
+	virtual bool open(std::string const& filename, Mode mode = Mode::Replace);
 	virtual ptr::size_t write(const uint8* data, ptr::size_t size) = 0;
-	virtual bool close() = 0;
+	virtual bool close() {};
 	virtual bool is_opened() = 0;
 	virtual ~writer() { _pos = 0; }
 };

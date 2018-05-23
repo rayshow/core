@@ -5,6 +5,8 @@
 
 ccdk_namespace_mpl_it_start
 
+
+
 template<typename It>
 struct reverse_iterator 
 {
@@ -42,6 +44,11 @@ struct reverse_iterator
 		return it != other.it;
 	}
 };
+
+
+// test weather T is a reverse_iterator
+template<typename T> struct is_reverse_iterator :false_ {};
+template<typename It> struct is_reverse_iterator<reverse_iterator<It>> :true_ {};
 
 
 template<typename It, typename RawIt = remove_const_t<It>>

@@ -16,7 +16,7 @@ namespace ccdk
 		template<typename T> struct is_function :false_ {};
 		template<typename T> struct is_function<T*> :is_function<T> {};
 		
-#ifdef CCDK_COMPILER_MSVC
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC
 		//varg function always prefix with __cdecl, no matter explicitly with which prefix
 		//normal function default prefix width __cdecl
 		#define IS_FUNCTION(Prefix, ...)                                                                                    \

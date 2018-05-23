@@ -20,6 +20,12 @@ CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_iterator, iterator);
 // test weather Container::const_iterator is defined
 CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_const_iterator, const_iterator);
 
+// test weather Container::reverse_iterator is defined
+CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_reverse_iterator, reverse_iterator);
+
+// test weather Container::const_reverse_iterator is defined
+CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_const_reverse_iterator, const_reverse_iterator);
+
 
 template<typename It>
 struct iterator_traits

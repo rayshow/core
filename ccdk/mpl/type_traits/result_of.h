@@ -17,7 +17,7 @@ namespace ccdk
 			//for function pointer
 			template<typename T> struct result_of_impl<T*> : result_of_impl<T> {};
 
-#ifdef CCDK_COMPILER_MSVC
+#if  CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC
 	#define FUNCTION_ENUM(Postfix,...) \
 			template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) Postfix> { typedef Ret type; };        \
 			template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) Postfix> { typedef Ret type; };   \

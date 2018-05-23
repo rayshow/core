@@ -1,9 +1,9 @@
 #pragma once
 
 #include<ccdk/type.h>
-#include<ccdk/mpl/base/integer_.h>
+#include<ccdk/mpl/base/type_.h>
 
-#if defined(CCDK_COMPILER_MSVC)
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC
 #pragma warning(push)
 //4324 : because of align declare signature, MaxAlign_t had been filled
 #pragma warning(disable:4324)
@@ -14,7 +14,7 @@ namespace ccdk
 	namespace mpl
 	{
 		//detail hide
-		namespace detail
+		namespace tt_impl
 		{
 			struct alignas(16) Vector4_t
 			{
@@ -64,7 +64,7 @@ namespace ccdk
 
 
 		  //decare a aligned storage from length and alignment
-		template<int64 Size, int64 Align> struct AlignedStorage :public detail::AlignHelper<Size, Align, int8, (Align <= alignof(int8)) >
+		template<int64 Size, int64 Align> struct AlignedStorage :public tt_impl::AlignHelper<Size, Align, int8, (Align <= alignof(int8)) >
 		{
 			static constexpr int value = alignof(type);
 		};

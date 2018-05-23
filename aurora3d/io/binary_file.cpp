@@ -41,29 +41,15 @@ namespace Aurora3D
 		return true;
 	}
 
-	CONSTEXPR achar* kWriteMode[2] = { "rb", "r+b" };
+	
 
 	bool BinaryFileWriter::Open(const AString& file, FileWriteMode mode)
 	{
-		CCDK_ASSERT(!file.empty());
-
-		if (IsOpened())
-		{
-			CCDK_WARNING(file + " had been opened, close it and open again");
-			return false;
-		}
-		std::string& path = PathHelper::UnixStylePath(file);
-		if (nullptr == (handle = fopen(path.c_str(), kWriteMode[uint32(mode)] )))
-		{
-			CCDK_WARNING("file " + path + " open failed, please ensure file name is correct.");
-			return false;
-		}
-		file_name = path;
-		return true;
+		
 
 	}
 	size_type BinaryFileWriter::Write(const uint8* data, size_type size)
 	{
-		return fwrite(data, size, 1, handle);
+		return 
 	}
 }

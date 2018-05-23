@@ -52,6 +52,7 @@ int main()
 				//DebugValue(i);
 				m.insert({ i,i });
 				m.print_tree();
+				DebugValue("==\n");
 			}
 		}
 	}

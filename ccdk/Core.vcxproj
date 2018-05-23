@@ -86,7 +86,7 @@
     <ClInclude Include="mpl\design_pattern\singleton.h" />
     <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\prediction.h" />
-    <ClInclude Include="mpl\iterator\algorithm\adj_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\advance.h" />
     <ClInclude Include="mpl\iterator\algorithm\count.h" />
     <ClInclude Include="mpl\iterator\algorithm\distance.h" />
@@ -189,6 +189,7 @@
     <ClInclude Include="mpl\iterator\algorithm\search.h" />
     <ClInclude Include="mpl\iterator\algorithm\test_of.h" />
     <ClInclude Include="mpl\iterator\algorithm\transform.h" />
+    <ClInclude Include="mpl\iterator\algorithm\unique.h" />
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="mpl\iterator\bit_iterator.h" />
     <ClInclude Include="mpl\iterator\biward_list_iterator.h" />

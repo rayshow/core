@@ -5,18 +5,21 @@
 #include<ccdk/mpl/type_traits/add_const_lref.h>
 #include<ccdk/mpl/type_traits/add_rref.h>
 
-#if defined(CCDK_COMPILER_GCC)
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_GCC
 #include<ccdk/mpl/type_traits/is_array.h>
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/declval.h>
 #endif
+
 #include<ccdk/mpl/type_traits/remove_ref.h>
 
 namespace ccdk
 {
 	namespace mpl
 	{
-#if defined(CCDK_COMPILER_MSVC) || defined(CCDK_COMPILER_CLANG) || defined(CCDK_COMPILER_INTEL)
+
+#if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC) ||\
+	(CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG)
 		//normal constructor family
 		template<typename T, typename... Args> struct has_constructor :public bool_<__is_constructible(T, Args...)> {};
 		template<typename T> struct has_copy_constructor :public has_constructor<T, add_const_lref_t<T>> {};
