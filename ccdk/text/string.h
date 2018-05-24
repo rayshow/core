@@ -3,6 +3,7 @@
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/container/vector.h>
 #include<ccdk/mpl/iterator/algorithm/advance.h>
+#include<ccdk/text/char_traits.h>
 #include<ccdk/text/text_module.h>
 
 ccdk_namespace_text_start
@@ -460,12 +461,25 @@ public:
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//// find
+//// find / find_index
 
-	template<uint32 Count = 1>
-	CCDK_FORCEINLINE constexpr size_type find(char_type ch) const noexcept { return find_impl<Count>(mpl::bool_c<(Count < 0)>, ch); }
+	template<int32 N, typename = check<N!=0> >
+	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
+		return find_index_impl<N>(mpl::bool_c<(N < 0)>, Fn));
+	}
 
-	CCDK_FORCEINLINE constexpr size_type find(char_type const* str) { return traits_type::find(content, length, str, traits_type::length(str)); }
+	template<int32 N, typename = check<N != 0> >
+	CCDK_FORCEINLINE size_type find_index(char_type const* str) {
+		return traits_type::find(content, length, str, traits_type::length(str));
+	}
+
+
+	template<int32 N = 1, typename = check< N!=0 > >
+	CCDK_FORCEINLINE constexpr const_iterator find(FN Fn) const noexcept { 
+		return content + find_index<N>(Fn);
+	}
+
+	
 	CCDK_FORCEINLINE constexpr size_type find(char_type const* str, size_type len){ return traits_type::find(content, length, str, traits_type::length(str)); }
 	template<typename Alloc2, typename Size2>
 	CCDK_FORCEINLINE constexpr size_type find(basic_string<Char, Alloc2, Size2> const& str) { return traits_type::find(content, length, str.c_str(), str.length()); }
@@ -495,8 +509,34 @@ public:
 	template<typename T>
 	CCDK_FORCEINLINE basic_string& append(T const& t) { return *this; }
 
-	/* destroy */
-	~basic_string() { allocator_type::deallocate(*this, content, length); length = 0;  }
+private:
+	template<int32 N>
+	CCDK_FORCEINLINE size_type find_index_impl(mpl::false_, FN Fn) const noexcept {
+		uint32 count = 0;
+		for (size_type i = 0; i < len; ++i) {
+			if (Fn(at(i))) {
+				if (++count == N) {
+					return i;
+				}
+			}
+		}
+		return len;
+	}
+
+	template<int32 N>
+	CCDK_FORCEINLINE size_type find_index_impl(mpl::true_, FN Fn) const noexcept {
+		uint32 count = 0;
+		size_type last = len - 1;
+		for (size_type i = 0; i < len; ++i) {
+			if (Fn(at(last - i))) {
+				if (++count == N) {
+					return last - i;
+				}
+			}
+		}
+		return len;
+	}
+
 };
 
 using string  = basic_string<achar>;

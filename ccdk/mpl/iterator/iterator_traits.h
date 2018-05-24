@@ -26,6 +26,8 @@ CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_reverse_iterator, reverse_iterator);
 // test weather Container::const_reverse_iterator is defined
 CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_const_reverse_iterator, const_reverse_iterator);
 
+// test weather Container::const_reverse_iterator is defined
+CCDK_TT_HAS_NEST_TYPE_DECL(has_nest_category, category);
 
 template<typename It>
 struct iterator_traits
@@ -136,5 +138,28 @@ template<
 	typename P = remove_cv_t< remove_pointer_t<It>>  >
 struct is_pointer_iterator 
 		: and_< is_same<P,T>, or_ < is_same< It, P*>, is_same<It, P const*> >>{};
+
+
+
+// test weather is biward iterator
+template<typename T>
+struct is_biward_category :is_same<typename T::category, biward_category> {};
+
+template<typename T>
+struct is_biward_iterator :and_< is_iterator<T>, is_biward_category<iterator_traits<T>>> {};
+
+template<typename T>
+static constexpr bool is_biward_iterator_v = is_biward_iterator<T>::value;
+
+
+// test weather is random iterator
+template<typename T>
+struct is_random_category :is_same<typename T::category, random_category> {};
+
+template<typename T>
+struct is_random_iterator :and_< is_iterator<T>, is_random_category<iterator_traits<T>>> {};
+
+template<typename T>
+static constexpr bool is_random_iterator_v = is_random_iterator<T>::value;
 
 ccdk_namespace_mpl_it_end

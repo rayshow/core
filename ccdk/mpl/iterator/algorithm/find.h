@@ -13,7 +13,7 @@ ccdk_namespace_mpl_it_start
 CCDK_TT_HAS_MEMBER_EXTRA_DECL(has_member_find, find<N>);
 
 //////////////////////////////////////////////////////////////////////////////////////
-//// find Times-th matching  iterator which is equal to a value
+//// find Times-th matching  iterator which match Prediction
 
 //container version, has find<Times>
 template<

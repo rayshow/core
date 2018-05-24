@@ -17,7 +17,7 @@ CCDK_FORCEINLINE void foreach(Container const& ct, FN Fn) { ct.foreach(Fn); }
 
 
 // Container member-fn foreach not exists but [cbegin,cend) exists ,
-// loop over const_iterator
+// loop over iterator
 template<
 	typename Container, typename FN,
 	typename = check_t<not_<has_member_foreach<Container, FN>> >,
