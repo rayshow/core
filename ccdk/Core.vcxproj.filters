@@ -59,15 +59,6 @@
   <ItemGroup>
     <ClInclude Include="compile.h" />
     <ClInclude Include="type.h" />
-    <ClInclude Include="filesystem\path.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem\reader.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem\writer.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
     <ClInclude Include="math\capsule.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -882,7 +873,6 @@
     <ClInclude Include="container\view\const_view.h" />
     <ClInclude Include="container\view\range_filter_view.h" />
     <ClInclude Include="container\filter\range_filter.h" />
-    <ClInclude Include="filesystem\log\log.h" />
     <ClInclude Include="mpl\iterator\bstree_iterator.h" />
     <ClInclude Include="container\impl\link_node.h" />
     <ClInclude Include="mpl\fusion\local_arr.h" />
@@ -911,18 +901,37 @@
     <ClInclude Include="mpl\iterator\algorithm\count.h" />
     <ClInclude Include="mpl\iterator\algorithm\find.h" />
     <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
-    <ClInclude Include="mpl\iterator\algorithm\is_permutation.h" />
     <ClInclude Include="mpl\iterator\algorithm\replace.h" />
     <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\search.h" />
     <ClInclude Include="mpl\iterator\algorithm\transform.h" />
     <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
-    <ClInclude Include="mpl\iterator\algorithm\test_of.h" />
     <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
     <ClInclude Include="container\range.h" />
     <ClInclude Include="mpl\design_pattern\singleton.h" />
     <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\unique.h" />
     <ClInclude Include="mpl\iterator\algorithm\mismatch.h" />
+    <ClInclude Include="mpl\iterator\algorithm\seq_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\remove.h" />
+    <ClInclude Include="mpl\iterator\algorithm\rotate.h" />
+    <ClInclude Include="mpl\iterator\algorithm\shuffle.h" />
+    <ClInclude Include="mpl\iterator\algorithm\heap_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\set_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\sort_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\bsearch_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\permutation_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\partition_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\fold.h" />
+    <ClInclude Include="filesystem\log\log.h" />
+    <ClInclude Include="filesystem\path.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\reader.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\writer.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

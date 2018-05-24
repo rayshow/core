@@ -30,7 +30,7 @@ constexpr uint32 kVectorLestElements = 16;
 template<
 	typename T,                               /* element type */
 	typename IncRatio = units::ratio<2, 1>,   /* 2X incease ratio*/
-	uint32  N = kVectorLestElements,          /* least allocate 10 elements */
+	uint32 N = kVectorLestElements,          /* least allocate 10 elements */
 	typename Size = uint32,                   /* size type */
 	typename Alloc = mem::simple_new_allocator<T,Size> /* basic allocator */
 >
@@ -284,7 +284,7 @@ public:
 		typename ... Args,
 		typename  = check_t< has_constructor< T, Args...>> >
 	CCDK_FORCEINLINE this_type& emplace_back(Args&& ... args){
-		if (len == cap) { reallocate_move(); }
+		if (len == cap) { reallocate_move(len); }
 		util::construct<T>(content + len++, util::forward<Args>(args)...);
 		return *this;
 	}
@@ -563,10 +563,10 @@ protected:
 
 	// allocate a new memory, if success
 	// move [content, content+n) to this [memory, memory+n), free old content
-	CCDK_FORCEINLINE void reallocate_move() {
+	CCDK_FORCEINLINE void reallocate_move(size_type n) {
 		size_type new_cap, new_len;
-		pointer memory = allocator_type::allocate_inc(*this, len, &new_cap, &new_len);
-		util::construct_move_n(memory, content, len);
+		pointer memory = allocator_type::allocate_inc(*this, n, &new_cap, &new_len);
+		util::construct_move_n(memory, content, n);
 		destroy();
 		content = memory;
 		cap = new_cap;

@@ -99,7 +99,6 @@ CCDK_FORCEINLINE void copy_range(It tbegin, It2 fbegin, It2 fend)
 	return ut_impl::copy_range_impl(tbegin, fbegin, fend, copy_opt_level_c<It, It2>);
 }
 
-
 template< 
 	typename It,
 	typename It2,

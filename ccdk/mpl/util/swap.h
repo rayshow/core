@@ -129,6 +129,11 @@ ccdk_namespace_mpl_util_start
 		t2 = util::move(tmp);
 	}
 
+	template<typename ForwardIt, typename ForwardIt2>
+	CCDK_FORCEINLINE void swap_range(ForwardIt begin, ForwardIt end, ForwardIt2 begin2) {
+
+	}
+
 ccdk_namespace_mpl_util_end
 
 
