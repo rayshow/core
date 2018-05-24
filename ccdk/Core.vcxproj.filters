@@ -923,5 +923,6 @@
     <ClInclude Include="mpl\design_pattern\singleton.h" />
     <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\unique.h" />
+    <ClInclude Include="mpl\iterator\algorithm\mismatch.h" />
   </ItemGroup>
 </Project>

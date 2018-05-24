@@ -184,6 +184,7 @@
     <ClInclude Include="mpl\iterator\algorithm\find.h" />
     <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
     <ClInclude Include="mpl\iterator\algorithm\is_permutation.h" />
+    <ClInclude Include="mpl\iterator\algorithm\mismatch.h" />
     <ClInclude Include="mpl\iterator\algorithm\replace.h" />
     <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
     <ClInclude Include="mpl\iterator\algorithm\search.h" />

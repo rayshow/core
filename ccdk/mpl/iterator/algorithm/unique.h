@@ -8,6 +8,7 @@
 
 ccdk_namespace_mpl_it_start
 
+//return a new Container2 that contain all Container1's unique element 
 template<typename Container2, typename Container1>
 CCDK_FORCEINLINE Container2 unique(Container1 const& ct) {
 	Container2 ct2{};
@@ -20,12 +21,19 @@ CCDK_FORCEINLINE Container2 unique(Container1 const& ct) {
 	return ct2;
 }
 
+//return value-no-used iterator
 template<typename ForwardIt>
-CCDK_FORCEINLINE unique(ForwardIt begin, ForwardIt end) {
+CCDK_FORCEINLINE auto unique(ForwardIt begin, ForwardIt end) {
 	auto prev = begin;
-	for (auto it = ++begin; it != end; ++it) {
-		if()
+	for (auto it = begin; it != end; ++it) {
+		if (*it != prev) {
+			++prev;
+			if (prev != it) {
+				*prev = *it;
+			}
+		}
 	}
+	return ++prev;
 }
 
 

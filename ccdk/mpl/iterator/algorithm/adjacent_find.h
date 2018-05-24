@@ -5,7 +5,6 @@
 #include<ccdk/mpl/type_traits/impl/has_member_decl.h>
 #include<ccdk/mpl/iterator/algorithm/foreach.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
-#include<ccdk/mpl/iterator/iterator_traits.h>
 
 ccdk_namespace_mpl_it_start
 

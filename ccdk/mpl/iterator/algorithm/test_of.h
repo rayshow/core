@@ -8,9 +8,9 @@
 ccdk_namespace_mpl_it_start
 
 // some container like bit_set  defined more efficient any/all/none of 
-CCDK_TT_HAS_MEMBER_WITH_RET_DECL(any_of, any, bool);
-CCDK_TT_HAS_MEMBER_WITH_RET_DECL(all_of, all, bool);
-CCDK_TT_HAS_MEMBER_WITH_RET_DECL(none_of, all, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_any_of, any, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_all_of, all, bool);
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(has_member_none_of, none, bool);
 
 //////////////////////////////////////////////////////////////////////////////
 //// test weather no one element of Container/range is false
