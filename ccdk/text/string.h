@@ -115,7 +115,7 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>>>
 	CCDK_FORCEINLINE basic_string(InputIt begin, InputIt end)
-		:basic_string{ begin, util::distance(begin,end) } {}
+		:basic_string{ begin, it::distance(begin,end) } {}
 
 	//copy ctor
 	CCDK_FORCEINLINE basic_string(this_type const& other)
@@ -170,6 +170,7 @@ public:
 			rvalue_set(other.content, other.len, other.cap);
 			other.rvalue_reset();
 		}
+		return *this;
 	}
 
 	// template copy assign
@@ -189,10 +190,10 @@ public:
 	}
 
 	//assign string literial
-	template<uint32 N>
+	template<uint32 D>
 	CCDK_FORCEINLINE constexpr basic_string& assign(
-		string_literial_init, char_type const (&arr)[N]) {
-		return assign(arr, N - 1);
+		string_literial_init, char_type const (&arr)[D]) {
+		return assign(arr, D - 1);
 	}
 
 	// fill assign
@@ -254,7 +255,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//// insert with index
 
-		//insert single char
+	//insert single char
 	CCDK_FORCEINLINE basic_string& insert(size_type pos, char_type c) {
 		char arr[2] = { c,0 };
 		return insert(pos, arr, 2);
@@ -271,7 +272,6 @@ public:
 		size_type pos, string_literial_init, char_type const (&arr)[D]) {
 		return insert(pos, arr, D - 1);
 	}
-
 
 	//insert range
 	template<
@@ -329,7 +329,7 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, InputIt end) {
+	CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, InputIt end) {
 		return insert(pos - content, begin, it::distance(begin, end));
 	}
 
@@ -337,7 +337,7 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, size_type n) {
+	CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, size_type n) {
 		insert_impl(pos - content, pos + n, begin);
 		set_terminal();
 		return *this;
@@ -347,7 +347,7 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, size_type n, char_type c) {
+	CCDK_FORCEINLINE basic_string& insert(const_iterator pos, size_type n, char_type c) {
 		emplace_impl(pos - content, pos + n, c);
 		set_terminal();
 		return *this;
@@ -579,7 +579,7 @@ public:
 
 	CCDK_FORCEINLINE void debug_value(const char* title="") {
 		DebugValueItBegin(title);
-		DebugValueIt(content);
+		if(content) DebugValueIt(content);
 		DebugValueItEnd();
 	}
 };

@@ -16,7 +16,6 @@ struct test_swap_t
 
 int main()
 {
-
 	DebugNewTitle("constructor ");
 	{
 		DebugSubTitle("empty");
@@ -24,13 +23,11 @@ int main()
 			string e1{};
 			string e2{ nullptr };
 		}
-
 		DebugSubTitle("fill");
 		{
 			string s{ 31,'i' };
 			s.debug_value();
 		}
-
 		DebugNewTitle("copy c-string");
 		{
 			string s1{ "123456789"};
@@ -43,7 +40,6 @@ int main()
 			s3.debug_value();
 			RuntimeAssertTrue(s3.size() == 9);
 		}
-
 		DebugNewTitle("copy/move/range ctor");
 		{
 			string s1{ "123456789" };
@@ -53,11 +49,82 @@ int main()
 			s2.debug_value();
 			RuntimeAssertTrue(s2.size() == 9);
 			string s3{ s1.begin(), s1.end() };
-
+			s3.debug_value();
+			RuntimeAssertTrue(s3.size() == 9);
+			string s4{ util::move(s1) };
+			s4.debug_value();
+			s1.debug_value();
+			RuntimeAssertTrue(s4.size() == 9);
+			RuntimeAssertTrue(s1.size() == 0);
 		}
-
+	}
+	DebugNewTitle("swap")
+	{
+		string s1{ "123456789" };
+		string s2{ "987654321" };
+		s1.debug_value();
+		s2.debug_value();
+		util::swap(s1, s2);
+		s1.debug_value();
+		s2.debug_value();
+	}
+	DebugNewTitle("empty assign");
+	{
+		string s1{};
+		s1 = "xiongya";
+		s1.debug_value();
+		RuntimeAssertTrue(s1.size() == 7);
+		string s2{};
+		s2.assign(7, 'i');
+		s2.debug_value();
+		RuntimeAssertTrue(s2.size() == 7);
+	}
+	DebugNewTitle("assign");
+	{
+		string s1{ "123456789" };
+		string s2{ "helloworld" };
+		string s3{};
+		s1.debug_value();
+		s1 = "xiongya";
+		s1.debug_value();
+		RuntimeAssertTrue(s1.size() == 7);
+		s1 = s2;
+		s1.debug_value();
+		RuntimeAssertTrue(s1.size() == s2.size());
+		s3 = util::move(s1);
+		RuntimeAssertTrue(s1.empty());
+		s3.debug_value();
+		RuntimeAssertTrue(s3.size() == s2.size());
+		s3.assign(10, 'i');
+		s3.debug_value();
+		RuntimeAssertTrue(s3.size() == 10);
+		s3.assign(string_literial_init_c, "literial init");
+		s3.debug_value();
+		RuntimeAssertTrue(s3.size()==13);
+		s3.assign("hello,world", 5);
+		s3.debug_value();
+		RuntimeAssertTrue(s3.size() == 5);
+	}
+	DebugNewTitle("pop back");
+	{
+		string s1{ "123456789" };
+		while (!s1.empty()) {
+			DebugValueIt(s1.back());
+			s1.pop_back();
+		}
+		DebugValueItEnd();
+		RuntimeAssertTrue(s1.size() == 0);
+		string s2{};
+		for (char c = 'a'; c <= 'z'; ++c) {
+			if (s2.size() < 16)
+				s2.push_back(c);
+			else
+				s2.push_back(c);
+		}
+		s2.debug_value();
 
 	}
+
 	/*string c1{ "hello" };
 	DebugValue(c1.c_str());
 	string c2{ "hello", 3 };
@@ -160,6 +227,8 @@ int main()
 	string app2{ ",hello world" };
 	DebugValue(app1.append(app2).append(app2).append(app2).c_str());
 */
+
+	ccdk_open_leak_check();
 	getchar();
 	return 0;
 }
