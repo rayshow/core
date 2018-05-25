@@ -30,17 +30,17 @@ public:
 	using char_type = Char;
 	using this_type = basic_string;
 	using traits_type = char_traits<Char>;
-	using default_encoding_type = traits_type::default_encoding_type;
+	using default_encoding_type = typename traits_type::default_encoding_type;
 	using allocator_type = typename super_type::allocator_type;
 
 	//common
 	using value_type = Char;
 	using size_type = Size;
 	using difference_type = ptr::diff_t;
-	using pointer_type = Char * ;
-	using const_pointer_type = Char const*;
-	using reference_type = Char & ;
-	using const_reference_type = Char const&;
+	using pointer = Char * ;
+	using const_pointer = Char const*;
+	using reference = Char & ;
+	using const_reference = Char const&;
 
 	//iterator
 	using iterator = typename super_type::iterator;
@@ -55,7 +55,7 @@ public:
 	// multiplex
 	using super_type::swap;
 	using super_type::size;
-	using super_type::capcity;
+	using super_type::capacity;
 	using super_type::empty;
 	using super_type::max_size;
 	using super_type::front;
@@ -73,7 +73,7 @@ public:
 
 	// clear
 	CCDK_FORCEINLINE basic_string& clear() noexcept {
-		if (size()) {len = 0;at(len) = 0;}
+		if (size()) { len = 0; set_terminal(); }
 		return *this;
 	}
 
@@ -81,41 +81,40 @@ public:
 	CCDK_FORCEINLINE pointer c_str() noexcept { return content; }
 	CCDK_FORCEINLINE const_pointer c_str() const noexcept { return content; }
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//// ctor
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//// ctor
-
-		//default and nullptr
+			//default and nullptr
 	CCDK_FORCEINLINE basic_string() noexcept : super_type{} {}
 	CCDK_FORCEINLINE basic_string(ptr::nullptr_t) noexcept : super_type{ nullptr } {}
 
 	// just allocate least n cap
 	CCDK_FORCEINLINE basic_string(size_type n) : super_type{ n + 1 } {
-		this->at(0) = 0;
+		set_terminal();
 	}
 
 	// fill
 	CCDK_FORCEINLINE basic_string(size_type n, char_type v) : basic_string{ n } {
 		util::construct_fill_n(content, v, n);
-		at(n) = 0; //set n-th element '\0'
 		len = n;
+		set_terminal();
 	}
 
 	// copy-n
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>>>
-		CCDK_FORCEINLINE basic_string(InputIt begin, size_type n) : basic_string{ n } {
+	CCDK_FORCEINLINE basic_string(InputIt begin, size_type n) : basic_string{ n } {
 		util::construct_copy_n(content, begin, n);
-		at(n) = 0;
 		len = n;
+		set_terminal();
 	}
 
 	// copy-n
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator<InputIt>>>
-		CCDK_FORCEINLINE basic_string(InputIt begin, InputIt end)
+	CCDK_FORCEINLINE basic_string(InputIt begin, InputIt end)
 		:basic_string{ begin, util::distance(begin,end) } {}
 
 	//copy ctor
@@ -130,7 +129,7 @@ public:
 	template<uint32 D>
 	CCDK_FORCEINLINE basic_string(
 		string_literial_init, char_type const (&arr)[D])
-		: super_type{ arr, D } {}
+		: basic_string{ arr, D-1 } {}
 
 	// c-style string copy 
 	CCDK_FORCEINLINE basic_string(char_type const* str)
@@ -148,8 +147,8 @@ public:
 		basic_string<Char, IncRatio2, N2, Size2, Alloc> && other)
 		: basic_string{ util::move(other) } {}
 
-///////////////////////////////////////////////////////////////////////////////////////////
-//// assign 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//// assign 
 
 	// c-style string assign
 	CCDK_FORCEINLINE basic_string& operator=(char_type const* str) {
@@ -174,7 +173,7 @@ public:
 	}
 
 	// template copy assign
-	template<typename IncRatio2, typename Size2, typename Allo2, uint32 N2>
+	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
 	CCDK_FORCEINLINE basic_string& operator=(
 		basic_string<char_type, IncRatio2, N2, Size2, Alloc2> const& other) {
 		return assign(other.begin(), other.size());
@@ -198,10 +197,10 @@ public:
 
 	// fill assign
 	CCDK_FORCEINLINE basic_string& assign(size_type n, char_type c) {
-		if (!content || n > capcity()) { reallocate(n); }
+		if (!content || n > capacity()) { reallocate(n); }
 		util::construct_fill_n(content, c, n);
 		len = n;
-		at(len) = 0;
+		set_terminal();
 		return *this;
 	}
 
@@ -211,20 +210,21 @@ public:
 		typename = check_t< is_iterator< InputIt >>>
 		CCDK_FORCEINLINE basic_string& assign(
 			InputIt begin, size_type n) {
-		if (!content || n > capcity()) { reallocate(n); }
+		if (!content || n > capacity()) { reallocate(n); }
 		util::construct_copy_n(content, begin, n);
 		len = n;
-		at(len) = 0;
+		set_terminal();
 		return *this;
 	}
 
-////////////////////////////////////////////////////////////////////////////////////////
-//// pop / push /emplace back
+	////////////////////////////////////////////////////////////////////////////////////////
+	//// pop / push /emplace back
 
-	// pop back
+		// pop back
 	CCDK_FORCEINLINE basic_string& pop_back() noexcept {
 		if (ccdk_likely(size() > 0)) {
-			at(--len) = 0;
+			--len;
+			set_terminal();
 		}
 		return *this;
 	}
@@ -234,7 +234,7 @@ public:
 		ccdk_assert(n < size() && n>0);
 		if (n > 0 && n < size()) {
 			len -= n;
-			at(len) = 0;
+			set_terminal();
 		}
 		return *this;
 	}
@@ -246,55 +246,15 @@ public:
 	CCDK_FORCEINLINE basic_string& push_back(char_type c) {
 		if (size() == capacity()) { reallocate_move(size()); }
 		content[len++] = c;
-		at(len) = 0;
+		set_terminal();
 		return *this;
 	}
 
-	//push back range-fill
-	CCDK_FORCEINLINE basic_string& push_back(size_type n, char_type c) {
-		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
-		util::construct_fill_n(content + size(), c, n);
-		len += n;
-		at(len) = 0;
-		return *this;
-	}
 
-	//push back range-n
-	template<
-		typename InputIt,
-		typename = check_t< is_iterator< InputIt>> >
-		CCDK_FORCEINLINE basic_string& push_back(InputIt begin, size_type n) {
-		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
-		util::construct_copy_n(content + size(), begin, n);
-		len += n;
-		at(len) = 0;
-		return *this;
-	}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//// insert with index
 
-	//push back range
-	template<
-		typename InputIt,
-		typename = check_t< is_iterator< InputIt>> >
-		CCDK_FORCEINLINE basic_string& push_back(InputIt begin, InputIt end) {
-		return push_back(begin, it::distance(begin, end));
-	}
-
-	//push back c-string
-	CCDK_FORCEINLINE basic_string& push_back(char_type const& str) {
-		return push_back(str, traits_type::length(str));
-	}
-
-	//push back string literial
-	template<uint32 D>
-	CCDK_FORCEINLINE basic_string& push_back(
-		string_literial_init, char_type const (&arr)[D]) {
-		return push_back(arr, D-1);
-	}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//// insert with index
-
-	//insert single char
+		//insert single char
 	CCDK_FORCEINLINE basic_string& insert(size_type pos, char_type c) {
 		char arr[2] = { c,0 };
 		return insert(pos, arr, 2);
@@ -309,7 +269,7 @@ public:
 	template<uint32 D>
 	CCDK_FORCEINLINE basic_string& insert(
 		size_type pos, string_literial_init, char_type const (&arr)[D]) {
-		return insert(pos, arr, D-1);
+		return insert(pos, arr, D - 1);
 	}
 
 
@@ -317,17 +277,17 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, InputIt begin, InputIt end) {
+		CCDK_FORCEINLINE basic_string& insert(size_type pos, InputIt begin, InputIt end) {
 		return insert(pos, begin, it::distance(begin, end));
 	}
 
 	//insert range-n
 	template<
-		typename InputIt, 
+		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, InputIt begin, size_type n) {
+		CCDK_FORCEINLINE basic_string& insert(size_type pos, InputIt begin, size_type n) {
 		insert_impl(pos, pos + n, begin);
-		at(len) = 0;
+		set_terminal();
 		return *this;
 	}
 
@@ -335,33 +295,33 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
-	CCDK_FORCEINLINE basic_string& insert(size_type pos, size_type n, char_type c) {
+		CCDK_FORCEINLINE basic_string& insert(size_type pos, size_type n, char_type c) {
 		emplace_impl(pos, pos + n, c);
-		at(len) = 0;
+		set_terminal();
 		return *this;
 	}
 
 	//insert a string
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
-	CCDK_FORCEINLINE basic_string& insert( size_type pos,
+	CCDK_FORCEINLINE basic_string& insert(size_type pos,
 		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
 		insert(pos, other.begin(), other.size());
 	}
 
 
-//////////////////////////////////////////////////////////////////////////////////////////
-//// insert with iterator
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//// insert with iterator
 
-	//insert c-string
+		//insert c-string
 	CCDK_FORCEINLINE basic_string& insert(const_iterator pos, char_type const* str) {
-		return insert(pos-content, str, traits_type::length(str));
+		return insert(pos - content, str, traits_type::length(str));
 	}
 
 	//insert string literial 
 	template<uint32 D>
 	CCDK_FORCEINLINE basic_string& insert(
 		const_iterator pos, string_literial_init, char_type const (&arr)[D]) {
-		return insert(pos-content, arr, D - 1);
+		return insert(pos - content, arr, D - 1);
 	}
 
 
@@ -370,7 +330,7 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
 		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, InputIt end) {
-		return insert(pos-content, begin, it::distance(begin, end));
+		return insert(pos - content, begin, it::distance(begin, end));
 	}
 
 	//insert range-n
@@ -378,8 +338,8 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
 		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, InputIt begin, size_type n) {
-		insert_impl(pos-content, pos + n, begin);
-		at(len) = 0;
+		insert_impl(pos - content, pos + n, begin);
+		set_terminal();
 		return *this;
 	}
 
@@ -388,38 +348,42 @@ public:
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>>>
 		CCDK_FORCEINLINE basic_string& insert(const_iterator pos, size_type n, char_type c) {
-		emplace_impl(pos-content, pos + n, c);
-		at(len) = 0;
+		emplace_impl(pos - content, pos + n, c);
+		set_terminal();
 		return *this;
 	}
 
 	//insert a string
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
-	CCDK_FORCEINLINE basic_string& insert( const_iterator pos,
+	CCDK_FORCEINLINE basic_string& insert(const_iterator pos,
 		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
-		insert(pos-content,other.begin(), other.size());
+		insert(pos - content, other.begin(), other.size());
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-//// erase
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	//// erase
 	CCDK_FORCEINLINE basic_string& erase(size_type begin, size_type end) noexcept {
 		ccdk_assert(end > begin && end <= size());
 		size_type tail_len = size() - end;
 		util::move_n(content + begin, content + end, tail_len);
 		len -= end - start;
-		at(len) = 0;
+		set_terminal();
 	}
 
-	CCDK_FORCEINLINE basic_string& erase(const_iterator pos) noexcept {
+	CCDK_FORCEINLINE basic_string& erase(size_type pos) noexcept {
 		return erase(pos, pos + 1);
 	}
 
-	CCDK_FORCEINLINE basic_string& erase(size_type begin, size_type end) noexcept {
+	CCDK_FORCEINLINE basic_string& erase(const_iterator begin, const_iterator end) noexcept {
 		return erase(begin - content, end - content);
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-//// replace
+	CCDK_FORCEINLINE basic_string& erase(const_iterator pos) noexcept {
+		return erase(pos - content);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	//// replace
 
 	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, char_type const* str) {
 		return replace(start, end, str, traits_type::length(str));
@@ -429,7 +393,7 @@ public:
 		size_type reduce = end - start;
 		if (reduce >= n) {
 			util::construct_fill_n(content + start, c, n);
-			if(reduce>n) erase(n, end);
+			if (reduce > n) erase(n, end);
 		}
 		else {
 			util::construct_fill_n(content + start, c, reduce);
@@ -442,17 +406,17 @@ public:
 		size_type reduce = end - start;
 		if (reduce >= n) {
 			util::construct_copy_n(content + start, begin, n);
-			if (reduce>n) erase(n, end);
+			if (reduce > n) erase(n, end);
 		}
 		else {
 			util::construct_copy_n(content + start, begin, reduce);
-			insert(end, it::advance(begin,reduce), n - reduce);
+			insert(end, it::advance(begin, reduce), n - reduce);
 		}
 	}
 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, InputIt begin, InputIt end) {
-		return replace(start, end, begin, it::distance(begin, end));
+	CCDK_FORCEINLINE basic_string& replace(size_type begin, size_type end, InputIt begin2, InputIt end2) {
+		return replace(start, end, begin2, it::distance(begin2, end2));
 	}
 
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
@@ -461,29 +425,29 @@ public:
 		return replace(start, end, other.begin(), other.size());
 	}
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//// find / find_index / find_in / find_not_in
+	////////////////////////////////////////////////////////////////////////////////////////////
+	//// find / find_index / find_in / find_not_in
 
-	template<int32 Cnt, typename = check<Cnt!=0> >
+	template<int32 Cnt, typename FN, typename = check<Cnt != 0> >
 	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
 		return find<Cnt>(Fn) - content;
 	}
 
-	template<int32 Cnt = 1, typename = check< Cnt!=0 > >
-	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept { 
+	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >
+	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept {
 		return content + find_index<Cnt>(Fn);
 	}
 
-	template<int32 Cnt = 1, typename = check< Cnt != 0 > >
+	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >
 	CCDK_FORCEINLINE const_iterator find(const_pointer str) const noexcept {
 		return it::seq_find<Cnt>(content, len, str, traits_type::length(str));
 	}
 
 	template<
 		int32 Cnt = 1, typename RandomIt,
-		typename = check< Cnt!=0 >,
+		typename = check< Cnt != 0 >,
 		typename = check_t< is_random_iterator<RandomIt>>>
-	CCDK_FORCEINLINE const_iterator find(RandomIt begin, size_type len) const noexcept {
+		CCDK_FORCEINLINE const_iterator find(RandomIt begin, size_type len) const noexcept {
 		return it::seq_find<Cnt>(content, len, str, len);
 	}
 
@@ -493,42 +457,97 @@ public:
 		return it::seq_find<Cnt>(content, len, other.begin(), other.size());
 	}
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//// trim 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	//// trim 
 
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& ltrim() noexcept { length = traits_type::ltrim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) noexcept { length = traits_type::ltrim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& ltrim() noexcept {
+		len = traits_type::ltrim<Encoding>(content, len);
+		return *this;
+	}
+	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) noexcept {
+		len = traits_type::ltrim(content, len, ev);
+		return *this;
+	}
 
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& rtrim() noexcept { length = traits_type::rtrim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& rtrim(encoding_value ev) noexcept { length = traits_type::rtrim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& rtrim() noexcept {
+		len = traits_type::rtrim<Encoding>(content, len);
+		return *this;
+	}
+	CCDK_FORCEINLINE basic_string& rtrim(encoding_value ev) noexcept {
+		len = traits_type::rtrim(content, len, ev);
+		return *this;
+	}
 
 	template<typename Encoding = default_encoding_type >
-	CCDK_FORCEINLINE basic_string& trim() noexcept { length = traits_type::trim<Encoding>(content, length); return *this; }
-	CCDK_FORCEINLINE basic_string& trim(encoding_value ev) noexcept { length = traits_type::trim(content, length, ev); return *this; }
+	CCDK_FORCEINLINE basic_string& trim() noexcept {
+		len = traits_type::trim<Encoding>(content, len);
+		return *this;
+	}
+	CCDK_FORCEINLINE basic_string& trim(encoding_value ev) noexcept {
+		len = traits_type::trim(content, len, ev);
+		return *this;
+	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//// append
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//// append
 
-	CCDK_FORCEINLINE basic_string& append(char_type const* str, size_type len) { realloc_replace(length, length, str, len); return *this; }
-	CCDK_FORCEINLINE basic_string& append(char_type const* str) { return append(str, traits_type::length(str));  }
-	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& append(basic_string<Char, Alloc2, Size2> const& str) { return append(str.content, str.length); }
-	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE basic_string& append(basic_string<Char, Alloc2, Size2> const& str, size_type start, size_type end) { return append(str.content+start, end-start); }
-	template<typename T>
-	CCDK_FORCEINLINE basic_string& append(T const& t) { return *this; }
+		//push back range-fill
+	CCDK_FORCEINLINE basic_string& append(size_type n, char_type c) {
+		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
+		util::construct_fill_n(content + size(), c, n);
+		len += n;
+		set_terminal();
+		return *this;
+	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//// substr
+	//push back range-n
+	template<
+		typename InputIt,
+		typename = check_t< is_iterator< InputIt>> >
+		CCDK_FORCEINLINE basic_string& append(InputIt begin, size_type n) {
+		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
+		util::construct_copy_n(content + size(), begin, n);
+		len += n;
+		set_terminal();
+		return *this;
+	}
+
+	//push back range
+	template<
+		typename InputIt,
+		typename = check_t< is_iterator< InputIt>> >
+		CCDK_FORCEINLINE basic_string& append(InputIt begin, InputIt end) {
+		return append(begin, it::distance(begin, end));
+	}
+
+	//push back c-string
+	CCDK_FORCEINLINE basic_string& append(char_type const& str) {
+		return append(str, traits_type::length(str));
+	}
+
+	//push back string literial
+	template<uint32 D>
+	CCDK_FORCEINLINE basic_string& append(
+		string_literial_init, char_type const (&arr)[D]) {
+		return append(arr, D - 1);
+	}
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//// 
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	//// substr
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	//// 
 
 private:
-	template<int32 N>
+
+	//set end
+	CCDK_FORCEINLINE void set_terminal() noexcept { *(content + len) = 0; }
+
+	template<int32 N, typename FN>
 	CCDK_FORCEINLINE const_iterator find_impl(mpl::false_, FN Fn) const noexcept {
 		uint32 count = 0;
 		auto end = content + len;
@@ -542,18 +561,26 @@ private:
 		return end;
 	}
 
-	template<int32 N>
+	template<int32 N, typename FN>
 	CCDK_FORCEINLINE const_iterator find_impl(mpl::true_, FN Fn) const noexcept {
 		uint32 count = 0;
 		auto end = content - 1;
-		for (auto c = content+len-1; c > end; --c) {
+		for (auto c = content + len - 1; c > end; --c) {
 			if (Fn(at(*c))) {
 				if (++count == N) {
 					return c;
 				}
 			}
 		}
-		return content+len;
+		return content + len;
+	}
+
+public:
+
+	CCDK_FORCEINLINE void debug_value(const char* title="") {
+		DebugValueItBegin(title);
+		DebugValueIt(content);
+		DebugValueItEnd();
 	}
 };
 

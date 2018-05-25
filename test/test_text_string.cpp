@@ -5,7 +5,6 @@
 #include<memory>
 #include<vector>
 #include<ccdk/text/string.h>
-#include<ccdk/text/string_view.h>
 #include<stdio.h>
 
 using namespace ccdk::txt;
@@ -17,10 +16,49 @@ struct test_swap_t
 
 int main()
 {
-	DebugNewTitle("test string");
 
-	DebugSubTitle("constructor ");
-	string c1{ "hello" };
+	DebugNewTitle("constructor ");
+	{
+		DebugSubTitle("empty");
+		{
+			string e1{};
+			string e2{ nullptr };
+		}
+
+		DebugSubTitle("fill");
+		{
+			string s{ 31,'i' };
+			s.debug_value();
+		}
+
+		DebugNewTitle("copy c-string");
+		{
+			string s1{ "123456789"};
+			s1.debug_value();
+			RuntimeAssertTrue(s1.size() == 9);
+			string s2{ "123456789",5 };
+			s2.debug_value();
+			RuntimeAssertTrue(s2.size() == 5);
+			string s3{ string_literial_init_c, "123456789"};
+			s3.debug_value();
+			RuntimeAssertTrue(s3.size() == 9);
+		}
+
+		DebugNewTitle("copy/move/range ctor");
+		{
+			string s1{ "123456789" };
+			s1.debug_value();
+			RuntimeAssertTrue(s1.size() == 9);
+			string s2{ s1 };
+			s2.debug_value();
+			RuntimeAssertTrue(s2.size() == 9);
+			string s3{ s1.begin(), s1.end() };
+
+		}
+
+
+	}
+	/*string c1{ "hello" };
 	DebugValue(c1.c_str());
 	string c2{ "hello", 3 };
 	DebugValue(c2.c_str());
@@ -121,7 +159,7 @@ int main()
 	string app1{ "hello world" };
 	string app2{ ",hello world" };
 	DebugValue(app1.append(app2).append(app2).append(app2).c_str());
-
+*/
 	getchar();
 	return 0;
 }

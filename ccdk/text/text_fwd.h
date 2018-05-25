@@ -21,8 +21,6 @@ struct encoding;
 template<typename T, typename String>
 struct to_string_t;
 
-template<typename Char, typename Alloc, typename Size >
-class basic_string;
 
 
 ccdk_namespace_text_end
