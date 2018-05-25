@@ -1,8 +1,9 @@
 #pragma once
 
 #include<ccdk/mpl/base/compile_check.h>
-#include<ccdk/container/vector.h>
 #include<ccdk/mpl/iterator/algorithm/advance.h>
+#include<ccdk/mpl/iterator/algorithm/seq_find.h>
+#include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
 #include<ccdk/text/text_module.h>
 
@@ -20,7 +21,7 @@ template<
 	typename IncRatio = units::ratio<2, 1>,   /* 2X incease ratio*/
 	uint32  N = kStringLestElements,          /* least allocate 10 elements */
 	typename Size = uint32,                   /* size type */
-	typename Alloc = mem::simple_new_allocator<T, Size> /* basic allocator */
+	typename Alloc = mem::simple_new_allocator<Char, Size> /* basic allocator */
 >
 class basic_string : public ct::vector<Char, IncRatio, N, Size, Alloc>
 {
@@ -30,7 +31,7 @@ public:
 	using this_type = basic_string;
 	using traits_type = char_traits<Char>;
 	using default_encoding_type = traits_type::default_encoding_type;
-	using allocator_type = typename base_type::allocator_type;
+	using allocator_type = typename super_type::allocator_type;
 
 	//common
 	using value_type = Char;
@@ -461,32 +462,40 @@ public:
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//// find / find_index
+//// find / find_index / find_in / find_not_in
 
-	template<int32 N, typename = check<N!=0> >
+	template<int32 Cnt, typename = check<Cnt!=0> >
 	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
-		return find_index_impl<N>(mpl::bool_c<(N < 0)>, Fn));
+		return find<Cnt>(Fn) - content;
 	}
 
-	template<int32 N, typename = check<N != 0> >
-	CCDK_FORCEINLINE size_type find_index(char_type const* str) {
-		return traits_type::find(content, length, str, traits_type::length(str));
+	template<int32 Cnt = 1, typename = check< Cnt!=0 > >
+	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept { 
+		return content + find_index<Cnt>(Fn);
 	}
 
-
-	template<int32 N = 1, typename = check< N!=0 > >
-	CCDK_FORCEINLINE constexpr const_iterator find(FN Fn) const noexcept { 
-		return content + find_index<N>(Fn);
+	template<int32 Cnt = 1, typename = check< Cnt != 0 > >
+	CCDK_FORCEINLINE const_iterator find(const_pointer str) const noexcept {
+		return it::seq_find<Cnt>(content, len, str, traits_type::length(str));
 	}
 
-	
-	CCDK_FORCEINLINE constexpr size_type find(char_type const* str, size_type len){ return traits_type::find(content, length, str, traits_type::length(str)); }
-	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr size_type find(basic_string<Char, Alloc2, Size2> const& str) { return traits_type::find(content, length, str.c_str(), str.length()); }
-	template<typename Alloc2, typename Size2>
-	CCDK_FORCEINLINE constexpr size_type find(basic_string<Char, Alloc2, Size2> const& str, size_type start, size_type end) { ccdk_assert(end > start); return traits_type::find(content, length, str.c_str() + start, end - start); }
+	template<
+		int32 Cnt = 1, typename RandomIt,
+		typename = check< Cnt!=0 >,
+		typename = check_t< is_random_iterator<RandomIt>>>
+	CCDK_FORCEINLINE const_iterator find(RandomIt begin, size_type len) const noexcept {
+		return it::seq_find<Cnt>(content, len, str, len);
+	}
 
-	/* trim */
+	template<int32 Cnt = 1, typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
+	CCDK_FORCEINLINE const_iterator find(size_type start, size_type end,
+		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
+		return it::seq_find<Cnt>(content, len, other.begin(), other.size());
+	}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//// trim 
+
 	template<typename Encoding = default_encoding_type >
 	CCDK_FORCEINLINE basic_string& ltrim() noexcept { length = traits_type::ltrim<Encoding>(content, length); return *this; }
 	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) noexcept { length = traits_type::ltrim(content, length, ev); return *this; }
@@ -499,7 +508,9 @@ public:
 	CCDK_FORCEINLINE basic_string& trim() noexcept { length = traits_type::trim<Encoding>(content, length); return *this; }
 	CCDK_FORCEINLINE basic_string& trim(encoding_value ev) noexcept { length = traits_type::trim(content, length, ev); return *this; }
 
-	/* append */
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//// append
+
 	CCDK_FORCEINLINE basic_string& append(char_type const* str, size_type len) { realloc_replace(length, length, str, len); return *this; }
 	CCDK_FORCEINLINE basic_string& append(char_type const* str) { return append(str, traits_type::length(str));  }
 	template<typename Alloc2, typename Size2>
@@ -509,34 +520,41 @@ public:
 	template<typename T>
 	CCDK_FORCEINLINE basic_string& append(T const& t) { return *this; }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//// substr
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//// 
+
 private:
 	template<int32 N>
-	CCDK_FORCEINLINE size_type find_index_impl(mpl::false_, FN Fn) const noexcept {
+	CCDK_FORCEINLINE const_iterator find_impl(mpl::false_, FN Fn) const noexcept {
 		uint32 count = 0;
-		for (size_type i = 0; i < len; ++i) {
-			if (Fn(at(i))) {
+		auto end = content + len;
+		for (auto c = content; c < end; ++c) {
+			if (Fn(at(*c))) {
 				if (++count == N) {
-					return i;
+					return c;
 				}
 			}
 		}
-		return len;
+		return end;
 	}
 
 	template<int32 N>
-	CCDK_FORCEINLINE size_type find_index_impl(mpl::true_, FN Fn) const noexcept {
+	CCDK_FORCEINLINE const_iterator find_impl(mpl::true_, FN Fn) const noexcept {
 		uint32 count = 0;
-		size_type last = len - 1;
-		for (size_type i = 0; i < len; ++i) {
-			if (Fn(at(last - i))) {
+		auto end = content - 1;
+		for (auto c = content+len-1; c > end; --c) {
+			if (Fn(at(*c))) {
 				if (++count == N) {
-					return last - i;
+					return c;
 				}
 			}
 		}
-		return len;
+		return content+len;
 	}
-
 };
 
 using string  = basic_string<achar>;

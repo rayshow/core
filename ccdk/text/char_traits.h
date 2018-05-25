@@ -28,30 +28,6 @@ struct common_char_traits
 		for (; *it; ++it, ++len);
 		return len;
 	}
-
-	static uint32* build_next(const_pointer search, uint32 search_len) {
-		ccdk_assert(search != nullptr && search_len > 0);
-	
-	}
-
-	static const_pointer kmp(uint32* next,
-		const_pointer source, ptr::size_t source_len,
-		const_pointer search, uint32 search_len) noexcept {
-
-		
-	}
-
-	static const_pointer rkmp(uint32 *prev)
-
-
-
-	/* kmp */
-	template<int32 N = 1>
-	static char_type const* find( 
-		const_pointer source, ptr::size_t source_len,
-		const_pointer search, uint32 search_len ) {
-		
-	}
 };
 
 template<typename Char>
@@ -64,7 +40,6 @@ struct char_traits<achar> : public common_char_traits<achar>
 	typedef ascii_encoding            default_encoding_type;
 
 	using base_type::length;
-	using base_type::find;
 
 	/* encoding know at compile-time */
 	template<typename Encoding = default_encoding_type >
@@ -149,7 +124,6 @@ struct char_traits<wchar> : public common_char_traits<wchar>
 {
 	typedef common_char_traits<wchar> base_type;
 	using base_type::length;
-	using base_type::find;
 };
 
 template<>
@@ -157,7 +131,6 @@ struct char_traits<char16> : public common_char_traits<char16>
 {
 	typedef common_char_traits<char16> base_type;
 	using base_type::length;
-	using base_type::find;
 };
 
 template<>
@@ -165,7 +138,6 @@ struct char_traits<char32> : public common_char_traits<char32>
 {
 	typedef common_char_traits<char32> base_type;
 	using base_type::length;
-	using base_type::find;
 };
 
 ccdk_namespace_text_end
