@@ -133,7 +133,7 @@ public:
 	// move ctor
 	CCDK_FORCEINLINE vector(vector && other) noexcept
 		:content{ other.content }, len{ other.len }, cap{ other.cap } {
-		other.rvalue_reset();
+		other.rvalue_reset(); 
 	}
 
 	// template move ctor
@@ -565,8 +565,9 @@ protected:
 	// move [content, content+n) to this [memory, memory+n), free old content
 	CCDK_FORCEINLINE void reallocate_move(size_type n) {
 		size_type new_cap, new_len;
-		pointer memory = allocator_type::allocate_inc(*this, n, &new_cap, &new_len);
-		util::construct_move_n(memory, content, n);
+		new_len = len;
+		pointer memory = allocator_type::allocate_inc(*this, n, &new_cap);
+		if(content) util::construct_move_n(memory, content, len);
 		destroy();
 		content = memory;
 		cap = new_cap;

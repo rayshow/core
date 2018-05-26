@@ -105,7 +105,7 @@ int main()
 		s3.debug_value();
 		RuntimeAssertTrue(s3.size() == 5);
 	}
-	DebugNewTitle("pop back");
+	DebugNewTitle("pop back/push back");
 	{
 		string s1{ "123456789" };
 		while (!s1.empty()) {
@@ -115,13 +115,35 @@ int main()
 		DebugValueItEnd();
 		RuntimeAssertTrue(s1.size() == 0);
 		string s2{};
-		for (char c = 'a'; c <= 'z'; ++c) {
-			if (s2.size() < 16)
-				s2.push_back(c);
-			else
-				s2.push_back(c);
-		}
+		for (char c = 'a'; c <= 'z'; ++c) {s2.push_back(c);}
 		s2.debug_value();
+	}
+	DebugNewTitle("insert");
+	{
+		string s1{ "123456789" };
+		s1.insert(8, 'a');
+		s1.debug_value();
+		s1.insert(3, "hello,world");
+		s1.debug_value();
+		s1.insert(2, string_literial_init_c, "xiongya");
+		s1.debug_value();
+		s1.insert(1, string{ "c++" });
+		s1.debug_value();
+		s1.insert(s1.size() - 2, "java,scala", 4);
+		s1.debug_value();
+		s1.insert(s1.size() - 1, 5,'i');
+		s1.debug_value();
+	}
+	DebugNewTitle("erase");
+	{
+		string s1{ "12345678910111213141516171819202122232425" };
+		s1.erase(1,4);
+		s1.debug_value();
+		s1.erase(s1.size()-2);
+		s1.debug_value();
+	}
+	DebugNewTitle("replace");
+	{
 
 	}
 

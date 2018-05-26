@@ -245,7 +245,7 @@ public:
 
 	//push char to back
 	CCDK_FORCEINLINE basic_string& push_back(char_type c) {
-		if (size() == capacity()) { reallocate_move(size()); }
+		if (!content || size()+1 == capacity()) { reallocate_move(size()); }
 		content[len++] = c;
 		set_terminal();
 		return *this;
@@ -258,7 +258,7 @@ public:
 	//insert single char
 	CCDK_FORCEINLINE basic_string& insert(size_type pos, char_type c) {
 		char arr[2] = { c,0 };
-		return insert(pos, arr, 2);
+		return insert(pos, arr, 1);
 	}
 
 	//insert c-string
@@ -292,10 +292,7 @@ public:
 	}
 
 	//insert fill-n
-	template<
-		typename InputIt,
-		typename = check_t< is_iterator< InputIt>>>
-		CCDK_FORCEINLINE basic_string& insert(size_type pos, size_type n, char_type c) {
+	CCDK_FORCEINLINE basic_string& insert(size_type pos, size_type n, char_type c) {
 		emplace_impl(pos, pos + n, c);
 		set_terminal();
 		return *this;
@@ -305,7 +302,7 @@ public:
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
 	CCDK_FORCEINLINE basic_string& insert(size_type pos,
 		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
-		insert(pos, other.begin(), other.size());
+		return insert(pos, other.begin(), other.size());
 	}
 
 
@@ -366,8 +363,9 @@ public:
 		ccdk_assert(end > begin && end <= size());
 		size_type tail_len = size() - end;
 		util::move_n(content + begin, content + end, tail_len);
-		len -= end - start;
+		len -= end - begin;
 		set_terminal();
+		return *this;
 	}
 
 	CCDK_FORCEINLINE basic_string& erase(size_type pos) noexcept {

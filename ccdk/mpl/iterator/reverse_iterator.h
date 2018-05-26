@@ -2,6 +2,7 @@
 
 #include<ccdk/mpl/iterator/iterator_fwd.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/util/equals.h>
 
 ccdk_namespace_mpl_it_start
 

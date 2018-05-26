@@ -22,6 +22,7 @@ public:
 		ccdk_assert(n > 0); 
 		return static_cast<pointer>(::operator new(n * sizeof(T)));
 	}
+
 	//allocate n numbers of T around hint
 	CCDK_FORCEINLINE pointer allocate(size_type n, const void* hint) { 
 		allocate(n); 

@@ -1,6 +1,7 @@
 
 #include<ccdk/container/vector.h>
 #include<ccdk/mpl/function/prediction.h>
+
 #include<stdio.h>
 #include<string>
 
