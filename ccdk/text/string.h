@@ -3,6 +3,7 @@
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/iterator/algorithm/advance.h>
 #include<ccdk/mpl/iterator/algorithm/seq_find.h>
+#include<ccdk/mpl/type_traits/is_invocable.h>
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
 #include<ccdk/text/text_module.h>
