@@ -387,29 +387,31 @@ public:
 		return replace(start, end, str, traits_type::length(str));
 	}
 
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, size_type n, char_type c) {
-		size_type reduce = end - start;
+	CCDK_FORCEINLINE basic_string& replace(size_type begin, size_type end, size_type n, char_type c) {
+		size_type reduce = end - begin;
 		if (reduce >= n) {
-			util::construct_fill_n(content + start, c, n);
-			if (reduce > n) erase(n, end);
+			util::construct_fill_n(content + begin, c, n);
+			if (reduce > n) erase(begin+n, end);
 		}
 		else {
-			util::construct_fill_n(content + start, c, reduce);
-			insert(end, it::advance(begin, reduce), n - reduce);
+			util::construct_fill_n(content + begin, c, reduce);
+			insert(end,n-reduce,c);
 		}
+		return *this;
 	}
 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
-	CCDK_FORCEINLINE basic_string& replace(size_type start, size_type end, InputIt begin, size_type n) {
-		size_type reduce = end - start;
+	CCDK_FORCEINLINE basic_string& replace(size_type begin, size_type end, InputIt begin2, size_type n) {
+		size_type reduce = end - begin;
 		if (reduce >= n) {
-			util::construct_copy_n(content + start, begin, n);
-			if (reduce > n) erase(n, end);
+			util::construct_copy_n(content + begin, begin2, n);
+			if (reduce > n) erase(begin+n, end);
 		}
 		else {
-			util::construct_copy_n(content + start, begin, reduce);
-			insert(end, it::advance(begin, reduce), n - reduce);
+			util::construct_copy_n(content + begin, begin2, reduce);
+			insert(end, it::advance(begin2, reduce), n - reduce);
 		}
+		return *this;
 	}
 
 	template<typename InputIt, typename = check_t< is_iterator<InputIt>>>
@@ -426,14 +428,33 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//// find / find_index / find_in / find_not_in
 
-	template<int32 Cnt, typename FN, typename = check<Cnt != 0> >
+	template<int32 Cnt = 1, typename = check<Cnt!=0>>
+	CCDK_FORCEINLINE size_type find_index(char_type c) const noexcept {
+		return find<Cnt>([=](char_type ch) { return ch == c; })-content;
+	}
+
+	template<int32 Cnt = 1, typename FN, typename = check<Cnt != 0> >
 	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
 		return find<Cnt>(Fn) - content;
 	}
 
+	template<int32 Cnt = 1>
+	CCDK_FORCEINLINE size_type find_index(const_pointer str) const noexcept {
+		return find<Cnt>(str) - content;
+	}
+
+
 	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >
 	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept {
-		return content + find_index<Cnt>(Fn);
+		size_type n = 0;
+		for (size_type i = 0; i < len; ++i) {
+			if (Fn(content[i])) {
+				if (++n == Cnt) {
+					return content + i;
+				}
+			}
+		}
+		return content + len;
 	}
 
 	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >

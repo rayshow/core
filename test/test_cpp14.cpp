@@ -1,19 +1,26 @@
 #include<iostream>
+#include<ccdk/mpl/type_traits/has_callable.h>
 
-template<typename Char, unsigned int N>
-void test_char(Char const (&arr)[N]) {
-	std::cout << "test literal" << std::endl;
+using namespace ccdk::mpl;
+
+
+
+template<typename... Args, typename FN>
+void test(FN fn)
+{
+	std::cout << has_callable<FN, Args...>::value << std::endl;
 }
 
-template<typename Char>
-void test_char(Char const* str) {
-	std::cout << "test string" << std::endl;
-}
-
+void test_char(char){}
+class A {};
 int main() {
-	const char* str = "hello";
-	test_char(str);
-	test_char("fdsa");
+	
+	test<char>(test_char);
+	test<int>(test_char);
+	test<void>(test_char);
+	test<float>([](float) {});
+	test<A>([](float) {});
+
 	getchar();
 	return 0;
 }

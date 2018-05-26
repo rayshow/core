@@ -933,5 +933,6 @@
     <ClInclude Include="filesystem\writer.h">
       <Filter>filesystem</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_callable.h" />
   </ItemGroup>
 </Project>

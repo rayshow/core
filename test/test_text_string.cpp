@@ -144,7 +144,20 @@ int main()
 	}
 	DebugNewTitle("replace");
 	{
-
+		string s1{ "012345678910111213141516171819202122232425" };
+		s1.replace(2, 9, "abcdefgh");
+		s1.debug_value();
+		s1.replace(s1.size() - 6, s1.size(), "#$@");
+		s1.debug_value();
+		s1.replace(1, 4, 5, 'i');
+		s1.debug_value();
+	}
+	DebugNewTitle("find");
+	{
+		string s1{ "012345678910111213141516171819202122232425" };
+		RuntimeAssertTrue(s1.find_index('9') == 9);
+		RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
+		RuntimeAssertTrue(s1.find_index("1011") == 10);
 	}
 
 	/*string c1{ "hello" };

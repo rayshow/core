@@ -585,6 +585,8 @@ void local_vector_test()
 			s1.debug_value();
 		}
 	}
+
+
 	//	DebugNewTitle("move assign");
 	//	{
 	//		DebugSubTitle("move only");
