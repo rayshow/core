@@ -4,6 +4,8 @@
 #include<ccdk/mpl/iterator/algorithm/advance.h>
 #include<ccdk/mpl/iterator/algorithm/seq_find.h>
 #include<ccdk/mpl/type_traits/is_invocable.h>
+#include<ccdk/mpl/iterator/iterator_traits.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
 #include<ccdk/text/text_module.h>
@@ -429,60 +431,100 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//// find / find_index / find_in / find_not_in
 
-	template<int32 Cnt = 1, typename = check<Cnt!=0>>
-	CCDK_FORCEINLINE size_type find_index(char_type c) const noexcept {
-		return find<Cnt>([=](char_type ch) { return ch == c; })-content;
+	//find i-th matching char
+	CCDK_FORCEINLINE size_type find_index(char_type c, difference_type ith=1) const noexcept {
+		return find_index_impl([=](char_type ch) { return ch == c; }, ith);
 	}
 
+	//find position of i-th  matching prediction FN  char
 	template<
-		int32 Cnt = 1, 
 		typename FN,
-		typename = check<Cnt != 0>,
 		typename = check_t< is_invocable<FN, char_type>> >
-	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
-		return find<Cnt>(Fn) - content;
+	CCDK_FORCEINLINE size_type find_index(
+		FN Fn, difference_type ith=1) const noexcept {
+		return find_index_impl(Fn, ith);
 	}
 
-	template<int32 Cnt = 1>
-	CCDK_FORCEINLINE size_type find_index(const_pointer str) const noexcept {
-		return find<Cnt>(str) - content;
+	//find i-th position of matching c-string  
+	CCDK_FORCEINLINE size_type find_index(
+		const_pointer str, difference_type ith=1) const noexcept {
+		return find_index(str, traits_type::length(str), ith);
 	}
 
-
+	//find i-th position of matching range-n-string
 	template<
-		int32 Cnt = 1,
+		typename RandomIt,
+		typename = check_t< is_random_iterator<RandomIt>>,
+		typename = is_same< char_type, iterator_value_t<RandomIt>> >
+	CCDK_FORCEINLINE size_type find_index(
+		RandomIt begin, size_type n, difference_type ith = 1) const noexcept {
+		return it::seq_find(content, len, begin, n, ith);
+	}
+
+	//find i-th position of matching range-string
+	template<
+		typename RandomIt,
+		typename = check_t< is_random_iterator<RandomIt>>,
+		typename = is_same< char_type, iterator_value_t<RandomIt>> >
+		CCDK_FORCEINLINE size_type find_index(
+			RandomIt begin, RandomIt end, difference_type ith = 1) const noexcept {
+		return it::seq_find(content, len, begin, it::distance(begin, end), ith);
+	}
+
+	//find i-th position of matching basic_string
+	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
+	CCDK_FORCEINLINE size_type find_index(
+		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other, difference_type ith = 1) const noexcept {
+		return find_index(other.c_str(), other.size(), ith );
+	}
+
+	//find i-th iterator of matching char
+	CCDK_FORCEINLINE const_iterator find(
+			char_type c, difference_type ith = 1) const noexcept {
+		return content + find_index(c, ith);
+	}
+
+	//find i-th iterator of matching char
+	template<
 		typename FN,
-		typename = check< Cnt != 0 >,
 		typename = check_t< is_invocable<FN,char_type>> >
-	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept {
-		size_type n = 0;
-		for (size_type i = 0; i < len; ++i) {
-			if (Fn(content[i])) {
-				if (++n == Cnt) {
-					return content + i;
-				}
-			}
-		}
-		return content + len;
+	CCDK_FORCEINLINE const_iterator find(
+		FN Fn, difference_type ith = 1) const noexcept {
+		return content + find_index(Fn, ith);
 	}
 
+	//find i-th iterator of matching c-string
 	template<int32 Cnt = 1, typename = check< Cnt != 0 > >
-	CCDK_FORCEINLINE const_iterator find(const_pointer str) const noexcept {
-		return content+it::seq_find<Cnt>(content, len, str, traits_type::length(str));
+	CCDK_FORCEINLINE const_iterator find(
+		const_pointer str, difference_type ith = 1) const noexcept {
+		return content + find_index(str, ith);
 	}
 
+	//find i-th iterator of matching range-n
 	template<
-		int32 Cnt = 1, typename RandomIt,
-		typename = check< Cnt != 0 >,
-		typename = check_t< is_random_iterator<RandomIt>>>
-		CCDK_FORCEINLINE const_iterator find(RandomIt begin, size_type len) const noexcept {
-		return it::seq_find<Cnt>(content, len, str, len);
+		typename RandomIt,
+		typename = check_t< is_random_iterator<RandomIt>>,
+		typename = is_same< char_type, iterator_value_t<RandomIt>> >
+		CCDK_FORCEINLINE const_iterator find(
+			RandomIt begin, size_type len, difference_type ith = 1) const noexcept {
+		return content + find_index(begin, len, ith);
 	}
 
-	template<int32 Cnt = 1, typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
-	CCDK_FORCEINLINE const_iterator find(size_type start, size_type end,
-		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
-		return it::seq_find<Cnt>(content, len, other.begin(), other.size());
+	//find i-th iterator of matching range
+	template<
+		typename RandomIt,
+		typename = check_t< is_random_iterator<RandomIt>>,
+		typename = is_same< char_type, iterator_value_t<RandomIt>> >
+		CCDK_FORCEINLINE const_iterator find(
+			RandomIt begin, RandomIt end, difference_type ith = 1) const noexcept {
+		return content + find_index(begin, end, ith);
+	}
+
+	//find i-th iterator of matching basic_string
+	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
+	CCDK_FORCEINLINE const_iterator find(
+		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other, difference_type ith = 1) const noexcept {
+		return content+find_index(other,ith);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -493,6 +535,7 @@ public:
 		len = traits_type::ltrim<Encoding>(content, len);
 		return *this;
 	}
+
 	CCDK_FORCEINLINE basic_string& ltrim(encoding_value ev) noexcept {
 		len = traits_type::ltrim(content, len, ev);
 		return *this;
@@ -521,7 +564,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//// append
 
-		//push back range-fill
+	//push back range-fill
 	CCDK_FORCEINLINE basic_string& append(size_type n, char_type c) {
 		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
 		util::construct_fill_n(content + size(), c, n);
@@ -551,7 +594,7 @@ public:
 	}
 
 	//push back c-string
-	CCDK_FORCEINLINE basic_string& append(char_type const& str) {
+	CCDK_FORCEINLINE basic_string& append(const_pointer str) {
 		return append(str, traits_type::length(str));
 	}
 
@@ -562,9 +605,21 @@ public:
 		return append(arr, D - 1);
 	}
 
+	template<
+		typename IncRatio2, 
+		typename Size2,
+		typename Alloc2, uint32 N2>
+		CCDK_FORCEINLINE basic_string& append(
+			basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
+		return append(other.c_str(), other.size());
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//// substr
+
+	CCDK_FORCEINLINE void substr(size_type begin, size_type end) {
+
+	}
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -575,32 +630,30 @@ private:
 	//set end
 	CCDK_FORCEINLINE void set_terminal() noexcept { *(content + len) = 0; }
 
-	template<int32 N, typename FN>
-	CCDK_FORCEINLINE const_iterator find_impl(mpl::false_, FN Fn) const noexcept {
+	//find ith macthing FN backward
+	template<typename FN>
+	CCDK_FORCEINLINE size_type find_index_impl(FN Fn, difference_type ith) const noexcept {
 		uint32 count = 0;
-		auto end = content + len;
-		for (auto c = content; c < end; ++c) {
-			if (Fn(at(*c))) {
-				if (++count == N) {
-					return c;
+		if (ith > 0) {
+			for (size_type i = 0; i < len; ++i) {
+				if (Fn(content[i])) {
+					if (++count == ith) {
+						return i;
+					}
 				}
 			}
 		}
-		return end;
-	}
-
-	template<int32 N, typename FN>
-	CCDK_FORCEINLINE const_iterator find_impl(mpl::true_, FN Fn) const noexcept {
-		uint32 count = 0;
-		auto end = content - 1;
-		for (auto c = content + len - 1; c > end; --c) {
-			if (Fn(at(*c))) {
-				if (++count == N) {
-					return c;
+		else {
+			ith = -ith;
+			for (size_type i = 1; i <= len; ++i) {
+				if (Fn(content[len - i])) {
+					if (++count == ith) {
+						return i;
+					}
 				}
 			}
 		}
-		return content + len;
+		return len;
 	}
 
 public:

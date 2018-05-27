@@ -11,8 +11,7 @@ ccdk_namespace_mpl_it_start
 namespace alg_impl {
 
 	template<typename RandomIt>
-	uint32* build_next(RandomIt begin, uint32 n) {
-		uint32 *next = new uint32[n];
+	constexpr uint32* build_next(uint32* next, RandomIt begin,  uint32 n) {
 		uint32 fore = 0;
 		next[0] = 0;
 		for (uint32 i = 1; i < n; ++i) {
@@ -23,7 +22,7 @@ namespace alg_impl {
 	}
 
 	template<typename RandomIt, typename RandomIt2>
-	ptr::size_t kmp(uint32* next,
+	constexpr ptr::size_t kmp(uint32* next,
 		RandomIt source, ptr::size_t n1,
 		RandomIt2 search, uint32 n2) noexcept {
 
@@ -46,18 +45,20 @@ namespace alg_impl {
 		return n1;
 	}
 
-	//N > 0, forward search N-th match
+	//ith > 0, forward search N-th match
 	template< 
-		int32 N, 
 		typename RandomIt,
 		typename RandomIt2>
-	CCDK_FORCEINLINE ptr::size_t seq_find_impl(mpl::false_,
+	CCDK_FORCEINLINE ptr::size_t seq_find_forward(
 		RandomIt source, ptr::size_t n1,
-		RandomIt2 search, uint32 n2)
+		RandomIt2 search, uint32 n2,
+		ptr::diff_t ith)
 	{
-		uint32* next = build_next(search, n2);
+		ccdk_assert(ith > 0);
+		uint32 *next = new uint32[n];
+		build_next(next, search, n2);
 		ptr::size_t offset = 0;
-		for (uint32 i = 0; i < N && offset < n1; ++i) {
+		for (uint32 i = 0; i < ith && offset < n1; ++i) {
 			offset += kmp(next, source+ offset,
 				n1 - offset, search, n2);
 		}
@@ -69,20 +70,23 @@ namespace alg_impl {
 
 	// N < 0, backward search N-th match
 	template< 
-		int32 N,
 		typename RandomIt,
 		typename RandomIt2,
 		typename iterator = reverse_iterator<RandomIt>,
 		typename iterator2 = reverse_iterator<RandomIt2>>
-	CCDK_FORCEINLINE ptr::size_t seq_find_impl(mpl::true_,
+	CCDK_FORCEINLINE ptr::size_t seq_find_reverse(
 		RandomIt source, ptr::size_t n1,
-		RandomIt2 search, uint32 n2)
+		RandomIt2 search, uint32 n2,
+		ptr::diff_t ith)
 	{
-		uint32* next = build_next(iterator2{ search+n2-1 }, n2);
+		ccdk_assert(ith < 0);
+		ith = -ith;
+		uint32 *next = new uint32[n];
+		build_next(next, iterator2{ search+n2-1 },  n2);
 		iterator begin = iterator{ source + n1 - 1 };
 		iterator end = iterator{ source - 1 };
 		ptr::size_t next_start = 0;
-		for (uint32 i = 0; i < -N && next_start < n1; ++i) {
+		for (uint32 i = 0; i < ith && next_start < n1; ++i) {
 			//get reverse-ward pos
 			next_start += kmp(next, begin + next_start,
 				n1 - next_start, iterator2{ search+n2-1 }, n2);
@@ -95,21 +99,21 @@ namespace alg_impl {
 		delete[] next;
 		return next_start;
 	}
-
 }
 
-
-template< int32 N,
+template<
 	typename RandomIt,
 	typename RandomIt2,
-	typename = check< N!=0>,
 	typename = check_t< is_random_iterator<RandomIt>>,
 	typename = check_t< is_random_iterator<RandomIt2>> >
 CCDK_FORCEINLINE ptr::size_t seq_find(
 	RandomIt source, ptr::size_t n1,
-	RandomIt2 search, uint32 n2)
+	RandomIt2 search, uint32 n2, ptr::diff_t ith = 1)
 {
-	return alg_impl::seq_find_impl<N>(mpl::bool_c<(N < 0)>, source, n1, search, n2);
+	if (ith > 0) {
+		return alg_impl::seq_find_forward(source, n1, search, n2, ith);
+	}
+	return alg_impl::seq_find_reverse(source, n1, search, n2, ith);
 }
 
 

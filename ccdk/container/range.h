@@ -26,8 +26,6 @@ struct range_iterator {
 template<typename T>
 struct range : public fs::pair<T,T> {
 
-
-	
 	CCDK_FORCEINLINE range merge(fs::pair<T, T> const& other) {
 		return { fn::min(_1, other._1), fn::min(_2, other._2) };
 	}
@@ -43,6 +41,9 @@ struct range : public fs::pair<T,T> {
 		return { min,max };
 	}
 
+	CCDK_FORCEINLINE bool is_valid() {
+		return max > min;
+	}
 };
 
 

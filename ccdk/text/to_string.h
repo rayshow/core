@@ -29,7 +29,7 @@ struct uint_to_string_t
 	typedef typename String::char_type char_type;
 	String& operator()(UIntType i, String& str)
 	{
-		constexpr int BufferMaxPos = 63;
+		constexpr int BufferMaxPos = 64;
 		char_type buffer[BufferMaxPos+1];
 		uint32 len = 0;
 		while (i > 0) { buffer[BufferMaxPos -len] = char_type(i % 10 - '0'); i = i / i; ++len; }
@@ -41,11 +41,11 @@ struct uint_to_string_t
 template<typename String, typename IntType>
 struct int_to_string_t
 {
-	/*-9223372036854775808~9223372036854775807*/
+	/*max -9223372036854775808~9223372036854775807*/
 	typedef typename String::char_type char_type;
 	String& operator()(IntType value, String& str)
 	{
-		constexpr int BufferMaxPos = 63;
+		constexpr int BufferMaxPos = 64;
 		IntType i = value;
 		char_type buffer[BufferMaxPos+1];
 		uint32 len = 1;

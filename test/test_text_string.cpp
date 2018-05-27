@@ -152,25 +152,25 @@ int main()
 	}
 	DebugNewTitle("find");
 	{
-		//string s1{ "012345678910111213141516171819202122232425" };
-		//RuntimeAssertTrue(s1.find_index('9') == 9);
-		//RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
-		//RuntimeAssertTrue(s1.find_index("1011") == 10);
-		//RuntimeAssertTrue(s1.find_index("1012") == s1.size());
+		string s1{ "012345678910111213141516171819202122232425" };
+		RuntimeAssertTrue(s1.find_index('9') == 9);
+		RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
+		RuntimeAssertTrue(s1.find_index("1011") == 10);
+		RuntimeAssertTrue(s1.find_index("1012") == s1.size());
 		string s2{ "0001230123" };
-		RuntimeAssertTrue(s2.find_index<-1>("012") == 6);
-		RuntimeAssertTrue(s2.find_index<-2>("012") == 2);
-		RuntimeAssertTrue(s2.find_index<-1>("112") == s2.size());
-		RuntimeAssertTrue(s2.find_index<-2>("112") == s2.size());
-		RuntimeAssertTrue(s2.find_index<-200>("012") == s2.size());
-		RuntimeAssertTrue(s2.find_index<-200>("112") == s2.size());
+		RuntimeAssertTrue(s2.find_index("012",-1) == 6);
+		RuntimeAssertTrue(s2.find_index("012") == 2);
+		RuntimeAssertTrue(s2.find_index("112",-1) == s2.size());
+		RuntimeAssertTrue(s2.find_index("112",-2) == s2.size());
+		RuntimeAssertTrue(s2.find_index("012",-200) == s2.size());
+		RuntimeAssertTrue(s2.find_index("112",-200) == s2.size());
 		string s3{ "0001230123" };
 		RuntimeAssertTrue(s3.find_index("012") == 2);
 		RuntimeAssertTrue(s3.find_index("0124") == s3.size());
-		RuntimeAssertTrue(s3.find_index<2>("012") == 6);
-		RuntimeAssertTrue(s3.find_index<2>("0124") == s3.size());
-		RuntimeAssertTrue(s3.find_index<200>("012") == s3.size());
-		RuntimeAssertTrue(s3.find_index<200>("0124") == s3.size());
+		RuntimeAssertTrue(s3.find_index("012",2) == 6);
+		RuntimeAssertTrue(s3.find_index("0124",2) == s3.size());
+		RuntimeAssertTrue(s3.find_index("012",200) == s3.size());
+		RuntimeAssertTrue(s3.find_index("0124",200) == s3.size());
 	}
 	DebugNewTitle("trim");
 	{
@@ -186,6 +186,19 @@ int main()
 		DebugValue(encoding<ascii_encoding>::is_space(' '));
 		DebugValue(encoding<ascii_encoding>::is_space('\n'));
 		DebugValue(encoding<ascii_encoding>::is_space('\r'));
+	}
+	DebugNewTitle("append");
+	{
+		string s1{ "1234" };
+		string s2{ "hello" };
+		s1.append("5678");
+		s1.debug_value();
+		s1.append(string_literial_init_c, "91011");
+		s1.debug_value();
+		s1.append(s2);
+		s1.debug_value();
+		s1.append(4, 'i');
+		s1.debug_value();
 	}
 
 	/*string c1{ "hello" };
