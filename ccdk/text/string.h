@@ -434,7 +434,11 @@ public:
 		return find<Cnt>([=](char_type ch) { return ch == c; })-content;
 	}
 
-	template<int32 Cnt = 1, typename FN, typename = check<Cnt != 0> >
+	template<
+		int32 Cnt = 1, 
+		typename FN,
+		typename = check<Cnt != 0>,
+		typename = check_t< is_invocable<FN, char_type>> >
 	CCDK_FORCEINLINE size_type find_index(FN Fn) const noexcept {
 		return find<Cnt>(Fn) - content;
 	}
@@ -445,7 +449,11 @@ public:
 	}
 
 
-	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >
+	template<
+		int32 Cnt = 1,
+		typename FN,
+		typename = check< Cnt != 0 >,
+		typename = check_t< is_invocable<FN,char_type>> >
 	CCDK_FORCEINLINE const_iterator find(FN Fn) const noexcept {
 		size_type n = 0;
 		for (size_type i = 0; i < len; ++i) {
@@ -458,9 +466,9 @@ public:
 		return content + len;
 	}
 
-	template<int32 Cnt = 1, typename FN, typename = check< Cnt != 0 > >
+	template<int32 Cnt = 1, typename = check< Cnt != 0 > >
 	CCDK_FORCEINLINE const_iterator find(const_pointer str) const noexcept {
-		return it::seq_find<Cnt>(content, len, str, traits_type::length(str));
+		return content+it::seq_find<Cnt>(content, len, str, traits_type::length(str));
 	}
 
 	template<

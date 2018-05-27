@@ -10,9 +10,7 @@
 using namespace ccdk::txt;
 using namespace ccdk;
 
-struct test_swap_t
-{
-};
+struct test_swap_t{};
 
 int main()
 {
@@ -154,10 +152,23 @@ int main()
 	}
 	DebugNewTitle("find");
 	{
-		string s1{ "012345678910111213141516171819202122232425" };
-		RuntimeAssertTrue(s1.find_index('9') == 9);
-		RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
-		RuntimeAssertTrue(s1.find_index("1011") == 10);
+		//string s1{ "012345678910111213141516171819202122232425" };
+		//RuntimeAssertTrue(s1.find_index('9') == 9);
+		//RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
+		//RuntimeAssertTrue(s1.find_index("1011") == 10);
+		//RuntimeAssertTrue(s1.find_index("1012") == s1.size());
+		string s2{ "0123" };
+		DebugValue(s2.find_index<-1>("012"));
+		RuntimeAssertTrue(s2.find_index<-1>("012") == 12);
+		using ri = reverse_iterator<char*>;
+		//DebugValue(is_random_iterator_v<ri>);
+	}
+	DebugNewTitle("trim");
+	{
+		string s1{ "  1123  " };
+		s1.ltrim().debug_value();
+		s1.rtrim().debug_value();
+		s1.trim().debug_value();
 	}
 
 	/*string c1{ "hello" };

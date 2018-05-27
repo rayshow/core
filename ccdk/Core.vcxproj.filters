@@ -305,20 +305,11 @@
     <ClInclude Include="preprocessor\uint8_sub_one.h">
       <Filter>preprocessor</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\base\choose.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\if_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
     <ClInclude Include="preprocessor\impl\uint8_to_bool.h">
       <Filter>preprocessor\impl</Filter>
     </ClInclude>
     <ClInclude Include="preprocessor\impl\uint8_to_byte.h">
       <Filter>preprocessor\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\type_traits.h">
-      <Filter>mpl</Filter>
     </ClInclude>
     <ClInclude Include="mpl\type_traits\forward.h">
       <Filter>mpl\type_trait</Filter>
@@ -326,58 +317,97 @@
     <ClInclude Include="mpl\type_traits\move.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
+    <ClInclude Include="debug_type.hpp" />
+    <ClInclude Include="container\array.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="container\container_mudule.h" />
+    <ClInclude Include="memory\memory_module.h" />
+    <ClInclude Include="memory\allocator_traits.h" />
+    <ClInclude Include="text\encoding\ascii.h" />
+    <ClInclude Include="text\encoding\iso8859_1.h" />
+    <ClInclude Include="text\encoding\unicode.h" />
+    <ClInclude Include="text\char_traits.h" />
+    <ClInclude Include="text\string_literial.h">
+      <Filter>mpl\fusion</Filter>
+    </ClInclude>
+    <ClInclude Include="text\string_view.h" />
+    <ClInclude Include="text\to_string.h" />
+    <ClInclude Include="text\text_module.h" />
+    <ClInclude Include="text\text_fwd.h" />
+    <ClInclude Include="container\vector.h" />
+    <ClInclude Include="text\string_old.h" />
+    <ClInclude Include="text\string.h" />
+    <ClInclude Include="container\unordered_map.h" />
+    <ClInclude Include="container\unordered_set.h" />
+    <ClInclude Include="container\adapter\prority_queue.h" />
+    <ClInclude Include="container\adapter\queue.h" />
+    <ClInclude Include="container\adapter\stack.h" />
+    <ClInclude Include="container\list_node.h" />
+    <ClInclude Include="container\impl\hash_table.h" />
+    <ClInclude Include="container\impl\rb_tree.h" />
+    <ClInclude Include="container\view\const_view.h" />
+    <ClInclude Include="container\view\range_filter_view.h" />
+    <ClInclude Include="container\filter\range_filter.h" />
+    <ClInclude Include="container\impl\link_node.h" />
+    <ClInclude Include="container\map.h" />
+    <ClInclude Include="container\set.h" />
+    <ClInclude Include="container\bitset.h" />
+    <ClInclude Include="container\slist.h" />
+    <ClInclude Include="memory\allocator\simple_new_allocator.h" />
+    <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
+    <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
+    <ClInclude Include="memory\allocator\local_cached_allocator.h" />
+    <ClInclude Include="container\list.h" />
+    <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
+    <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
+    <ClInclude Include="container\circular_buffer.h" />
+    <ClInclude Include="container\fix_bitset.h" />
+    <ClInclude Include="container\fix_circular_buffer.h" />
+    <ClInclude Include="container\range.h" />
+    <ClInclude Include="filesystem\log\log.h" />
+    <ClInclude Include="filesystem\path.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\reader.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem\writer.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\apply_.h" />
+    <ClInclude Include="mpl\base\arithmetic_.h" />
+    <ClInclude Include="mpl\base\bit_alg.h" />
+    <ClInclude Include="mpl\base\choose.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\compare_.h" />
+    <ClInclude Include="mpl\base\compatible_op.h" />
+    <ClInclude Include="mpl\base\compile_check.h" />
+    <ClInclude Include="mpl\base\derive_if.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
     <ClInclude Include="mpl\base\enable_if.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\fold_args.h" />
+    <ClInclude Include="mpl\base\identity.h">
+      <Filter>mpl\type_trait</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\if_.h">
+      <Filter>mpl\base</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\base\literials_parse.h" />
+    <ClInclude Include="mpl\base\logic_.h" />
+    <ClInclude Include="mpl\base\placeholder.h" />
+    <ClInclude Include="mpl\base\type_.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\base\when_match.h">
       <Filter>mpl\base</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\weak_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\unique_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\share_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\scope_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="debug_type.hpp" />
-    <ClInclude Include="mpl\mpl_module.h">
-      <Filter>mpl</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\derive_if.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\default_deleter.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\resource_base.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\default_ref_count.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\smart_ptr_fwd.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\smart_pointer_cast.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\enable_share_from_this.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h">
-      <Filter>mpl\smart_ptr</Filter>
-    </ClInclude>
+    <ClInclude Include="mpl\design_pattern\singleton.h" />
+    <ClInclude Include="mpl\exception\exception.h" />
     <ClInclude Include="mpl\function\arg.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
@@ -408,6 +438,7 @@
     <ClInclude Include="mpl\function\function_fwd.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\identity.h" />
     <ClInclude Include="mpl\function\invoke_base.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
@@ -420,6 +451,7 @@
     <ClInclude Include="mpl\function\partial.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\function\prediction.h" />
     <ClInclude Include="mpl\function\ref.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
@@ -429,119 +461,111 @@
     <ClInclude Include="mpl\function\val.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\mcontainer\arg_pack.h" />
-    <ClInclude Include="mpl\mcontainer\val_pack.h" />
-    <ClInclude Include="mpl\base\compile_check.h" />
-    <ClInclude Include="mpl\base\logic_.h" />
-    <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
-    <ClInclude Include="mpl\util\addressof.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\copy.h" />
-    <ClInclude Include="mpl\util\create.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\dummy_call.h" />
-    <ClInclude Include="mpl\util\forward.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\hash.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\move.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\noncopyable.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\size.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\util\swap.h">
-      <Filter>mpl\util</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\iterator\ptr_iterator.h" />
-    <ClInclude Include="mpl\iterator\iterator_fwd.h" />
-    <ClInclude Include="container\array.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="container\container_mudule.h" />
-    <ClInclude Include="mpl\units\ratio.h" />
-    <ClInclude Include="mpl\util\at.h" />
-    <ClInclude Include="mpl\util\data.h" />
-    <ClInclude Include="mpl\util\fill.h" />
-    <ClInclude Include="mpl\exception\exception.h" />
-    <ClInclude Include="mpl\units\quantity.h" />
-    <ClInclude Include="mpl\units\dimension.h" />
-    <ClInclude Include="mpl\units\units_fwd.h" />
-    <ClInclude Include="mpl\mstate_machine\state_machine.h" />
-    <ClInclude Include="mpl\mcontainer\range_.h" />
-    <ClInclude Include="mpl\base\identity.h">
-      <Filter>mpl\type_trait</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\literials_parse.h" />
-    <ClInclude Include="mpl\base\type_.h">
-      <Filter>mpl\base</Filter>
-    </ClInclude>
-    <ClInclude Include="mpl\base\placeholder.h" />
-    <ClInclude Include="mpl\base\apply_.h" />
-    <ClInclude Include="mpl\base\fold_args.h" />
-    <ClInclude Include="mpl\base\compare_.h" />
-    <ClInclude Include="mpl\base\arithmetic_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
-    <ClInclude Include="mpl\mcontainer\iterator_.h" />
-    <ClInclude Include="mpl\mcontainer\forward_.h" />
-    <ClInclude Include="mpl\mcontainer\backward_.h" />
-    <ClInclude Include="mpl\mcontainer\random_.h" />
-    <ClInclude Include="mpl\mcontainer\view\filter_view_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\find_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
-    <ClInclude Include="mpl\mcontainer\slist_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\transform_.h" />
-    <ClInclude Include="mpl\mcontainer\view\btree_view_.h" />
-    <ClInclude Include="mpl\mcontainer\algorithm\sort_.h" />
-    <ClInclude Include="mpl\mcontainer\entirety_.h" />
     <ClInclude Include="mpl\fusion\any.h" />
     <ClInclude Include="mpl\fusion\bad_cast_exception.h" />
     <ClInclude Include="mpl\fusion\fusion_fwd.h" />
     <ClInclude Include="mpl\fusion\imap.h" />
+    <ClInclude Include="mpl\fusion\local_arr.h" />
+    <ClInclude Include="mpl\fusion\local_obj.h" />
     <ClInclude Include="mpl\fusion\maybe.h" />
     <ClInclude Include="mpl\fusion\pair.h" />
     <ClInclude Include="mpl\fusion\tuple.h" />
     <ClInclude Include="mpl\fusion\val_seq.h" />
     <ClInclude Include="mpl\fusion\varient.h" />
-    <ClInclude Include="memory\memory_module.h" />
-    <ClInclude Include="memory\allocator_traits.h" />
-    <ClInclude Include="text\encoding\ascii.h" />
-    <ClInclude Include="text\encoding\iso8859_1.h" />
-    <ClInclude Include="text\encoding\unicode.h" />
-    <ClInclude Include="text\char_traits.h" />
-    <ClInclude Include="text\string_literial.h">
-      <Filter>mpl\fusion</Filter>
-    </ClInclude>
-    <ClInclude Include="text\string_view.h" />
-    <ClInclude Include="text\to_string.h" />
-    <ClInclude Include="text\text_module.h" />
-    <ClInclude Include="text\text_fwd.h" />
-    <ClInclude Include="mpl\util\construct.h" />
-    <ClInclude Include="mpl\util\destruct.h" />
-    <ClInclude Include="mpl\iterator\iterator_traits.h" />
-    <ClInclude Include="container\vector.h" />
-    <ClInclude Include="text\string_old.h" />
-    <ClInclude Include="text\string.h" />
-    <ClInclude Include="container\unordered_map.h" />
-    <ClInclude Include="container\unordered_set.h" />
-    <ClInclude Include="container\adapter\prority_queue.h" />
-    <ClInclude Include="container\adapter\queue.h" />
-    <ClInclude Include="container\adapter\stack.h" />
+    <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\advance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\bsearch_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\count.h" />
+    <ClInclude Include="mpl\iterator\algorithm\distance.h" />
+    <ClInclude Include="mpl\iterator\algorithm\find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\fold.h" />
+    <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
+    <ClInclude Include="mpl\iterator\algorithm\heap_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\mismatch.h" />
+    <ClInclude Include="mpl\iterator\algorithm\partition_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\permutation_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\remove.h" />
+    <ClInclude Include="mpl\iterator\algorithm\replace.h" />
+    <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\rotate.h" />
+    <ClInclude Include="mpl\iterator\algorithm\search.h" />
+    <ClInclude Include="mpl\iterator\algorithm\seq_find.h" />
+    <ClInclude Include="mpl\iterator\algorithm\set_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\shuffle.h" />
+    <ClInclude Include="mpl\iterator\algorithm\sort_ops.h" />
+    <ClInclude Include="mpl\iterator\algorithm\transform.h" />
+    <ClInclude Include="mpl\iterator\algorithm\unique.h" />
     <ClInclude Include="mpl\iterator\bit_iterator.h" />
+    <ClInclude Include="mpl\iterator\biward_list_iterator.h" />
+    <ClInclude Include="mpl\iterator\bstree_iterator.h" />
+    <ClInclude Include="mpl\iterator\forward_list_iterator.h" />
+    <ClInclude Include="mpl\iterator\iterator_fwd.h" />
+    <ClInclude Include="mpl\iterator\iterator_traits.h" />
+    <ClInclude Include="mpl\iterator\ptr_iterator.h" />
     <ClInclude Include="mpl\iterator\reverse_iterator.h" />
     <ClInclude Include="mpl\iterator\round_index_iterator.h" />
-    <ClInclude Include="container\list_node.h" />
-    <ClInclude Include="mpl\iterator\forward_list_iterator.h" />
-    <ClInclude Include="mpl\iterator\biward_list_iterator.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\count_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\find_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\fold_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\index_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\lambda_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\sort_.h" />
+    <ClInclude Include="mpl\mcontainer\algorithm\transform_.h" />
+    <ClInclude Include="mpl\mcontainer\view\btree_view_.h" />
+    <ClInclude Include="mpl\mcontainer\view\filter_view_.h" />
+    <ClInclude Include="mpl\mcontainer\arg_pack.h" />
+    <ClInclude Include="mpl\mcontainer\backward_.h" />
+    <ClInclude Include="mpl\mcontainer\entirety_.h" />
+    <ClInclude Include="mpl\mcontainer\forward_.h" />
+    <ClInclude Include="mpl\mcontainer\iterator_.h" />
+    <ClInclude Include="mpl\mcontainer\mcontainer_fwd.h" />
+    <ClInclude Include="mpl\mcontainer\random_.h" />
+    <ClInclude Include="mpl\mcontainer\range_.h" />
+    <ClInclude Include="mpl\mcontainer\slist_.h" />
+    <ClInclude Include="mpl\mcontainer\val_pack.h" />
+    <ClInclude Include="mpl\mstate_machine\state_machine.h" />
+    <ClInclude Include="mpl\smart_ptr\bad_weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\default_deleter.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\default_ref_count.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\enable_share_from_this.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\poly_share_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\poly_weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\resource_base.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\scope_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\share_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\smart_pointer_cast.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\smart_ptr_fwd.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\unique_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\smart_ptr\weak_ptr.h">
+      <Filter>mpl\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
+    <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
     <ClInclude Include="mpl\type_traits\impl\has_operator_decl.h">
       <Filter>mpl\type_trait\impl</Filter>
     </ClInclude>
@@ -608,6 +632,7 @@
     <ClInclude Include="mpl\type_traits\has_assigner.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\type_traits\has_attribute.h" />
     <ClInclude Include="mpl\type_traits\has_bit_and.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -825,6 +850,7 @@
     <ClInclude Include="mpl\type_traits\is_void.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
+    <ClInclude Include="mpl\type_traits\is_volatile.h" />
     <ClInclude Include="mpl\type_traits\max_aligned_storage.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
@@ -864,75 +890,48 @@
     <ClInclude Include="mpl\type_traits\traits_case.h">
       <Filter>mpl\type_trait</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\impl\has_attribute_decl.h" />
-    <ClInclude Include="mpl\type_traits\has_attribute.h" />
-    <ClInclude Include="container\impl\hash_table.h" />
-    <ClInclude Include="container\impl\rb_tree.h" />
-    <ClInclude Include="mpl\base\compatible_op.h" />
-    <ClInclude Include="mpl\fusion\local_obj.h" />
-    <ClInclude Include="container\view\const_view.h" />
-    <ClInclude Include="container\view\range_filter_view.h" />
-    <ClInclude Include="container\filter\range_filter.h" />
-    <ClInclude Include="mpl\iterator\bstree_iterator.h" />
-    <ClInclude Include="container\impl\link_node.h" />
-    <ClInclude Include="mpl\fusion\local_arr.h" />
-    <ClInclude Include="mpl\iterator\algorithm\advance.h" />
-    <ClInclude Include="mpl\iterator\algorithm\distance.h" />
-    <ClInclude Include="mpl\function\prediction.h" />
-    <ClInclude Include="mpl\type_traits\is_volatile.h" />
-    <ClInclude Include="mpl\util\equals.h" />
-    <ClInclude Include="mpl\function\identity.h" />
-    <ClInclude Include="container\map.h" />
-    <ClInclude Include="container\set.h" />
-    <ClInclude Include="container\bitset.h" />
-    <ClInclude Include="container\slist.h" />
-    <ClInclude Include="memory\allocator\simple_new_allocator.h" />
-    <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
-    <ClInclude Include="memory\adapter\block_list_allocate_adapter.h" />
-    <ClInclude Include="memory\allocator\local_cached_allocator.h" />
-    <ClInclude Include="container\list.h" />
-    <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
-    <ClInclude Include="memory\allocator\semi_stack_allocator.h" />
+    <ClInclude Include="mpl\units\dimension.h" />
+    <ClInclude Include="mpl\units\quantity.h" />
+    <ClInclude Include="mpl\units\ratio.h" />
+    <ClInclude Include="mpl\units\units_fwd.h" />
+    <ClInclude Include="mpl\util\addressof.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\at.h" />
     <ClInclude Include="mpl\util\compare.h" />
-    <ClInclude Include="container\circular_buffer.h" />
-    <ClInclude Include="container\fix_bitset.h" />
-    <ClInclude Include="container\fix_circular_buffer.h" />
-    <ClInclude Include="mpl\base\bit_alg.h" />
-    <ClInclude Include="mpl\iterator\algorithm\count.h" />
-    <ClInclude Include="mpl\iterator\algorithm\find.h" />
-    <ClInclude Include="mpl\iterator\algorithm\foreach.h" />
-    <ClInclude Include="mpl\iterator\algorithm\replace.h" />
-    <ClInclude Include="mpl\iterator\algorithm\reverse_find.h" />
-    <ClInclude Include="mpl\iterator\algorithm\search.h" />
-    <ClInclude Include="mpl\iterator\algorithm\transform.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
-    <ClInclude Include="mpl\type_traits\impl\has_nest_decl.h" />
-    <ClInclude Include="container\range.h" />
-    <ClInclude Include="mpl\design_pattern\singleton.h" />
-    <ClInclude Include="mpl\iterator\algorithm\adjacent_find.h" />
-    <ClInclude Include="mpl\iterator\algorithm\unique.h" />
-    <ClInclude Include="mpl\iterator\algorithm\mismatch.h" />
-    <ClInclude Include="mpl\iterator\algorithm\seq_find.h" />
-    <ClInclude Include="mpl\iterator\algorithm\remove.h" />
-    <ClInclude Include="mpl\iterator\algorithm\rotate.h" />
-    <ClInclude Include="mpl\iterator\algorithm\shuffle.h" />
-    <ClInclude Include="mpl\iterator\algorithm\heap_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\set_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\sort_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\bsearch_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\permutation_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\partition_ops.h" />
-    <ClInclude Include="mpl\iterator\algorithm\fold.h" />
-    <ClInclude Include="filesystem\log\log.h" />
-    <ClInclude Include="filesystem\path.h">
-      <Filter>filesystem</Filter>
+    <ClInclude Include="mpl\util\construct.h" />
+    <ClInclude Include="mpl\util\copy.h" />
+    <ClInclude Include="mpl\util\create.h">
+      <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="filesystem\reader.h">
-      <Filter>filesystem</Filter>
+    <ClInclude Include="mpl\util\data.h" />
+    <ClInclude Include="mpl\util\destruct.h" />
+    <ClInclude Include="mpl\util\dummy_call.h" />
+    <ClInclude Include="mpl\util\equals.h" />
+    <ClInclude Include="mpl\util\fill.h" />
+    <ClInclude Include="mpl\util\forward.h">
+      <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="filesystem\writer.h">
-      <Filter>filesystem</Filter>
+    <ClInclude Include="mpl\util\hash.h">
+      <Filter>mpl\util</Filter>
     </ClInclude>
-    <ClInclude Include="mpl\type_traits\has_callable.h" />
+    <ClInclude Include="mpl\util\move.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\noncopyable.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\size.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\util\swap.h">
+      <Filter>mpl\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\mpl_module.h">
+      <Filter>mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="mpl\type_traits.h">
+      <Filter>mpl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
