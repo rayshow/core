@@ -42,7 +42,7 @@ namespace alg_impl {
 			}
 			else { ++i; /* not equal && offset == 0, source move to next char */ }
 		}
-		if (offset == n2) return i - n2;
+		if (offset == n2) return i;
 		return n1;
 	}
 
@@ -56,14 +56,15 @@ namespace alg_impl {
 		RandomIt2 search, uint32 n2)
 	{
 		uint32* next = build_next(search, n2);
-		ptr::size_t next_start = 0;
-		RandomIt end = source + n1;
-		for (uint32 i = 0; i < N && next_start < n1; ++i) {
-			next_start = kmp(next, source+next_start,
-				n1 - next_start, search, n2);
+		ptr::size_t offset = 0;
+		for (uint32 i = 0; i < N && offset < n1; ++i) {
+			offset += kmp(next, source+ offset,
+				n1 - offset, search, n2);
 		}
+		ccdk_assert(offset <= n1 && offset>=0);
 		delete[] next;
-		return next_start;
+		if (offset < n1) offset -= n2;
+		return offset;
 	}
 
 	// N < 0, backward search N-th match
@@ -82,9 +83,15 @@ namespace alg_impl {
 		iterator end = iterator{ source - 1 };
 		ptr::size_t next_start = 0;
 		for (uint32 i = 0; i < -N && next_start < n1; ++i) {
-			next_start = kmp(next, begin + next_start,
-				n1 - next_start, iterator2{ search }, n2);
+			//get reverse-ward pos
+			next_start += kmp(next, begin + next_start,
+				n1 - next_start, iterator2{ search+n2-1 }, n2);
 		}
+		ccdk_assert(next_start <= n1);
+		if (next_start < n1) {
+			next_start = n1 - next_start;
+		}
+
 		delete[] next;
 		return next_start;
 	}

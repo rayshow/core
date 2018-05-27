@@ -157,18 +157,35 @@ int main()
 		//RuntimeAssertTrue(s1.find_index([](auto ch) {return ch == '8'; }) == 8);
 		//RuntimeAssertTrue(s1.find_index("1011") == 10);
 		//RuntimeAssertTrue(s1.find_index("1012") == s1.size());
-		string s2{ "0123" };
-		DebugValue(s2.find_index<-1>("012"));
-		RuntimeAssertTrue(s2.find_index<-1>("012") == 12);
-		using ri = reverse_iterator<char*>;
-		//DebugValue(is_random_iterator_v<ri>);
+		string s2{ "0001230123" };
+		RuntimeAssertTrue(s2.find_index<-1>("012") == 6);
+		RuntimeAssertTrue(s2.find_index<-2>("012") == 2);
+		RuntimeAssertTrue(s2.find_index<-1>("112") == s2.size());
+		RuntimeAssertTrue(s2.find_index<-2>("112") == s2.size());
+		RuntimeAssertTrue(s2.find_index<-200>("012") == s2.size());
+		RuntimeAssertTrue(s2.find_index<-200>("112") == s2.size());
+		string s3{ "0001230123" };
+		RuntimeAssertTrue(s3.find_index("012") == 2);
+		RuntimeAssertTrue(s3.find_index("0124") == s3.size());
+		RuntimeAssertTrue(s3.find_index<2>("012") == 6);
+		RuntimeAssertTrue(s3.find_index<2>("0124") == s3.size());
+		RuntimeAssertTrue(s3.find_index<200>("012") == s3.size());
+		RuntimeAssertTrue(s3.find_index<200>("0124") == s3.size());
 	}
 	DebugNewTitle("trim");
 	{
 		string s1{ "  1123  " };
-		s1.ltrim().debug_value();
-		s1.rtrim().debug_value();
-		s1.trim().debug_value();
+		string s2{ "  1123  " };
+		string s3{ "  1123  " };
+		s1.ltrim().debug_content();
+		s2.rtrim().debug_content();
+		s3.trim().debug_content();
+		ccdk_assert(s1.size() == 6);
+		ccdk_assert(s2.size() == 6);
+		ccdk_assert(s3.size() == 4);
+		DebugValue(encoding<ascii_encoding>::is_space(' '));
+		DebugValue(encoding<ascii_encoding>::is_space('\n'));
+		DebugValue(encoding<ascii_encoding>::is_space('\r'));
 	}
 
 	/*string c1{ "hello" };

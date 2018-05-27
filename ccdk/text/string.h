@@ -610,6 +610,13 @@ public:
 		if(content) DebugValueIt(content);
 		DebugValueItEnd();
 	}
+
+
+	void debug_content(const char* title = "") {
+		DebugValueItBegin(title);
+		DebugValueIt(content);
+		DebugValueItEnd();
+	}
 };
 
 using string  = basic_string<achar>;

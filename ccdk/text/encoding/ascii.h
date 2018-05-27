@@ -183,7 +183,10 @@ struct encoding<ascii_encoding>
 
 	CCDK_FORCEINLINE static bool is_ctrl(char32 ch) { ccdk_assert(ch < 256);  return ascii_category_table[ch] & ascii_category::kCtrl; }
 
-	CCDK_FORCEINLINE static bool is_space(char32 ch) { ccdk_assert(ch < 256);  return ascii_category_table[ch] & ascii_category::kSpace; }
+	CCDK_FORCEINLINE static bool is_space(char32 ch) { 
+		ccdk_assert(ch < 256);
+	
+		return ascii_category_table[ch] & ascii_category::kSpace; }
 
 	CCDK_FORCEINLINE static bool is_lower(char32 ch) { ccdk_assert(ch < 256);  return ascii_category_table[ch] & ascii_category::kLower; }
 

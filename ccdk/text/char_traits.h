@@ -46,10 +46,13 @@ struct char_traits<achar> : public common_char_traits<achar>
 	static constexpr ptr::size_t ltrim(achar* content, ptr::size_t len)
 	{
 		achar const* it = content;
-		ptr::size_t space_count = 0;
-		for (; it != '\0'; ++it, ++space_count) if (!encoding<Encoding>::is_space(*it)) break;
-		util::move_n(content, content + space_count, len - space_count + 1); /* move forward with 0-terminal */
-		return len - space_count;
+		achar const* end = content + len;
+		for (; it != end; ++it)
+			if (!encoding<Encoding>::is_space(*it)) 
+				break;
+		if(it!=end)
+			util::move_n(content, it, len - (it-content) + 1); /* move forward with 0-terminal */
+		return len - (it-content);
 	}
 
 	/* encoding know at run-time */
