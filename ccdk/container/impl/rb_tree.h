@@ -719,15 +719,15 @@ private:
 
 			there are  cases:
 				case 1: P black, no need process
-				case 2: P on the left
-					sub-case 1: P red, S red
+				case 2: P on the left and is Red => G is Black
+					sub-case 1: S red
 						turn P and S black, G red, recursive justify G as C
-					sub-case 2: P red S black => G black, S=Nil,CS=Nil
+					sub-case 2: S black => G black, S=Nil,CS=Nil
 						insert at left(Red) rotate right, switch P and G's color
 						        C   Black
                               /   \ 
 						Red  P     G  Red
-							    
+							     
 					sub-case 3: P red, G black, insert right => CS is Nil, S is Nil
 						rise C to G, and P as C's left and G as C's right
 							   C  Black
@@ -762,16 +762,22 @@ private:
 				if (S != nullptr) {
 					int a = 0;
 				}
-				ccdk_assert(S == nullptr);
-				ccdk_assert((child_on_right ? P->left : P->right) == nullptr);
+				ccdk_assert(P->is_red());
 				ccdk_assert(G->is_black());
 				if (parent_on_left) {
 					if (child_on_right) {
 						// case 2.3
-						C->set_pointer(G->parent, P, G);
+						link_type CL = C->left;
+						link_type CR = C->right;
+						link_type GP = G->parent;
+
+						//C is red so child must be black
+						ccdk_assert(!CL || CL->is_black());  
+						ccdk_assert(!CR || CR->is_black());
+						C->set_pointer(GP, P, G);
+						P->set_parent_right(C, CL);
+						G->set_parent_left(C, CR);
 						C->set_black();
-						P->set_pointer(C, nullptr, nullptr);
-						G->set_pointer(C, nullptr, nullptr);
 						G->set_red();
 					}
 					else {
@@ -782,10 +788,17 @@ private:
 				else {
 					// case 3.3 mirror with 2.3
 					if (!child_on_right) {
-						C->set_pointer(G->parent, G, P);
+						link_type CL = C->left;
+						link_type CR = C->right;
+						link_type GP = G->parent;
+
+						//C is red so child must be black
+						ccdk_assert(!CL || CL->is_black());
+						ccdk_assert(!CR || CR->is_black());
+						C->set_pointer(GP, G, P);
+						P->set_parent_left(C, CR);
+						G->set_parent_right(C, CL);
 						C->set_black();
-						P->set_pointer(C, nullptr, nullptr);
-						G->set_pointer(C, nullptr, nullptr);
 						G->set_red();
 					}
 					else {

@@ -30,7 +30,7 @@ struct capture_t
 	{
 		return partial( util::forward<Fn>(fn), util::move(content.template at<indice>() )... );
 	}
-		
+	
 	/* function / function pointer */
 	template< typename Fn>
 	CCDK_FORCEINLINE constexpr auto operator()(Fn&& fn ) noexcept

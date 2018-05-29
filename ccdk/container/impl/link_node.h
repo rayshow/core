@@ -51,6 +51,18 @@ struct rb_node
 		right = r;
 	}
 
+	CCDK_FORCEINLINE void set_parent_left(
+		pointer p, pointer l) {
+		parent = p;
+		left = l;
+	}
+
+	CCDK_FORCEINLINE void set_parent_right(
+		pointer p, pointer r) {
+		parent = p;
+		right = r;
+	}
+
 	CCDK_FORCEINLINE bool is_red() {
 		return color == eRed;
 	}
