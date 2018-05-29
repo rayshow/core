@@ -4,6 +4,8 @@
 #include<ccdk/mpl/iterator/algorithm/advance.h>
 #include<ccdk/mpl/iterator/algorithm/seq_find.h>
 #include<ccdk/mpl/type_traits/is_invocable.h>
+#include<ccdk/mpl/type_traits/is_integer.h>
+#include<ccdk/mpl/type_traits/is_float.h>
 #include<ccdk/mpl/iterator/iterator_traits.h>
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/container/vector.h>
@@ -621,7 +623,7 @@ public:
 		typename Int, 
 		typename = check_t< is_integer<Int>> >
 	CCDK_FORCEINLINE this_type& append(Int val) {
-		return to_string<Int, this_type>(val);
+		return to_string<Int, this_type>(val,*this);
 	}
 
 	//append float
@@ -634,13 +636,11 @@ public:
 	//append double 
 	CCDK_FORCEINLINE this_type& append(double val) {
 		append(128, '\0');
-		sprintf(content + len - 128, "%lf", val);
+		snprintf(content + len - 128,128, "%lf", val);
 		return *this;
 	}
 
-
-
-
+	// append string
 	template<
 		typename IncRatio2,
 		typename Size2,
@@ -651,9 +651,32 @@ public:
 		return tmp;
 	}
 
+	// append c-string
+	CCDK_FORCEINLINE this_type operator+(const_pointer str) {
+		string tmp{ *this };
+		tmp.append(str);
+		return tmp;
+	}
 
+	//append integer
+	template<
+		typename Int,
+		typename = check_t< is_integer<Int>> >
+	CCDK_FORCEINLINE this_type operator+(Int val) {
+		string tmp{ *this };
+		tmp.append(val);
+		return tmp;
+	}
 
-
+	//append integer
+	template<
+		typename Float,
+		typename = check_t< is_float<Float>>, typename=void>
+	CCDK_FORCEINLINE this_type operator+(Float val) {
+		string tmp{ *this };
+		tmp.append(val);
+		return tmp;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//// substr

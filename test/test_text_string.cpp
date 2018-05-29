@@ -1,4 +1,3 @@
-
 #include<ccdk/mpl/base/derive_if.h>
 #include<ccdk/mpl/type_traits/has_inner_type.h>
 #include<ccdk/memory/allocator_traits.h>
@@ -199,6 +198,21 @@ int main()
 		s1.debug_value();
 		s1.append(4, 'i');
 		s1.debug_value();
+	}
+	DebugNewTitle("concat");
+	{
+		string s1{ "hello" };
+		string s2{ "world" };
+		auto s3 = s1 + s2;
+		s3.debug_value();
+		s3.append(1);
+		s3.debug_value();
+		s3.append(-323LL);
+		s3.debug_value();
+		s3.append(543LL);
+		s3.debug_value();
+		s3.append(2.5343);
+		s3.debug_value();
 	}
 
 	ccdk_open_leak_check();

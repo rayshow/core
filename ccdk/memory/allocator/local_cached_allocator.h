@@ -44,9 +44,9 @@ public:
 
 /*
 	this is a mid-ware-allocator will hold a node cache (
-		suitible for these fix-size-node contianer like list and tree )
+		suitible for these fix-node-size contianer like list and tree )
 	when cache is not full, deallocate will put memory block to it, and allocate
-		will get memory block from it
+		will get memory block from this cache
 	note:
 		only for list and tree container
 */

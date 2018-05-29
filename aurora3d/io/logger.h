@@ -34,7 +34,7 @@ private:
 	FILE* handle{};
 	std::mutex mutex{};
 public:
-	bool open(const std::string& filename) {
+	bool open(const txt::string& filename) {
 		if (handle != nullptr) {
 			a3d_assert(0);
 			fclose(handle);
@@ -46,8 +46,9 @@ public:
 		}
 	}
 
-	void write(level lv, const std::string& msg, const std::string& file = "", uint32 line = 0) {
-		std::string log = prefix(lv) + msg;
+	void write(level lv, const txt::string& msg, const txt::string& file = "", uint32 line = 0) {
+		txt::string log{};
+		log.append(prefix(lv)).append(msg);
 		if (lv >= level::Warn) log += suffix(file, line);
 		log += "\n";
 		std::lock_guard<std::mutex> lock(mutex);
@@ -58,12 +59,12 @@ public:
 #endif
 	}
 
-	void write(level lv, const std::wstring& msg, const std::wstring& file = WSTR(""), uint32 line = 0) {
+	void write(level lv, const txt::wstring& msg, const txt::wstring& file = WSTR(""), uint32 line = 0) {
 		
 	}
 
 private:
-	std::string prefix(level lv) {
+	txt::string prefix(level lv) {
 		using namespace std::chrono;
 		auto now = system_clock::to_time_t(system_clock::now());
 		auto tm = std::localtime(&now);
@@ -72,8 +73,8 @@ private:
 			tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, kLevelString[(int)lv]);
 		return buffer;
 	}
-	std::string suffix(const std::string& file, unsigned line) {
-		return  "{ from file:" + file + " line:" + std::to_string(line) + " }";
+	txt::string suffix(const std::string& file, unsigned line) {
+		return  "{ from file:" + file + " line:" + txt::to_string(line) + " }";
 	}
 
 };
