@@ -8,6 +8,7 @@
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
+#include<ccdk/text/to_string.h>
 #include<ccdk/text/text_module.h>
 
 ccdk_namespace_text_start
@@ -87,7 +88,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	//// ctor
 
-			//default and nullptr
+	//default and nullptr
 	CCDK_FORCEINLINE basic_string() noexcept : super_type{} {}
 	CCDK_FORCEINLINE basic_string(ptr::nullptr_t) noexcept : super_type{ nullptr } {}
 
@@ -565,7 +566,7 @@ public:
 	//// append
 
 	//push back range-fill
-	CCDK_FORCEINLINE basic_string& append(size_type n, char_type c) {
+	CCDK_FORCEINLINE this_type& append(size_type n, char_type c) {
 		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
 		util::construct_fill_n(content + size(), c, n);
 		len += n;
@@ -577,7 +578,7 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>> >
-		CCDK_FORCEINLINE basic_string& append(InputIt begin, size_type n) {
+		CCDK_FORCEINLINE this_type& append(InputIt begin, size_type n) {
 		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
 		util::construct_copy_n(content + size(), begin, n);
 		len += n;
@@ -589,30 +590,70 @@ public:
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>> >
-		CCDK_FORCEINLINE basic_string& append(InputIt begin, InputIt end) {
+		CCDK_FORCEINLINE this_type& append(InputIt begin, InputIt end) {
 		return append(begin, it::distance(begin, end));
 	}
 
 	//push back c-string
-	CCDK_FORCEINLINE basic_string& append(const_pointer str) {
+	CCDK_FORCEINLINE this_type& append(const_pointer str) {
 		return append(str, traits_type::length(str));
 	}
 
 	//push back string literial
 	template<uint32 D>
-	CCDK_FORCEINLINE basic_string& append(
+	CCDK_FORCEINLINE this_type& append(
 		string_literial_init, char_type const (&arr)[D]) {
 		return append(arr, D - 1);
 	}
 
+	//append a string
 	template<
 		typename IncRatio2, 
 		typename Size2,
 		typename Alloc2, uint32 N2>
-		CCDK_FORCEINLINE basic_string& append(
+		CCDK_FORCEINLINE this_type& append(
 			basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
 		return append(other.c_str(), other.size());
 	}
+
+	//append integer
+	template<
+		typename Int, 
+		typename = check_t< is_integer<Int>> >
+	CCDK_FORCEINLINE this_type& append(Int val) {
+		return to_string<Int, this_type>(val);
+	}
+
+	//append float
+	CCDK_FORCEINLINE this_type& append(float val) {
+		append(128, '\0');
+		sprintf(content+len-128, "%f", val);
+		return *this;
+	}
+
+	//append double 
+	CCDK_FORCEINLINE this_type& append(double val) {
+		append(128, '\0');
+		sprintf(content + len - 128, "%lf", val);
+		return *this;
+	}
+
+
+
+
+	template<
+		typename IncRatio2,
+		typename Size2,
+		typename Alloc2, uint32 N2>
+	CCDK_FORCEINLINE this_type operator+(basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
+		string tmp{ *this };
+		tmp.append(other);
+		return tmp;
+	}
+
+
+
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//// substr
@@ -623,7 +664,7 @@ public:
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-	//// 
+	//// starts / ends with
 
 private:
 

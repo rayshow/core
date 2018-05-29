@@ -16,7 +16,7 @@ struct has_member_at
 	static constexpr bool value = sfinae<T>(0);
 };
 
-/* default call size(), need check has function T::at() */
+/* default call size(), need check T has function at() */
 template<typename T, typename = check_t< has_member_at<T>>  >
 CCDK_FORCEINLINE decltype(auto) at(T const& t, ptr::size_t index) noexcept { 
 	return t.at(index); 

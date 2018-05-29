@@ -60,7 +60,6 @@ public:
 
 	A3D_FORCEINLINE ptr::size_t pos() const { return _pos; }
 	A3D_FORCEINLINE void inc_pos(uint32 size) { _pos += size; }
-	virtual bool open(std::string const& filename, Mode mode = Mode::Replace);
 	virtual ptr::size_t write(const uint8* data, ptr::size_t size) = 0;
 	virtual bool close() {};
 	virtual bool is_opened() = 0;

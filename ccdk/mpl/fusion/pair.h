@@ -44,6 +44,11 @@ struct pair
 	First  _1;
 	Second _2;
 
+	CCDK_FORCEINLINE void swap(pair& other) {
+		util::swap(_1, other._1);
+		util::swap(_2, other._2);
+	}
+
 	CCDK_FORCEINLINE First& first() noexcept { return _1; }
 	CCDK_FORCEINLINE First const& first() const noexcept { return _1; }
 
@@ -93,7 +98,10 @@ CCDK_FORCEINLINE rpair<T1, T2> tie(T1& t1, T2& t2) { return { t1, t2 }; }
 
 /////////////////////////////////////////////////////////////////////////////////////
 //// compress pair
-template<typename First, typename Second, bool = is_empty_v<First> && !is_final_v<First> >
+template<
+	typename First, 
+	typename Second,
+	bool = is_empty_v<First> && !is_final_v<First> >
 struct cpair : public First
 {
 	typedef decay_t<Second> second_type;

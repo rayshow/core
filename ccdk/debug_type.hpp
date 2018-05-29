@@ -109,6 +109,7 @@ namespace ccdk {
 #define AssertTrue(v)  static_assert(v, "");
 #define AssertFalse(v) static_assert(!v, "");
 #define RuntimeAssertTrue(v) assert(v)
+#define RuntimeAssertFalse(v) assert(!(v))
 
 #if !defined(CCDK_NO_TRACE)
 #define DebugNewTitle(T)  std::cout<<"\n ================ " << T << " ================" << std::endl;

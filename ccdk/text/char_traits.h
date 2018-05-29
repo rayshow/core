@@ -1,10 +1,12 @@
 #pragma once
 
-#include<ccdk/mpl/util/copy.h>
+
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/type_traits/array_length.h>
 #include<ccdk/mpl/type_traits/remove_all_dim.h>
 #include<ccdk/mpl/type_traits/is_same.h>
+#include<ccdk/mpl/util/copy.h>
+#include<ccdk/mpl/util/move.h>
 #include<ccdk/text/text_module.h>
 #include<ccdk/text/encoding/ascii.h>
 #include<ccdk/text/encoding/iso8859_1.h>

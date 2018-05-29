@@ -32,7 +32,6 @@
       <Filter>io</Filter>
     </ClCompile>
     <ClCompile Include="math\math_utility.cpp" />
-    <ClCompile Include="io\buffer.cpp" />
     <ClCompile Include="io\file_system.cpp">
       <Filter>io</Filter>
     </ClCompile>
@@ -150,5 +149,6 @@
     <ClInclude Include="graphic\vertex_buffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="io\file.h" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
 #include <mutex>
 #include <chrono>
 #include <ctime>
 #include <module.h>
 #include <ccdk/mpl/design_pattern/singleton.h>
+#include <ccdk/text/string.h>
 
 a3d_namespace_io_start
 

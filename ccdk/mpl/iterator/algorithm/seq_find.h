@@ -55,7 +55,7 @@ namespace alg_impl {
 		ptr::diff_t ith)
 	{
 		ccdk_assert(ith > 0);
-		uint32 *next = new uint32[n];
+		uint32 *next = new uint32[n2];
 		build_next(next, search, n2);
 		ptr::size_t offset = 0;
 		for (uint32 i = 0; i < ith && offset < n1; ++i) {
@@ -81,7 +81,7 @@ namespace alg_impl {
 	{
 		ccdk_assert(ith < 0);
 		ith = -ith;
-		uint32 *next = new uint32[n];
+		uint32 *next = new uint32[n2];
 		build_next(next, iterator2{ search+n2-1 },  n2);
 		iterator begin = iterator{ source + n1 - 1 };
 		iterator end = iterator{ source - 1 };

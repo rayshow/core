@@ -34,7 +34,6 @@
     <ClCompile Include="platform_spec\input_sdl.cpp" />
     <ClCompile Include="io\binary_file.cpp" />
     <ClCompile Include="io\file_system.cpp" />
-    <ClCompile Include="io\buffer.cpp" />
     <ClCompile Include="math\vector.cpp" />
     <ClCompile Include="resource\image.cpp" />
     <ClCompile Include="scene\scene.cpp" />
@@ -49,6 +48,7 @@
     <ClInclude Include="engine\pulser.h" />
     <ClInclude Include="event\event_dispatcher.h" />
     <ClInclude Include="event\input_evt.h" />
+    <ClInclude Include="io\file.h" />
     <ClInclude Include="io\io_def.h" />
     <ClInclude Include="io\serialize.h" />
     <ClInclude Include="math\capsule.h" />

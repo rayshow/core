@@ -80,6 +80,9 @@
     <ClInclude Include="container\slist.h" />
     <ClInclude Include="container\map.h" />
     <ClInclude Include="container\set.h" />
+    <ClInclude Include="container\view\group_view.h" />
+    <ClInclude Include="container\view\poly_group_view.h" />
+    <ClInclude Include="container\view\sort_view.h" />
     <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
     <ClInclude Include="memory\allocator\local_cached_allocator.h" />
     <ClInclude Include="mpl\base\bit_alg.h" />
@@ -152,7 +155,6 @@
     <ClInclude Include="mpl\base\when_match.h" />
     <ClInclude Include="mpl\base\if_.h" />
     <ClInclude Include="mpl\base\type_.h" />
-    <ClInclude Include="mpl\exception\exception.h" />
     <ClInclude Include="mpl\function\const_forward.h" />
     <ClInclude Include="mpl\function\expr.h" />
     <ClInclude Include="mpl\function\function_fwd.h" />
@@ -452,11 +454,13 @@
     <ClInclude Include="preprocessor\uint8_sub_one.h" />
     <ClInclude Include="preprocessor\while.h" />
     <ClInclude Include="text\char_traits.h" />
-    <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\text_fwd.h" />
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\string_view.h" />
     <ClInclude Include="type.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mpl\design_pattern\TODO.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

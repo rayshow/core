@@ -336,7 +336,6 @@
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\text_fwd.h" />
     <ClInclude Include="container\vector.h" />
-    <ClInclude Include="text\string_old.h" />
     <ClInclude Include="text\string.h" />
     <ClInclude Include="container\unordered_map.h" />
     <ClInclude Include="container\unordered_set.h" />
@@ -407,7 +406,6 @@
       <Filter>mpl\base</Filter>
     </ClInclude>
     <ClInclude Include="mpl\design_pattern\singleton.h" />
-    <ClInclude Include="mpl\exception\exception.h" />
     <ClInclude Include="mpl\function\arg.h">
       <Filter>mpl\function</Filter>
     </ClInclude>
@@ -933,5 +931,11 @@
     <ClInclude Include="mpl\type_traits.h">
       <Filter>mpl</Filter>
     </ClInclude>
+    <ClInclude Include="container\view\group_view.h" />
+    <ClInclude Include="container\view\poly_group_view.h" />
+    <ClInclude Include="container\view\sort_view.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mpl\design_pattern\TODO.md" />
   </ItemGroup>
 </Project>

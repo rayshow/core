@@ -1,0 +1,1 @@
+add flyweight like Boost Flyweight Library

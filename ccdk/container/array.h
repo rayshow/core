@@ -59,9 +59,8 @@ public:
 	/* compile-time arry constructor, note for c-string length include 0-terminal  */
 	template<
 		uint32 N2, 
-		uint32 Min = min_val<uint32, N,N2>
-	>
-	CCDK_FORCEINLINE  array(const T(&arr)[N2])
+		uint32 Min = min_val<uint32, N,N2> >
+	CCDK_FORCEINLINE constexpr array(const T(&arr)[N2])
 		: array(arr, mpl::make_indice<Min>{}, Min) {}
 
 	/* fill n */
@@ -106,6 +105,9 @@ public:
 		other.len = 0;
 	}
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//// assign 
 
 	/* array assign */
 	template< uint32 N2, uint32 Min = min_val<uint32, N, N2> >
@@ -179,67 +181,51 @@ public:
 		return *this;
 	}
 
-	/* filte index */
-	CCDK_FORCEINLINE view_type operator[](filter_type&& filter) { 
-		return { *this, util::move(filter) }; 
-	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//// access
 
-	/* index */
-	CCDK_FORCEINLINE constexpr reference operator[](difference_type index) {
-		//ccdk_check_index(index,len); 
-		return content[(index + len) % len];
-	}
+	//range filter
+	CCDK_FORCEINLINE view_type operator[](filter_type&& filter) { return { *this, util::move(filter) }; }
 
-	/* const index */
-	CCDK_FORCEINLINE constexpr const_reference operator[](difference_type index) const {
-		ccdk_check_index(index, len);
-		return content[(index + len) % len];
-	}
+	// index
+	CCDK_FORCEINLINE constexpr reference operator[](size_type index) { ccdk_assert(index < len); return content[index];}
+	CCDK_FORCEINLINE constexpr const_reference operator[](size_type index) const {ccdk_assert(index < len); return content[index]; }
+	CCDK_FORCEINLINE constexpr reference at(size_type index) noexcept {ccdk_assert(index < len); return content[index]; }
+	CCDK_FORCEINLINE constexpr const_reference at(uint32 index) const noexcept { ccdk_assert(index < len);return content[index]; }
 
-	/* quick index */
-	CCDK_FORCEINLINE constexpr reference at(size_type index) noexcept {
-		ccdk_assert(index < len); 
-		return content[index]; 
-	}
-
-	/* quick const index */
-	CCDK_FORCEINLINE constexpr const_reference at(uint32 index) const noexcept {
-		ccdk_assert(index < len);
-		return content[index]; 
-	}
-
-	/* access data */
+	//data
 	CCDK_FORCEINLINE constexpr const_pointer data() const noexcept { return content; }
 	CCDK_FORCEINLINE constexpr pointer data() noexcept { return content; }
 
-	/* access front */
+	//front
 	CCDK_FORCEINLINE constexpr reference front() noexcept { return content[0]; }
 	CCDK_FORCEINLINE constexpr const_reference front() const noexcept { return content[0]; }
 
-	/* access back */
-	CCDK_FORCEINLINE constexpr reference back() noexcept { 
-		ccdk_assert(len > 0);
-		return content[len - 1]; 
-	}
-	CCDK_FORCEINLINE constexpr const_reference back() const noexcept { 
-		ccdk_assert(len > 0);
-		return content[len-1]; 
-	}
+	// back
+	CCDK_FORCEINLINE constexpr reference back(size_type ith=1) noexcept { ccdk_assert(len > 0);return content[len - ith]; }
+	CCDK_FORCEINLINE constexpr const_reference back(size_type ith=1) const noexcept { ccdk_assert(len > 0);return content[len-ith]; }
 
-	/* attribute */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// readonly attribute
+
 	CCDK_FORCEINLINE constexpr size_type size() const noexcept { return len; }
 	CCDK_FORCEINLINE constexpr size_type capcity() const noexcept { return N; }
-	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept {
-		return size_type(-1) / sizeof(T);
-	}
+	CCDK_FORCEINLINE constexpr size_type max_size() const noexcept { return size_type(-1) / sizeof(T);}
 
-	/* iterator */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// iterator 
+
+	//iterator
 	CCDK_FORCEINLINE constexpr iterator begin()  noexcept { return content; }
 	CCDK_FORCEINLINE constexpr iterator end()  noexcept  { return content + len; }
+	CCDK_FORCEINLINE constexpr const_iterator begin()  noexcept { return content; }
+	CCDK_FORCEINLINE constexpr const_iterator end()  noexcept { return content + len; }
 	CCDK_FORCEINLINE constexpr const_iterator cbegin() noexcept  { return content; }
 	CCDK_FORCEINLINE constexpr const_iterator cend()  noexcept { return content + len; }
 	CCDK_FORCEINLINE constexpr reverse_iterator rbegin() noexcept { return { content + len - 1 }; }
 	CCDK_FORCEINLINE constexpr reverse_iterator rend() noexcept { return { content - 1 }; }
+	CCDK_FORCEINLINE constexpr const_reverse_iterator rbegin() noexcept { return { content + len - 1 }; }
+	CCDK_FORCEINLINE constexpr const_reverse_iterator rend() noexcept { return { content - 1 }; }
 	CCDK_FORCEINLINE constexpr const_reverse_iterator crbegin() const noexcept { return { content + len - 1 }; }
 	CCDK_FORCEINLINE constexpr const_reverse_iterator crend() const noexcept { return { content - 1 }; }
 
