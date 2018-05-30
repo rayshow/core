@@ -10,6 +10,7 @@
 a3d_namespace_io_start
 
 using namespace ccdk;
+using namespace ccdk::mpl;
 
 class logger:public dp::singleton<logger>
 {
@@ -49,8 +50,8 @@ public:
 	void write(level lv, const txt::string& msg, const txt::string& file = "", uint32 line = 0) {
 		txt::string log{};
 		log.append(prefix(lv)).append(msg);
-		if (lv >= level::Warn) log += suffix(file, line);
-		log += "\n";
+		if (lv >= level::Warn) log.append(suffix(file, line));
+		log.append("\n");
 		std::lock_guard<std::mutex> lock(mutex);
 #if defined(A3D_DEBUG)
 		fprintf(stdout, log.c_str());
@@ -73,8 +74,10 @@ private:
 			tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, kLevelString[(int)lv]);
 		return buffer;
 	}
-	txt::string suffix(const std::string& file, unsigned line) {
-		return  "{ from file:" + file + " line:" + txt::to_string(line) + " }";
+
+	txt::string suffix(const txt::string& file, uint32 line) {
+		txt::string str{ "{ from file : " };
+		str.append(file).append(" line").append(line).append(" }");
 	}
 
 };
