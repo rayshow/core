@@ -80,9 +80,6 @@
     <ClInclude Include="io\binary_file.h">
       <Filter>io</Filter>
     </ClInclude>
-    <ClInclude Include="io\logger.h">
-      <Filter>io</Filter>
-    </ClInclude>
     <ClInclude Include="resource\resource_def.h" />
     <ClInclude Include="event\window_evt.h" />
     <ClInclude Include="event\event_def.h" />
@@ -106,12 +103,10 @@
     <ClInclude Include="math\math_neon.inl" />
     <ClInclude Include="math\math_sse.inl" />
     <ClInclude Include="io\io_def.h" />
-    <ClInclude Include="io\buffer.h" />
     <ClInclude Include="io\file_system.h">
       <Filter>io</Filter>
     </ClInclude>
     <ClInclude Include="math\int_rect.h" />
-    <ClInclude Include="io\serialize.h" />
     <ClInclude Include="platform_spec\GenericMemory.h" />
     <ClInclude Include="platform_spec\GenericString.h" />
     <ClInclude Include="platform_spec\GenericTime.h" />
@@ -149,6 +144,5 @@
     <ClInclude Include="graphic\vertex_buffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="io\file.h" />
   </ItemGroup>
 </Project>

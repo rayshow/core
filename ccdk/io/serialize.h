@@ -4,9 +4,9 @@
 #include<ccdk/mpl/base/logic_.h>
 #include<ccdk/mpl/type_traits/impl/has_member_decl.h>
 #include<ccdk/mpl/util/addressof.h>
-#include<module.h>
+#include<ccdk/io/io_module.h>
 
-a3d_namespace_io_start
+ccdk_namespace_io_start
 
 using namespace ccdk::mpl;
 
@@ -27,43 +27,50 @@ template<> struct is_real_size<achar> { enum { value = true }; };
 template<> struct is_real_size<wchar> { enum { value = true }; };
 
 //test weather void write_to(writer&) is exists
-CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_writable, write_to, void)
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_writable, write_to, bool)
 
 //test weather void read_from(reader&) is exists
-CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_readable, read_from, void)
+CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_readable, read_from, bool)
+
+enum class rewind_mode :uint8 {
+	start,
+	current,
+	end,
+};
 
 //serialize write base class
 class writer
 {
-public:
-	enum Mode :uint8 {
-		Replace = 0,
-		Append
-	};
-
 private:
 	ptr::size_t _pos = 0;
 public:
 	template<
 		typename T,
 		typename = check_t< is_real_size<T>>  > 
-	A3D_FORCEINLINE writer& operator<<(const T& t){
-		ccdk_assert( sizeof(T) == 
-			write(reinterpret_cast<const uint8*>(util::addressof(t)), sizeof(T)));
+	CCDK_FORCEINLINE writer& operator<<(const T& t){
+		ptr::size_t len = write(reinterpret_cast<const uint8*>(util::addressof(t)), sizeof(T));
+		ccdk_assert(len == sizeof(T));
+		return *this;
 	}
 
 	template<
 		typename T,
 		typename = check_t< not_< is_real_size<T>>>,
 		typename = check_t< is_serialize_writable<T>> >
-	A3D_FORCEINLINE writer& operator<<(T const& t) { t.write_to(*this); }
+	CCDK_FORCEINLINE writer& operator<<(T const& t) { 
+		bool ret = t.write_to(*this); 
+		ccdk_assert(ret);
+		return *this;
+	}
 
-	A3D_FORCEINLINE ptr::size_t pos() const { return _pos; }
-	A3D_FORCEINLINE void inc_pos(uint32 size) { _pos += size; }
+	CCDK_FORCEINLINE ptr::size_t position() const { return _pos; }
+	CCDK_FORCEINLINE void move(int32 offset) { _pos += offset; }
 	virtual ptr::size_t write(const uint8* data, ptr::size_t size) = 0;
-	virtual bool close() {};
-	virtual bool is_opened() = 0;
-	virtual ~writer() { _pos = 0; }
+	virtual void rewind(rewind_mode mode = rewind_mode::current, uint32 offset=0) {}
+	virtual void close() {};
+	virtual bool is_opened() { return false; }
+	virtual bool reached_end() { return false;}
+	virtual ~writer() { _pos = 0; close(); }
 };
 
 //deserialize class
@@ -76,24 +83,28 @@ public:
 		typename T,
 		typename = check_t< is_real_size<T>> >  
 	CCDK_FORCEINLINE reader& operator>>(T& t) {
-		a3d_assert(sizeof(T) == read(&t, sizeof(T)));
+		ptr::size_t len = read(reinterpret_cast<uint8*>(util::addressof(t)), sizeof(T));
+		ccdk_assert(len == sizeof(T));
+		return *this;
 	}
 
 	template<
 		typename T,
-		typename = check_t< is_real_size<T>> >
-		CCDK_FORCEINLINE reader& operator>>(T& t) {
-		a3d_assert(sizeof(T) == read(&t, sizeof(T)));
+		typename = check_t< not_<is_real_size<T>>>, typename=void >
+	CCDK_FORCEINLINE reader& operator>>(T& t) {
+		bool ret = t.read_from(*this);
+		ccdk_assert(ret);
+		return *this;
 	}
 
-	ptr::size_t pos() const { return _pos; }
-	virtual bool is_end() = 0;
-	virtual bool is_opened() = 0;
-	virtual ptr::size_t read(uint8* buf, ptr::size_t n) = 0;
-	virtual bool skip_from_begin(ptr::size_t n) = 0;
-	virtual bool skip_from_cur(ptr::size_t n) = 0;
-	virtual bool skip_from_end(ptr::size_t n) = 0;
-	virtual ~reader() { _pos = 0; }
+	CCDK_FORCEINLINE ptr::size_t position() const { return _pos; }
+	CCDK_FORCEINLINE void move(int32 offset) { _pos += offset; }
+	virtual ptr::size_t read(uint8* data, ptr::size_t size) = 0;
+	virtual void rewind(rewind_mode mode = rewind_mode::current, uint32 offset = 0) {}
+	virtual void close() {};
+	virtual bool is_opened() { return false; }
+	virtual bool reached_end() { return false; }
+	virtual ~reader() { _pos = 0; close(); }
 };
 
-a3d_namespace_io_end
+ccdk_namespace_io_end

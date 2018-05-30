@@ -1,10 +1,5 @@
-#include<ccdk/mpl/base/derive_if.h>
-#include<ccdk/mpl/type_traits/has_inner_type.h>
-#include<ccdk/memory/allocator_traits.h>
-#include<memory>
-#include<vector>
 #include<ccdk/text/string.h>
-#include<stdio.h>
+
 
 using namespace ccdk::txt;
 using namespace ccdk;
@@ -205,7 +200,7 @@ int main()
 		string s2{ "world" };
 		auto s3 = s1 + s2;
 		s3.debug_value();
-		s3.append(1);
+		s3.append(10386);
 		s3.debug_value();
 		s3.append(-323LL);
 		s3.debug_value();

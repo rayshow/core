@@ -83,6 +83,13 @@
     <ClInclude Include="container\view\group_view.h" />
     <ClInclude Include="container\view\poly_group_view.h" />
     <ClInclude Include="container\view\sort_view.h" />
+    <ClInclude Include="io\buffer.h" />
+    <ClInclude Include="io\filesystem\file.h" />
+    <ClInclude Include="io\filesystem\path.h" />
+    <ClInclude Include="io\filesystem\file_serialize.h" />
+    <ClInclude Include="io\io_module.h" />
+    <ClInclude Include="io\logger.h" />
+    <ClInclude Include="io\serialize.h" />
     <ClInclude Include="memory\adapter\array_allocate_adapter.h" />
     <ClInclude Include="memory\allocator\local_cached_allocator.h" />
     <ClInclude Include="mpl\base\bit_alg.h" />
@@ -112,10 +119,6 @@
     <ClInclude Include="memory\adapter\list_allocate_adapter.h" />
     <ClInclude Include="container\vector.h" />
     <ClInclude Include="debug_type.hpp" />
-    <ClInclude Include="filesystem\path.h" />
-    <ClInclude Include="filesystem\reader.h" />
-    <ClInclude Include="filesystem\writer.h" />
-    <ClInclude Include="filesystem\log\log.h" />
     <ClInclude Include="math\capsule.h" />
     <ClInclude Include="math\color4.h" />
     <ClInclude Include="math\euler.h" />
@@ -243,8 +246,10 @@
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
+    <ClInclude Include="text\convert\char_internal_convert.h" />
+    <ClInclude Include="text\convert\float_to_string.h" />
     <ClInclude Include="text\string.h" />
-    <ClInclude Include="text\to_string.h" />
+    <ClInclude Include="text\convert\integer_to_string.h" />
     <ClInclude Include="text\encoding\ascii.h" />
     <ClInclude Include="text\encoding\iso8859_1.h" />
     <ClInclude Include="text\encoding\unicode.h" />

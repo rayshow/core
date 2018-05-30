@@ -332,7 +332,6 @@
       <Filter>mpl\fusion</Filter>
     </ClInclude>
     <ClInclude Include="text\string_view.h" />
-    <ClInclude Include="text\to_string.h" />
     <ClInclude Include="text\text_module.h" />
     <ClInclude Include="text\text_fwd.h" />
     <ClInclude Include="container\vector.h" />
@@ -364,16 +363,6 @@
     <ClInclude Include="container\fix_bitset.h" />
     <ClInclude Include="container\fix_circular_buffer.h" />
     <ClInclude Include="container\range.h" />
-    <ClInclude Include="filesystem\log\log.h" />
-    <ClInclude Include="filesystem\path.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem\reader.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem\writer.h">
-      <Filter>filesystem</Filter>
-    </ClInclude>
     <ClInclude Include="mpl\base\apply_.h" />
     <ClInclude Include="mpl\base\arithmetic_.h" />
     <ClInclude Include="mpl\base\bit_alg.h" />
@@ -934,6 +923,16 @@
     <ClInclude Include="container\view\group_view.h" />
     <ClInclude Include="container\view\poly_group_view.h" />
     <ClInclude Include="container\view\sort_view.h" />
+    <ClInclude Include="text\convert\integer_to_string.h" />
+    <ClInclude Include="text\convert\float_to_string.h" />
+    <ClInclude Include="text\convert\char_internal_convert.h" />
+    <ClInclude Include="io\logger.h" />
+    <ClInclude Include="io\serialize.h" />
+    <ClInclude Include="io\buffer.h" />
+    <ClInclude Include="io\filesystem\file.h" />
+    <ClInclude Include="io\io_module.h" />
+    <ClInclude Include="io\filesystem\path.h" />
+    <ClInclude Include="io\filesystem\file_serialize.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mpl\design_pattern\TODO.md" />

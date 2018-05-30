@@ -89,7 +89,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.type_traits.has_xx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.text.string_literal", "test\test.text.string_literal\test.text.string_literal.vcxproj", "{A505B1CF-18A6-41B7-97B1-34B1E920CCE2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora3D", "aurora3d\Aurora3D.vcxproj", "{2A8BBC1B-400D-45B4-9E3D-20FB0C8A1671}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora3D", "Aurora3d\Aurora3D.vcxproj", "{2A8BBC1B-400D-45B4-9E3D-20FB0C8A1671}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ccdk", "ccdk", "{914BD781-5DED-4308-A9BE-FBFE2A290307}"
 EndProject
@@ -98,6 +98,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.mpl.design_pattern.singleton", "test\test.mpl.design_pattern.singleton\test.mpl.design_pattern.singleton.vcxproj", "{31D7531A-8AA5-4198-A58F-5B92D5A899DB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aurora3d.app_sample", "test\aurora3d.app_sample\aurora3d.app_sample.vcxproj", "{AACB5005-95A3-4AD2-BE72-8E3B9C1D0A91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test.io", "test.io", "{2B5E0344-8DCE-4901-9AFD-B6B388FEAD4A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.io.serialize", "test\test.io.serialize\test.io.serialize.vcxproj", "{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -433,6 +437,14 @@ Global
 		{AACB5005-95A3-4AD2-BE72-8E3B9C1D0A91}.Release|Win32.Build.0 = Release|Win32
 		{AACB5005-95A3-4AD2-BE72-8E3B9C1D0A91}.Release|x64.ActiveCfg = Release|x64
 		{AACB5005-95A3-4AD2-BE72-8E3B9C1D0A91}.Release|x64.Build.0 = Release|x64
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Debug|Win32.Build.0 = Debug|Win32
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Debug|x64.ActiveCfg = Debug|x64
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Debug|x64.Build.0 = Debug|x64
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Release|Win32.ActiveCfg = Release|Win32
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Release|Win32.Build.0 = Release|Win32
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Release|x64.ActiveCfg = Release|x64
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -482,6 +494,8 @@ Global
 		{69C18EF8-ED54-4D0D-859C-EBD1BEC83963} = {6D716468-881E-4447-B442-5A9ACAE0CA20}
 		{31D7531A-8AA5-4198-A58F-5B92D5A899DB} = {ACD318CE-325F-4554-9875-ADB66601ED5D}
 		{AACB5005-95A3-4AD2-BE72-8E3B9C1D0A91} = {69C18EF8-ED54-4D0D-859C-EBD1BEC83963}
+		{2B5E0344-8DCE-4901-9AFD-B6B388FEAD4A} = {914BD781-5DED-4308-A9BE-FBFE2A290307}
+		{A3B5664C-5EB0-4DE3-9C24-5C0767476A42} = {2B5E0344-8DCE-4901-9AFD-B6B388FEAD4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42D0876B-9FC6-41C9-8F37-E95B46CD3046}

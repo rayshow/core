@@ -10,7 +10,7 @@
 #include<ccdk/mpl/iterator/algorithm/distance.h>
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
-#include<ccdk/text/to_string.h>
+#include<ccdk/text/convert/integer_to_string.h>
 #include<ccdk/text/text_module.h>
 
 ccdk_namespace_text_start
@@ -56,6 +56,10 @@ public:
 
 	template<typename, typename, uint32, typename, typename>
 	friend class basic_string;
+
+protected:
+	using super_type::content;
+	using super_type::len;
 
 public:
 	// multiplex
@@ -646,14 +650,14 @@ public:
 		typename Size2,
 		typename Alloc2, uint32 N2>
 	CCDK_FORCEINLINE this_type operator+(basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other) {
-		string tmp{ *this };
+		this_type tmp{ *this };
 		tmp.append(other);
 		return tmp;
 	}
 
 	// append c-string
 	CCDK_FORCEINLINE this_type operator+(const_pointer str) {
-		string tmp{ *this };
+		this_type tmp{ *this };
 		tmp.append(str);
 		return tmp;
 	}
@@ -663,7 +667,7 @@ public:
 		typename Int,
 		typename = check_t< is_integer<Int>> >
 	CCDK_FORCEINLINE this_type operator+(Int val) {
-		string tmp{ *this };
+		this_type tmp{ *this };
 		tmp.append(val);
 		return tmp;
 	}
@@ -673,7 +677,7 @@ public:
 		typename Float,
 		typename = check_t< is_float<Float>>, typename=void>
 	CCDK_FORCEINLINE this_type operator+(Float val) {
-		string tmp{ *this };
+		this_type tmp{ *this };
 		tmp.append(val);
 		return tmp;
 	}

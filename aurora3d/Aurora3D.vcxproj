@@ -48,9 +48,7 @@
     <ClInclude Include="engine\pulser.h" />
     <ClInclude Include="event\event_dispatcher.h" />
     <ClInclude Include="event\input_evt.h" />
-    <ClInclude Include="io\file.h" />
     <ClInclude Include="io\io_def.h" />
-    <ClInclude Include="io\serialize.h" />
     <ClInclude Include="math\capsule.h" />
     <ClInclude Include="math\euler.h" />
     <ClInclude Include="math\int_rect.h" />
@@ -83,8 +81,6 @@
     <ClInclude Include="io\binary_file.h" />
     <ClInclude Include="auxiliary\aux_string_trait.h" />
     <ClInclude Include="io\file_system.h" />
-    <ClInclude Include="io\logger.h" />
-    <ClInclude Include="io\buffer.h" />
     <ClInclude Include="math\color4.h" />
     <ClInclude Include="math\vector2.h" />
     <ClInclude Include="platform_spec\GenericFile.h" />

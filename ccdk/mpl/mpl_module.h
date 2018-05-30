@@ -3,9 +3,6 @@
 #include<ccdk/compile.h>
 #include<ccdk/type.h>
 
-#define ccdk_namespace_end_of_3  }}}
-#define ccdk_namespace_end_of_2  }}
-
 //module base / type_traits
 #define ccdk_namespace_mpl_start     namespace ccdk{ namespace mpl{
 #define ccdk_namespace_mpl_end       ccdk_namespace_end_of_2

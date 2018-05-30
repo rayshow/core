@@ -114,12 +114,14 @@
 #include<cassert>
 #define ccdk_throw_at   false
 #define ccdk_rethrow_at false
-#define ccdk_assert( expr )  assert( expr )
+#define ccdk_assert( expr ) assert( expr )
+#define ccdk_assert_eval( expr ) assert( expr )
 #define ccdk_throw( expr ) ( assert(ccdk_throw_at), throw(expr))
 #define ccdk_rethrow()     ( assert(ccdk_rethrow_at), throw )
 #define ccdk_assert_if(expr) ccdk_assert(!(expr)); if(expr)
 #else
 #define ccdk_assert( expr ) 
+#define ccdk
 #define ccdk_throw( expr )  throw(expr)
 #define ccdk_rethrow()  throw
 #endif
@@ -182,7 +184,8 @@
 //4514: un-used inline function had been removed
 //4710: function had not been inlined
 //4505: un-reference local function had been removed
-#pragma warning(disable:4514 4710 4505)
+//4996: _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4514 4710 4505 4996)
 #endif
 
 #if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC) && (defined(DEBUG) || defined(_DEBUG))
@@ -196,11 +199,5 @@
 #define ccdk_open_leak_check()
 #endif
 
-
-
-
-
-
-
-
-
+#define ccdk_namespace_end_of_3  }}}
+#define ccdk_namespace_end_of_2  }}
