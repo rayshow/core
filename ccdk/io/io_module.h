@@ -7,3 +7,11 @@
 #define ccdk_namespace_io_end   ccdk_namespace_end_of_2
 
 
+ccdk_namespace_io_start
+
+//serializer and deserializer
+class writer;
+class reader;
+
+
+ccdk_namespace_io_end

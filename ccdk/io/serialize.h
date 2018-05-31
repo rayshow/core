@@ -26,10 +26,10 @@ template<> struct is_real_size<int64> { enum { value = true }; };
 template<> struct is_real_size<achar> { enum { value = true }; };
 template<> struct is_real_size<wchar> { enum { value = true }; };
 
-//test weather void write_to(writer&) is exists
+//test weather bool write_to(writer&) is exists
 CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_writable, write_to, bool)
 
-//test weather void read_from(reader&) is exists
+//test weather bool read_from(reader&) is exists
 CCDK_TT_HAS_MEMBER_WITH_RET_DECL(is_serialize_readable, read_from, bool)
 
 enum class rewind_mode :uint8 {
@@ -48,7 +48,7 @@ public:
 		typename T,
 		typename = check_t< is_real_size<T>>  > 
 	CCDK_FORCEINLINE writer& operator<<(const T& t){
-		ptr::size_t len = write(reinterpret_cast<const uint8*>(util::addressof(t)), sizeof(T));
+		ptr::size_t len = write(reinterpret_cast<const void*>(util::addressof(t)), sizeof(T));
 		ccdk_assert(len == sizeof(T));
 		return *this;
 	}
@@ -56,7 +56,7 @@ public:
 	template<
 		typename T,
 		typename = check_t< not_< is_real_size<T>>>,
-		typename = check_t< is_serialize_writable<T>> >
+		typename = check_t< is_serialize_writable<T,writer&>> >
 	CCDK_FORCEINLINE writer& operator<<(T const& t) { 
 		bool ret = t.write_to(*this); 
 		ccdk_assert(ret);
@@ -65,7 +65,7 @@ public:
 
 	CCDK_FORCEINLINE ptr::size_t position() const { return _pos; }
 	CCDK_FORCEINLINE void move(int32 offset) { _pos += offset; }
-	virtual ptr::size_t write(const uint8* data, ptr::size_t size) = 0;
+	virtual ptr::size_t write(const void* data, ptr::size_t size) = 0;
 	virtual void rewind(rewind_mode mode = rewind_mode::current, uint32 offset=0) {}
 	virtual void close() {};
 	virtual bool is_opened() { return false; }
@@ -90,7 +90,8 @@ public:
 
 	template<
 		typename T,
-		typename = check_t< not_<is_real_size<T>>>, typename=void >
+		typename = check_t< not_<is_real_size<T>>>,
+		typename = check_t< is_serialize_readable<T, reader&>> >
 	CCDK_FORCEINLINE reader& operator>>(T& t) {
 		bool ret = t.read_from(*this);
 		ccdk_assert(ret);
@@ -99,7 +100,7 @@ public:
 
 	CCDK_FORCEINLINE ptr::size_t position() const { return _pos; }
 	CCDK_FORCEINLINE void move(int32 offset) { _pos += offset; }
-	virtual ptr::size_t read(uint8* data, ptr::size_t size) = 0;
+	virtual ptr::size_t read(void* data, ptr::size_t size) = 0;
 	virtual void rewind(rewind_mode mode = rewind_mode::current, uint32 offset = 0) {}
 	virtual void close() {};
 	virtual bool is_opened() { return false; }

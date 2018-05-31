@@ -11,6 +11,7 @@
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
 #include<ccdk/text/convert/integer_to_string.h>
+#include<ccdk/io/io_module.h>
 #include<ccdk/text/text_module.h>
 
 ccdk_namespace_text_start
@@ -60,7 +61,8 @@ public:
 protected:
 	using super_type::content;
 	using super_type::len;
-
+	using super_type::allocate_with_len;
+	using super_type::destroy;
 public:
 	// multiplex
 	using super_type::swap;
@@ -439,23 +441,23 @@ public:
 	//// find / find_index / find_in / find_not_in
 
 	//find i-th matching char
-	CCDK_FORCEINLINE size_type find_index(char_type c, difference_type ith=1) const noexcept {
-		return find_index_impl([=](char_type ch) { return ch == c; }, ith);
+	CCDK_FORCEINLINE size_type index_of(char_type c, difference_type ith=1) const noexcept {
+		return index_of_impl([=](char_type ch) { return ch == c; }, ith);
 	}
 
 	//find position of i-th  matching prediction FN  char
 	template<
 		typename FN,
 		typename = check_t< is_invocable<FN, char_type>> >
-	CCDK_FORCEINLINE size_type find_index(
+	CCDK_FORCEINLINE size_type index_of(
 		FN Fn, difference_type ith=1) const noexcept {
-		return find_index_impl(Fn, ith);
+		return index_of_impl(Fn, ith);
 	}
 
 	//find i-th position of matching c-string  
-	CCDK_FORCEINLINE size_type find_index(
+	CCDK_FORCEINLINE size_type index_of(
 		const_pointer str, difference_type ith=1) const noexcept {
-		return find_index(str, traits_type::length(str), ith);
+		return index_of_impl(str, traits_type::length(str), ith);
 	}
 
 	//find i-th position of matching range-n-string
@@ -463,7 +465,7 @@ public:
 		typename RandomIt,
 		typename = check_t< is_random_iterator<RandomIt>>,
 		typename = is_same< char_type, iterator_value_t<RandomIt>> >
-	CCDK_FORCEINLINE size_type find_index(
+	CCDK_FORCEINLINE size_type index_of(
 		RandomIt begin, size_type n, difference_type ith = 1) const noexcept {
 		return it::seq_find(content, len, begin, n, ith);
 	}
@@ -473,22 +475,22 @@ public:
 		typename RandomIt,
 		typename = check_t< is_random_iterator<RandomIt>>,
 		typename = is_same< char_type, iterator_value_t<RandomIt>> >
-		CCDK_FORCEINLINE size_type find_index(
+		CCDK_FORCEINLINE size_type index_of(
 			RandomIt begin, RandomIt end, difference_type ith = 1) const noexcept {
 		return it::seq_find(content, len, begin, it::distance(begin, end), ith);
 	}
 
 	//find i-th position of matching basic_string
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
-	CCDK_FORCEINLINE size_type find_index(
+	CCDK_FORCEINLINE size_type index_of(
 		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other, difference_type ith = 1) const noexcept {
-		return find_index(other.c_str(), other.size(), ith );
+		return index_of(other.c_str(), other.size(), ith );
 	}
 
 	//find i-th iterator of matching char
 	CCDK_FORCEINLINE const_iterator find(
 			char_type c, difference_type ith = 1) const noexcept {
-		return content + find_index(c, ith);
+		return content + index_of(c, ith);
 	}
 
 	//find i-th iterator of matching char
@@ -497,14 +499,14 @@ public:
 		typename = check_t< is_invocable<FN,char_type>> >
 	CCDK_FORCEINLINE const_iterator find(
 		FN Fn, difference_type ith = 1) const noexcept {
-		return content + find_index(Fn, ith);
+		return content + index_of(Fn, ith);
 	}
 
 	//find i-th iterator of matching c-string
 	template<int32 Cnt = 1, typename = check< Cnt != 0 > >
 	CCDK_FORCEINLINE const_iterator find(
 		const_pointer str, difference_type ith = 1) const noexcept {
-		return content + find_index(str, ith);
+		return content + index_of(str, ith);
 	}
 
 	//find i-th iterator of matching range-n
@@ -514,7 +516,7 @@ public:
 		typename = is_same< char_type, iterator_value_t<RandomIt>> >
 		CCDK_FORCEINLINE const_iterator find(
 			RandomIt begin, size_type len, difference_type ith = 1) const noexcept {
-		return content + find_index(begin, len, ith);
+		return content + index_of(begin, len, ith);
 	}
 
 	//find i-th iterator of matching range
@@ -524,14 +526,14 @@ public:
 		typename = is_same< char_type, iterator_value_t<RandomIt>> >
 		CCDK_FORCEINLINE const_iterator find(
 			RandomIt begin, RandomIt end, difference_type ith = 1) const noexcept {
-		return content + find_index(begin, end, ith);
+		return content + index_of(begin, end, ith);
 	}
 
 	//find i-th iterator of matching basic_string
 	template<typename IncRatio2, typename Size2, typename Alloc2, uint32 N2>
 	CCDK_FORCEINLINE const_iterator find(
 		basic_string<Char, IncRatio2, N2, Size2, Alloc2> const& other, difference_type ith = 1) const noexcept {
-		return content+find_index(other,ith);
+		return content+ index_of(other,ith);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -693,6 +695,40 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//// starts / ends with
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	//// serialize
+
+	bool write_to(io::writer &wt) const  {
+		wt << len;
+		wt.write(content, len);
+		return true;
+	}
+
+	bool read_from(io::reader &rd) {
+		size_type size;
+		rd >> size;
+		if (size > 0) {
+			destroy();
+			allocate_with_len(size+1);
+		}
+		len = size;
+		rd.read(content, len);
+		set_terminal();
+		return true;
+	}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//// format
+
+	template<typename T,typename... Args>
+	static string format(const char_type* format, T&& t, Args&&... args) {
+		string dest{ 256 };
+		//auto group = format.find_pair('{', '}');
+
+	}
+
+
 private:
 
 	//set end
@@ -700,7 +736,7 @@ private:
 
 	//find ith macthing FN backward
 	template<typename FN>
-	CCDK_FORCEINLINE size_type find_index_impl(FN Fn, difference_type ith) const noexcept {
+	CCDK_FORCEINLINE size_type index_of_impl(FN Fn, difference_type ith) const noexcept {
 		uint32 count = 0;
 		if (ith > 0) {
 			for (size_type i = 0; i < len; ++i) {

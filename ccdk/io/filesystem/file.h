@@ -42,12 +42,12 @@ public:
 		return handle != nullptr;
 	}
 
-	ptr::size_t write(const uint8* buffer, ptr::size_t size) {
+	ptr::size_t write(const void* buffer, ptr::size_t size) {
 		ccdk_assert(handle);
 		return fwrite(buffer, 1, size, handle);
 	}
 
-	ptr::size_t read(uint8* buffer, ptr::size_t size) {
+	ptr::size_t read(void* buffer, ptr::size_t size) {
 		ccdk_assert(handle);
 		return fread(buffer, 1, size, handle);
 	}

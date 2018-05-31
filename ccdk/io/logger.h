@@ -6,10 +6,7 @@
 #include<ccdk/mpl/design_pattern/singleton.h>
 #include<ccdk/text/string.h>
 #include<ccdk/io/io_module.h>
-
-
 ccdk_namespace_io_start
-
 
 
 using namespace mpl;
