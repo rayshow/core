@@ -97,7 +97,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A8BBC1B-400D-45B4-9E3D-20FB0C8A1671}</ProjectGuid>
     <RootNamespace>Graphics</RootNamespace>
-    <ProjectName>Aurora3D</ProjectName>
+    <ProjectName>aurora3D</ProjectName>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

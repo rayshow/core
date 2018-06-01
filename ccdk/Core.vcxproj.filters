@@ -324,9 +324,6 @@
     <ClInclude Include="container\container_mudule.h" />
     <ClInclude Include="memory\memory_module.h" />
     <ClInclude Include="memory\allocator_traits.h" />
-    <ClInclude Include="text\encoding\ascii.h" />
-    <ClInclude Include="text\encoding\iso8859_1.h" />
-    <ClInclude Include="text\encoding\unicode.h" />
     <ClInclude Include="text\char_traits.h" />
     <ClInclude Include="text\string_literial.h">
       <Filter>mpl\fusion</Filter>
@@ -926,13 +923,22 @@
     <ClInclude Include="text\convert\integer_to_string.h" />
     <ClInclude Include="text\convert\float_to_string.h" />
     <ClInclude Include="text\convert\char_internal_convert.h" />
-    <ClInclude Include="io\logger.h" />
-    <ClInclude Include="io\serialize.h" />
     <ClInclude Include="io\buffer.h" />
     <ClInclude Include="io\filesystem\file.h" />
     <ClInclude Include="io\io_module.h" />
     <ClInclude Include="io\filesystem\path.h" />
     <ClInclude Include="io\filesystem\file_serialize.h" />
+    <ClInclude Include="io\io_predef.h" />
+    <ClInclude Include="text\charset\ascii.h" />
+    <ClInclude Include="text\charset\iso8859_1.h" />
+    <ClInclude Include="text\charset\unicode.h" />
+    <ClInclude Include="text\encoding\encoding.h" />
+    <ClInclude Include="text\charset\unicode\category_table.hpp" />
+    <ClInclude Include="text\charset\unicode\lowercase_table.hpp" />
+    <ClInclude Include="text\charset\unicode\script_table.hpp" />
+    <ClInclude Include="text\charset\unicode\uppercase_table.hpp" />
+    <ClInclude Include="io\filesystem\console.h" />
+    <ClInclude Include="io\filesystem\logger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mpl\design_pattern\TODO.md" />

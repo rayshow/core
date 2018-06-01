@@ -1,37 +1,36 @@
 #pragma once
-#include"../common_def.h"
-#include"event_dispatcher.h"
 
-namespace Aurora3D
+#include<aurora3d/event/event_def.h>
+#include<aurora3d/module.h>
+a3d_namespace_evt_start
+
+struct InputEvt
 {
-	struct InputEvt
-	{
-		const static EventID KeyPressed = ID(CCDKModule::Input, 1);
-		const static EventID KeyReleased = ID(CCDKModule::Input, 2);
-		const static EventID MousePressed = ID(CCDKModule::Input, 3);
-		const static EventID MouseReleased = ID(CCDKModule::Input, 4);
-		const static EventID WindowReleated = ID(CCDKModule::Input, 5);
-
-		struct KeyEventData
-		{
-			int key;
-			int scancode;
-			unsigned qualifier;
-			bool repeat;
-		};
-
-		struct MouseEventData
-		{
-			unsigned cur_key;
-			unsigned times;
-			unsigned keys;
-			unsigned qualifiter;
-		};
-
-		struct WindowReleatedData
-		{
-			unsigned evt_type;
-		};
+	enum {
+		eKeyPressed = A3D_EVT_ID(Module::eInput, 1),
+		eKeyReleased,
+		eMousePressed,
+		eMouseReleased,
+		eWindowReleated
 	};
 
-}
+	struct key_evt_data {
+		int32  key;
+		int32  scancode;
+		uint32 qualifier;
+		bool   repeat;
+	};
+
+	struct mouse_evt_data {
+		uint32 cur_key;
+		uint32 times;
+		uint32 keys;
+		uint32 qualifiter;
+	};
+
+	struct window_releated_data {
+		uint32 evt_type;
+	};
+};
+
+a3d_namespace_evt_end

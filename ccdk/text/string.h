@@ -11,23 +11,23 @@
 #include<ccdk/container/vector.h>
 #include<ccdk/text/char_traits.h>
 #include<ccdk/text/convert/integer_to_string.h>
-#include<ccdk/io/io_module.h>
+#include<ccdk/io/io_predef.h>
 #include<ccdk/text/text_module.h>
 
 ccdk_namespace_text_start
 
 using namespace mpl;
 
-constexpr uint32 kStringLestElements = 16;
+constexpr uint32 kStringLeastElementSize = 16;
 
 struct string_literial_init {};
 constexpr string_literial_init string_literial_init_c{};
 
 template<
-	typename Char,                            /* Char type */
-	typename IncRatio = units::ratio<2, 1>,   /* 2X incease ratio*/
-	uint32  N = kStringLestElements,          /* least allocate 10 elements */
-	typename Size = uint32,                   /* size type */
+	typename Char,                                         /* Char type */
+	typename IncRatio = units::ratio<2, 1>,                /* 2X incease ratio*/
+	uint32  N = kStringLeastElementSize,                   /* least allocate 10 elements */
+	typename Size = uint32,                                /* size type */
 	typename Alloc = mem::simple_new_allocator<Char, Size> /* basic allocator */
 >
 class basic_string : public ct::vector<Char, IncRatio, N, Size, Alloc>
@@ -63,6 +63,9 @@ protected:
 	using super_type::len;
 	using super_type::allocate_with_len;
 	using super_type::destroy;
+	using super_type::allocate;
+	using super_type::reallocate_move;
+
 public:
 	// multiplex
 	using super_type::swap;
@@ -573,7 +576,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//// append
 
-	//push back range-fill
+	//append range-fill
 	CCDK_FORCEINLINE this_type& append(size_type n, char_type c) {
 		if (!content || size() + n > capacity()) { reallocate_move(size() + n); }
 		util::construct_fill_n(content + size(), c, n);
@@ -582,7 +585,7 @@ public:
 		return *this;
 	}
 
-	//push back range-n
+	//append range-n
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>> >
@@ -594,7 +597,7 @@ public:
 		return *this;
 	}
 
-	//push back range
+	//append range
 	template<
 		typename InputIt,
 		typename = check_t< is_iterator< InputIt>> >
@@ -602,12 +605,12 @@ public:
 		return append(begin, it::distance(begin, end));
 	}
 
-	//push back c-string
+	//append c-string
 	CCDK_FORCEINLINE this_type& append(const_pointer str) {
 		return append(str, traits_type::length(str));
 	}
 
-	//push back string literial
+	//append string literial
 	template<uint32 D>
 	CCDK_FORCEINLINE this_type& append(
 		string_literial_init, char_type const (&arr)[D]) {
@@ -699,35 +702,44 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//// serialize
 
-	bool write_to(io::writer &wt) const  {
+	io::writer& write_to(io::writer &wt) const  {
 		wt << len;
-		wt.write(content, len);
-		return true;
+		if (len) {
+			wt.write(content, len);
+		}
+		return wt;
 	}
 
-	bool read_from(io::reader &rd) {
-		size_type size;
-		rd >> size;
-		if (size > 0) {
-			destroy();
-			allocate_with_len(size+1);
+	io::reader& read_from(io::reader &rd) {
+		this_type original{ util::move(*this) };
+		try {
+			size_type size =0;
+			rd >> size;
+			if (size > 0) { 
+				allocate(size + 1);
+				len = size;
+			}
+			rd.read(content, size);
 		}
-		len = size;
-		rd.read(content, len);
+		catch(...){
+			destroy();
+			ccdk_rethrow();
+		}
 		set_terminal();
-		return true;
+		return rd;
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //// format
 
+	// {0}, {1}, {2,x}, {3,4.5}
+	// 
 	template<typename T,typename... Args>
-	static string format(const char_type* format, T&& t, Args&&... args) {
-		string dest{ 256 };
+	static this_type format(const char_type* fmt, T&& t, Args&&... args) {
+		this_type dest{ 256 };
 		//auto group = format.find_pair('{', '}');
 
 	}
-
 
 private:
 

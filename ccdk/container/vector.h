@@ -16,6 +16,7 @@
 #include<ccdk/memory/allocator/simple_new_allocator.h>
 #include<ccdk/memory/allocator/semi_stack_allocator.h>
 #include<ccdk/memory/adapter/array_allocate_adapter.h>
+#include<ccdk/io/io_predef.h>
 #include<ccdk/container/container_mudule.h>
 
 ccdk_namespace_ct_start
@@ -512,6 +513,44 @@ public:
 		return ret;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////
+//// serialize / deserialize
+
+	template<typename = check_t< io::is_serializible<value_type>>>
+	io::writer& write_to(io::writer& w) const {
+		w << len;
+		for (size_type i = 0; i < len; ++i) {
+			w << content[i];
+		}
+		return w;
+	}
+
+	template<typename = check_t< io::is_deserializible<value_type>>>
+	io::reader& read_from(io::reader& rd) {
+		//keep orignal content
+		this_type original{util::move(*this)};
+
+		//now content/len is clear
+		rd >> len;
+		//allocate new space 
+		if (len > 0) { 
+			allocate(len);                                //allocate n size memory          
+			util::construct_n<value_type>(content, len);  //default construct n elements
+		}
+		//loop to read each element
+		size_type i = 0;
+		try {
+			for (; i < len; ++i) { rd >> content[i]; }
+		}
+		catch (...) {
+			destroy();
+			swap(original);  //recover original content
+			ccdk_rethrow();
+		}
+		return rd;
+	}
+
+
 /////////////////////////////////////////////////////////////////////////
 //// implements
 protected:
@@ -559,7 +598,6 @@ protected:
 		destroy();
 		allocate(n);
 	}
-
 
 	// allocate a new memory, if success
 	// move [content, content+n) to this [memory, memory+n), free old content

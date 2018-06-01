@@ -1,6 +1,10 @@
 #pragma once
 #include<ccdk/mpl/type_traits/is_same.h>
 #include<ccdk/mpl/type_traits/declval.h>
+#include<ccdk/mpl/base/type_.h>
+#include<ccdk/mpl/base/derive_if.h>
+#include<ccdk/mpl/base/compile_check.h>
+
 
 #define CCDK_TT_HAS_MEMBER_DECL_IMPL(TraitName, MemberName)                        \
 namespace TraitName##ns                                                            \

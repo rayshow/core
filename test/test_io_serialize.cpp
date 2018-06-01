@@ -1,10 +1,11 @@
 #include<ccdk/io/filesystem/file_serialize.h>
 #include<ccdk/text/string.h>
 
-
+using namespace ccdk;
 using namespace ccdk::io;
 using namespace ccdk::txt;
-using namespace ccdk;
+using namespace ccdk::ct;
+
 
 struct person {
 	string name;
@@ -12,14 +13,14 @@ struct person {
 	int age;
 	float weight;
 	
-	bool write_to(writer& w) const {
+	writer& write_to(writer& w) const {
 		w << height << age << weight << name;
-		return true;
+		return w;
 	}
 
-	bool read_from(reader& r) {
+	reader& read_from(reader& r) {
 		r >> height >> age >> weight >> name;
-		return true;
+		return r;
 	}
 
 	void debug_value() {
@@ -48,23 +49,56 @@ int main() {
 	}
 	DebugNewTitle("struct data save/load");
 	{ 
-		DebugValue(is_serialize_readable_v<person, reader&>);
-		DebugValue(is_serialize_readable_v<string, reader&>);
-		DebugValue(is_serialize_writable_v<person, writer&>);
-		DebugValue(is_serialize_writable_v<string, writer&>);
+		DebugValue(is_serializible_v<person>);
+		DebugValue(is_serializible_v<string>);
+		DebugValue(is_deserializible_v<person>);
+		DebugValue(is_deserializible_v<string>);
 
-		binary_file file{ "test2.bin", binary_file::eWriteReplace };
+		binary_file file{ "person.bin", binary_file::eWriteReplace };
 		file_writer w{ file };
 		person p1{ "xiongya", 175.5f, 27, 60.67f };
 		w << p1;
 		w.close();
 		
-		binary_file file2{ "test2.bin", binary_file::eRead };
+		binary_file file2{ "person.bin", binary_file::eRead };
 		file_reader r{ file2 };
 		person p2{};
 		r >> p2;
 		p2.debug_value();
 		r.close();
+	}
+	DebugNewTitle("vector read/save");
+	{
+		DebugValue(is_serializible_v<vector<int>>);
+		DebugValue(is_serializible_v<vector<string>>);
+		DebugValue(is_deserializible_v<vector<int>>);
+		DebugValue(is_deserializible_v<vector<string>>);
+
+		DebugSubTitle("vector write");
+		{
+			binary_file file{ "vector.bin", binary_file::eWriteReplace };
+			file_writer w{ file };
+			vector<int>    ints{ { 45,12,998,3,1,5 } };
+			vector<string> names{ { "lily","lucy", "tom", "kite" } };
+			w << ints << names;
+			w.close();
+		}
+		DebugSubTitle("vector read");
+		{
+			binary_file file2{ "vector.bin", binary_file::eRead };
+			file_reader r{ file2 };
+			vector<int>    ints2{};
+			vector<string> names2{};
+			r >> ints2;
+			ints2.debug_value("read ints:");
+			r >> names2;
+			DebugValueItBegin("names:");
+			for (auto& name : names2) {
+				DebugValueIt(name.c_str());
+			}
+			DebugValueItEnd();
+			r.close();
+		}
 	}
 	
 	ccdk_open_leak_check();

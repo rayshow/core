@@ -3,8 +3,7 @@
 #include<string>
 #include"engine.h"
 
-namespace Aurora3D
-{
+a3d_namespace_engine_start
 	class Application
 	{
 	private:
@@ -18,7 +17,8 @@ namespace Aurora3D
 		virtual void Exit() {}
 		virtual ~Application(){}
 	};
-}
+
+a3d_namespace_engine_end
 
 //window console and open memory leak detection
 #if defined(AURORCCDK_WINDOW) && defined(AURORCCDK_DEBUG) 

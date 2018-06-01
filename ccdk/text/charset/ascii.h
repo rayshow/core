@@ -3,11 +3,10 @@
 #include<ccdk/text/text_module.h>
 #include<ccdk/text/text_fwd.h>
 
-ccdk_namespace_text_encoding_start
-
+ccdk_namespace_text_start
 
 template<>
-struct encoding<ascii_encoding>
+struct charset<ascii_charset>
 {
 	struct ascii_category
 	{
@@ -168,7 +167,6 @@ struct encoding<ascii_encoding>
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-
 	CCDK_FORCEINLINE static bool is_ascii(char32 ch) { return 0 == (ch & ~0x7f); }
 
 	CCDK_FORCEINLINE static bool is_achar(char32 ch) { return is_ascii(ch); }
@@ -185,8 +183,8 @@ struct encoding<ascii_encoding>
 
 	CCDK_FORCEINLINE static bool is_space(char32 ch) { 
 		ccdk_assert(ch < 256);
-	
-		return ascii_category_table[ch] & ascii_category::kSpace; }
+		return ascii_category_table[ch] & ascii_category::kSpace; 
+	}
 
 	CCDK_FORCEINLINE static bool is_lower(char32 ch) { ccdk_assert(ch < 256);  return ascii_category_table[ch] & ascii_category::kLower; }
 
@@ -199,4 +197,4 @@ struct encoding<ascii_encoding>
 	CCDK_FORCEINLINE static bool to_upper(char32 ch) { ccdk_assert(ch < 256); is_lower(ch) ? ch - 32 : ch; }
 };
 
-ccdk_namespace_text_encoding_end
+ccdk_namespace_text_end

@@ -3,10 +3,10 @@
 #include<ccdk/text/text_module.h>
 #include<ccdk/text/text_fwd.h>
 
-ccdk_namespace_text_encoding_start
+ccdk_namespace_text_start
 
 template<>
-struct encoding<iso8859_1_encoding>
+struct charset<iso8859_1_charset>
 {
 	struct iso_8859_1_category
 	{
@@ -336,4 +336,4 @@ struct encoding<iso8859_1_encoding>
 	CCDK_FORCEINLINE achar to_upper(char32 ch) { ccdk_assert(ch < 256); return (achar)is_lower(ch) ? iso_8859_1_conv_table[ch] : (achar)ch; }
 };
 
-ccdk_namespace_text_encoding_end
+ccdk_namespace_text_end

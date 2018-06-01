@@ -1,20 +1,22 @@
 #pragma once
-#include"../common_def.h"
-#include"event_dispatcher.h"
 
-namespace Aurora3D
+#include<aurora3d/event/event_def.h>
+#include<aurora3d/module.h>
+
+a3d_namespace_evt_start
+
+struct EngineEvt
 {
-	struct EngineEvt
-	{
-		const static EventID FrameBegin = ID(CCDKModule::Engine, 1);
-		const static EventID FrameEnd = ID(CCDKModule::Engine, 2);
-
-		struct FrameBeginData
-		{
-			float delta_time;
-			float total_time;
-			unsigned total_frame;
-		};
+	enum {
+		eFrameBegin = A3D_EVT_ID(Module::eEngine, 1),
+		eFrameEnd,
 	};
 
-}
+	struct frame_begin_data {
+		float    delta_time;
+		float    total_time;
+		unsigned total_frame;
+	};
+};
+
+a3d_namespace_evt_end

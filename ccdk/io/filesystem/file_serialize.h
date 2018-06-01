@@ -2,9 +2,8 @@
 
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/base/logic_.h>
-#include<ccdk/io/serialize.h>
 #include<ccdk/io/filesystem/file.h>
-#include<ccdk/io/io_module.h>
+#include<ccdk/io/io_predef.h>
 
 ccdk_namespace_io_start
 

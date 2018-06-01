@@ -20,8 +20,8 @@ public:
 		s_instance = static_cast< T*>(this);
 	}
 
-	static T* initialize(){
-		return new T{};
+	static void initialize(){
+		s_instance = new T{};
 	}
 
 	static void destory()

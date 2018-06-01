@@ -84,6 +84,10 @@ struct hash_iterator
 	CCDK_FORCEINLINE reference operator*() noexcept { ccdk_assert(node); return node->data; }
 	CCDK_FORCEINLINE const_reference operator*() const noexcept { ccdk_assert(node);  return node->data; }
 
+	CCDK_FORCEINLINE pointer operator->() noexcept { return node; }
+	CCDK_FORCEINLINE const_pointer operator->() const noexcept { return node; }
+
+
 	CCDK_FORCEINLINE bool operator==(this_type const& other) const noexcept {
 		return index == other.index && 
 			node == other.node &&

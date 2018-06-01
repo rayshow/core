@@ -1,9 +1,8 @@
 #pragma once
 #include<vector>
-#include<cassert>
 #include<chrono>
 #include<thread>
-#include<module.h>
+#include<aurora3d/module.h>
 
 a3d_namespace_engine_start
 
@@ -15,7 +14,7 @@ struct PulserFruquency
 };
 
 ///nano timer
-class Pulser
+class pulser
 {
 	using clock_type = std::chrono::high_resolution_clock;
 	using duration = clock_type::duration;
@@ -30,20 +29,17 @@ private:
 	uint32 fruquency = PulserFruquency::Smooth;
 
 public:
-	Pulser() 
-	{
+	A3D_FORCEINLINE pulser() noexcept {
 		start_point = clock_type::now();
 		loop_duration *= period::den / (double)fruquency;
 	}
 
-	CCDK_FORCEINLINE void tick()
-	{
+	A3D_FORCEINLINE void tick() {
 		elapse = clock_type::now() - start_point;
 		start_point = clock_type::now();
 	}
 
-	CCDK_FORCEINLINE void sleep()
-	{
+	A3D_FORCEINLINE void sleep() {
 		finish_point = clock_type::now();
 		duration execute_time = finish_point - start_point;
 		std::chrono::duration<long long, std::milli> one_milli(1);
@@ -54,38 +50,32 @@ public:
 	}
 
 	// 1 / 1000000000
-	CCDK_FORCEINLINE long long elapsed_nano_seconds()
-	{
+	CCDK_FORCEINLINE int64 elapsed_nano_seconds() {
 		return elapse.count()*period::num;
 	}
 
 	// 1 / 1000000
-	CCDK_FORCEINLINE double elapsed_micro_seconds()
-	{
+	CCDK_FORCEINLINE double elapsed_micro_seconds() {
 		std::chrono::duration<double, std::micro> seconds(elapse);
 		return seconds.count();
 	}
 
 	// 1 / 1000
-	CCDK_FORCEINLINE double elapsed_milli_seconds()
-	{
+	CCDK_FORCEINLINE double elapsed_milli_seconds() {
 		std::chrono::duration<double, std::milli> seconds(elapse);
 		return seconds.count();
 	}
 
-	CCDK_FORCEINLINE double elapsed_seconds()
-	{
+	CCDK_FORCEINLINE double elapsed_seconds() {
 		std::chrono::duration<double, std::ratio<1, 1>> seconds(elapse);
 		return seconds.count();
 	}
 
-	CCDK_FORCEINLINE double instant_fps()
-	{
+	CCDK_FORCEINLINE double instant_fps() {
 		return period::den / ((double)elapse.count());
 	}
 
-	CCDK_FORCEINLINE double fruquency_elapse()
-	{
+	CCDK_FORCEINLINE double fruquency_elapse() {
 		return (double)loop_duration.count() / period::den;
 	}
 };

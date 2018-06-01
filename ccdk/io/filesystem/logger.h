@@ -8,7 +8,6 @@
 #include<ccdk/io/io_module.h>
 ccdk_namespace_io_start
 
-
 using namespace mpl;
 
 class logger:public dp::singleton<logger>
@@ -64,18 +63,18 @@ private:
 	txt::string prefix(level lv) {
 		using namespace std::chrono;
 		
-		constexpr static char* kLevelString[] = {
-			"debug",
-			"info ",
-			"warn ",
-			"error",
-			"fatal"
+		const static char* kLevelString[] = {
+			"DEBUG",
+			"INFO ",
+			"WARN ",
+			"ERROR",
+			"FATAL"
 		};
 
 		auto now = system_clock::to_time_t(system_clock::now());
 		auto tm = std::localtime(&now);
 		char buffer[1024];
-		sprintf(buffer, "[ %d-%2d-%2d %2.2d:%2.2d:%2.2d Level: %-5s]:", 
+		sprintf(buffer, "[ %d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d : %-5s]:", 
 			tm->tm_year + 1900, tm->tm_mon,
 			tm->tm_mday, tm->tm_hour, tm->tm_min,
 			tm->tm_sec, kLevelString[(int)lv]);
@@ -84,12 +83,12 @@ private:
 
 	txt::string suffix(const txt::string& file, uint32 line) {
 		txt::string str{ "{ from file : " };
-		str.append(file).append(" line").append(line).append(" }");
+		str.append(file).append(" line :").append(line).append(" }");
+		return str;
 	}
 
 };
 
-#define CCDK_DEBUG(msg)          logger::instance()->write(logger::level::Debug, msg,  __FILE__, __LINE__);
 #define CCDK_INFO(msg)           logger::instance()->write(logger::level::Info,  msg,  __FILE__, __LINE__);
 #define CCDK_WARNING(msg)        logger::instance()->write(logger::level::Warn,  msg,  __FILE__, __LINE__);
 #define CCDK_ERROR(msg)          logger::instance()->write(logger::level::Error, msg,  __FILE__, __LINE__);

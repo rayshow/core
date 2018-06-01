@@ -1,73 +1,67 @@
 #pragma once
 
-#include<memory>
-#include<functional>
-#include<unordered_map>
-#include<unordered_set>
-#include"../design/singleton.h"
-#include"../common_def.h"
+#include<ccdk/mpl/util/hash.h>
+#include<ccdk/mpl/design_pattern/singleton.h>
+#include<ccdk/mpl/function/function.h>
+#include<ccdk/mpl/smart_ptr/poly_share_ptr.h>
+#include<aurora3d/module.h>
 
+a3d_namespace_evt_start
 
-namespace Aurora3D
-{
-	typedef size_t EventID;
-	typedef std::shared_ptr<void> EventData;
-	typedef std::function<void(EventData)> EventCallBack;
+	using namespace mpl;
+
+	using event_id_t       = uint32;
+	using event_data_t     = sp::poly_share_ptr<void>;
+	using event_callback_t = fn::function<void(event_data_t)>;
 	
-#define ID(mudule, sub)  ((mudule<<8)| (sub))
+#define A3D_EVT_ID(mudule, sub)  ((((event_id_t)mudule)<<16)|((event_id_t)sub))
 
-	struct CCDKModule
-	{
-		const static unsigned Common = 0;
-		const static unsigned Window = 1;
-		const static unsigned Graphics = 2;
-		const static unsigned Engine = 3;
-		const static unsigned Input = 4;
+	//main table
+	struct Module {
+		enum {
+			eCommon = 0,
+			eWindows,
+			eGraphics,
+			eEngine,
+			eInput,
+		};
 	};
 
-	///fatal error, immedicately notify and stop
-	struct CommonEvt
-	{
-		const static EventID FatalError = ID(CCDKModule::Common, 1);
-		const static EventID Quit = ID(CCDKModule::Common, 2);
+	//sub-table of Common
+	struct CommonEvt {
+		enum {
+			eFatalError = A3D_EVT_ID(Module::eCommon, 1),
+			eQuit,
+		};
 	};
 
 
-	///a callback item
-	class EventCallBackWarpper
+	//a callback item
+	class event_callback_wrapper
 	{
 	private:
-		void* subscriber_;
-		EventCallBack callback_;
+		void*            subscriber;
+		event_callback_t callback;
 	public:
-		EventCallBackWarpper(void* subscriber, EventCallBack callback) :
-			subscriber_(subscriber), callback_(callback)
+
+		A3D_FORCEINLINE	event_callback_wrapper(
+			void* subscriber, event_callback_t callback):
+			subscriber(subscriber), callback(callback)
 		{}
 		
-		void* GetSubcriber() const { return subscriber_;  }
+		void* get_subscriber() const { return subscriber;  }
 
-		void operator()(EventData data) const
-		{
-			callback_(data);
+		void operator()(event_data_t data) const {
+			callback(data);
 		}
 
-		bool operator==(const EventCallBackWarpper& r) const
-		{
-			return subscriber_ == r.subscriber_;
+		bool operator==(const event_callback_wrapper& r) const {
+			return subscriber == r.subscriber;
 		}
 
-	};
-}
-
-namespace std
-{
-	///for unorder_xxx key
-	template<>
-	struct hash<Aurora3D::EventCallBackWarpper>
-	{
-		size_t operator()(const Aurora3D::EventCallBackWarpper& warpper)const
-		{
-			return std::hash<void*>()(warpper.GetSubcriber());
+		ptr::size_t to_hash() noexcept {
+			return util::hash(subscriber);
 		}
 	};
-}
+
+a3d_namespace_evt_end

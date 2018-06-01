@@ -18,6 +18,9 @@
 #define CCDK_SIMD_NEON      2  //NEON 
 #define CCDK_SIMD_NONE      3  //FPU
 
+#define CCDK_SIZE_CHECK     1
+#define CCDK_SIZE_MAX       10000
+
 #define WSTR( str )   L##str
 
 //OS

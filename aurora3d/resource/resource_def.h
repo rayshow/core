@@ -1,8 +1,7 @@
 #pragma once
-#include<memory>
-namespace Aurora3D
-{
-	class Image;
-	typedef std::shared_ptr<Image> ImagePtr;
+#include<aurora3d/module.h>
 
-}
+a3d_namespace_resource_start
+
+
+a3d_namespace_resource_end
