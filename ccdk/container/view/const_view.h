@@ -3,15 +3,19 @@
 #include<ccdk/mpl/base/compile_check.h>
 #include<ccdk/mpl/fusion/pair.h>
 #include<ccdk/mpl/iterator/reverse_iterator.h>
+#include<ccdk/mpl/iterator/algorithm/advance.h>
+#include<ccdk/mpl/iterator/algorithm/distance.h>
 
 ccdk_namespace_ct_start
 
 using namespace mpl;
 
+
 //readonly view, store range, only for random container
 template<
 	typename Container,
-	typename Iterator = typename Container::const_iterator>
+	typename Iterator = typename Container::const_iterator
+>
 struct const_view: public fs::pair<Iterator, Iterator>
 {
 public:
@@ -26,6 +30,7 @@ public:
 	using const_reference = typename Container::const_reference;
 	using const_iterator  = Iterator;
 	using const_reverse_iterator = it::reverse_iterator<Iterator>;
+	using this_pair = fs::pair<this_type, this_type>;
 
 public:
 
@@ -50,8 +55,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////
 //// attribute
 
-	CCDK_FORCEINLINE size_type size() { return second() - first(); }
-	CCDK_FORCEINLINE size_type empty() { return second() <= first(); }
+	CCDK_FORCEINLINE size_type size() { return it::distance(first(), end()); }
+	CCDK_FORCEINLINE size_type empty() { return size() == 0; }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //// iterator
@@ -69,13 +74,23 @@ public:
 //// pop front / back , will generate new const_view
 
 	CCDK_FORCEINLINE this_type pop_front(size_type n = 1) const {
-		ccdk_assert(n <= size());
-		return { first()+n, second() };
+		ccdk_assert(n <= size() && n != 0);
+		return { it::advance(first(),n) , second() };
 	}
 
 	CCDK_FORCEINLINE this_type pop_back(size_type n = 1) const {
-		ccdk_assert(n <= size());
-		return { first(), second()-n };
+		ccdk_assert(n <= size() && n!=0);
+
+		auto it1 = first();
+		for (int i = 0; i < n; ++i, ++it) {
+			if (it1 == second()) {
+				//empty view
+				return { first(), first() }; 
+			}
+		}
+		auto it2 = first();
+		for (; it2 != second() && it1 != second(); ++it1, ++it2);
+		return { first(), it2 };
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,21 +98,74 @@ public:
 
 	CCDK_FORCEINLINE const_reference front() const { return *first();}
 	CCDK_FORCEINLINE const_reference back() const { return *second(); }
-	CCDK_FORCEINLINE const_reference operator[](size_type index) const { return first()[index]; }
-	CCDK_FORCEINLINE const_reference at(size_type index) const{ return first()[index]; }
+	CCDK_FORCEINLINE const_reference operator[](size_type index) const { 
+		return *it::advance(first(), index); 
+	 }
+	CCDK_FORCEINLINE const_reference at(size_type index) const{ return *it::advance(first(), index); }
 	CCDK_FORCEINLINE const_pointer data() const { return &(*first()); }
 
 /////////////////////////////////////////////////////////////////////////////////////
-//// 
+//// split
 
-	CCDK_FORCEINLINE this_type split(const_iterator pos) {
-
+	CCDK_FORCEINLINE this_pair split(size_type pos) noexcept {
+		ccdk_assert(pos >= 0 && pos < size());
+		return split(first() + pos);
 	}
 
-	CCDK_FORCEINLINE this_type erase(const_iterator begin, const_iterator end) {
-
+	CCDK_FORCEINLINE this_pair split(const_iterator pos) noexcept {
+		return { this_type{first(), pos }, this_type{ pos, second() } };
 	}
 
+////////////////////////////////////////////////////////////////////////////////////
+//// erase 
+
+	CCDK_FORCEINLINE this_type erase(const_iterator begin, const_iterator end) noexcept  {
+		return { this_type{ first(), begin }, this_type{ end, second() } };
+	}
+
+	CCDK_FORCEINLINE this_type erase(size_type begin, size_type end) noexcept {
+		ccdk_assert(begin >= 0 && end <= size() && end>begin);
+		return erase(it::advance(first(),begin), it::advance(first(), end) );
+	}
+
+	CCDK_FORCEINLINE this_type erase(const_iterator pos) noexcept {
+		return erase(pos, ++const_iterator{ pos });
+	}
+
+	CCDK_FORCEINLINE this_type erase(size_type pos) noexcept {
+		ccdk_assert(pos > 0 && pos < size());
+		return erase(it::advance(first(),pos));
+	}
+
+////////////////////////////////////////////////////////////////////////////////////
+//// index / find 
+
+	template<typename FN>
+	size_type index_of(FN Fn, size_type n=1) {
+		size_type index = 0;
+		size_type count = 0;
+		for (auto it = first(); it != second(); ++it,++index) {
+			if (Fn(*it)) {
+				if (++count == n) {
+					return index;
+				}
+			}
+		}
+		return size();
+	}
+
+	template<typename FN>
+	const_iterator find(FN Fn, size_type n = 1) {
+		size_type count = 0;
+		for (auto it = first(); it != second(); ++it) {
+			if (Fn(*it)) {
+				if (++count == n) {
+					return it;
+				}
+			}
+		}
+		return second();
+	}
 };
 
 

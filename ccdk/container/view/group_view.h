@@ -15,7 +15,6 @@ struct group_node {
 
 };
 
-
 //a batch of view
 template<
 	typename View,

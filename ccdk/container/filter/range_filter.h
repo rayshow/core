@@ -10,6 +10,18 @@ ccdk_namespace_ct_start
 
 using namespace mpl;
 
+template<
+	typename Container, 
+	typename size_type = Container::size_type,
+	typename difference_type = Container::difference_type
+>
+size_type absolute_index(Container const& ct, difference_type index) {
+	ccdk_assert( ( index<0 && index + difference_type(ct.size()) >= 0) || 
+		( index>=0 && index < difference_type(ct.size())) );
+	if (index < 0) return size_type(index + difference_type(ct.size()));
+	return size_type(index);
+}
+
 /* aggresive initialize */
 template<typename T>
 struct range_filter

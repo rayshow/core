@@ -185,7 +185,11 @@ public:
 //// access
 
 	//range filter
-	CCDK_FORCEINLINE view_type operator[](filter_type&& filter) { return { *this, util::move(filter) }; }
+	CCDK_FORCEINLINE view_type operator[](filter_type&& filter) { 
+		size_type start = absolute_index(*this,filter.start);
+		size_type end = absolute_index(*this, filter.end);
+		return { step_view{ *this, start, end, filter.step }, filter.pred };
+	}
 
 	// index
 	CCDK_FORCEINLINE constexpr reference operator[](size_type index) { ccdk_assert(index < len); return content[index];}
