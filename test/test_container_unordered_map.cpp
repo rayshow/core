@@ -18,7 +18,7 @@ int main()
 	{
 		unordered_map<int, int> a{};
 		unordered_map<int, int> b{};
-		constexpr int N = 666;
+		constexpr int N = 10000;
 		for (int i = 0; i < N; ++i) {
 			a.insert({ i,i+1 });
 		}
@@ -27,6 +27,7 @@ int main()
 		RuntimeAssertTrue(a.size() == N);
 		DebugValue("conflict:", a.conflict_count);
 		DebugValue("loadfactor:", a.load_factor());
+		DebugValue("reallocate:", (int)a.reallocate_count);
 		for (int i = 0; i < N; ++i) {
 			DebugValue(a[i]);
 		}

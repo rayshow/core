@@ -38,7 +38,7 @@ class rb_tree : protected Alloc::template rebind< Node >
 	using key_type   = Key;
 	using mapped_type = MappedType;
 
-	/* common */
+	/* common type */
 	using value_type = T;
 	using pointer = T * ;
 	using const_pointer = T const*;
@@ -339,12 +339,15 @@ private:
 		head->set_black();
 	}
 
+
 	CCDK_FORCEINLINE static link_type min_node(link_type node) noexcept {
+		ccdk_assert(node1 = nullptr);
 		while (node->left) node = node->left;
 		return node;
 	}
 
 	CCDK_FORCEINLINE static link_type max_node(link_type node) noexcept {
+		ccdk_assert(node != nullptr);
 		while (node->right) node = node->right;
 		return node;
 	}
@@ -627,9 +630,6 @@ private:
 		
 		// key of new node < key of parent, insert to left
 		if (insert_at_left) {
-			if (parent->left) {
-				int a = 0;
-			}
 			ccdk_assert(parent->left == nullptr);
 			parent->left = new_node;
 			if (parent == left_most()) {

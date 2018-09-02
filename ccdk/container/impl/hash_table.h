@@ -144,6 +144,7 @@ public:
 	using bucket_container = vector<link_type, 
 		units::ratio<1,1>, kVectorLestElements, 
 		Size, typename Alloc::template rebind<link_type> >;
+
 	using node_allocator_type = mem::allocator_traits<
 		typename Alloc::template rebind<node_type>>;
 
@@ -169,7 +170,6 @@ private:
 
 	// mapping key to bucket index
 	CCDK_FORCEINLINE size_type bucket_idx(Key const& key) const noexcept {
-		
 		return (size_type)util::hash(key) % (size_type)(kPrimeArray[mask_index]);
 	}
 
@@ -188,6 +188,7 @@ public:
 
 #if  defined(CCDK_PROFILE)
 	uint16           conflict_count;
+	uint8            reallocate_count;
 #endif
 
 	//de-ctor
@@ -243,6 +244,11 @@ public:
 		buckets.swap(other.buckets);
 		util::swap(len, other.len);
 		util::swap(mask_index, other.mask_index);
+
+#if  defined(CCDK_PROFILE)
+		util::swap(conflict_count, other.conflict_count);
+		util::swap(reallocate_count, other.reallocate_count);
+#endif
 	}
 
 
@@ -462,10 +468,12 @@ public:
 				tmp.insert_unique(util::move(node->data));
 			}
 		}
-		tmp.swap(*this);
 #if defined(CCDK_PROFILE)
 		conflict_count = 0;
+		reallocate_count++;
 #endif
+
+		tmp.swap(*this);
 	}
 
 	template<>
@@ -484,6 +492,7 @@ public:
 		tmp.swap(*this);
 #if defined(CCDK_PROFILE)
 		conflict_count = 0;
+		reallocate_count++;
 #endif
 	}
 

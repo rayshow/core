@@ -8,6 +8,9 @@ using namespace ccdk;
 using namespace ccdk::mpl;
 using namespace ccdk::ct;
 
+class A { virtual void add() {} };
+class B :public A {  };
+
 int main()
 {
 	DebugNewTitle("queue");

@@ -48,9 +48,16 @@ int main()
 		DebugNewTitle("path test");
 		{
 			iimap m{};
+			// 19 79
+			// 34
 			for (int i = 1; i < 100; ++i) {
-				//DebugValue(i); 
-				m.insert({ i,i });
+				int j = i * i*i % 113;
+				DebugValue(i,j); 
+				if(i==19)
+					m.insert({ j,i });
+				else {
+					m.insert({ j,i });
+				}
 				m.print_tree();
 				DebugValue("==\n");
 			}
