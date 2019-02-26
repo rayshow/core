@@ -30,7 +30,7 @@
 
 #include<memory>
 
-using namespace ccdk;
+//using namespace ccdk;
 using namespace ccdk::mpl;
 
 

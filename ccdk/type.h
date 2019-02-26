@@ -57,10 +57,16 @@ namespace ccdk
 		typedef std::nothrow_t nothrow_t;
 		constexpr nothrow_t nothrow;
 
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-value"
+#endif
 		// safe release t / array t, rise compile error if T is imcomplete like void*
 		template<typename T> void safe_delete(T*& t) { sizeof(*t); if (t) { delete t; t = nullptr; } }
 		template<typename T> void safe_delete_array(T*& t) { sizeof(*t); if (t) { delete[] t; t = nullptr; } }
-
+#if CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG
+        #pragma clang diagnostic pop
+#endif
 		//like void* / declared T*, not check type
 		template<typename T> void imcomp_delete(T*& t) { if (t) { delete t; t = nullptr; } }
 

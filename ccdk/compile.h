@@ -152,7 +152,8 @@
 #	define CCDK_VARARGS    
 #	define CCDK_STDCALL	  
 #	define CCDK_FORCEINLINE inline __attribute__ ((always_inline))
-#	define CCDK_FORCENOINLINE __attribute__((noinline))	
+#	define CCDK_FORCENOINLINE __attribute__((noinline))
+#   define CCDK_DISABLE_WARNING(Msg)
 #else ///mac
 #	define CCDK_MS_ALIGN(n) 
 #	define CCDK_GCC_ALIGN(n)	__attribute__((aligned(n)))
