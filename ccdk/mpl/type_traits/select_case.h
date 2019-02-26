@@ -13,7 +13,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-		template<template<typename...> typename T>
+		template<template<class...> class T>
 		using case_index_t = typename case_index<T>::type;
 
 		template<typename T, bool b>
@@ -89,7 +89,7 @@ namespace ccdk
 			template<uint32... bits>
 			struct u64x2_create_impl<ccdk_tt_rank_default_val, bits...>
 			{
-				typedef u64x2<-1, -1> type;
+				typedef u64x2<(uint64)-1, (uint64)-1> type;
 			};
 
 			template<typename T>
@@ -229,7 +229,7 @@ namespace ccdk
 				typedef indice_pack<tag, args...> type;
 			};
 
-			template<uint32 tag, template<typename...> typename... Args>
+			template<uint32 tag, template<class...> class... Args>
 			using case_recursive_t = u64x2_create_t<
 				rank_merge_t<tag, case_index_t<Args>...> >;
 
@@ -274,13 +274,13 @@ namespace ccdk
 			
 
 		//case
-		template<template<typename...> typename T>
+		template<template<class...> class T>
 		using case_t = tt_detail::u64x2_create_t<  typename case_index<T>::type >;
 
-		template<template<typename...>typename ... Args>
+		template<template<class...>class ... Args>
 		using case_and = tt_detail::case_recursive_t< ccdk_tt_rank_and_val, Args...>;
 
-		template<template<typename...>typename ... Args>
+		template<template<class...>class ... Args>
 		using case_or = tt_detail::case_recursive_t< ccdk_tt_rank_or_val, Args...>;
 
 		

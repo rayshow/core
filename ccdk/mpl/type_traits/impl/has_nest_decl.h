@@ -33,4 +33,4 @@ struct TraitName                                                                
 	static constexpr bool value = sfinae<T, V>(0);                                           \
 };                                                                                           \
 template<typename T, typename V>                                                             \
-static constexpr bool TraitName##_v = TraitName##name<T, V>::value;
+static constexpr bool TraitName##_v = TraitName<T, V>::value;

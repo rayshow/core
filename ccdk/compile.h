@@ -130,7 +130,7 @@
 #endif
 
 
-#if  defined(CCDK_COMPILER_MSVC)  
+#if  CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC
 #	define CCDK_MS_ALIGN(n)     __declspec(align(n))
 #	define CCDK_GCC_ALIGN(n) 
 #	define CCDK_DLLEXPORT       __declspec(dllexport)    //building as a library
@@ -140,9 +140,9 @@
 #   define CCDK_FASTCALL        __fastcall
 #   define CCDK_VECTORCALL      __vectorcall
 #	define CCDK_STDCALL	        __stdcall										
-#	define CCDK_FORCEINLINE     __forceinline						
+#	define CCDK_FORCEINLINE     __forceinline
 #	define CCDK_FORCENOINLINE   __declspec(noinline)
-#elif defined(CCDK_COMPILER_GCC) ||  defined(CCDK_COMPILER_CLANG) //linux or  clang
+#elif CCDK_COMPILER_DEFINE == CCDK_COMPILER_GCC ||  CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG //linux or  clang
 #	define CCDK_MS_ALIGN(n) 
 #	define CCDK_GCC_ALIGN(n)	__attribute__((aligned(n)))
 #	define CCDK_DLLEXPORT	__attribute__((visibility("default")))

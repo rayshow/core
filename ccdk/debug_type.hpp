@@ -98,7 +98,7 @@ namespace ccdk {
 		}
 	};
 
-#if  defined(CCDK_COMPILER_MSVC)
+#if CCDK_COMPILE_DEFINED == CCDK_COMPILER_MSVC
 #define DebugFunctionName()  std::cout << " *** function name: " << __FUNCSIG__ <<std::endl;
 #else
 #define DebugFunctionName()  std::cout << " *** function name: " << __PRETTY_FUNCTION__ <<std::endl;

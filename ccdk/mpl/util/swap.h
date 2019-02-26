@@ -15,13 +15,13 @@
 
 ccdk_namespace_mpl_util_start
 
-#if defined( CCDK_COMPILER_MSVC ) 
+#if ( CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC )
 
 	//no suitable implements found, for msvc-17+ to  to get detail line and file error place
 	template< typename T1, typename T2,  typename = check_t<false_> >
 	CCDK_FORCEINLINE void swap(T1& t1, T2& t2) {}
 
-#elif defined( CCDK_COMPILER_GCC )
+#elif ( CCDK_COMPILER_DEFINE == CCDK_COMPILER_GCC )
 	
 	//no suitable implements found, for gcc  to get detail line and file error place 
 	template< typename T1, typename T2>
@@ -29,10 +29,10 @@ ccdk_namespace_mpl_util_start
 
 #else //clang or some compiler not found suitable method
 
-	template< typename T1, typename T2 >
+	template< typename T1, typename T2, typename T3 = false_ >
 	CCDK_FORCEINLINE void swap(T1& t1, T2& t2)
 	{
-		static_assert(false_::value, "no suitable swap found");
+		static_assert(T3::value, "no suitable swap found");
 	}
 	
 #endif

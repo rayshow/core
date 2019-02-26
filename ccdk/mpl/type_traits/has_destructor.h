@@ -9,8 +9,7 @@ namespace ccdk
 {
 	namespace mpl
 	{
-#if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC)||\
-	(CCDK_COMPILER_DEFINE == CCDK_COMPILER_CLANG)
+#if (CCDK_COMPILER_DEFINE == CCDK_COMPILER_MSVC) 
 		template<typename T> struct has_destructor:public bool_<__is_destructible(T)> {};
 		template<typename T> struct has_nothrow_destructor :public bool_<__is_nothrow_destructible(T)> {};
 #else

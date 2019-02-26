@@ -79,8 +79,8 @@ namespace ccdk
 #define ccdk_if_not_this(T)          if(ccdk_likely( mpl::addressof(T)!=this ))
 #define ccdk_if_not_same_addr(T1,T2) if(ccdk_likely( mpl::addressof(T1)!= mpl::addressof(T2) ))
 
-#define CCDK_TFN(T)  template<typename...> typename T
-#define CCDK_TFN1(T) template<typename, typename...> typename T
+#define CCDK_TFN(T)  template<class...> class T
+#define CCDK_TFN1(T) template<class, class...> class T
 	}
 
 }

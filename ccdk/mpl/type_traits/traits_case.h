@@ -29,16 +29,16 @@ namespace ccdk
 
 #define ccdk_tt_rank_has_invoker     50
 
-		template<template<typename...> typename T>
+		template<template<class...> class T>
 		struct case_;
 
-		template<template<typename...> typename T>
+		template<template<class...> class T>
 		struct case_index;
 
 		template<typename T, bool>
 		struct case_val;
 
-		template<uint32 tag, typename T, template<typename...> typename... Args>
+		template<uint32 tag, typename T, template<class...> class... Args>
 		struct rank_pack
 		{
 			typedef indice_pack< tag, case_index<Args>::value... > type;

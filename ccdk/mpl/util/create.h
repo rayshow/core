@@ -10,7 +10,7 @@
 
 ccdk_namespace_mpl_util_start
 
-template<template<typename...> typename T>
+template<template<class...> class T>
 struct create_t
 {
 	template<typename... Args>
@@ -20,7 +20,7 @@ struct create_t
 	}
 };
 
-template<template<typename...> typename T>
+template<template<class...> class T>
 struct create_const_t
 {
 	template<typename... Args>
