@@ -156,7 +156,8 @@ public:
 	// insert range-n
 	template<
 		typename InputIt,
-		typename = check_t<is_iterator<InputIt>> >
+		typename = check_t<is_iterator<InputIt>> 
+	>
 	CCDK_FORCEINLINE auto insert(InputIt begin, size_type n) {
 		return insert_unique(begin, n);
 	}
@@ -164,7 +165,8 @@ public:
 	// insert range
 	template<
 		typename InputIt,
-		typename = check_t<is_iterator<InputIt>> >
+		typename = check_t<is_iterator<InputIt>> 
+	>
 	CCDK_FORCEINLINE auto insert(InputIt begin, InputIt end) {
 		return insert_unique(begin, end);
 	}

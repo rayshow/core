@@ -472,6 +472,8 @@ main(int argc, char **argv)
 		return 1;
 	}
 
+	printf("re:%s post:%s", pattern, post);
+
 	start = post2nfa(post);
 	if (start == NULL) {
 		fprintf(stderr, "error in post2nfa %s\n", post);

@@ -23,10 +23,15 @@ constexpr uint32 kStringLeastElementSize = 16;
 struct string_literial_init {};
 constexpr string_literial_init string_literial_init_c{};
 
+
+struct string_take_ownership {};
+constexpr string_take_ownership string_take_ownership_c{};
+
+
 template<
 	typename Char,                                         /* Char type */
 	typename IncRatio = units::ratio<2, 1>,                /* 2X incease ratio*/
-	uint32  N = kStringLeastElementSize,                   /* least allocate 10 elements */
+	uint32  N = kStringLeastElementSize,                   /* least allocate 16 elements */
 	typename Size = uint32,                                /* size type */
 	typename Alloc = mem::simple_new_allocator<Char, Size> /* basic allocator */
 >

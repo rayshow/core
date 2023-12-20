@@ -8,9 +8,9 @@
 #include<ccdk/mpl/util/copy.h>
 #include<ccdk/mpl/util/move.h>
 #include<ccdk/text/text_module.h>
-#include<ccdk/text/encoding/ascii.h>
-#include<ccdk/text/encoding/iso8859_1.h>
-#include<ccdk/text/encoding/unicode.h>
+#include<ccdk/text/charset/ascii.h>
+#include<ccdk/text/charset/iso8859_1.h>
+#include<ccdk/text/charset/unicode.h>
 #include<vector>
 
 ccdk_namespace_text_start
@@ -30,6 +30,23 @@ struct common_char_traits
 		for (; *it; ++it, ++len);
 		return len;
 	}
+
+	static Char* copy(char_type const* str, ptr::size_t len, void* memory = nullptr)
+	{
+		if (len == 0) {
+			len = length(str);
+		}
+		if (memory == nullptr) {
+			memory = new Char[len + 1];
+			memory[len] = Char(0);
+			if (memory)
+			{
+				for (ptr::size_t i = 0; i < len; ++i) memory[i] = str[i];
+			}
+		}
+		return memory;
+	}
+
 };
 
 template<typename Char>

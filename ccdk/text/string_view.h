@@ -2,13 +2,23 @@
 
 #include<ccdk/mpl/util/addressof.h>
 #include<ccdk/mpl/iterator/ptr_iterator.h>
-#include<ccdk/mpl/fusion/range.h>
 #include<ccdk/mpl/fusion/pair.h>
+#include<ccdk/container/unordered_map.h>
+#include<ccdk/container/range.h>
 #include<ccdk/text/text_module.h>
 #include<ccdk/text/char_traits.h>
 
 ccdk_namespace_text_start
 using namespace mpl;
+
+struct string_store_cache {};
+constexpr string_store_cache string_store_cache_c{};
+
+template<typename Char>
+struct global_string_slice {
+	Char*       content;
+	ptr::size_t len;
+};
 
 template<typename Char, typename Size = ptr::size_t>
 class basic_string_view
@@ -36,22 +46,70 @@ private:
 	fs::range<const_pointer_type>        range;
 public:
 	/* from c-string */
-	CCDK_FORCEINLINE basic_string_view(char_type const* str): range{ str, str+traits_type::length(str) } { ccdk_assert(range.valid()); }
-	CCDK_FORCEINLINE basic_string_view(char_type const* str, size_type len) : range{ str, str+len } { ccdk_assert(range.valid()); }
-	CCDK_FORCEINLINE basic_string_view(char_type const* start, char_type const* end) : range{ start, end } { ccdk_assert(range.valid()); }
+	CCDK_FORCEINLINE basic_string_view(char_type const* str)
+		: range{ str, str + traits_type::length(str) } {
+		ccdk_assert(range.valid()); 
+	}
+	CCDK_FORCEINLINE basic_string_view(char_type const* str, size_type len) 
+		: range{ str, str+len } { 
+		ccdk_assert(range.valid()); 
+	}
+	CCDK_FORCEINLINE basic_string_view(char_type const* start, char_type const* end) 
+		: range{ start, end } {
+		ccdk_assert(range.valid()); 
+	}
 
 	/* from basic_string */ 
 	template<typename Size2>
-	CCDK_FORCEINLINE basic_string_view(basic_string<Char, Size2> const& str) : range{ str.content, str.content+str.length } { ccdk_assert(range.valid()); }
+	CCDK_FORCEINLINE basic_string_view(basic_string<Char, Size2> const& str) 
+		: range{ str.content, str.content+str.length } {
+		ccdk_assert(range.valid()); 
+	}
 	template<typename Size2>
-	CCDK_FORCEINLINE basic_string_view(basic_string<Char, Size2> const& str, size_type start, size_type end): range{ str.content+start, str.content+end } { ccdk_assert(end>start && end<=str.length && range.valid()); }
+	CCDK_FORCEINLINE basic_string_view(basic_string<Char, Size2> const& str, size_type start, size_type end)
+		: range{ str.content+start, str.content+end } {
+		ccdk_assert(end>start && end<=str.length && range.valid()); 
+	}
 
 	/* copy */
-	CCDK_FORCEINLINE basic_string_view(this_type const& other) :range{ other.range } {}
+	CCDK_FORCEINLINE basic_string_view(this_type const& other) 
+		:range{ other.range } {}
+
 	template<typename Size2>
-	CCDK_FORCEINLINE basic_string_view(basic_string_view<Char,Size2> const& other) : range{ other.range } {}
+	CCDK_FORCEINLINE basic_string_view(basic_string_view<Char,Size2> const& other) 
+		: range{ other.range } {}
+
 	template<typename Size2>
-	CCDK_FORCEINLINE basic_string_view(this_type const& other, size_type start, size_type end) : range{ start, end } { ccdk_assert( end>start && end<= other.range.size() ); }
+	CCDK_FORCEINLINE basic_string_view(this_type const& other, size_type start, size_type end) 
+		: range{ start, end } { 
+		ccdk_assert( end>start && end<= other.range.size() ); 
+	}
+
+	CCDK_FORCEINLINE basic_string_view(char_type const* str, ptr::size_t len,  string_store_cache const&)
+	{
+		static ct::unordered_map<ptr::size_t, global_string_slice<char_type> > pool;
+		ptr::size_t hash = util_impl::hash_bytes(reinterpret_cast<uint8*>(str), traits_type::length(str) * sizeof(char_type));
+		auto it = pool.find(hash)
+		if (it != pool.end()) {
+			range._1 = it->content;
+			range._2 = it->content + it->len;
+		}
+		else {
+			global_string_slice<char_type> new_slice;
+			if (len == 0) {
+				new_slice.len = char_traits::length(str);
+			}
+			else {
+				new_slice.len = len;
+			}
+			new_slice.content = char_traits::copy(str, len);
+			if (new_slice.content) {
+				pool.emplace(hash, new_slice)
+			}
+			range._1 = new_slice.content;
+			range._2 = new_slice.content + new_slice.len;
+		}
+	}
 	
 	/* swap */
 	void swap(this_type & other) { range.swap(other.range); }

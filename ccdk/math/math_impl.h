@@ -1,5 +1,6 @@
 #pragma once
 
+#include<ccdk/compile.h>
 #include<cmath>
 #include<cassert>
 #include<ccdk/type.h>

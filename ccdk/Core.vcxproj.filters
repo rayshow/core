@@ -939,6 +939,7 @@
     <ClInclude Include="text\charset\unicode\uppercase_table.hpp" />
     <ClInclude Include="io\filesystem\console.h" />
     <ClInclude Include="io\filesystem\logger.h" />
+    <ClInclude Include="mpl\util\scope_destructor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mpl\design_pattern\TODO.md" />

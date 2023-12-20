@@ -76,6 +76,10 @@ namespace util_impl {
 		}
 	};
 
+
+
+
+
 	// class with member to_hash exists
 	template< typename T>
 	struct hash_impl_t<T, false, true> {

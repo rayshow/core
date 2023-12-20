@@ -247,6 +247,7 @@
     <ClInclude Include="mpl\util\equals.h" />
     <ClInclude Include="mpl\util\fill.h" />
     <ClInclude Include="mpl\type_traits\impl\has_member_decl.h" />
+    <ClInclude Include="mpl\util\scope_destructor.h" />
     <ClInclude Include="text\charset\unicode\category_table.hpp" />
     <ClInclude Include="text\charset\unicode\lowercase_table.hpp" />
     <ClInclude Include="text\charset\unicode\script_table.hpp" />

@@ -15,7 +15,7 @@ template<
 	typename Value,
 	typename Size = uint32,
 	typename Alloc = mem::simple_new_allocator<fs::pair<Key, Value>, Size>,
-	typename Impl = rb_tree<false, Key, Value, fs::pair<Key,Value>, fs::get_first_t, fs::get_second_t, Size,Alloc>
+	typename Impl = rb_tree<false, Key, Value, fs::pair<Key, Value>, fs::get_first_t, fs::get_second_t, Size,Alloc>
 >
 class map: public Impl
 {
