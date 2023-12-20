@@ -28,7 +28,7 @@ namespace ccdk
 #else  
 		#define IS_FUNCTION(Prefix,...)                                                                                     \
 			template<typename Ret, typename... Args> struct is_function< Ret(Args...) Prefix> :public true_ {};             \
-			template<typename Ret, typename... Args> struct is_function< Ret(Args......) Prefix> :public true_ {};    
+			template<typename Ret, typename... Args> struct is_function< Ret(Args...,...) Prefix> :public true_ {};    
 #endif
 		CCDK_PP_FOREACH_ITEM(IS_FUNCTION, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))
 #undef IS_FUNCTION

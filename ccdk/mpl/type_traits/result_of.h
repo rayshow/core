@@ -31,7 +31,7 @@ namespace ccdk
 			template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args...) Postfix> { typedef Ret type; };       \
 			template<typename Class, typename Ret, typename... Args> struct result_of_impl<Ret(Class::*)(Args..., ...) Postfix> { typedef Ret type; };  \
 			template<typename Ret, typename... Args> struct result_of_impl< Ret(Args...) Postfix> { typedef Ret type; };                                \
-			template<typename Ret, typename... Args> struct result_of_impl< Ret(Args......) Postfix> { typedef Ret type; };
+			template<typename Ret, typename... Args> struct result_of_impl< Ret(Args...,...) Postfix> { typedef Ret type; };
 #endif
 
 			CCDK_PP_FOREACH_ITEM(FUNCTION_ENUM, CCDK_PP_COMPOSE_EX((const, volatile, const volatile), (&, &&, ), , &, &&))

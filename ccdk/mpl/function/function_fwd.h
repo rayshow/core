@@ -57,16 +57,16 @@ ccdk_namespace_mpl_fn_end
 
 ccdk_namespace_mpl_start
 
-#define ccdk_fn  ::ccdk::mpl::fn::function
+#define CCDK_NS  ccdk::mpl::fn::function
 
 /*  function<T1> can transform to  function<T2>  when Ret and each Arg can transform */
 template<typename Ret1, typename Ret2, typename... Args1, typename... Args2>
-struct is_convertible< ccdk_fn<Ret1(Args1...)>, ccdk_fn<Ret2(Args2...)> > : and_<  is_convertible< Ret1, Ret2>, is_convertible<Args1, Args2>... > {};
+struct is_convertible< CCDK_NS<Ret1(Args1...)>, CCDK_NS<Ret2(Args2...)> > : and_<  is_convertible< Ret1, Ret2>, is_convertible<Args1, Args2>... > {};
 
 /*  function<T1> compatible with function<T2> when Ret and each Arg is compatible */
 template<typename Ret1, typename Ret2, typename... Args1, typename... Args2>
-struct is_compatible< ccdk_fn<Ret1(Args1...)>, ccdk_fn<Ret2(Args2...)> > : and_<  is_compatible< Ret1, Ret2>, is_compatible<Args1, Args2>... > {};
+struct is_compatible< CCDK_NS<Ret1(Args1...)>, CCDK_NS<Ret2(Args2...)> > : and_<  is_compatible< Ret1, Ret2>, is_compatible<Args1, Args2>... > {};
 
-#undef ccdk_fn
+#undef CCDK_NS
 
 ccdk_namespace_mpl_end
